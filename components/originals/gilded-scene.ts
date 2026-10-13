@@ -47,9 +47,15 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
   const materials = new Set<THREE.Material>(), geometries = new Set<THREE.BufferGeometry>(), textures = new Set<THREE.Texture>();
   let disposed = false, contextLost = false, paused = false, visible = false, frame = 0, last = 0, time = 0, started = performance.now();
   let width = 1, height = 1, slowFrames = 0;
-  const motion = { x: 0, y: 0, tx: 0, ty: 0, spin: 0, goal: 0, velocity: 0, drag: false, dragX: 0, dragAt: 0, inside: false };
+  const motion = { x: 0, y: 0, tx: 0, ty: 0, spin: 0, goal: 0, velocity: 0, drag: false, dragX: 0, dragAt: 0, inside: false, mouse: false };
   const pointer = new THREE.Vector2(.5, .5), previousPointer = pointer.clone();
   const uTime = { value: 0 }, uPointer = { value: new THREE.Vector2() }, uReveal = { value: media.matches ? 2 : -.1 };
+  const uCardPointer = { value: new THREE.Vector2(.5, .52) }, uCardHover = { value: 0 };
+  const uThreadPointer = { value: new THREE.Vector2(.5, .5) }, uThreadHover = { value: 0 };
+  const uViewport = { value: new THREE.Vector2(1, 1) };
+  const cardPointerTarget = new THREE.Vector2(.5, .52), pointerNDC = new THREE.Vector2();
+  const raycaster = new THREE.Raycaster(), hoverPlane = new THREE.Plane();
+  const planeNormal = new THREE.Vector3(), planePoint = new THREE.Vector3(), pointerHit = new THREE.Vector3(), toCamera = new THREE.Vector3();
   const low = small || compact;
   const ownGeometry = <T extends THREE.BufferGeometry>(g: T): T => { geometries.add(g); return g; };
   const ownMaterial = <T extends THREE.Material>(m: T): T => { materials.add(m); return m; };
@@ -101,7 +107,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
     texture.needsUpdate = true; texture.generateMipmaps = true;
     texture.minFilter = THREE.LinearMipmapLinearFilter; texture.magFilter = THREE.LinearFilter;
     texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-    return new THREE.ShaderMaterial({ uniforms: { uArt: { value: texture }, uTexel: { value: new THREE.Vector2(1 / atlas.width, 1 / atlas.height) }, uTime, uReveal, uPointer, uFoil: { value: 1 } }, defines: { OCTAVES: 3 }, vertexShader: surfaceVertex, fragmentShader: foilFragment });
+    return new THREE.ShaderMaterial({ uniforms: { uArt: { value: texture }, uTexel: { value: new THREE.Vector2(1 / atlas.width, 1 / atlas.height) }, uTime, uReveal, uPointer, uCardPointer, uCardHover, uFoil: { value: 1 } }, defines: { OCTAVES: 3 }, vertexShader: surfaceVertex, fragmentShader: foilFragment });
   }
   const front = addMesh(faceUV(new THREE.ShapeGeometry(frontShape, 64)), foil(false)); front.position.z = .05; front.renderOrder = 4;
   const back = addMesh(faceUV(new THREE.ShapeGeometry(rounded(2.5, 3.5, .12), 48)), foil(true)); back.rotation.y = Math.PI; back.position.z = -.07; back.renderOrder = 4;
@@ -134,7 +140,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
   const bead = addMesh(new THREE.SphereGeometry(.062, 16, 12), sphereMaterial); bead.position.set(0, 1.07, .076);
   // These are ambient filaments; there is no card-to-card connector in this slice.
   const filaments = new THREE.Group(); scene.add(filaments);
-  const threadMaterial = ownMaterial(new THREE.ShaderMaterial({ uniforms: { uTime }, vertexShader: threadVertex, fragmentShader: threadFragment, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  const threadMaterial = ownMaterial(new THREE.ShaderMaterial({ uniforms: { uTime, uThreadPointer, uThreadHover, uViewport, uThreadRadius: { value: low ? 110 : 190 } }, vertexShader: threadVertex, fragmentShader: threadFragment, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
   for (let n = 0; n < (low ? 16 : 42); n++) {
     const seed = n * 1.91, y = Math.sin(seed) * 3.8, z = -2.5 - (n % 7) * .18;
     const points: THREE.Vector3[] = [];
@@ -162,7 +168,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
     camera.aspect = width / height;
     const desiredHeight = compact ? height * .82 : Math.min(height * .62, 480);
     camera.position.set(0, 0, 3.5 * height / Math.max(150, desiredHeight) / (2 * Math.tan(Math.PI / 12)));
-    camera.updateProjectionMatrix();
+    camera.updateProjectionMatrix(); camera.updateMatrixWorld(); uViewport.value.set(width, height);
     const dpr = renderer.getPixelRatio();
     if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) renderer.setSize(width, height, false);
     skyUniforms.uAspect.value = camera.aspect;
@@ -193,6 +199,27 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
     orbit.rotation.z = still ? 0 : Math.sin(time * .25) * .13;
     uPointer.value.x += (tx - uPointer.value.x) * alpha;
     uPointer.value.y += (-ty - uPointer.value.y) * alpha;
+    const hoverActive = !still && motion.inside && motion.mouse;
+    let overCard = false;
+    if (hoverActive) {
+      card.updateMatrixWorld();
+      pointerNDC.set(pointer.x * 2 - 1, pointer.y * 2 - 1);
+      raycaster.setFromCamera(pointerNDC, camera);
+      planeNormal.set(0, 0, 1).applyQuaternion(card.quaternion);
+      const frontFacing = planeNormal.dot(toCamera.subVectors(camera.position, card.position)) > 0;
+      card.localToWorld(planePoint.set(0, 0, frontFacing ? .05 : -.07));
+      hoverPlane.setFromNormalAndCoplanarPoint(planeNormal, planePoint);
+      if (raycaster.ray.intersectPlane(hoverPlane, pointerHit)) {
+        card.worldToLocal(pointerHit);
+        overCard = Math.abs(pointerHit.x) <= 1.25 && Math.abs(pointerHit.y) <= 1.75;
+        if (overCard) cardPointerTarget.set(.5 + pointerHit.x / 2.5 * (frontFacing ? 1 : -1), .5 + pointerHit.y / 3.5);
+      }
+    }
+    const hoverAlpha = 1 - Math.exp(-dt * 8);
+    uCardPointer.value.lerp(cardPointerTarget, hoverAlpha);
+    uCardHover.value += (Number(overCard) - uCardHover.value) * hoverAlpha;
+    uThreadPointer.value.lerp(pointer, hoverAlpha);
+    uThreadHover.value += (Number(hoverActive) - uThreadHover.value) * hoverAlpha;
     root.style.setProperty('--gc-px', ((motion.x + 1) * 50).toFixed(2) + '%');
     uReveal.value = still ? 2 : Math.min(2, (now - started) / 2200 - .08);
     if (driftA && driftB && !still) {
@@ -206,7 +233,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
     renderer.render(scene, camera);
     if (!low && dt > .036) slowFrames++; else slowFrames = Math.max(0, slowFrames - 1);
     if (slowFrames > 90 && renderer.getPixelRatio() > 1) { renderer.setPixelRatio(1); dustMaterial.uniforms.uPixelRatio.value = 1; resize(); slowFrames = 0; }
-    if (!still || Math.abs(motion.x) + Math.abs(motion.y) > .001) wake();
+    if (!still || Math.abs(motion.x) + Math.abs(motion.y) + uCardHover.value + uThreadHover.value > .001) wake();
   }
   function coordinates(event: PointerEvent) {
     const rect = canvas.getBoundingClientRect();
@@ -215,7 +242,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
     pointer.set(x, 1 - y); motion.tx = x * 2 - 1; motion.ty = y * 2 - 1;
   }
   function move(event: PointerEvent) {
-    motion.inside = true; coordinates(event);
+    motion.inside = true; motion.mouse = event.pointerType !== 'touch'; coordinates(event);
     if (motion.drag && !paused && !media.matches) {
       const now = performance.now(), delta = (event.clientX - motion.dragX) / Math.max(100, height * .7) * 3.3;
       motion.goal += delta; motion.velocity = THREE.MathUtils.clamp(delta / Math.max(.008, (now - motion.dragAt) / 1000), -7, 7);
@@ -237,7 +264,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
   }
   function leave() { if (!motion.drag) { motion.inside = false; motion.tx = motion.ty = 0; wake(); } }
   function flip() { if (!paused && !media.matches) { motion.velocity = 0; motion.goal += Math.PI; wake(); } }
-  function resetMotion() { motion.tx = motion.ty = 0; motion.velocity = 0; motion.drag = false; motion.spin = motion.goal = 0; wake(); }
+  function resetMotion() { motion.tx = motion.ty = 0; motion.velocity = 0; motion.drag = false; motion.spin = motion.goal = 0; motion.mouse = false; wake(); }
   function visibility() { if (document.hidden) stop(); else wake(); }
   function lost(event: Event) { event.preventDefault(); contextLost = true; stop(); onLost(); }
   const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) wake(); else stop(); }); observer.observe(canvas);
