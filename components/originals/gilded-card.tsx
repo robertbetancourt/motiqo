@@ -17,8 +17,7 @@ export default function GildedCard({ compact = false, paused = false, background
   const pausedRef = useRef(paused);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [localPause, setLocalPause] = useState(false);
-  const still = paused || localPause;
+  const still = paused;
   pausedRef.current = still;
 
   useEffect(() => {
@@ -43,17 +42,12 @@ export default function GildedCard({ compact = false, paused = false, background
     <canvas ref={canvas} className={`gc-canvas ${ready ? 'gc-ready' : ''}`} aria-hidden="true" />
     <div className="gc-fallback" aria-hidden="true"><div><span>MOTIQO</span><img src={emblemSrc} alt=""/><span>MADE TO MOVE</span></div></div>
     {!compact && <>
-      <header className="gc-header"><span className="gc-brand"><img src="/branding/Isotype.svg" alt=""/>Motiqo</span><span className="gc-edition">MOTION STUDY / 006</span></header>
+      <header className="gc-header"><span className="gc-brand"><img src="/branding/Isotype.svg" alt=""/>Motiqo</span></header>
       <div className="gc-bottom">
-        <span className="gc-kicker">A LITTLE MOTION. A LOT OF CHARACTER.</span>
-        <h3>Small details. Strong impressions.</h3>
-        <p>{failed ? 'A still edition. WebGL is unavailable in this browser.' : 'Light, texture and a little curiosity.'}</p>
         <div className="gc-controls">
           <button type="button" className="gc-turn" onClick={() => engine.current?.flip()} disabled={!ready || failed || still}>Turn the card <span aria-hidden="true">↻</span></button>
-          <button type="button" className="gc-pause" aria-pressed={still} disabled={paused || failed || !ready} onClick={() => setLocalPause(value => !value)}>{still ? 'Resume motion' : 'Pause motion'}</button>
         </div>
       </div>
-      <footer className="gc-footer"><span>GILDED SIGNAL</span><span className="gc-gesture">DRAG TO ROTATE · DOUBLE-CLICK TO TURN</span><span>INDEPENDENT BY DESIGN</span></footer>
     </>}
     <span className="gc-accessible">A dark engraved card with gold and iridescent details. The Motiqo emblem floats inside an arched window, with smoke, fine threads and dust behind it. Use Turn the card to see the reverse.</span>
   </section>;

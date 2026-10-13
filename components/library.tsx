@@ -1,15 +1,16 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Bookmark, Check, ChevronDown, Command, Copy, Pause, Play, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { ArrowRight, Bookmark, Check, Command, Pause, Play, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { aiTools, categories, elements, makePrompt, type AITool, type Category, type LibraryElement, type OriginalSources } from '@/lib/catalog';
+import { aiTools, categories, elements, type AITool, type Category, type LibraryElement, type OriginalSources } from '@/lib/catalog';
 import { Demo } from './demos';
 import DetailDialog from './detail-dialog';
 import SiteFrame from './site-frame';
 import SponsorCards from './sponsor-cards';
 import GitHubControl from './github-control';
 import OutlineField from './outline-field';
+import PromptControl from './prompt-control';
 
 export default function Library({ originalSource }: { originalSource: OriginalSources }) {
   const [category,setCategory] = useState<Category>('All elements');
@@ -18,15 +19,11 @@ export default function Library({ originalSource }: { originalSource: OriginalSo
   const [savedOnly,setSavedOnly] = useState(false);
   const [selected,setSelected] = useState<LibraryElement | null>(null);
   const [initialTab,setInitialTab] = useState<'preview' | 'code' | 'prompt'>('preview');
-  const [menu,setMenu] = useState<string | null>(null);
   const [tool,setTool] = useState<AITool>('Universal');
-  const [copied,setCopied] = useState<string | null>(null);
   const [toast,setToast] = useState('');
   const [paused,setPaused] = useState(false);
   const search = useRef<HTMLInputElement>(null);
-  const promptMenu = useRef<HTMLDivElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduced = useReducedMotion();
   const still = paused || !!reduced;
   const timing = {duration:still ? 0 : .32,ease:[.22,1,.36,1] as [number,number,number,number]};
@@ -47,19 +44,10 @@ export default function Library({ originalSource }: { originalSource: OriginalSo
     sync(); window.addEventListener('popstate',sync);
     const shortcut=(e:KeyboardEvent)=>{
       if((e.metaKey || e.ctrlKey) && e.key==='k'){e.preventDefault();search.current?.focus();}
-      if(e.key==='Escape')setMenu(null);
     };
     window.addEventListener('keydown',shortcut);
-    return ()=>{window.removeEventListener('popstate',sync);window.removeEventListener('keydown',shortcut);if(toastTimer.current)clearTimeout(toastTimer.current);if(copiedTimer.current)clearTimeout(copiedTimer.current);};
+    return ()=>{window.removeEventListener('popstate',sync);window.removeEventListener('keydown',shortcut);if(toastTimer.current)clearTimeout(toastTimer.current);};
   },[]);
-
-  useEffect(()=>{
-    if(!menu)return;
-    promptMenu.current?.querySelector<HTMLButtonElement>('[aria-checked="true"]')?.focus();
-    const dismiss=(e:PointerEvent)=>{if(!(e.target as HTMLElement).closest('.prompt-control'))setMenu(null);};
-    document.addEventListener('pointerdown',dismiss);
-    return()=>document.removeEventListener('pointerdown',dismiss);
-  },[menu]);
 
   function notify(message:string){
     setToast(message);if(toastTimer.current)clearTimeout(toastTimer.current);
@@ -69,14 +57,8 @@ export default function Library({ originalSource }: { originalSource: OriginalSo
     try{await navigator.clipboard.writeText(text);notify('Copied. Make something good.');return true;}
     catch{notify('Clipboard unavailable. Open the element to select the text manually.');return false;}
   }
-  async function copyPrompt(element:LibraryElement){
-    if(await copy(makePrompt(element,tool))){setCopied(element.id);if(copiedTimer.current)clearTimeout(copiedTimer.current);copiedTimer.current=setTimeout(()=>setCopied(null),2000);}
-    setMenu(null);
-  }
   function chooseTool(value:AITool){
-    const trigger=promptMenu.current?.closest('.prompt-control')?.querySelector<HTMLButtonElement>('.prompt-select');
-    setTool(value);setMenu(null);setCopied(null);
-    requestAnimationFrame(()=>trigger?.focus());
+    setTool(value);
     try{localStorage.setItem('motiqo-prompt-tool',value);}catch{}
   }
   function toggleSave(id:string){
@@ -84,7 +66,7 @@ export default function Library({ originalSource }: { originalSource: OriginalSo
     try{localStorage.setItem('motiqo-saved',JSON.stringify(next));}catch{}
   }
   function open(element:LibraryElement,tab:'preview'|'code'|'prompt'='preview'){
-    setSelected(element);setInitialTab(tab);setMenu(null);
+    setSelected(element);setInitialTab(tab);
     const url=new URL(window.location.href);url.searchParams.set('element',element.id);window.history.pushState({},'',url);
   }
   function close(){setSelected(null);const url=new URL(window.location.href);url.searchParams.delete('element');window.history.replaceState({},'',url);}
@@ -101,15 +83,10 @@ export default function Library({ originalSource }: { originalSource: OriginalSo
         <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
           <div className="filter-row"><div className="filters" aria-label="Filter by category">{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?'selected':''} onClick={()=>setCategory(c)}>{c}</button>)}</div><div className="search-tools"><button className="motion-control" aria-pressed={paused} disabled={!!reduced} onClick={()=>setPaused(!paused)}>{still?<Play size={13}/>:<Pause size={13}/>} {reduced?'Reduced motion':paused?'Resume motion':'Pause motion'}</button><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>
           <motion.div className="element-grid" layout transition={timing}><AnimatePresence>
-            {filtered.map((element,index)=><motion.article key={element.id} layout className={`element-card card-${element.id}`} initial={still?false:{opacity:0,y:18}} animate={{opacity:1,y:0}} exit={{opacity:0,scale:.97}} transition={{...timing,delay:still?0:index*.035,layout:timing}} whileHover={still?undefined:{y:-4}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea,.folder-float,.prompt-control')&&!window.getSelection()?.toString())open(element);}}>
+            {filtered.map((element,index)=><motion.article key={element.id} layout className={`element-card card-${element.id}`} initial={still?false:{opacity:0,y:18}} animate={{opacity:1,y:0}} exit={{opacity:0,scale:.97}} transition={{...timing,delay:still?0:index*.035,layout:timing}} whileHover={still?undefined:{y:-4}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea,.prompt-control')&&!window.getSelection()?.toString())open(element);}}>
               <div className="card-stage"><Demo id={element.id} paused={still}/><span className="stage-hint">{element.hint}</span><button className={`save-button preview-save ${saved.includes(element.id)?'is-saved':''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={16} fill={saved.includes(element.id)?'currentColor':'none'}/></button></div>
               <div className="card-info"><div className="card-title-row"><button className="card-title" onClick={()=>open(element)}><h2>{element.title}</h2></button><span className="category-label">{element.category}</span></div><p>{element.description}</p><div className="tags">{element.tags.map(t=><span key={t}>{t}</span>)}</div></div>
-              <footer className="card-actions"><button className="code-button" onClick={()=>open(element,'code')}><span className="code-symbol">&lt;/&gt;</span> Code</button><div className="prompt-control"><div className="prompt-split"><button className="prompt-button" aria-label={`Copy ${element.title} prompt for ${tool}`} onClick={()=>void copyPrompt(element)}>{copied===element.id?<Check size={13}/>:<Copy size={13}/>} {copied===element.id?'Copied':tool==='Universal'?'Copy prompt':`Copy ${tool}`}</button><button className="prompt-select" aria-label={`Choose AI for ${element.title}`} aria-haspopup="menu" aria-expanded={menu===element.id} aria-controls={`menu-${element.id}`} onClick={()=>setMenu(menu===element.id?null:element.id)}><ChevronDown size={13}/></button></div><AnimatePresence>{menu===element.id&&<motion.div ref={promptMenu} id={`menu-${element.id}`} className="prompt-menu" role="menu" aria-label={`Prompt target for ${element.title}`} initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}} transition={timing} onKeyDown={e=>{
-                const options=Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"], [role="menuitem"]'));
-                const position=options.indexOf(document.activeElement as HTMLButtonElement);
-                if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();options[(position+(e.key==='ArrowDown'?1:options.length-1))%options.length]?.focus();}
-                if(e.key==='Escape'){e.preventDefault();e.stopPropagation();setMenu(null);e.currentTarget.closest('.prompt-control')?.querySelector<HTMLButtonElement>('.prompt-select')?.focus();}
-              }}><span className="eyebrow">CHOOSE YOUR WORKFLOW</span>{aiTools.map(value=><button role="menuitemradio" aria-checked={tool===value} key={value} onClick={()=>chooseTool(value)}><span className="tool-symbol">{value==='Universal'?'↗':value==='Claude'?'✳':value==='ChatGPT'?'◎':value==='Codex'?'›_':'↗'}</span><span>{value}<small>{value==='Universal'?'Copy as is':value==='ChatGPT'?'Discuss & implement':value==='Codex'?'Implement & verify':value==='Claude'?'Plan & implement':'Use your repo context'}</small></span>{tool===value&&<Check size={14}/>}</button>)}<button role="menuitem" className="review-prompt" onClick={()=>open(element,'prompt')}>Review prompt first <ArrowRight size={13}/></button></motion.div>}</AnimatePresence></div></footer>
+              <footer className="card-actions"><button className="code-button" onClick={()=>open(element,'code')}><span className="code-symbol">&lt;/&gt;</span> Code</button><PromptControl element={element} tool={tool} onToolChange={chooseTool} copy={copy} onReview={()=>open(element,'prompt')} paused={still}/></footer>
             </motion.article>)}
           </AnimatePresence></motion.div>
           {filtered.length===0&&<motion.div className="empty-results" initial={{opacity:0}} animate={{opacity:1}} transition={timing}><SlidersHorizontal size={24}/><h2>{savedOnly&&saved.length===0?'Keep the good ones close.':'Nothing here. Yet.'}</h2><p>{savedOnly&&saved.length===0?'Bookmark an element and it will be waiting here.':'Try another search or explore the whole collection.'}</p><button className="secondary-button" onClick={collection}>Explore all elements <ArrowRight size={15}/></button></motion.div>}
@@ -117,6 +94,6 @@ export default function Library({ originalSource }: { originalSource: OriginalSo
         <SponsorCards paused={still}/>
     </SiteFrame>
     <div className={`toast ${toast?'visible':''}`} role="status" aria-live="polite"><Check size={16}/>{toast}</div>
-    {selected&&<DetailDialog key={`${selected.id}-${initialTab}`} element={selected} onClose={close} paused={still} copy={copy} initialTab={initialTab} initialTool={tool} originalSource={originalSource}/>}
+    {selected&&<DetailDialog key={`${selected.id}-${initialTab}`} element={selected} onClose={close} paused={still} copy={copy} initialTab={initialTab} initialTool={tool} onToolChange={chooseTool} originalSource={originalSource}/>}
   </>;
 }

@@ -11,8 +11,8 @@ return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1
 float fbm(vec2 p){float s=0.,a=.5; for(int i=0;i<OCTAVES;i++){s+=a*noise2(p);p=mat2(1.61,1.17,-1.17,1.61)*p+3.7;a*=.5;}return s;}`;
 
 export const foilFragment = `
-uniform sampler2D uArt; uniform vec2 uTexel; uniform vec2 uPointer;
-uniform float uTime,uReveal,uFoil;
+uniform sampler2D uArt; uniform vec2 uTexel; uniform vec2 uPointer,uCardPointer;
+uniform float uTime,uReveal,uFoil,uCardHover;
 varying vec2 vUv; varying vec3 vNormal,vView;
 ${noise}
 void main(){
@@ -25,15 +25,26 @@ vec3 l=normalize(vec3(-.6,.85,1.4)),r=reflect(-view,n);
 float spec=pow(max(dot(r,l),0.),48.);
 float mouse=pow(max(dot(r,normalize(vec3(uPointer*.8,1.8))),0.),65.);
 float diffuse=max(dot(n,l),0.);
-float lane=vUv.x*.9-vUv.y*.38+n.x*.95+n.y*.7-.22;
-float streak=exp(-lane*lane/.022);
-vec3 holo=.52+.48*cos(6.283*(vUv.x*1.2-vUv.y*.6+n.x*1.1+n.y*.7+vec3(.12,.36,.68)));
+// A moving spectral reflection, anchored in the card's own coordinates.
+vec2 reflection=mix(vec2(.5,.52),uCardPointer,uCardHover);
+float lane=dot(vUv-reflection,vec2(.91,.42))-n.x*1.9+n.y*1.25;
+float streak=exp(-lane*lane/.025);
+float phase=vUv.x*1.75-vUv.y*.94+n.x*2.65-n.y*1.8;
+phase+=dot(reflection-vec2(.5),vec2(1.15,-.82));
+vec3 holo=.5+.5*cos(6.283*(phase+vec3(.10,.37,.69)));
+holo=mix(holo,vec3(.95,.75,.48),.12);
 vec3 metal=vec3(.58,.34,.12)*(.45+diffuse*.5)+vec3(.94,.79,.53)*(spec*1.2+mouse*.7);
-metal=mix(metal,holo*(.55+spec),streak*.72*uFoil)+holo*streak*.27;
+metal=mix(metal,holo*(.6+spec),streak*(.5+.38*uCardHover)*uFoil)+holo*streak*(.17+.20*uCardHover);
 vec3 lacquer=vec3(.0018,.0026,.0035)+vec3(.016,.014,.012)*pow(max(dot(r,l),0.),5.);
-lacquer+=art.a*(.019+mouse*.12+streak*.075)*mix(vec3(.72,.53,.32),holo,.5);
+float spectralInk=streak*(.045+.22*uCardHover);
+lacquer+=art.a*(.019+mouse*.10+spectralInk)*mix(vec3(.72,.53,.32),holo,.86);
+// Fine intermittent foil rows catch the moving reflection on the black print too.
+float pitch=uv.y*190.+uv.x*6.;
+float rows=1.-smoothstep(.035,.035+min(.35,fwidth(pitch)),abs(fract(pitch)-.5));
+float runs=step(.60,hash(floor(uv*vec2(90.,190.))));
+lacquer+=holo*streak*uCardHover*(.003+rows*runs*.085);
 float sparkle=step(.994,hash(floor(uv*vec2(470.,658.))))*pow(max(dot(r,normalize(vec3(hash(floor(uv*100.))-.5,.7,1.))),0.),140.);
-lacquer+=holo*sparkle*.8;
+lacquer+=holo*sparkle*(.6+.65*uCardHover);
 vec3 col=mix(lacquer,metal,art.r); col=mix(col,vec3(.72,.66,.52),art.b*.75);
 float reveal=smoothstep(0.,.13,uReveal-length((vUv-vec2(.5,.5))*vec2(.7,1.)));
 float edge=exp(-pow((length((vUv-.5)*vec2(.7,1.))-uReveal)/.018,2.));
@@ -94,12 +105,24 @@ float brush=exp(-dot(vUv-uPointer,vUv-uPointer)/.006)*uActive;
 field+=uVelocity*brush*.2;
 gl_FragColor=vec4(clamp(field,vec2(-.65),vec2(.65)),0.,1.);}`;
 
-export const threadVertex = `uniform float uTime;varying vec3 vPos;
-void main(){vec3 p=position;p.y+=sin(p.x*.6+uTime*.22+p.z)*.025;vPos=p;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
-export const threadFragment = `uniform float uTime;varying vec3 vPos;
+export const threadVertex = `
+uniform float uTime,uThreadHover,uThreadRadius;
+uniform vec2 uThreadPointer,uViewport;
+varying vec3 vPos; varying float vHover;
+void main(){
+vec3 p=position;p.y+=sin(p.x*.6+uTime*.22+p.z)*.025;vPos=p;
+vec4 clip=projectionMatrix*modelViewMatrix*vec4(p,1.);
+vec2 pixel=(clip.xy/clip.w*.5+.5)*uViewport;
+vec2 separation=pixel-uThreadPointer*uViewport;
+float radiusSquared=dot(separation,separation)/(uThreadRadius*uThreadRadius);
+float influence=pow(max(0.,1.-radiusSquared),3.);
+// A smooth finite lens parts the filaments without a sharp kink at its edge.
+clip.xy+=separation*(1.25*uThreadHover*influence)/uViewport*2.*clip.w;
+vHover=uThreadHover*influence;gl_Position=clip;}`;
+export const threadFragment = `uniform float uTime;varying vec3 vPos;varying float vHover;
 void main(){float glint=pow(.5+.5*sin(vPos.x*1.5-uTime*.45+vPos.z*5.),12.);
 vec3 c=mix(vec3(.23,.12,.055),vec3(.65,.55,.43),.5+.5*sin(vPos.z*4.));
-gl_FragColor=vec4(c*(.5+glint*1.5),.19+glint*.16);}`;
+gl_FragColor=vec4(c*(.5+glint*1.5+vHover*.65),.19+glint*.16+vHover*.12);}`;
 
 export const particleVertex = `uniform float uTime,uPixelRatio;attribute float aSize;attribute float aSeed;varying float vSeed;
 void main(){vec3 p=position;p.y+=sin(uTime*.16+aSeed*30.)*.13;p.x+=sin(uTime*.11+aSeed*8.)*.06;
