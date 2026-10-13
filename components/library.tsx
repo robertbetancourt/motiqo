@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Bookmark, Check, Command, Pause, Play, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { ArrowRight, Bookmark, Check, Command, Pause, Play, Search, SlidersHorizontal } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { aiTools, categories, elements, type AITool, type Category, type LibraryElement, type OriginalSources } from '@/lib/catalog';
 import { Demo } from './demos';
@@ -11,6 +11,7 @@ import SponsorCards from './sponsor-cards';
 import GitHubControl from './github-control';
 import OutlineField from './outline-field';
 import PromptControl from './prompt-control';
+import FoldText from './effects/fold-text';
 
 export default function Library({ originalSource }: { originalSource: OriginalSources }) {
   const [category,setCategory] = useState<Category>('All elements');
@@ -78,7 +79,7 @@ export default function Library({ originalSource }: { originalSource: OriginalSo
     <a href="#collection" className="skip-link">Skip to collection</a>
     <SiteFrame collection paused={still} savedOnly={savedOnly} savedCount={saved.length} onCollection={collection} onSaved={showSaved}>
         <section className="intro intro-centered" aria-labelledby="collection-title">
-          <motion.div className="intro-copy" initial={false} animate={{opacity:1,y:0}} transition={{...timing,duration:reduced?0:.55}}><div className="hero-pill"><Sparkles size={13}/> A little motion. A lot of character.</div><h1 id="collection-title">Small details.<br/><span>Strong impressions.</span></h1><p>Interactive elements with a little more character.<br/>Explore, experiment, and make them your own.</p><div className="hero-actions"><a className="primary-button" href="#collection">Explore the collection <ArrowRight size={15}/></a><GitHubControl/></div></motion.div>
+          <motion.div className="intro-copy" initial={false} animate={{opacity:1,y:0}} transition={{...timing,duration:reduced?0:.55}}><h1 id="collection-title"><FoldText text={'Small details.\nStrong impressions.'} hinge="left" splitBy="char" duration={.8} stagger={.028} ease="expo.out" perspective={725} creaseShading={.5} paused={still}/></h1><p>Interactive elements with a little more character.<br/>Explore, experiment, and make them your own.</p><div className="hero-actions"><a className="primary-button" href="#collection">Explore the collection <ArrowRight size={15}/></a><GitHubControl/></div></motion.div>
         </section>
         <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
           <div className="filter-row"><div className="filters" aria-label="Filter by category">{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?'selected':''} onClick={()=>setCategory(c)}>{c}</button>)}</div><div className="search-tools"><button className="motion-control" aria-pressed={paused} disabled={!!reduced} onClick={()=>setPaused(!paused)}>{still?<Play size={13}/>:<Pause size={13}/>} {reduced?'Reduced motion':paused?'Resume motion':'Pause motion'}</button><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>

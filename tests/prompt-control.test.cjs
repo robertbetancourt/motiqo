@@ -18,9 +18,22 @@ function load(relative, overrides = {}) {
   return entry.exports;
 }
 const catalog = load('../lib/catalog.ts');
+const choice = load('../components/choice-select.tsx', { '@/lib/catalog': catalog });
+const liquid = load('../components/liquid-action.tsx', {
+  './outline-field': { default: ({ children }) => React.createElement('div', null, children) },
+});
 const Control = load('../components/prompt-control.tsx', {
   '@/lib/catalog': catalog,
-  './outline-field': { default: ({ children }) => React.createElement('div', null, children) },
+  './choice-select': choice,
+  './liquid-action': liquid,
+}).default;
+const Dialog = load('../components/detail-dialog.tsx', {
+  '@/lib/catalog': catalog,
+  './demos': { Demo: () => React.createElement('div', { 'data-demo': true }) },
+  './prompt-control': { default: Control },
+  './choice-select': choice,
+  './liquid-action': liquid,
+  './source-view': load('../components/source-view.tsx'),
 }).default;
 
 test('workflow keyboard selection copies the matching prompt; review and motion clean up', async () => {
@@ -29,6 +42,7 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
   const original = new Map(keys.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
   const frames = new Map(), mediaListeners = new Set(); let serial = 0, written = '', reviewed = 0;
   dom.window.HTMLElement.prototype.showPopover = function () {};
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   const values = { window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement, IS_REACT_ACT_ENVIRONMENT: true,
     matchMedia: () => ({ matches: false, addEventListener: (_, fn) => mediaListeners.add(fn), removeEventListener: (_, fn) => mediaListeners.delete(fn) }),
     requestAnimationFrame: fn => { frames.set(++serial, fn); return serial; }, cancelAnimationFrame: key => frames.delete(key) };
@@ -73,6 +87,33 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
     assert.ok(Number(document.querySelector('.prompt-liquid').style.getPropertyValue('--liquid-strength')) > .9);
     await React.act(() => root.render(React.createElement(Fixture, { paused: true })));
     assert.equal(document.querySelector('.prompt-liquid').style.getPropertyValue('--liquid-strength'), '0');
+
+    // The actual shared dialog keeps copy content and the selected workflow in sync.
+    let closed = 0, workflow = '';
+    const relay = catalog.elements.find(element => element.id === 'relay');
+    await React.act(() => root.render(React.createElement(Dialog, {
+      element: relay, paused: true, onClose: () => closed++, onToolChange: value => { workflow = value; },
+      copy: async text => { written = text; return true; },
+      originalSource: { relay: [{ name: 'relay.tsx', code: 'export const relay = 1;' }, { name: 'line-scene.tsx', code: 'export const scene = 2;' }] },
+    })));
+    assert.equal(document.querySelector('dialog h2').textContent, 'Relay');
+    assert.equal(document.querySelector('.detail-description'), null);
+    assert.equal(document.querySelector('dialog select'), null);
+    await React.act(() => document.querySelector('#tab-preview').dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'End', bubbles: true })));
+    assert.equal(document.querySelector('#tab-prompt').getAttribute('aria-selected'), 'true');
+    await React.act(() => document.querySelector('dialog .choice-trigger').click());
+    await React.act(() => document.querySelector('[data-label="Codex"]').click());
+    assert.equal(workflow, 'Codex');
+    await React.act(async () => { document.querySelector('dialog .prompt-button').click(); await Promise.resolve(); });
+    assert.equal(written, catalog.makePrompt(relay, 'Codex'));
+    await React.act(() => document.querySelector('#tab-code').click());
+    await React.act(() => document.querySelector('dialog .choice-trigger').click());
+    await React.act(() => document.querySelector('[data-label="line-scene.tsx"]').click());
+    await React.act(async () => { document.querySelector('dialog .prompt-button').click(); await Promise.resolve(); });
+    assert.equal(written, 'export const scene = 2;');
+    assert.ok(document.querySelector('dialog .source-content').textContent.includes(written));
+    await React.act(() => document.querySelector('dialog').dispatchEvent(new dom.window.Event('cancel', { cancelable: true })));
+    assert.equal(closed, 1);
     await React.act(() => root.unmount()); mounted = false;
     assert.equal(frames.size, 0); assert.equal(mediaListeners.size, 0);
   } finally {

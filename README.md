@@ -35,7 +35,9 @@ Open http://127.0.0.1:3014. `npm run typecheck` checks TypeScript; `npm run buil
 
 Desktop at 1024px and above uses four element columns; tablet uses two and narrow mobile one. Pause sits immediately left of search. A subtle grayscale image, grain and accent light give depth to the darker background. Ambient movement pauses with the demos.
 
-Pointer input stays scoped to each preview. Motion follows reduced-motion settings. Native modal dialogs trap focus; Escape closes them, tab arrows switch views, and Ctrl/Cmd K focuses search. The shared PromptControl provides keyboard navigation, workflow selection, copy feedback and an inset divider. In previews it adds a Lerp-driven glass reflection and the same decorative ring used by search. All frames, listeners and timers are cleaned up.
+Pointer input stays scoped to each preview. Motion follows reduced-motion settings. Native modal dialogs trap focus and restore the triggering focus; Escape closes them, tab arrows switch views, and Ctrl/Cmd K focuses search. Preview, Source code and Prompt use a shared segmented control and a fixed preview-sized shell, with scrolling inside the document. ChoiceSelect provides the same inset, keyboard-accessible menu for prompt workflows and source files. LiquidAction gives all dialog copy actions a Lerp-driven glass reflection and the same decorative ring used by search. All frames, listeners and timers are cleaned up.
+
+The hero uses the supplied React Bits FoldText effect, adapted to TypeScript and responsive word wrapping, with GSAP and static reduced-motion support. Its attribution and license are retained in `components/effects/ReactBits-LICENSE.md`; it is used as site decoration and is not listed in the original component catalog. GitHub buttons use the unmodified white Invertocat from the [official GitHub brand toolkit](https://brand.github.com/foundations/logo).
 
 Saved items migrate from the former Prism4 storage key without deleting old data. Primary color saves under `motiqo-accent`; selected prompt workflow saves under `motiqo-prompt-tool`.
 
