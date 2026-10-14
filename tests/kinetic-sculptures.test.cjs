@@ -16,7 +16,7 @@ function load(name){
   entry._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText,file);
   cache.set(name,entry.exports);return entry.exports;
 }
-test('Gyro, Lantern and Relay have solid depth, respond, settle and release every animation resource',async()=>{
+test('Gyro and Lantern have solid depth, respond, settle and release every animation resource',async()=>{
   const dom=new JSDOM('<div id="mount"></div>',{pretendToBeVisual:true,url:'http://localhost'});
   const frames=new Map(),mediaListeners=new Set(),observers=[];let serial=0,now=1000,disconnected=0;
   const media={matches:false,addEventListener:(_,fn)=>mediaListeners.add(fn),removeEventListener:(_,fn)=>mediaListeners.delete(fn)};
@@ -66,22 +66,6 @@ test('Gyro, Lantern and Relay have solid depth, respond, settle and release ever
     await React.act(()=>root.render(React.createElement(Lantern)));media.matches=true;mediaListeners.forEach(fn=>fn());advance(2);const reduced=paths();pointer(host,'pointermove',320,210);advance(60);assert.deepEqual(paths(),reduced);assert.equal(frames.size,0);
     assert.ok(paths().every(d=>!d||!/NaN|Infinity/.test(d)));
     media.matches=false;
-    const Relay=load('relay.tsx').default;
-    await React.act(()=>root.render(React.createElement(Relay)));host=prepare();advance();
-    assert.equal(document.querySelectorAll('[data-lever]').length,5);
-    host.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'End'}));advance(120);
-    assert.ok(Number(document.querySelector('[data-lever="4"]').getAttribute('data-tilt'))>.2);
-    assert.ok(Number(document.querySelector('[data-lever="0"]').getAttribute('data-tilt'))<.001);
-    host.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:' '}));pointer(host,'pointerleave');advance(12);
-    const pulses=()=>[...document.querySelectorAll('[data-lever]')].map(el=>Number(el.getAttribute('data-pulse')));
-    let pulse=pulses();assert.ok(pulse[4]>.7&&pulse[3]>0&&pulse[0]===0,'pulse starts at the selected rocker');
-    advance(45);pulse=pulses();assert.ok(pulse[0]>.7&&pulse[4]===0,'pulse reaches the distant rocker later');
-    advance();assert.ok([...document.querySelectorAll('[data-lever]')].every(el=>Math.abs(Number(el.getAttribute('data-tilt')))<.001));assert.equal(frames.size,0);
-    pointer(host,'pointerdown',320,230);pointer(host,'pointerup',320,230);advance(2);
-    observers.at(-1).fn([{isIntersecting:false}]);assert.equal(frames.size,0);observers.at(-1).fn([{isIntersecting:true}]);assert.ok(frames.size>0);
-    await React.act(()=>root.render(React.createElement(Relay,{paused:true})));advance(2);const frozen=paths();advance(60);assert.deepEqual(paths(),frozen);assert.equal(frames.size,0);
-    await React.act(()=>root.render(React.createElement(Relay)));media.matches=true;mediaListeners.forEach(fn=>fn());advance(2);const reducedRelay=paths();pointer(host,'pointerdown');pointer(host,'pointerup');advance(60);assert.deepEqual(paths(),reducedRelay);assert.equal(frames.size,0);
-    assert.ok(paths().every(d=>!d||!/NaN|Infinity/.test(d)));
-    await React.act(()=>root.unmount());mounted=false;assert.equal(frames.size,0);assert.equal(mediaListeners.size,0);assert.equal(disconnected,6);
+    await React.act(()=>root.unmount());mounted=false;assert.equal(frames.size,0);assert.equal(mediaListeners.size,0);assert.equal(disconnected,4);
   }finally{if(mounted)await React.act(()=>root.unmount());dom.window.close();for(const [k,desc]of old){if(desc)Object.defineProperty(globalThis,k,desc);else delete globalThis[k];}}
 });

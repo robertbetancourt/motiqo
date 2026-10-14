@@ -17,7 +17,8 @@ function load(relative, overrides = {}) {
   }).outputText, filename);
   return entry.exports;
 }
-const catalog = load('../lib/catalog.ts');
+const settings = load('../lib/element-controls.ts');
+const catalog = load('../lib/catalog.ts', { './element-controls': settings });
 const choice = load('../components/choice-select.tsx', { '@/lib/catalog': catalog });
 const liquid = load('../components/liquid-action.tsx', {
   './outline-field': { default: ({ children }) => React.createElement('div', null, children) },
@@ -27,9 +28,10 @@ const Control = load('../components/prompt-control.tsx', {
   './choice-select': choice,
   './liquid-action': liquid,
 }).default;
-const Dialog = load('../components/detail-dialog.tsx', {
+const Workspace = load('../components/element-workspace.tsx', {
+  '@/lib/element-controls': settings,
   '@/lib/catalog': catalog,
-  './demos': { Demo: () => React.createElement('div', { 'data-demo': true }) },
+  './demos': { Demo: props => React.createElement('div', { 'data-demo': true, 'data-count': props.settings.count }) },
   './prompt-control': { default: Control },
   './choice-select': choice,
   './liquid-action': liquid,
@@ -56,8 +58,8 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
   }
   let mounted = true;
   try {
-    assert.deepEqual(catalog.elements.map(e => e.id).sort(), ['arbor', 'drawer', 'gilded-signal', 'gyro', 'lantern', 'pleat', 'relay', 'silk-aperture', 'tempo']);
-    assert.deepEqual(catalog.elements.filter(e=>e.category==='Linework').map(e=>e.id).sort(), ['arbor','drawer','gyro','lantern','pleat','relay','tempo']);
+    assert.deepEqual(catalog.elements.map(e => e.id).sort(), ['arbor', 'crate', 'district', 'drawer', 'event-horizon', 'gilded-signal', 'glow-nav', 'gyro', 'halo', 'lantern', 'liquid-relic', 'liquid-sculpture', 'pleat', 'pulse', 'silk-aperture', 'tempo']);
+    assert.deepEqual(catalog.elements.filter(e=>e.category==='Linework').map(e=>e.id).sort(), ['arbor','crate','district','drawer','gyro','lantern','pleat','tempo']);
     assert.ok(catalog.elements.every(e => !e.tags.includes('Original') && catalog.categories.includes(e.category)));
     await React.act(() => root.render(React.createElement(Fixture)));
     await React.act(() => document.querySelector('.prompt-select').click());
@@ -88,31 +90,44 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
     await React.act(() => root.render(React.createElement(Fixture, { paused: true })));
     assert.equal(document.querySelector('.prompt-liquid').style.getPropertyValue('--liquid-strength'), '0');
 
-    // The actual shared dialog keeps copy content and the selected workflow in sync.
+    // The full-page workspace keeps source, workflow, navigation and preview state in sync.
     let closed = 0, workflow = '';
-    const relay = catalog.elements.find(element => element.id === 'relay');
-    await React.act(() => root.render(React.createElement(Dialog, {
-      element: relay, paused: true, onClose: () => closed++, onToolChange: value => { workflow = value; },
+    const crate = catalog.elements.find(element => element.id === 'crate');
+    await React.act(() => root.render(React.createElement(Workspace, {
+      element: crate, paused: true, onBack: () => closed++, onPrevious: () => {}, onNext: () => {}, index: 0, total: 12,
+      saved: false, onSave: () => {}, onPause: () => {}, onToolChange: value => { workflow = value; },
       copy: async text => { written = text; return true; },
-      originalSource: { relay: [{ name: 'relay.tsx', code: 'export const relay = 1;' }, { name: 'line-scene.tsx', code: 'export const scene = 2;' }] },
+      originalSource: { crate: [{ name: 'crate.tsx', code: 'export const crate = 1;' }, { name: 'line-scene.tsx', code: 'export const scene = 2;' }] },
     })));
-    assert.equal(document.querySelector('dialog h2').textContent, 'Relay');
+    assert.equal(document.querySelector('.element-workbench h1').textContent, 'Crate');
+    assert.equal(document.querySelector('dialog'), null);
+    assert.equal(document.body.style.overflow, '');
+    const preview = document.querySelector('[data-demo]');
+    const records=document.querySelector('[aria-label=Records]');
+    await React.act(()=>{Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype,'value').set.call(records,'5');records.dispatchEvent(new dom.window.Event('input',{bubbles:true}));});
+    assert.equal(preview.dataset.count,'5','live controls pass actual component props');
     assert.equal(document.querySelector('.detail-description'), null);
-    assert.equal(document.querySelector('dialog select'), null);
+    assert.equal(document.querySelector('.element-workbench select'), null);
     await React.act(() => document.querySelector('#tab-preview').dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'End', bubbles: true })));
     assert.equal(document.querySelector('#tab-prompt').getAttribute('aria-selected'), 'true');
-    await React.act(() => document.querySelector('dialog .choice-trigger').click());
+    await React.act(() => document.querySelector('.document-toolbar .choice-trigger').click());
     await React.act(() => document.querySelector('[data-label="Codex"]').click());
     assert.equal(workflow, 'Codex');
-    await React.act(async () => { document.querySelector('dialog .prompt-button').click(); await Promise.resolve(); });
-    assert.equal(written, catalog.makePrompt(relay, 'Codex'));
+    await React.act(async () => { document.querySelector('.workbench-actions .prompt-button').click(); await Promise.resolve(); });
+    assert.equal(written, catalog.makePrompt(crate, 'Codex', {...settings.defaultsFor('crate'),count:5}));
     await React.act(() => document.querySelector('#tab-code').click());
-    await React.act(() => document.querySelector('dialog .choice-trigger').click());
+    await React.act(() => document.querySelector('.document-toolbar .choice-trigger').click());
     await React.act(() => document.querySelector('[data-label="line-scene.tsx"]').click());
-    await React.act(async () => { document.querySelector('dialog .prompt-button').click(); await Promise.resolve(); });
+    await React.act(async () => { document.querySelector('.workbench-actions .prompt-button').click(); await Promise.resolve(); });
     assert.equal(written, 'export const scene = 2;');
-    assert.ok(document.querySelector('dialog .source-content').textContent.includes(written));
-    await React.act(() => document.querySelector('dialog').dispatchEvent(new dom.window.Event('cancel', { cancelable: true })));
+    assert.ok(document.querySelector('.source-content').textContent.includes(written));
+    await React.act(() => document.querySelector('#tab-preview').click());
+    assert.equal(document.querySelector('[data-demo]'), preview);
+    assert.equal(document.querySelector('.workbench-preview').hidden, false);
+    await React.act(()=>document.querySelector('.parameter-reset').click());assert.equal(preview.dataset.count,'8');
+    await React.act(() => document.querySelector('[aria-label="mobile preview"]').click());
+    assert.equal(document.querySelector('.workbench-stage').dataset.viewport, 'mobile');
+    await React.act(() => document.querySelector('.workbench-back').click());
     assert.equal(closed, 1);
     await React.act(() => root.unmount()); mounted = false;
     assert.equal(frames.size, 0); assert.equal(mediaListeners.size, 0);

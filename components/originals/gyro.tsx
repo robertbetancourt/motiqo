@@ -1,7 +1,7 @@
 'use client';
 
 import LineStage, { edge, limit, node, settle, spring, type Factory, type LineProps } from './line-scene';
-import { add, annulus, box, camera, circle3, cylinder, painter, rotateX, rotateY, rotateZ, type V3 } from './line-solid';
+import { add, annulus, camera, circle3, cylinder, painter, rotateX, rotateY, rotateZ, type V3 } from './line-solid';
 
 const createGyro:Factory = group => {
   const cam=camera(1.25,[320,303]),base=node(group,'g'),floor=painter(base,cam);
@@ -13,18 +13,18 @@ const createGyro:Factory = group => {
     floor.curve([[Math.cos(a)*64,Math.sin(a)*64,3.2],[Math.cos(a)*(i%3?68:71),Math.sin(a)*(i%3?68:71),3.2]],{stroke:'#657f71',width:.55});
   }floor.draw();
   const layer=node(group,'g'),paint=painter(layer,cam),centre:V3=[0,0,116];
-  paint.mesh(box(-93,-4,3,-85,4,116),{stroke:'#7e978b'});
-  paint.mesh(box(85,-4,3,93,4,116),{stroke:'#7e978b'});
   const rings=[90,71,52].map((r,i)=>({
     metal:paint.mesh(annulus(r,5, -2,4,56)),
-    // Split contours into short arcs so nearer surfaces can hide the far arcs.
-    edges:Array.from({length:64},(_,j)=>paint.curve(Array.from({length:8},(_,k)=>{
-      const a=(j%16+k/7)/16*Math.PI*2,rr=j>=32?r-5:r;
-      return [rr*Math.cos(a),rr*Math.sin(a),j%32>=16?-2.05:2.05] as V3;
-    }),{stroke:i===1?'#ccb998':'#9caf9e',width:j>=32?.55:.82})),
-    pin:paint.mesh(cylinder([-r,0,0],[r,0,0],2.2,12)),
+    // Contours use the mesh's exact facets, rather than a different arc grid.
+    edges:Array.from({length:224},(_,j)=>{
+      const segment=j%56,kind=Math.floor(j/56),inner=kind>=2,bottom=kind%2===1;
+      const radius=inner?r-5:r,z=bottom?-2:2,a=(segment+.5)/56*Math.PI*2;
+      const side:V3=[Math.cos(a)*(inner?-1:1),Math.sin(a)*(inner?-1:1),0];
+      const cap:V3=[0,0,bottom?-1:1];
+      const points=[segment,segment+1].map(k=>[radius*Math.cos(k/56*Math.PI*2),radius*Math.sin(k/56*Math.PI*2),z] as V3);
+      return {line:paint.curve(points,{stroke:i===1?'#ccb998':'#9caf9e',width:inner?.55:.82}),side,cap};
+    }),
   }));
-  const core=paint.mesh(cylinder([0,0,-8],[0,0,8],7,20));
   const yaw=spring(),pitch=spring(),spin=spring(),shine=spring();let detent=0;
   return {
     reset(){detent=0;[yaw,pitch,spin,shine].forEach(s=>{s.x=s.v=0;});},
@@ -40,10 +40,14 @@ const createGyro:Factory = group => {
         return add(rotateZ(q,-.08+yaw.x*.27),centre);
       };
       rings.forEach((ring,i)=>{
-        ring.metal.transform=p=>pose(p,i);ring.pin.transform=p=>pose(p,i);ring.metal.glow=shine.x*(i+1)*.18;
-        ring.edges.forEach(c=>{c.transform=p=>pose(p,i);c.stroke=edge(.32+shine.x*.45);});
+        ring.metal.transform=p=>pose(p,i);ring.metal.glow=shine.x*(i+1)*.18;
+        ring.edges.forEach(({line,side,cap})=>{
+          line.transform=p=>pose(p,i);line.stroke=edge(.32+shine.x*.45);
+          // A contour borders two faces; hide it when both turn away.
+          line.visible=Math.max(cam.depth(pose(side,i))-cam.depth(centre),cam.depth(pose(cap,i))-cam.depth(centre))>-.001;
+        });
       });
-      core.transform=p=>pose(p,2);core.glow=shine.x*.6;paint.draw();
+      paint.draw();
       group.setAttribute('data-gyro-angle',`${yaw.x.toFixed(4)},${pitch.x.toFixed(4)},${spin.x.toFixed(4)}`);return moving;
     },
     activate(){detent+=Math.PI/2;},
