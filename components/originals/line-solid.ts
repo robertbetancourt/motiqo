@@ -31,10 +31,19 @@ export type Camera = ReturnType<typeof camera>;
 type Style = {color?:string;stroke?:string;width?:number;glow?:number;cull?:boolean;shade?:boolean};
 type Draw = {element:SVGElement;key:number;id:number};
 const identity: Transform = p=>p;
+/** Keep opaque depth and lighting in both host themes; artwork is never image-inverted. */
+function lightColour(value:string,surface=false){
+  let rgb:number[];
+  if(/^#[\da-f]{3}$/i.test(value))value='#'+value.slice(1).split('').map(c=>c+c).join('');
+  if(/^#[\da-f]{6}$/i.test(value))rgb=[1,3,5].map(i=>parseInt(value.slice(i,i+2),16));
+  else if(value.startsWith('rgb('))rgb=value.match(/[\d.]+/g)!.slice(0,3).map(Number);
+  else return value;
+  return `rgb(${rgb.map((v,i)=>Math.round(surface?Math.min(253,210+v*.65):v*(rgb[0]-rgb[1]>20?[.78,.72,.68][i]:.46))).join(',')})`;
+}
 
 /** Own SVG painter. Opaque surfaces and curves share depth order; no React work per frame. */
 export function painter(group:SVGGElement,cam:Camera) {
-  const tasks:(()=>Draw[])[]=[];let serial=0,signature='';
+  const tasks:(()=>Draw[])[]=[];let serial=0,signature='',lightTheme=false;
   const write=(el:SVGElement,name:string,value:string)=>{if(el.getAttribute(name)!==value)el.setAttribute(name,value);};
   function mesh(faces:Face[],style:Style={}) {
     const entries=faces.map(points=>({points,el:path(group,{'stroke-width':style.width??.6,'data-solid-face':''}),id:serial++}));
@@ -47,8 +56,9 @@ export function painter(group:SVGGElement,cam:Camera) {
       if(visible){
         const light=style.shade===false?0:Math.max(0,dot(normal,LIGHT))*.8+.18;
         write(el,'d',outline(vertices.map(cam.project),true));
-        write(el,'fill',style.color??`rgb(${Math.round(15+light*29+item.glow*19)},${Math.round(29+light*29+item.glow*11)},${Math.round(32+light*22)})`);
-        write(el,'stroke',style.stroke??'none');
+        const fill=style.color??(lightTheme?`rgb(${Math.round(215+light*28+item.glow*10)},${Math.round(215+light*28)},${Math.round(215+light*28-item.glow*5)})`:`rgb(${Math.round(15+light*29+item.glow*19)},${Math.round(29+light*29+item.glow*11)},${Math.round(32+light*22)})`);
+        write(el,'fill',lightTheme&&style.color?lightColour(fill,true):fill);
+        write(el,'stroke',lightTheme?lightColour(style.stroke??'none'):style.stroke??'none');
       }
       const centre=mul(vertices.reduce(add,[0,0,0]),1/vertices.length);
       return {element:el,key:cam.depth(centre),id};
@@ -60,12 +70,13 @@ export function painter(group:SVGGElement,cam:Camera) {
     tasks.push(()=>{
       const vertices=item.points.map(item.transform);
       write(el,'d',vertices.length>1?outline(vertices.map(cam.project)):'');
-      write(el,'visibility',item.visible?'visible':'hidden');write(el,'opacity',String(item.opacity));write(el,'stroke',item.stroke);
+      write(el,'visibility',item.visible?'visible':'hidden');write(el,'opacity',String(item.opacity));write(el,'stroke',lightTheme?lightColour(item.stroke):item.stroke);
       return [{element:el,key:cam.depth(mul(vertices.reduce(add,[0,0,0]),1/(vertices.length||1)))+item.bias,id}];
     });return item;
   }
   function custom(element:SVGElement,depth:()=>number){const id=serial++;tasks.push(()=>[{element,key:depth(),id}]);}
   return {mesh,curve,custom,draw(){
+    lightTheme=document.documentElement.dataset.theme==='light';
     const draws=tasks.flatMap(task=>task()).sort((a,b)=>a.key-b.key||a.id-b.id),next=draws.map(d=>d.id).join(',');
     if(next!==signature){let cursor=group.firstElementChild;for(const {element} of draws){if(element===cursor)cursor=cursor.nextElementSibling;else group.insertBefore(element,cursor);}signature=next;}
   }};

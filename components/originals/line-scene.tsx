@@ -2,10 +2,10 @@
 
 import { useEffect, useId, useRef } from 'react';
 
-export type LineProps = { compact?: boolean; paused?: boolean; className?: string };
+export type LineProps = { compact?: boolean; paused?: boolean; className?: string;intensity?:number;speed?:number };
 export type Point = [number, number];
 export type Input = { x: number; y: number; strength: number };
-export type Scene = { update: (dt: number, input: Input, small: boolean) => boolean; reset: () => void; activate?: (input: Input) => void; key?: (key: string, input: Input) => void };
+export type Scene = { update: (dt: number, input: Input, small: boolean) => boolean; reset: () => void; pointer?: (input:Input) => void; activate?: (input: Input) => void; key?: (key: string, input: Input) => void };
 export type Factory = (group: SVGGElement, id: string) => Scene;
 export const limit = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 export const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -33,12 +33,13 @@ export function settle(s: { x: number; v: number }, target: number, dt: number, 
 export const edge = (amount: number) => `rgb(${Math.round(mix(141, 232, amount))},${Math.round(mix(163, 201, amount))},${Math.round(mix(155, 153, amount))})`;
 
 /** Shared lifecycle only. Each sculpture supplies its own geometry and interaction rules. */
-export default function LineStage({ label, help, factory, compact = false, paused = false, className = '' }: LineProps & { label: string; help: string; factory: Factory }) {
+export default function LineStage({ label, help, factory, compact = false, paused = false, intensity=1, speed=1, className = '' }: LineProps & { label: string; help: string; factory: Factory }) {
   const host = useRef<HTMLDivElement>(null), drawing = useRef<SVGGElement>(null);
   const stopped = useRef(paused), wakeRef = useRef<(() => void) | null>(null);
   stopped.current = paused;
+  const parameters=useRef({intensity,speed});parameters.current={intensity,speed};
   const id = useId().replace(/:/g, '');
-  useEffect(() => { wakeRef.current?.(); }, [paused]);
+  useEffect(() => { wakeRef.current?.(); }, [paused,intensity,speed]);
   useEffect(() => {
     const root = host.current!, group = drawing.current!, svg = root.querySelector('svg')!;
     const scene = factory(group, id), reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -57,7 +58,7 @@ export default function LineStage({ label, help, factory, compact = false, pause
       current.x = mix(current.x, wanted.x, alpha); current.y = mix(current.y, wanted.y, alpha);
       current.strength = mix(current.strength, wanted.strength, alpha);
       const inputMoving = Math.abs(current.x - wanted.x) + Math.abs(current.y - wanted.y) + Math.abs(current.strength - wanted.strength) > .003;
-      const moving = scene.update(dt, current, small);
+      const moving = scene.update(dt*limit(parameters.current.speed,.4,2), {...current,strength:current.strength*limit(parameters.current.intensity,0,1.4)}, small);
       if (moving || inputMoving) raf = requestAnimationFrame(tick);
     }
     function wake() { if (!gone && !raf && visible && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); } }
@@ -68,9 +69,9 @@ export default function LineStage({ label, help, factory, compact = false, pause
       wanted.x = limit((e.clientX - r.left - (r.width - 640 * scale) / 2) / scale, 0, 640);
       wanted.y = limit((e.clientY - r.top - (r.height - 440 * scale) / 2) / scale, 0, 440);
     }
-    function move(e: PointerEvent) { if (stopped.current || reduced.matches) return; clearTimeout(release); point(e); wanted.strength = 1; wake(); }
+    function move(e: PointerEvent) { if (stopped.current || reduced.matches) return; clearTimeout(release); point(e); wanted.strength = 1; scene.pointer?.(wanted); wake(); }
     function press(e: PointerEvent) { down = [e.clientX, e.clientY]; move(e); }
-    function rest() { clearTimeout(release); wanted.strength = 0; down = null; wake(); }
+    function rest() { clearTimeout(release); wanted.strength = 0; down = null; scene.pointer?.(wanted); wake(); }
     function lift(e: PointerEvent) {
       if (!stopped.current && !reduced.matches && !compact && down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 10) {
         point(e); scene.activate?.(wanted); wake();
@@ -94,6 +95,7 @@ export default function LineStage({ label, help, factory, compact = false, pause
       wake();
     }
     function visibility() { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else wake(); }
+    function theme(){scene.update(0,current,small);wake();}
     const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (!visible) { cancelAnimationFrame(raf); raf = 0; } else wake(); });
     const size = new ResizeObserver(([entry]) => { small = entry.contentRect.width < 500; wake(); });
     observer.observe(root); size.observe(root);
@@ -101,6 +103,7 @@ export default function LineStage({ label, help, factory, compact = false, pause
     root.addEventListener('pointerup', lift); root.addEventListener('pointerleave', leave); root.addEventListener('pointercancel', rest);
     root.addEventListener('keydown', keyboard); root.addEventListener('blur', rest);
     document.addEventListener('visibilitychange', visibility); reduced.addEventListener('change', wake);
+    document.addEventListener('motiqo-theme-change',theme);
     scene.update(0, current, small); wake();
     return () => {
       gone = true; cancelAnimationFrame(raf); clearTimeout(release); wakeRef.current = null;
@@ -109,12 +112,13 @@ export default function LineStage({ label, help, factory, compact = false, pause
       root.removeEventListener('pointerup', lift); root.removeEventListener('pointerleave', leave); root.removeEventListener('pointercancel', rest);
       root.removeEventListener('keydown', keyboard); root.removeEventListener('blur', rest);
       document.removeEventListener('visibilitychange', visibility); reduced.removeEventListener('change', wake);
+      document.removeEventListener('motiqo-theme-change',theme);
       group.replaceChildren();
     };
   }, [factory, compact, id]);
   return <div ref={host} className={`line-stage ${compact ? 'line-compact' : ''} ${className}`} role="group" tabIndex={compact ? -1 : 0} aria-label={label} aria-describedby={`${id}-help`}>
     <style>{styles}</style><span id={`${id}-help`} className="line-help">{help}</span>
-    <svg viewBox="0 0 640 440" aria-hidden="true"><defs><radialGradient id={`${id}-haze`}><stop stopColor="#92aa9520"/><stop offset="1" stopColor="#080e1000"/></radialGradient></defs><ellipse cx="320" cy="299" rx="220" ry="90" fill={`url(#${id}-haze)`}/><g ref={drawing} strokeLinecap="round" strokeLinejoin="round"/></svg>
+    <svg viewBox="0 0 640 440" aria-hidden="true"><defs><radialGradient id={`${id}-haze`}><stop stopColor="#aaaaaa12"/><stop offset="1" stopColor="#08080800"/></radialGradient></defs><ellipse cx="320" cy="299" rx="220" ry="90" fill={`url(#${id}-haze)`}/><g ref={drawing} strokeLinecap="round" strokeLinejoin="round"/></svg>
   </div>;
 }
-const styles = `.line-stage{position:relative;display:grid;place-items:center;width:100%;height:440px;min-height:280px;background:radial-gradient(ellipse at 50% 47%,#162123,#0b1214 63%,#080e10);overflow:hidden;touch-action:pan-y;outline:none}.line-stage svg{display:block;width:min(100%,700px);height:auto;max-height:100%}.line-stage:focus-visible{outline:1px solid #d9bf95;outline-offset:-5px}.line-compact{height:100%;min-height:0}.line-help{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:500px){.line-stage:not(.line-compact){height:320px}}`;
+const styles = `.line-stage{position:relative;display:grid;place-items:center;width:100%;height:440px;min-height:280px;background:radial-gradient(ellipse at 50% 47%,#1c1c1c,#101010 63%,#0a0a0a);overflow:hidden;touch-action:pan-y;outline:none}.line-stage svg{display:block;width:min(100%,700px);height:auto;max-height:100%}.line-stage:focus-visible{outline:1px solid #fff;outline-offset:-5px}.line-compact{height:100%;min-height:0}.line-help{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:500px){.line-stage:not(.line-compact){height:320px}}html[data-theme=light] .line-stage{background:radial-gradient(ellipse at 50% 47%,#fff,#f1eee8 74%)}html[data-theme=light] .line-stage:is(.arbor,.drawer)>svg{filter:invert(1) hue-rotate(180deg)}html[data-theme=light] .line-stage:focus-visible{outline-color:#302c28}`;

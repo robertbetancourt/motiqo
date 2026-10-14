@@ -1,0 +1,123 @@
+'use client';
+
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, Code2, Monitor, Play, SlidersHorizontal, Smartphone, Sparkles, Tablet } from 'lucide-react';
+import { Demo } from './demos';
+import { makePrompt, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
+import PromptControl from './prompt-control';
+import ChoiceSelect, { workflowOptions } from './choice-select';
+import LiquidAction, { LiquidCopyButton } from './liquid-action';
+import SourceView from './source-view';
+import { controlsFor, defaultsFor, usageFor, type Settings } from '@/lib/element-controls';
+
+type View = 'preview' | 'code' | 'prompt';
+type Viewport = 'desktop' | 'tablet' | 'mobile';
+const views: View[] = ['preview', 'code', 'prompt'];
+
+/** An addressable collection section: no overlay, focus trap or body scroll lock. */
+export default function ElementWorkspace({ element, onBack, onPrevious, onNext, index, total, saved, onSave, paused, copy, originalSource, onToolChange, initialTab = 'preview', initialTool = 'Universal' }: {
+  element: LibraryElement; onBack: () => void; onPrevious: () => void; onNext: () => void; index: number; total: number;
+  saved: boolean; onSave: () => void; paused: boolean;
+  copy: (text: string) => Promise<boolean>; originalSource: OriginalSources; initialTab?: View; initialTool?: AITool; onToolChange: (tool: AITool) => void;
+}) {
+  const root = useRef<HTMLElement>(null);
+  const [tab, setTab] = useState(initialTab);
+  const [tool, setTool] = useState<AITool>(initialTool);
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const [viewport, setViewport] = useState<Viewport>('desktop');
+  const [mobileSettings,setMobileSettings]=useState(false);
+  const [settings,setSettings]=useState<Settings>(()=>defaultsFor(element.id));
+  const controls=controlsFor(element.id);
+  const usage=usageFor(element,settings);
+  const files = originalSource[element.id] || [];
+  const code = files[sourceIndex]?.code || element.code;
+  const prompt = useMemo(() => makePrompt(element, tool, settings), [element, tool, settings]);
+  function chooseTool(value: AITool) { setTool(value); onToolChange(value); }
+  function reviewPrompt() { setTab('prompt'); root.current?.querySelector<HTMLButtonElement>('#tab-prompt')?.focus(); }
+  useEffect(() => { setTool(initialTool); }, [initialTool]);
+  useEffect(() => { root.current?.querySelector<HTMLElement>('#detail-title')?.focus({ preventScroll: true }); }, []);
+
+  return <section ref={root} className="element-workbench" data-paused={paused || undefined} aria-labelledby="detail-title">
+    <div className="workbench-toolbar">
+      <button className="workbench-back" onClick={onBack}><ArrowLeft size={16}/> Library</button>
+    </div>
+    <div className="workbench-layout">
+      <div className="workbench-canvas">
+        <div className="workbench-stage" data-viewport={viewport}>
+          <div id="detail-panel" className="detail-workspace" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0}>
+            <div className="workbench-preview" hidden={tab !== 'preview'}>
+              <Demo id={element.id} paused={paused || tab !== 'preview'} expanded silkLight={settings.light as 'dawn'|'dusk'|undefined} settings={settings}/>
+            </div>
+            {tab !== 'preview' && <div key={tab} className={`document-surface panel-enter ${tab === 'code' ? 'source-surface' : 'prompt-surface'}`}>
+              <div className="document-toolbar">
+                <span className="document-label">{tab === 'code' ? files[sourceIndex]?.name.endsWith('.svg') ? 'SVG / Artwork' : 'React / TSX' : 'Prompt'}</span>
+                {tab === 'code' ? files.length > 1 ? <ChoiceSelect className="source-file-picker" label="Source file" value={String(sourceIndex)}
+                  onChange={value => setSourceIndex(Number(value))} options={files.map((file, fileIndex) => ({ value: String(fileIndex), label: file.name }))} paused={paused}/>
+                  : <span className="document-filename">{files[0]?.name || `${element.id}.tsx`}</span>
+                  : <ChoiceSelect label="AI tool" options={workflowOptions} value={tool} onChange={value => chooseTool(value as AITool)} paused={paused}/>}
+              </div>
+              {tab === 'code' ? <SourceView code={code}/> : <div className="prompt-document" aria-label="Prompt text">
+                {prompt.split('\n\n').map((paragraph, paragraphIndex) => paragraph.startsWith('Usage example:')
+                  ? <pre className="prompt-example" key={paragraphIndex}><code>{paragraph}</code></pre>
+                  : <p key={paragraphIndex}>{paragraph}</p>)}
+              </div>}
+              {tab === 'code' && element.installNote && <div className="document-note">{element.installNote}</div>}
+            </div>}
+          </div>
+        </div>
+        <div className="workbench-bottom-bar">
+          <div className="workbench-pagination" aria-label="Browse components">
+            <button className="icon-button" aria-label="Previous component" onClick={onPrevious}><ChevronLeft size={16}/></button>
+            <span>{String(index + 1).padStart(2, '0')} <span>/ {String(total).padStart(2, '0')}</span></span>
+            <button className="icon-button" aria-label="Next component" onClick={onNext}><ChevronRight size={16}/></button>
+          </div>
+          <div className="workbench-viewport" role="group" aria-label="Preview viewport">
+          {(['mobile', 'tablet', 'desktop'] as const).map(size => <button key={size} aria-label={`${size} preview`} aria-pressed={viewport === size}
+            onClick={() => setViewport(size)}>{size === 'desktop' ? <Monitor size={16}/> : size === 'tablet' ? <Tablet size={16}/> : <Smartphone size={16}/>}</button>)}
+          </div>
+          <div className="workbench-actions">
+            <button className={`save-button ${saved ? 'is-saved' : ''}`} aria-label={`${saved ? 'Unsave' : 'Save'} ${element.title}`} aria-pressed={saved} onClick={onSave}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'}/></button>
+            {tab === 'code' ? <LiquidAction paused={paused}><LiquidCopyButton text={code} label="Copy source file" copy={copy}/></LiquidAction>
+              : <PromptControl element={element} tool={tool} onToolChange={chooseTool} copy={copy} onReview={reviewPrompt} paused={paused} liquid settings={settings}/>}
+          </div>
+        </div>
+      </div>
+      <aside className="workbench-inspector" aria-label="Component details" data-settings-open={mobileSettings||undefined}>
+        <header className="workbench-heading"><span className="category-label">{element.category}</span><h1 id="detail-title" tabIndex={-1}>{element.title}</h1>
+          <div className="tags">{element.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+        </header>
+        <div className="detail-tabs" role="tablist" aria-label="Element views" style={{ '--segment-index': views.indexOf(tab) } as CSSProperties} onKeyDown={event => {
+          if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+          event.preventDefault();
+          const next = event.key === 'Home' ? 0 : event.key === 'End' ? 2 : (views.indexOf(tab) + (event.key === 'ArrowRight' ? 1 : 2)) % 3;
+          setTab(views[next]); root.current?.querySelector<HTMLButtonElement>(`#tab-${views[next]}`)?.focus();
+        }}>
+          <span className="segment-thumb" aria-hidden="true"/>
+          {views.map(view => <button key={view} role="tab" id={`tab-${view}`} aria-selected={tab === view} aria-controls="detail-panel" tabIndex={tab === view ? 0 : -1}
+            className={tab === view ? 'active' : ''} onClick={() => setTab(view)}>
+            {view === 'preview' ? <Play size={13}/> : view === 'code' ? <Code2 size={13}/> : <Sparkles size={13}/>}
+            {view === 'code' ? 'Source' : view === 'preview' ? 'Preview' : 'Prompt'}
+          </button>)}
+        </div>
+        <div className="inspector-group"><span className="document-label">Interaction</span><p>{element.hint}</p>
+        </div>
+        <button className="mobile-settings-toggle" aria-expanded={mobileSettings} aria-controls="component-settings" onClick={()=>setMobileSettings(!mobileSettings)}><SlidersHorizontal size={14}/> Customize</button>
+        <div id="component-settings" className="inspector-customization">
+        <div className="inspector-group inspector-controls" aria-label="Live component settings">
+          {controls.map(control=>{
+            const value=settings[control.key]??control.defaultValue;
+            const update=(next:string|number)=>setSettings(previous=>({...previous,[control.key]:next}));
+            if(control.kind==='range')return <label key={control.key} className="parameter-range" style={{'--range-fill':`${(Number(value)-control.min!)/(control.max!-control.min!)*100}%`} as CSSProperties}><span>{control.label}</span><output>{control.step!==undefined&&Number.isInteger(control.step)?value:Number(value).toFixed(2)}</output><input aria-label={control.label} type="range" min={control.min} max={control.max} step={control.step} value={value} onChange={event=>update(Number(event.target.value))}/></label>;
+            if(control.kind==='color')return <label key={control.key} className="parameter-colour"><span>{control.label}</span><div><input aria-label={control.label} type="color" value={String(value)} onChange={event=>update(event.target.value)}/><code>{String(value).toUpperCase()}</code></div></label>;
+            return <div key={control.key} className="parameter-select"><span>{control.label}</span><ChoiceSelect label={control.label} value={String(value)} options={control.choices!} onChange={update} paused={paused}/></div>;
+          })}
+          <button className="parameter-reset" onClick={()=>setSettings(defaultsFor(element.id))}>Reset settings</button>
+        </div>
+        <details className="inspector-disclosure"><summary>Current props</summary><pre>{JSON.stringify(settings,null,2)}</pre><LiquidAction paused={paused}><LiquidCopyButton text={JSON.stringify(settings,null,2)} label="Copy props" copy={copy}/></LiquidAction></details>
+        <details className="inspector-disclosure"><summary>Usage code</summary><pre>{usage}</pre><LiquidAction paused={paused}><LiquidCopyButton text={usage} label="Copy usage" copy={copy}/></LiquidAction></details>
+        </div>
+        <div className="inspector-group inspector-dependencies"><span className="document-label">Dependencies</span><div className="tags">{element.dependencies.map(tag => <span key={tag}>{tag}</span>)}</div></div>
+      </aside>
+    </div>
+  </section>;
+}

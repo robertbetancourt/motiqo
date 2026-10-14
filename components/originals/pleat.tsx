@@ -2,21 +2,22 @@
 
 import { useEffect, useId, useRef } from 'react';
 
-export type PleatProps = { compact?: boolean; paused?: boolean; className?: string };
+export type PleatProps = { compact?: boolean; paused?: boolean; className?: string;intensity?:number;speed?:number };
 const COUNT = 25;
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 const blend = (a: number, b: number, t: number) => a + (b - a) * t;
 
 /** An original Motiqo sculpture. All geometry is generated here; React is its only dependency. */
-export default function Pleat({ compact = false, paused = false, className = '' }: PleatProps) {
+export default function Pleat({ compact = false, paused = false, intensity=1, speed=1, className = '' }: PleatProps) {
   const host = useRef<HTMLDivElement>(null);
   const drawing = useRef<SVGGElement>(null);
   const stop = useRef(paused);
   const wakeRef = useRef<(() => void) | null>(null);
   const id = useId().replace(/:/g, '');
   stop.current = paused;
+  const parameters=useRef({intensity,speed});parameters.current={intensity,speed};
 
-  useEffect(() => { wakeRef.current?.(); }, [paused]);
+  useEffect(() => { wakeRef.current?.(); }, [paused,intensity,speed]);
   useEffect(() => {
     const root = host.current!, group = drawing.current!;
     const media = matchMedia('(prefers-reduced-motion: reduce)');
@@ -70,14 +71,14 @@ export default function Pleat({ compact = false, paused = false, className = '' 
       input.current = blend(input.current, input.target, alpha);
       input.depth = blend(input.depth, input.depthTarget, alpha);
       input.amount = blend(input.amount, input.strength, alpha);
-      const steps = Math.ceil(dt / .008), h = dt / steps;
+      const scaled=dt*clamp(parameters.current.speed,.4,2),steps = Math.ceil(scaled / .008), h = scaled / steps;
       let moving = Math.abs(input.amount - input.strength) > .001 || Math.abs(input.current - input.target) > .001;
       for (let n = 0; n < steps; n++) {
         // Compute every force before advancing positions: neighbour coupling stays symmetric.
         const forces = ribs.map((r, i) => {
           const d = i - input.current, spread = 2.9 + input.depth * 1.5;
           const influence = Math.exp(-((d / spread) ** 2));
-          const target = Math.tanh(d * .62) * influence * 28 * input.amount * (input.small ? .65 : 1);
+          const target = Math.tanh(d * .62) * influence * 28 * input.amount * clamp(parameters.current.intensity,0,1.4) * (input.small ? .65 : 1);
           const neighbour = (ribs[Math.max(0, i - 1)].x + ribs[Math.min(COUNT - 1, i + 1)].x - 2 * r.x);
           return 122 * (target - r.x) + 34 * neighbour - 17.5 * r.v;
         });
@@ -169,6 +170,6 @@ export default function Pleat({ compact = false, paused = false, className = '' 
 
 const css = `
 .pleat{position:relative;display:grid;place-items:center;width:100%;height:440px;min-height:280px;overflow:hidden;background:radial-gradient(ellipse at 52% 48%,#172023 0%,#0b1113 57%,#080e10 100%);touch-action:pan-y;outline:none}
-.pleat svg{display:block;width:min(100%,700px);height:auto;max-height:100%}.pleat:focus-visible{outline:1px solid #d9be8f;outline-offset:-5px}.pleat-compact{height:100%;min-height:0}.pleat-help{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.pleat svg{display:block;width:min(100%,700px);height:auto;max-height:100%}.pleat:focus-visible{outline:1px solid #fff;outline-offset:-5px}.pleat-compact{height:100%;min-height:0}.pleat-help{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 @media(max-width:500px){.pleat:not(.pleat-compact){height:320px}}
-`;
+html[data-theme=light] .pleat{background:radial-gradient(ellipse at 50% 47%,#fff,#f1eee8 74%)}html[data-theme=light] .pleat>svg{filter:invert(1) hue-rotate(180deg)}html[data-theme=light] .pleat:focus-visible{outline-color:#302c28}`;

@@ -1,21 +1,20 @@
 'use client';
 
-import Link from 'next/link';
-import { motion, useReducedMotion } from 'motion/react';
-import type { ComponentProps, ReactNode } from 'react';
-import Brand from './brand';
-import SiteHeader from './site-header';
+import { useEffect, useRef, type ReactNode } from 'react';
+import type { SidebarProps } from './site-sidebar';
+import { useSiteNavigation } from './site-shell';
 import SiteFooter from './site-footer';
 
-type Props = ComponentProps<typeof SiteHeader> & { children: ReactNode; paused?: boolean; };
+type Props = SidebarProps & { children: ReactNode; paused?: boolean; workspace?: boolean; };
 
-export default function SiteFrame({children, paused=false, ...navigation}: Props) {
-  const reduced=useReducedMotion();
+export default function SiteFrame({children, paused=false, workspace=false, ...navigation}: Props) {
+  const publish=useSiteNavigation(),actions=useRef(navigation);actions.current=navigation;
+  const {collection,savedOnly,savedCount}=navigation;
+  useEffect(()=>{
+    publish({collection,savedOnly,savedCount,onCollection:collection?()=>actions.current.onCollection?.():undefined,onSaved:collection?()=>actions.current.onSaved?.():undefined});
+    return()=>publish({});
+  },[publish,collection,savedOnly,savedCount]);
   return <>
-    <aside className="side-rail" aria-label="Motiqo branding">
-      <Link className="rail-logo" href="/" aria-label="Motiqo home"><Brand variant="isotype"/></Link>
-      <div className="rail-bottom"><span className="rail-word">DETAILS MAKE THE DIFFERENCE</span><span className="status-dot"/><span className="rail-version">v.01</span></div>
-    </aside>
-    <div className={`site-shell ${paused?'motion-paused':''}`}><SiteHeader {...navigation}/><motion.main className="section-transition" initial={reduced||paused?false:{y:10}} animate={{y:0}} transition={{duration:reduced||paused?0:.32,ease:'linear'}}>{children}</motion.main><SiteFooter/></div>
+    <div className={`site-shell ${paused?'motion-paused':''} ${workspace?'workspace-shell':''}`}><main className="section-transition">{children}</main>{!workspace&&<SiteFooter/>}</div>
   </>;
 }
