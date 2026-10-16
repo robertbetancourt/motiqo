@@ -7,3 +7,7 @@ out/
 !.env.example
 /screenshots/
 *.log
+
+/packages/cli/registry.json
+/packages/cli/skill/
+/public/downloads/

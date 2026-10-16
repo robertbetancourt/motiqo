@@ -45,7 +45,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
   scene.environment = environment.texture; studio.dispose(); pmrem.dispose();
   const card = new THREE.Group(); scene.add(card);
   const materials = new Set<THREE.Material>(), geometries = new Set<THREE.BufferGeometry>(), textures = new Set<THREE.Texture>();
-  let disposed = false, contextLost = false, paused = false, visible = false, frame = 0, last = 0, time = 0, started = performance.now();
+  let presented = false, disposed = false, contextLost = false, paused = false, visible = false, frame = 0, last = 0, time = 0, started = performance.now();
   let width = 1, height = 1, slowFrames = 0;
   const motion = { x: 0, y: 0, tx: 0, ty: 0, spin: 0, goal: 0, velocity: 0, drag: false, dragX: 0, dragAt: 0, inside: false, mouse: false };
   const pointer = new THREE.Vector2(.5, .5), previousPointer = pointer.clone();
@@ -221,7 +221,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
     uThreadPointer.value.lerp(pointer, hoverAlpha);
     uThreadHover.value += (Number(hoverActive) - uThreadHover.value) * hoverAlpha;
     root.style.setProperty('--gc-px', ((motion.x + 1) * 50).toFixed(2) + '%');
-    uReveal.value = still ? 2 : Math.min(2, (now - started) / 2200 - .08);
+    uReveal.value = still || compact ? 2 : Math.min(2, (now - started) / 2200 - .08);
     if (driftA && driftB && !still) {
       driftUniforms.uField.value = driftA.texture; driftUniforms.uDt.value = dt;
       driftUniforms.uVelocity.value.copy(pointer).sub(previousPointer).multiplyScalar(5);
@@ -231,6 +231,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
     }
     previousPointer.lerp(pointer, alpha);
     renderer.render(scene, camera);
+    if (!presented) { presented = true; onReady(); }
     if (!low && dt > .036) slowFrames++; else slowFrames = Math.max(0, slowFrames - 1);
     if (slowFrames > 90 && renderer.getPixelRatio() > 1) { renderer.setPixelRatio(1); dustMaterial.uniforms.uPixelRatio.value = 1; resize(); slowFrames = 0; }
     if (!still || Math.abs(motion.x) + Math.abs(motion.y) + uCardHover.value + uThreadHover.value > .001) wake();
@@ -274,7 +275,7 @@ export function createGildedScene(canvas: HTMLCanvasElement, options: GildedScen
   canvas.addEventListener('webglcontextlost', lost); canvas.addEventListener('dblclick', flip);
   media.addEventListener('change', resetMotion); document.addEventListener('visibilitychange', visibility);
   canvas.style.cursor = compact ? 'pointer' : 'grab';
-  resize(); onReady();
+  resize();
   return {
     setPaused(value) { paused = value; motion.tx = motion.ty = 0; wake(); }, flip,
     dispose() {

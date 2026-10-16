@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { Suspense, startTransition, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import NavigationIcon from './navigation-icon';
 import SidebarArt from './sidebar-art';
@@ -16,42 +16,48 @@ export type SidebarProps = {
     onCollection?: () => void;
     onSaved?: () => void;
 };
-export default function SiteSidebar({ collection = false, savedOnly = false, savedCount = 0, onCollection, onSaved }: SidebarProps) {
+/** Query state belongs to the URL; page-published actions can arrive later. */
+function SidebarLocation({onChange}:{onChange:(route:string)=>void}){
+    const pathname=usePathname(),params=useSearchParams();
+    const route=pathname==='/library'&&params.get('saved')==='1'?'/library?saved=1':pathname;
+    useLayoutEffect(()=>onChange(route),[route,onChange]);
+    return null;
+}
+export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: SidebarProps) {
     const pathname = usePathname(), [open, setOpen] = useState(false), toggle = useRef<HTMLButtonElement>(null);
     const nav = useRef<HTMLElement>(null);
-    useEffect(() => {
-        const root = nav.current!, active = root.querySelector<HTMLElement>('[aria-current="page"]'), media = matchMedia('(prefers-reduced-motion: reduce)');
-        let raf = 0, last = performance.now(), y = Number(root.dataset.lightY ?? active?.offsetTop ?? 0);
-        let target = active?.offsetTop ?? 0;
-        const tick = (now: number) => { y += (target - y) * (1 - Math.exp(-Math.min(.05, (now - last) / 1000) * 10)); last = now; root.style.setProperty('--nav-y', `${y}px`); root.dataset.lightY = String(y); if (Math.abs(y - target) > .05)
-            raf = requestAnimationFrame(tick); };
+    const [route,setRoute]=useState<string|null>(()=>pathname==='/library'?null:pathname),[destination,setDestination]=useState<string|null>(null);
+    const active=destination??route;
+    const reportRoute=useCallback((next:string)=>{setRoute(next);setDestination(null);},[]);
+    const updateLight = useRef<()=>void>(()=>{});
+    useLayoutEffect(() => {
+        const root=nav.current!;
         const measure=()=>{
-            target=root.querySelector<HTMLElement>('[aria-current="page"]')?.offsetTop??0;
-            cancelAnimationFrame(raf);
-            if(media.matches){root.style.setProperty('--nav-y',`${target}px`);root.dataset.lightY=String(target);}
-            else {last=performance.now();raf=requestAnimationFrame(tick);}
+            const selected=root.querySelector<HTMLElement>('[aria-current="page"]');
+            root.dataset.lightVisible=String(!!selected);
+            if(selected){root.style.setProperty('--nav-y',`${selected.offsetTop}px`);root.dataset.lightY=String(selected.offsetTop);}
         };
-        const size=new ResizeObserver(measure);size.observe(root);measure();
-        return () => {cancelAnimationFrame(raf);size.disconnect();};
-    }, [pathname, savedOnly]);
-    useEffect(() => setOpen(false), [pathname, savedOnly]);
+        measure();updateLight.current=measure;
+        const size=new ResizeObserver(measure);size.observe(root);
+        return()=>{size.disconnect();updateLight.current=()=>{};};
+    },[]);
+    useLayoutEffect(()=>updateLight.current(),[active]);
+    useEffect(()=>setOpen(false),[route]);
     useEffect(() => { const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') {
         setOpen(false);
         toggle.current?.focus({ preventScroll: true });
     } }; document.addEventListener('keydown', escape); return () => document.removeEventListener('keydown', escape); }, []);
     const library = pathname === '/library';
-    const items = [{ name: 'Home', href: '/', icon: 'home' as const, active: pathname === '/' }, { name: 'Library', href: '/library', icon: 'library' as const, active: library && !savedOnly, action: library ? onCollection : undefined },
-        { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: library && savedOnly, action: library ? onSaved : undefined, count: savedCount }, { name: 'Getting started', href: '/docs', icon: 'docs' as const, active: pathname === '/docs' }];
+    const items = [{ name: 'Home', href: '/', icon: 'home' as const, active: active === '/' }, { name: 'Library', href: '/library', icon: 'library' as const, active: active === '/library', action: library ? onCollection : undefined },
+        { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount }, { name: 'Getting started', href: '/docs', icon: 'docs' as const, active: active === '/docs' }];
     return <>
+    <Suspense fallback={null}><SidebarLocation onChange={reportRoute}/></Suspense>
     <div className="sidebar-mobile-bar"><Link href="/" aria-label="Motiqo home"><Brand variant="logo"/></Link><button ref={toggle} className="icon-button" aria-label={open ? 'Close navigation' : 'Open navigation'} aria-controls="site-sidebar" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X size={20}/> : <Menu size={20}/>}</button></div>
     {open && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setOpen(false)}/>}
     <aside id="site-sidebar" className={`site-sidebar ${open ? 'is-open' : ''}`} aria-label="Motiqo navigation">
       <div className="sidebar-heading"><Link className="sidebar-brand" href="/" aria-label="Motiqo home"><Brand variant="logo"/></Link><GitHubControl/></div>
       <span className="sidebar-eyebrow">Menu</span>
-      <nav ref={nav} aria-label="Main navigation"><div className="sidebar-light" aria-hidden="true">{Array.from({ length: 8 }, (_, i) => <i key={i} style={{ '--i': i } as React.CSSProperties}/>)}</div>{items.map(item => <Link key={item.name} href={item.href} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onClick={event => { setOpen(false); if (item.action) {
-        event.preventDefault();
-        item.action();
-    } }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{!!item.count && <small>{item.count}</small>}</Link>)}</nav>
+      <nav ref={nav} aria-label="Main navigation"><div className="sidebar-light" aria-hidden="true">{Array.from({ length: 8 }, (_, i) => <i key={i} style={{ '--i': i } as React.CSSProperties}/>)}</div>{items.map(item => <Link key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={event => { setOpen(false);setDestination(item.href);if(item.action){event.preventDefault();startTransition(item.action);} }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{!!item.count && <small>{item.count}</small>}</Link>)}</nav>
       <div className="sidebar-personality"><SidebarArt /></div>
       <div className="sidebar-tools"><ColorPicker /><ThemeControl/></div>
     </aside>

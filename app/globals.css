@@ -553,7 +553,7 @@ button:active, summary:active { transform: scale(.97); }
 .prompt-frame { width:max-content; }
 .prompt-frame .field-ring { z-index:3; }
 .prompt-split { position:relative; isolation:isolate; }
-.prompt-split > button { position:relative; z-index:1; }
+.prompt-split > .prompt-button,.prompt-split > button { position:relative; z-index:1; }
 .prompt-menu { position:fixed; inset:auto; margin:0; min-width:0; max-height:calc(100dvh - 24px); overflow-y:auto; animation:menu-appear 240ms var(--motion-ease); }
 .prompt-split .prompt-button { min-height:44px; }
 .prompt-select { width:38px; min-height:44px; }
@@ -852,6 +852,9 @@ body:has(.site-shell.motion-paused) .ambient-stage > img { animation-play-state:
 .home-copy .primary-button { display:inline-flex; gap:16px; min-height:50px; padding:12px 20px; background:#ececec; color:#202020; border:1px solid #ececec; font-size:12px; animation:element-arrive 900ms var(--motion-ease) 280ms backwards; }
 .home-art { position:relative; height:clamp(380px,64dvh,700px); display:block; border-radius:26px; overflow:hidden; animation:surface-arrive 1000ms var(--motion-ease) 200ms backwards; }
 .home-art > span { position:absolute; inset:auto 24px 22px; display:flex; justify-content:space-between; align-items:center; color:#a2a2a2; font:10px var(--mono); }
+html[data-theme] .home-art .liquid-relic {background:transparent}
+.home-copy>.prompt-control {display:inline-flex;animation:surface-arrive 800ms var(--motion-ease) 300ms backwards}
+.home-copy .home-explore {display:flex;align-items:center;gap:12px;min-height:50px}
 .home-note { display:grid; grid-template-columns:1fr 2fr 1fr; gap:32px; padding:38px 32px; border-top:1px solid #d6d6d612; max-width:1400px; margin:auto; align-items:center; }
 .home-note p { margin:0; color:#b8b8b8; line-height:1.8; font-size:13px; }
 .home-note a { display:flex; align-items:center; gap:18px; justify-self:end; color:#c9c9c9; font-size:12px; }
@@ -948,7 +951,7 @@ body:has(.site-shell.motion-paused) .ambient-stage > img { animation-play-state:
 .sidebar-link { position:relative; z-index:1; height:48px; padding:12px 13px; font-size:13px; color:#969696; border-radius:10px; background:transparent; transition:color 450ms var(--motion-ease); }
 .sidebar-link.is-active { background:transparent; color:#fff; }
 .sidebar-link svg { opacity:1; }
-.sidebar-light { position:absolute; top:0; left:0; right:0; height:48px; transform:translateY(var(--nav-y,0px)); border-radius:10px; overflow:hidden; pointer-events:none; background:radial-gradient(ellipse at 0 50%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 80%); }
+.sidebar-light { will-change:transform;transition:transform 420ms cubic-bezier(.22,.61,.36,1);position:absolute; top:0; left:0; right:0; height:48px; transform:translateY(var(--nav-y,0px)); border-radius:10px; overflow:hidden; pointer-events:none; background:radial-gradient(ellipse at 0 50%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 80%); }
 .sidebar-light::before { content:''; position:absolute; top:9px; bottom:9px; left:0; width:1px; background:var(--accent); box-shadow:0 0 12px var(--accent); }
 .sidebar-light i { position:absolute; left:0; top:calc(5px + var(--i)*5px); width:2px; height:1px; background:var(--accent-soft); animation:sidebar-current calc(3.8s + var(--i)*.21s) cubic-bezier(.22,.55,.4,1) infinite; animation-delay:calc(var(--i)*-.63s); opacity:0; }
 @keyframes sidebar-current { 0% { transform:translateX(0); opacity:0; } 14% { opacity:.55; } 75% { opacity:.25; } 100% { transform:translateX(190px); opacity:0; } }
@@ -972,5 +975,41 @@ body:has(.site-shell.motion-paused) .ambient-stage > img { animation-play-state:
 @media(min-width:781px) and (max-width:1100px) { .route-loader{left:216px} }
 @media(max-width:780px) { .route-loader{left:0;top:68px} }
 @media(max-width:780px) { .sidebar-heading .github-compact {min-height:44px;min-width:54px} }
-.demo-halo {padding:0}
-.demo-halo>.halo {width:100%;height:100%}
+.demo-luma{padding:0}.demo-luma>.luma{width:100%;height:100%}
+.demo-galaxy{padding:0}.demo-galaxy>.galaxy{width:100%;height:100%}
+.demo-holdings{padding:0}.demo-holdings>.holdings{width:100%;height:100%}
+.demo-companion{padding:0}.demo-companion>.companion{width:100%;height:100%}
+.demo-sentiment{padding:0}.demo-sentiment>.sentiment{width:100%;height:100%}
+.demo-deck{padding:0}.demo-deck>.deck{width:100%;height:100%}
+.demo-helix{padding:0}.demo-helix>.helix{width:100%;height:100%}
+.demo-halo,.demo-nexus,.demo-orbit,.demo-aura {padding:0}
+.demo-halo>.halo,.demo-nexus>.sphere-stage,.demo-orbit>.sphere-stage,.demo-aura>.sphere-stage {width:100%;height:100%}
+@media(prefers-reduced-motion:reduce){.home-copy>.prompt-control{animation:none}}
+
+.demo-meridian,.demo-sleeve,.demo-constellation{padding:0}.demo-meridian>.meridian,.demo-sleeve>.sleeve,.demo-constellation>.constellation{width:100%;height:100%}
+
+.demo-resonance{padding:0}.demo-resonance>.resonance{width:100%;height:100%}
+
+.site-sidebar nav[data-light-visible=false] .sidebar-light{visibility:hidden}
+@media(prefers-reduced-motion:reduce){.sidebar-light{transition:none}}
+
+.card-preview{position:absolute;inset:0}
+.collection .element-card,.library-heading{animation:none}
+
+.inspector-delivery{display:grid;gap:8px;padding:0 0 22px}.inspector-delivery>a,.inspector-delivery>button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:inherit;font-size:11px;text-decoration:none;cursor:pointer}.inspector-delivery>a:hover,.inspector-delivery>button:hover{background:var(--surface)}
+
+.document-loading{padding:32px;color:var(--muted);font-size:13px}.document-loading button{display:block;margin-top:16px;padding:10px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);cursor:pointer}.prompt-button:disabled{cursor:wait;opacity:.45}
+
+/* Static artwork is present before a scene or its JavaScript has loaded. */
+.card-preview{background:var(--bg)}
+.card-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;opacity:1;transition:opacity 240ms linear}
+.card-poster-light{display:none}
+html[data-theme=light] .card-poster-dark{display:none}
+html[data-theme=light] .card-poster-light{display:block}
+.card-live{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 240ms linear}
+.card-preview[data-live=true] .card-live{opacity:1;pointer-events:auto}
+.card-preview[data-live=true] .card-poster{opacity:0}
+@media(prefers-reduced-motion:reduce){.card-poster,.card-live{transition:none}}
+
+/* The gallery owns the handoff fade; nested canvas entrances must not dim it twice. */
+.card-live canvas,.card-live :is(.resonance-fallback,.constellation-fallback,.companion-fallback,.luma-fallback,.crate-fallback,.gc-fallback){transition:none!important}

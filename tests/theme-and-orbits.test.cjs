@@ -16,10 +16,12 @@ test('Theme boot respects saved preferences before paint; control persists, foll
  await React.act(()=>buttons[1].click());assert.equal(document.documentElement.dataset.theme,'light');assert.equal(localStorage.getItem('motiqo-theme'),'system');e.media.matches=true;await React.act(()=>e.listeners.forEach(fn=>fn()));assert.equal(document.documentElement.dataset.theme,'dark');
  await React.act(()=>e.root.unmount());mounted=false;assert.equal(e.listeners.size,0);
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}});
-test('Sidebar rings loop during hover, brake on exit, stop offscreen and dispose cleanly',async()=>{const e=environment();let mounted=true;try{
+test('Sidebar rings orbit slowly without hover, suspend offscreen and reduce motion cleanly',async()=>{const e=environment();let mounted=true;try{
  const Art=load('components/sidebar-art.tsx').default;await React.act(()=>e.root.render(React.createElement(Art)));const host=document.querySelector('.sidebar-art');host.getBoundingClientRect=()=>({left:0,top:0,width:220,height:190});
- assert.equal(e.frames.size,0);host.dispatchEvent(new e.dom.window.MouseEvent('pointerenter'));e.advance(120);const first=host.dataset.orbitPhase;assert.ok(Number(first)>0);assert.ok(e.frames.size>0,'hover keeps orbiting');e.advance(120);assert.notEqual(host.dataset.orbitPhase,first);
- host.dispatchEvent(new e.dom.window.MouseEvent('pointerleave'));e.advance(300);assert.equal(e.frames.size,0,'exit settles without an idle loop');
+ assert.equal(host.querySelector('[data-orb]').tagName,'circle');assert.equal(host.querySelectorAll('[data-orbit-front]').length,5);const initial=[...host.querySelectorAll('[data-orbit-front]')].map(p=>p.getAttribute('d'));assert.ok(initial.every(Boolean));assert.ok([...host.querySelectorAll('[data-orbit-back]')].every(p=>p.getAttribute('d')),'the opaque orb separates front and rear ring segments');
+ assert.ok(e.frames.size>0,'autoplay starts without pointer input');e.advance(120);const first=host.dataset.orbitPhase;assert.ok(Number(first)>.23&&Number(first)<.25,'two seconds only advance the phase gently');host.dispatchEvent(new e.dom.window.MouseEvent('pointerenter'));e.advance(120);assert.ok(Number(host.dataset.orbitPhase)-Number(first)<.25,'hover does not accelerate the illustration');
+ assert.notDeepEqual([...host.querySelectorAll('[data-orbit-front]')].map(p=>p.getAttribute('d')),initial,'orbital planes precess in depth during idle autoplay');
+ host.dispatchEvent(new e.dom.window.MouseEvent('pointerleave'));e.advance(120);assert.ok(e.frames.size>0,'autoplay continues after pointer exit');
  host.dispatchEvent(new e.dom.window.MouseEvent('pointerenter'));e.observers[0].fn([{isIntersecting:false}]);assert.equal(e.frames.size,0);e.observers[0].fn([{isIntersecting:true}]);assert.ok(e.frames.size>0);
  e.media.matches=true;e.listeners.forEach(fn=>fn());assert.equal(e.frames.size,0);const still=host.dataset.orbitPhase;host.dispatchEvent(new e.dom.window.MouseEvent('pointerenter'));e.advance(120);assert.equal(host.dataset.orbitPhase,still);
  assert.ok([...host.querySelectorAll('path')].every(p=>!/NaN|Infinity/.test(p.getAttribute('d')??'')));
