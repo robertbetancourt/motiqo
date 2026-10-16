@@ -1,23 +1,24 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, Code2, Monitor, Play, SlidersHorizontal, Smartphone, Sparkles, Tablet } from 'lucide-react';
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, Code2, Download, Link, Monitor, Play, SlidersHorizontal, Smartphone, Sparkles, Tablet } from 'lucide-react';
 import { Demo } from './demos';
-import { makePrompt, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
+import { makePrompt, type AITool, type LibraryElement, type OriginalSources, type SourceFile } from '@/lib/catalog';
 import PromptControl from './prompt-control';
 import ChoiceSelect, { workflowOptions } from './choice-select';
 import LiquidAction, { LiquidCopyButton } from './liquid-action';
 import SourceView from './source-view';
-import { controlsFor, defaultsFor, usageFor, type Settings } from '@/lib/element-controls';
+import { controlsFor, moodsFor, normalizeSettings, configurationUrl, type Settings } from '@/lib/element-controls';
+import useComponentSettings from './use-component-settings';
 
 type View = 'preview' | 'code' | 'prompt';
 type Viewport = 'desktop' | 'tablet' | 'mobile';
 const views: View[] = ['preview', 'code', 'prompt'];
 
 /** An addressable collection section: no overlay, focus trap or body scroll lock. */
-export default function ElementWorkspace({ element, onBack, onPrevious, onNext, index, total, saved, onSave, paused, copy, originalSource, onToolChange, initialTab = 'preview', initialTool = 'Universal' }: {
+export default function ElementWorkspace({ element, onBack, onPrevious, onNext, index, total, saved, onSave, paused, copy, originalSource, onToolChange, initialSettings, initialTab = 'preview', initialTool = 'Universal' }: {
   element: LibraryElement; onBack: () => void; onPrevious: () => void; onNext: () => void; index: number; total: number;
-  saved: boolean; onSave: () => void; paused: boolean;
+  saved: boolean; onSave: () => void; paused: boolean; initialSettings?:Settings;
   copy: (text: string) => Promise<boolean>; originalSource: OriginalSources; initialTab?: View; initialTool?: AITool; onToolChange: (tool: AITool) => void;
 }) {
   const root = useRef<HTMLElement>(null);
@@ -26,16 +27,28 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
   const [sourceIndex, setSourceIndex] = useState(0);
   const [viewport, setViewport] = useState<Viewport>('desktop');
   const [mobileSettings,setMobileSettings]=useState(false);
-  const [settings,setSettings]=useState<Settings>(()=>defaultsFor(element.id));
+  const {settings,update,reset}=useComponentSettings(element.id,initialSettings);
   const controls=controlsFor(element.id);
-  const usage=usageFor(element,settings);
-  const files = originalSource[element.id] || [];
+  const moods=moodsFor(element.id);
+  const selectedMood=moods.find(mood=>JSON.stringify(normalizeSettings(element.id,mood.settings))===JSON.stringify(settings))?.id??(JSON.stringify(normalizeSettings(element.id,{}))===JSON.stringify(settings)?'default':'custom');
+  const [files,setFiles]=useState<SourceFile[]>(()=>originalSource[element.id]||[]);
+  const [sourceState,setSourceState]=useState<'idle'|'loading'|'ready'|'error'>(files.length?'ready':'idle');
+  const [sourceRetry,setSourceRetry]=useState(0);
   const code = files[sourceIndex]?.code || element.code;
   const prompt = useMemo(() => makePrompt(element, tool, settings), [element, tool, settings]);
   function chooseTool(value: AITool) { setTool(value); onToolChange(value); }
   function reviewPrompt() { setTab('prompt'); root.current?.querySelector<HTMLButtonElement>('#tab-prompt')?.focus(); }
   useEffect(() => { setTool(initialTool); }, [initialTool]);
   useEffect(() => { root.current?.querySelector<HTMLElement>('#detail-title')?.focus({ preventScroll: true }); }, []);
+  useEffect(()=>{
+    if(tab!=='code'||files.length)return;
+    const controller=new AbortController();setSourceState('loading');
+    fetch(`/api/components/${element.id}?format=source`,{signal:controller.signal})
+      .then(async response=>{if(!response.ok)throw Error('Source unavailable');return response.json();})
+      .then(data=>{if(controller.signal.aborted)return;if(!Array.isArray(data.files)||!data.files.length||!data.files.every((file:SourceFile)=>typeof file.name==='string'&&typeof file.code==='string'))throw Error('Invalid source response');setFiles(data.files);setSourceState('ready');})
+      .catch(()=>{if(!controller.signal.aborted)setSourceState('error');});
+    return()=>controller.abort();
+  },[element.id,tab,sourceRetry,files.length]);
 
   return <section ref={root} className="element-workbench" data-paused={paused || undefined} aria-labelledby="detail-title">
     <div className="workbench-toolbar">
@@ -46,7 +59,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
         <div className="workbench-stage" data-viewport={viewport}>
           <div id="detail-panel" className="detail-workspace" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0}>
             <div className="workbench-preview" hidden={tab !== 'preview'}>
-              <Demo id={element.id} paused={paused || tab !== 'preview'} expanded silkLight={settings.light as 'dawn'|'dusk'|undefined} settings={settings}/>
+              <Demo id={element.id} paused={paused || tab !== 'preview'} expanded silkLight={settings.light as 'dawn'|'dusk'|undefined} settings={settings} onSettingsChange={update}/>
             </div>
             {tab !== 'preview' && <div key={tab} className={`document-surface panel-enter ${tab === 'code' ? 'source-surface' : 'prompt-surface'}`}>
               <div className="document-toolbar">
@@ -56,7 +69,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
                   : <span className="document-filename">{files[0]?.name || `${element.id}.tsx`}</span>
                   : <ChoiceSelect label="AI tool" options={workflowOptions} value={tool} onChange={value => chooseTool(value as AITool)} paused={paused}/>}
               </div>
-              {tab === 'code' ? <SourceView code={code}/> : <div className="prompt-document" aria-label="Prompt text">
+              {tab === 'code' ? files.length?<SourceView code={code}/>:<div className="document-loading" role="status">{sourceState==='error'?<>Source could not be loaded. <button onClick={()=>setSourceRetry(value=>value+1)}>Try again</button></>:'Loading source…'}</div> : <div className="prompt-document" aria-label="Prompt text">
                 {prompt.split('\n\n').map((paragraph, paragraphIndex) => paragraph.startsWith('Usage example:')
                   ? <pre className="prompt-example" key={paragraphIndex}><code>{paragraph}</code></pre>
                   : <p key={paragraphIndex}>{paragraph}</p>)}
@@ -77,7 +90,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
           </div>
           <div className="workbench-actions">
             <button className={`save-button ${saved ? 'is-saved' : ''}`} aria-label={`${saved ? 'Unsave' : 'Save'} ${element.title}`} aria-pressed={saved} onClick={onSave}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'}/></button>
-            {tab === 'code' ? <LiquidAction paused={paused}><LiquidCopyButton text={code} label="Copy source file" copy={copy}/></LiquidAction>
+            {tab === 'code' ? <LiquidAction paused={paused}><LiquidCopyButton text={code} label="Copy source file" copy={copy} disabled={!files.length}/></LiquidAction>
               : <PromptControl element={element} tool={tool} onToolChange={chooseTool} copy={copy} onReview={reviewPrompt} paused={paused} liquid settings={settings}/>}
           </div>
         </div>
@@ -104,17 +117,20 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
         <button className="mobile-settings-toggle" aria-expanded={mobileSettings} aria-controls="component-settings" onClick={()=>setMobileSettings(!mobileSettings)}><SlidersHorizontal size={14}/> Customize</button>
         <div id="component-settings" className="inspector-customization">
         <div className="inspector-group inspector-controls" aria-label="Live component settings">
+          <div className="parameter-select"><span>Mood</span><ChoiceSelect label="Mood" value={selectedMood} options={[{value:'default',label:'Default'},...moods.map(mood=>({value:mood.id,label:mood.label})),...(selectedMood==='custom'?[{value:'custom',label:'Custom'}]:[])]} onChange={value=>{const mood=moods.find(item=>item.id===value);if(mood)update(mood.settings);else if(value==='default')reset();}} paused={paused}/></div>
           {controls.map(control=>{
             const value=settings[control.key]??control.defaultValue;
-            const update=(next:string|number)=>setSettings(previous=>({...previous,[control.key]:next}));
-            if(control.kind==='range')return <label key={control.key} className="parameter-range" style={{'--range-fill':`${(Number(value)-control.min!)/(control.max!-control.min!)*100}%`} as CSSProperties}><span>{control.label}</span><output>{control.step!==undefined&&Number.isInteger(control.step)?value:Number(value).toFixed(2)}</output><input aria-label={control.label} type="range" min={control.min} max={control.max} step={control.step} value={value} onChange={event=>update(Number(event.target.value))}/></label>;
-            if(control.kind==='color')return <label key={control.key} className="parameter-colour"><span>{control.label}</span><div><input aria-label={control.label} type="color" value={String(value)} onChange={event=>update(event.target.value)}/><code>{String(value).toUpperCase()}</code></div></label>;
-            return <div key={control.key} className="parameter-select"><span>{control.label}</span><ChoiceSelect label={control.label} value={String(value)} options={control.choices!} onChange={update} paused={paused}/></div>;
+            const change=(next:string|number)=>update({[control.key]:next});
+            if(control.kind==='range')return <label key={control.key} className="parameter-range" style={{'--range-fill':`${(Number(value)-control.min!)/(control.max!-control.min!)*100}%`} as CSSProperties}><span>{control.label}</span><output>{control.step!==undefined&&Number.isInteger(control.step)?value:Number(value).toFixed(2)}</output><input aria-label={control.label} type="range" min={control.min} max={control.max} step={control.step} value={value} onChange={event=>change(Number(event.target.value))}/></label>;
+            if(control.kind==='color')return <label key={control.key} className="parameter-colour"><span>{control.label}</span><div><input aria-label={control.label} type="color" value={String(value)} onChange={event=>change(event.target.value)}/><code>{String(value).toUpperCase()}</code></div></label>;
+            return <div key={control.key} className="parameter-select"><span>{control.label}</span><ChoiceSelect label={control.label} value={String(value)} options={control.choices!} onChange={change} paused={paused}/></div>;
           })}
-          <button className="parameter-reset" onClick={()=>setSettings(defaultsFor(element.id))}>Reset settings</button>
+          <button className="parameter-reset" onClick={reset}>Reset settings</button>
         </div>
-        <details className="inspector-disclosure"><summary>Current props</summary><pre>{JSON.stringify(settings,null,2)}</pre><LiquidAction paused={paused}><LiquidCopyButton text={JSON.stringify(settings,null,2)} label="Copy props" copy={copy}/></LiquidAction></details>
-        <details className="inspector-disclosure"><summary>Usage code</summary><pre>{usage}</pre><LiquidAction paused={paused}><LiquidCopyButton text={usage} label="Copy usage" copy={copy}/></LiquidAction></details>
+        </div>
+        <div className="inspector-delivery">
+          <button onClick={()=>copy(configurationUrl(window.location.href,element.id,settings).href)}><Link size={14}/> Share configuration</button>
+          <a href={`/api/components/${element.id}?config=${encodeURIComponent(JSON.stringify({v:1,id:element.id,settings}))}`} download><Download size={14}/> Download component</a>
         </div>
         <div className="inspector-group inspector-dependencies"><span className="document-label">Dependencies</span><div className="tags">{element.dependencies.map(tag => <span key={tag}>{tag}</span>)}</div></div>
       </aside>

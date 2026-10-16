@@ -1,0 +1,64 @@
+export const galaxyVertex=`#version 300 es
+precision highp float;
+layout(location=0) in vec4 aOrbit;
+layout(location=1) in vec4 aStyle;
+uniform vec2 uResolution;
+uniform vec2 uHand;
+uniform float uTime;
+uniform float uArms;
+uniform float uTilt;
+uniform float uDpr;
+uniform vec3 uCore;
+uniform vec3 uEdge;
+out vec3 vColor;
+out float vKind;
+out float vLight;
+void main(){
+  float kind=aStyle.x,size=aStyle.y;
+  bool core=kind<.16,field=kind>.994,star=kind>.989&&!field,dust=kind>.68&&!core&&!star&&!field;
+  float flow=fract(pow(aOrbit.x,.72)-uTime*(dust?.018+size*.018:.022));
+  float radius=core?pow(aOrbit.x,1.8)*.24:star?.075+pow(aOrbit.x,.72)*.89:.075+flow*.89;
+  float lane=floor(aStyle.z*uArms),scatter=dust?.08+size*.14:star?.3:.003+radius*.004;
+  float angle=lane*6.28318530718/uArms+radius*12.8+aOrbit.z*scatter+aOrbit.y*.025;
+  if(core||field)angle=aOrbit.y;
+  angle+=core?uTime*(.18+.024/(.18+radius)):star?uTime*(.14+size*.25/(.3+radius)):uTime*.08;
+  if(dust)angle+=sin(uTime*(.6+size)+aStyle.w)*.08;
+  float drift=star?.015+size*.025:dust?.009:.0015,r=radius+sin(uTime*(.7+size)+aStyle.w)*drift;
+  vec3 p=vec3(cos(angle)*r,sin(angle)*r,aOrbit.w*(core?.025:star?.018+size*.035:dust?.018:.003));
+  float turn=uHand.x*.2;
+  p.xz=mat2(cos(turn),-sin(turn),sin(turn),cos(turn))*p.xz;
+  float pitch=radians(uTilt)+uHand.y*.15;
+  p.yz=mat2(cos(pitch),sin(pitch),-sin(pitch),cos(pitch))*p.yz;
+  float perspective=1./(1.+p.z*.18),spin=-.12;
+  vec2 projected=mat2(cos(spin),sin(spin),-sin(spin),cos(spin))*p.xy*perspective;
+  if(field)projected=vec2(cos(aOrbit.y)*aOrbit.x*1.3,sin(aOrbit.y)*aOrbit.x);
+  float scale=min(uResolution.x*.44,uResolution.y*.72);
+  vec2 px=uResolution*vec2(.5,.52)+projected*scale;
+  gl_Position=vec4(px.x/uResolution.x*2.-1.,1.-px.y/uResolution.y*2.,0.,1.);
+  float sprite=field?mix(4.,19.,size):star?mix(4.,9.,size):kind<.035?mix(13.,30.,size):dust?mix(2.,size>.72?14.:4.,size):mix(2.4,3.2,size);
+  gl_PointSize=uDpr*clamp(scale/300.,.45,1.5)*sprite;
+  float outer=smoothstep(.12,.95,radius),cyan=.15+.85*(.5+.5*cos(angle+.55));
+  vColor=mix(uCore,mix(vec3(.12,.17,1.),uEdge,cyan),outer);
+  if(core)vColor=mix(vec3(1.,.93,1.),uCore,smoothstep(0.,.13,radius));
+  if(kind>.989)vColor=field?vec3(.55,.65,.9):uEdge;
+  float twinkle=.72+.28*sin(aStyle.w+uTime*(.7+size));
+  float pulseRadius=1.-fract(uTime*.13+lane*.21);
+  float pulse=exp(-pow((radius-pulseRadius)/.025,2.))*smoothstep(.04,.12,pulseRadius)*(1.-smoothstep(.86,1.,pulseRadius))*(mod(lane,3.)<.5?0.:1.);
+  float fade=core||star||field?1.:smoothstep(0.,.025,flow)*(1.-smoothstep(.965,1.,flow));
+  vLight=twinkle*(1.-smoothstep(.85,1.04,radius))*fade;vKind=kind;
+  if(!core&&!dust&&!star&&!field){vLight*=1.+pulse*4.;vColor=mix(vColor,vec3(.8,.85,1.),pulse*.55);}
+  if(core)vLight*=1.+sin(uTime*1.2)*.07;
+  if(field)vLight=(.3+.7*pow(.5+.5*sin(aStyle.w+uTime*.45),4.))*.065;
+}`;
+export const galaxyFragment=`#version 300 es
+precision highp float;
+in vec3 vColor;
+in float vKind;
+in float vLight;
+uniform float uGlow;
+out vec4 outColor;
+void main(){
+  vec2 p=gl_PointCoord*2.-1.;float r2=dot(p,p);if(r2>1.)discard;
+  float light=vKind>.994?exp(-r2*3.)*.4:vKind>.989?exp(-r2*5.)*.95+exp(-r2*2.)*.12:vKind<.035?exp(-r2*3.)*.03:vKind>.68?exp(-r2*6.)*.14:exp(-r2*10.)*.48+exp(-r2*4.)*.012;
+  float alpha=light*vLight*uGlow;outColor=vec4(vColor*alpha,alpha);
+}`;

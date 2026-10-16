@@ -7,8 +7,17 @@
     "build": "next build",
     "start": "next start --hostname 127.0.0.1 --port 3014",
     "typecheck": "tsc --noEmit",
+    "previews:build": "node scripts/build-preview-posters.mjs",
     "test:loader": "node --test tests/brand-loader.test.cjs",
-    "test:interface": "node --test tests/silk-aperture.test.cjs"
+    "test:interface": "node --test tests/silk-aperture.test.cjs",
+    "distribution:build": "node scripts/build-distribution.mjs",
+    "distribution:pack": "node scripts/build-distribution.mjs --pack",
+    "prebuild": "npm run distribution:pack",
+    "test": "node --test tests/*.test.cjs",
+    "verify:exports": "node scripts/verify-exports.mjs",
+    "pretest": "npm run distribution:build",
+    "preverify:exports": "npm run distribution:pack",
+    "predev": "npm run distribution:pack"
   },
   "dependencies": {
     "@fontsource-variable/urbanist": "^5.3.0",

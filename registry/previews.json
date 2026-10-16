@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "width": 320,
+  "height": 320,
+  "items": {
+    "resonance": {
+      "dark": "/previews/resonance-dark-74761e1d3a99.webp",
+      "light": "/previews/resonance-light-74761e1d3a99.webp"
+    },
+    "sleeve": {
+      "dark": "/previews/sleeve-dark-f9516c5b4ef3.webp",
+      "light": "/previews/sleeve-light-abb1f8867b9a.webp"
+    },
+    "meridian": {
+      "dark": "/previews/meridian-dark-6353036df085.webp",
+      "light": "/previews/meridian-light-1be7d77150a1.webp"
+    },
+    "deck": {
+      "dark": "/previews/deck-dark-ab006b43d2f8.webp",
+      "light": "/previews/deck-light-ab006b43d2f8.webp"
+    },
+    "sentiment": {
+      "dark": "/previews/sentiment-dark-171ee2415219.webp",
+      "light": "/previews/sentiment-light-fe39bf09f5a9.webp"
+    },
+    "companion": {
+      "dark": "/previews/companion-dark-d2b15cdaec50.webp",
+      "light": "/previews/companion-light-d2b15cdaec50.webp"
+    },
+    "helix": {
+      "dark": "/previews/helix-dark-95c217e7e8ef.webp",
+      "light": "/previews/helix-light-95c217e7e8ef.webp"
+    },
+    "holdings": {
+      "dark": "/previews/holdings-dark-f4553de74fee.webp",
+      "light": "/previews/holdings-light-71daddb2a1d0.webp"
+    },
+    "galaxy": {
+      "dark": "/previews/galaxy-dark-e8f555b6166a.webp",
+      "light": "/previews/galaxy-light-e8f555b6166a.webp"
+    },
+    "luma": {
+      "dark": "/previews/luma-dark-6ab48bcb99c6.webp",
+      "light": "/previews/luma-light-94f5c80c7ec6.webp"
+    },
+    "constellation": {
+      "dark": "/previews/constellation-dark-4a9f52b31ca7.webp",
+      "light": "/previews/constellation-light-4a9f52b31ca7.webp"
+    },
+    "aura": {
+      "dark": "/previews/aura-dark-8fbe50105d7f.webp",
+      "light": "/previews/aura-light-343409cfe76a.webp"
+    },
+    "nexus": {
+      "dark": "/previews/nexus-dark-48d3ca2bfa2a.webp",
+      "light": "/previews/nexus-light-3a2342cb18d0.webp"
+    },
+    "orbit": {
+      "dark": "/previews/orbit-dark-be1baf9f7961.webp",
+      "light": "/previews/orbit-light-cad413688ee0.webp"
+    },
+    "halo": {
+      "dark": "/previews/halo-dark-20bc758ed0ab.webp",
+      "light": "/previews/halo-light-a6b7d42c21a6.webp"
+    },
+    "district": {
+      "dark": "/previews/district-dark-9ffa05fe737c.webp",
+      "light": "/previews/district-light-937fc22be73b.webp"
+    },
+    "pulse": {
+      "dark": "/previews/pulse-dark-00f14f86bdc6.webp",
+      "light": "/previews/pulse-light-94165c4e342b.webp"
+    },
+    "event-horizon": {
+      "dark": "/previews/event-horizon-dark-083d8d25a3ac.webp",
+      "light": "/previews/event-horizon-light-dceef385613b.webp"
+    },
+    "liquid-relic": {
+      "dark": "/previews/liquid-relic-dark-c8055a1d931d.webp",
+      "light": "/previews/liquid-relic-light-00ba5a7739d8.webp"
+    },
+    "crate": {
+      "dark": "/previews/crate-dark-c80d265eabca.webp",
+      "light": "/previews/crate-light-f780267e878b.webp"
+    },
+    "liquid-sculpture": {
+      "dark": "/previews/liquid-sculpture-dark-01f9f65fef6e.webp",
+      "light": "/previews/liquid-sculpture-light-c6982287d958.webp"
+    },
+    "glow-nav": {
+      "dark": "/previews/glow-nav-dark-4a0d4df33b38.webp",
+      "light": "/previews/glow-nav-light-4cf9100f95a4.webp"
+    },
+    "lantern": {
+      "dark": "/previews/lantern-dark-8c817b4a3dc6.webp",
+      "light": "/previews/lantern-light-7f2a4ad36f3b.webp"
+    },
+    "gyro": {
+      "dark": "/previews/gyro-dark-bf35ce81d709.webp",
+      "light": "/previews/gyro-light-c6ee2b6b5c91.webp"
+    },
+    "arbor": {
+      "dark": "/previews/arbor-dark-21a371fce2cd.webp",
+      "light": "/previews/arbor-light-596f19a76709.webp"
+    },
+    "drawer": {
+      "dark": "/previews/drawer-dark-899b886a4eac.webp",
+      "light": "/previews/drawer-light-3947df49e020.webp"
+    },
+    "tempo": {
+      "dark": "/previews/tempo-dark-86baa42063bb.webp",
+      "light": "/previews/tempo-light-a3b868b33413.webp"
+    },
+    "pleat": {
+      "dark": "/previews/pleat-dark-69f596299516.webp",
+      "light": "/previews/pleat-light-a98f5b5b24a8.webp"
+    },
+    "gilded-signal": {
+      "dark": "/previews/gilded-signal-dark-0985e625e538.webp",
+      "light": "/previews/gilded-signal-light-a227fdfa769d.webp"
+    },
+    "silk-aperture": {
+      "dark": "/previews/silk-aperture-dark-2d971d4eef2e.webp",
+      "light": "/previews/silk-aperture-light-2d971d4eef2e.webp"
+    }
+  }
+}

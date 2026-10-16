@@ -23,6 +23,25 @@ const choice = load('../components/choice-select.tsx', { '@/lib/catalog': catalo
 const liquid = load('../components/liquid-action.tsx', {
   './outline-field': { default: ({ children }) => React.createElement('div', null, children) },
 });
+
+test('Source loads on demand, protects copying, retries failures and aborts when leaving the tab',async()=>{
+  const dom=new JSDOM('<div id="mount"></div>',{url:'http://localhost/library'}),requests=[];
+  const values={window:dom.window,document:dom.window.document,HTMLElement:dom.window.HTMLElement,IS_REACT_ACT_ENVIRONMENT:true,requestAnimationFrame:()=>1,cancelAnimationFrame:()=>{},matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),fetch:(url,options)=>new Promise(resolve=>requests.push({url,signal:options.signal,resolve}))};
+  const old=new Map(Object.keys(values).map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));for(const[key,value]of Object.entries(values))Object.defineProperty(globalThis,key,{value,writable:true,configurable:true});
+  const root=require('react-dom/client').createRoot(document.getElementById('mount'));let copied='';
+  const props={element:catalog.elements.find(e=>e.id==='crate'),onBack(){},onPrevious(){},onNext(){},index:0,total:30,saved:false,onSave(){},paused:true,copy:async text=>{copied=text;return true;},originalSource:{},onToolChange(){}};
+  try{
+    await React.act(()=>root.render(React.createElement(Workspace,props)));assert.equal(requests.length,0,'Preview never fetches implementation text');
+    await React.act(()=>document.querySelector('#tab-code').click());assert.equal(requests.length,1);assert.equal(document.querySelector('[aria-label="Copy source file"]').disabled,true);assert.match(document.querySelector('.document-loading').textContent,/Loading/);
+    await React.act(async()=>{requests[0].resolve(new Response('failure',{status:500}));await Promise.resolve();});assert.match(document.querySelector('.document-loading').textContent,/could not be loaded/);
+    await React.act(()=>document.querySelector('.document-loading button').click());assert.equal(requests.length,2);
+    await React.act(async()=>{requests[1].resolve(Response.json({files:[{name:'crate.tsx',code:'export const realSource = 42;'}]}));await Promise.resolve();});assert.equal(document.querySelector('[aria-label="Copy source file"]').disabled,false);
+    await React.act(async()=>document.querySelector('[aria-label="Copy source file"]').click());assert.equal(copied,'export const realSource = 42;');
+    await React.act(()=>root.render(React.createElement(Workspace,{...props,key:'gyro',element:catalog.elements.find(e=>e.id==='gyro'),initialTab:'code'})));assert.equal(requests.length,3);assert.match(requests[2].url,/gyro\?format=source/);
+    await React.act(()=>document.querySelector('#tab-preview').click());assert.equal(requests[2].signal.aborted,true);
+    await React.act(()=>root.unmount());
+  }finally{dom.window.close();for(const[key,value]of old){if(value)Object.defineProperty(globalThis,key,value);else delete globalThis[key];}}
+});
 const Control = load('../components/prompt-control.tsx', {
   '@/lib/catalog': catalog,
   './choice-select': choice,
@@ -30,6 +49,7 @@ const Control = load('../components/prompt-control.tsx', {
 }).default;
 const Workspace = load('../components/element-workspace.tsx', {
   '@/lib/element-controls': settings,
+  './use-component-settings': load('../components/use-component-settings.ts', {'@/lib/element-controls': settings}),
   '@/lib/catalog': catalog,
   './demos': { Demo: props => React.createElement('div', { 'data-demo': true, 'data-count': props.settings.count }) },
   './prompt-control': { default: Control },
@@ -58,8 +78,8 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
   }
   let mounted = true;
   try {
-    assert.deepEqual(catalog.elements.map(e => e.id).sort(), ['arbor', 'crate', 'district', 'drawer', 'event-horizon', 'gilded-signal', 'glow-nav', 'gyro', 'halo', 'lantern', 'liquid-relic', 'liquid-sculpture', 'pleat', 'pulse', 'silk-aperture', 'tempo']);
-    assert.deepEqual(catalog.elements.filter(e=>e.category==='Linework').map(e=>e.id).sort(), ['arbor','crate','district','drawer','gyro','lantern','pleat','tempo']);
+    assert.deepEqual(catalog.elements.map(e => e.id).sort(), ['arbor', 'aura', 'companion', 'constellation', 'crate', 'deck', 'district', 'drawer', 'event-horizon', 'galaxy', 'gilded-signal', 'glow-nav', 'gyro', 'halo', 'helix', 'holdings', 'lantern', 'liquid-relic', 'liquid-sculpture', 'luma', 'meridian', 'nexus', 'orbit', 'pleat', 'pulse', 'resonance', 'sentiment', 'silk-aperture', 'sleeve', 'tempo']);
+    assert.deepEqual(catalog.elements.filter(e=>e.category==='Linework').map(e=>e.id).sort(), ['arbor','crate','deck','district','drawer','gyro','lantern','pleat','tempo']);
     assert.ok(catalog.elements.every(e => !e.tags.includes('Original') && catalog.categories.includes(e.category)));
     await React.act(() => root.render(React.createElement(Fixture)));
     await React.act(() => document.querySelector('.prompt-select').click());
@@ -108,6 +128,7 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
     assert.equal(preview.dataset.count,'5','live controls pass actual component props');
     assert.equal(document.querySelector('.detail-description'), null);
     assert.equal(document.querySelector('.element-workbench select'), null);
+    assert.equal(document.querySelector('.inspector-disclosure'), null,'auxiliary props and usage sections are removed');
     await React.act(() => document.querySelector('#tab-preview').dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'End', bubbles: true })));
     assert.equal(document.querySelector('#tab-prompt').getAttribute('aria-selected'), 'true');
     await React.act(() => document.querySelector('.document-toolbar .choice-trigger').click());
@@ -125,6 +146,9 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
     assert.equal(document.querySelector('[data-demo]'), preview);
     assert.equal(document.querySelector('.workbench-preview').hidden, false);
     await React.act(()=>document.querySelector('.parameter-reset').click());assert.equal(preview.dataset.count,'8');
+    await React.act(()=>document.querySelector('[aria-label="Mood"]').click());
+    const mood=settings.moodsFor('crate')[1];await React.act(()=>document.querySelector(`[data-label="${mood.label}"]`).click());assert.equal(preview.dataset.count,String(mood.settings.count));
+    await React.act(async()=>{document.querySelector('.inspector-delivery button').click();await Promise.resolve();});assert.deepEqual(settings.decodeSettings('crate',new URL(written).searchParams.get('config')),mood.settings);assert.match(document.querySelector('.inspector-delivery a').href,/api\/components\/crate/);
     await React.act(() => document.querySelector('[aria-label="mobile preview"]').click());
     assert.equal(document.querySelector('.workbench-stage').dataset.viewport, 'mobile');
     await React.act(() => document.querySelector('.workbench-back').click());

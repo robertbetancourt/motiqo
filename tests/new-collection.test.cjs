@@ -29,11 +29,12 @@ test('Pulse draws progressively, interpolates inspection, pauses, reduces motion
  await React.act(()=>e.root.render(React.createElement(Pulse)));const host=document.querySelector('.pulse'),line=host.querySelector('[pathLength]');host.querySelector('svg').getBoundingClientRect=()=>({left:0,top:0,width:520,height:370});
  e.advance(30);const early=Number(line.getAttribute('stroke-dashoffset'));assert.ok(early>0&&early<1);e.advance(180);assert.equal(Number(line.getAttribute('stroke-dashoffset')),0);
  host.dispatchEvent(new e.dom.window.MouseEvent('pointermove',{clientX:26,clientY:200}));e.advance(180);assert.equal(host.querySelector('time').textContent,'00:00');
- host.dispatchEvent(new e.dom.window.KeyboardEvent('keydown',{key:'End'}));e.advance(180);assert.equal(host.querySelector('time').textContent,'12:00');
+ host.dispatchEvent(new e.dom.window.KeyboardEvent('keydown',{key:'End'}));e.advance(180);assert.equal(host.querySelector('time').textContent,'12:00');assert.match(host.querySelector('[role=status]').textContent,/12:00/);assert.equal(host.querySelectorAll('tbody tr').length,90);
  await React.act(()=>e.root.render(React.createElement(Pulse,{paused:true})));e.advance();const frozen=line.getAttribute('d');assert.equal(e.frames.size,0);e.advance(60);assert.equal(line.getAttribute('d'),frozen);
- await React.act(()=>e.root.render(React.createElement(Pulse,{paused:false,amplitude:.4})));e.advance(5);assert.notEqual(line.getAttribute('d'),frozen);
+ await React.act(()=>e.root.render(React.createElement(Pulse,{paused:false,amplitude:.4})));e.advance(30);assert.notEqual(line.getAttribute('d'),frozen);assert.ok(host.querySelector('[role=status]').textContent.includes(host.querySelector('strong').textContent),'changing the signal updates its accessible sample too');
  e.visible.at(-1).fn([{isIntersecting:false}]);assert.equal(e.frames.size,0);e.visible.at(-1).fn([{isIntersecting:true}]);assert.ok(e.frames.size>0);
- e.media.matches=true;e.mediaListeners.forEach(f=>f());e.advance();assert.equal(e.frames.size,0);assert.equal(line.getAttribute('stroke-dashoffset'),'0');
+ e.media.matches=true;e.mediaListeners.forEach(f=>f());e.advance();assert.equal(e.frames.size,0);assert.equal(line.getAttribute('stroke-dashoffset'),'0');host.dispatchEvent(new e.dom.window.KeyboardEvent('keydown',{key:'Home'}));e.advance();assert.match(host.querySelector('[role=status]').textContent,/00:00/);
+ e.media.matches=false;e.mediaListeners.forEach(f=>f());assert.ok(e.frames.size>0);const detached=line.getAttribute('d');document.getElementById('mount').remove();e.advance(1);assert.equal(e.frames.size,0,'a queued RAF stops as soon as the view is detached, before passive cleanup');assert.equal(line.getAttribute('d'),detached);
  await React.act(()=>e.root.unmount());mounted=false;assert.equal(e.frames.size,0);assert.equal(e.mediaListeners.size,0);assert.equal(e.disconnected,2);
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}});
 test('Shared shell preserves the sidebar node and tool state across page replacement',async()=>{const e=environment();let mounted=true,mounts=0,unmounts=0;try{
@@ -44,11 +45,36 @@ test('Shared shell preserves the sidebar node and tool state across page replace
  assert.equal(document.querySelector('aside'),sidebar);assert.equal(sidebar.textContent,'1');assert.equal(document.querySelector('h1').textContent,'Library');assert.equal(mounts,1);assert.equal(unmounts,0);
  await React.act(()=>e.root.unmount());mounted=false;assert.equal(unmounts,1);
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}});
-test('Sidebar light follows the route even while prior Library metadata is being cleared',async()=>{const e=environment();let mounted=true,route='/library';try{
- const Empty=()=>null,Link=({href,children,...props})=>React.createElement('a',{href,...props},children);
- const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'next/navigation':{usePathname:()=>route},'./navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
+test('Sidebar light follows the route even while prior Library metadata is being cleared',async()=>{const e=environment();let mounted=true,route='/library',query='';try{
+ const Empty=()=>null,Link=({href,children,onNavigate,prefetch,...props})=>React.createElement('a',{href,...props},children);
+ const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
  Object.defineProperty(e.dom.window.HTMLElement.prototype,'offsetTop',{get(){return this.parentElement?.tagName==='NAV'?[...this.parentElement.querySelectorAll('a')].indexOf(this)*56:0;},configurable:true});
  await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();const sidebar=document.querySelector('aside');route='/docs';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();
  const active=[...sidebar.querySelectorAll('[aria-current="page"]')];assert.equal(active.length,1);assert.equal(active[0].textContent,'Getting started');assert.ok(Math.abs(parseFloat(sidebar.querySelector('nav').style.getPropertyValue('--nav-y'))-168)<.1);assert.equal(document.querySelector('aside'),sidebar);
+ route='/library';query='saved=1';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:false,savedOnly:false})));
+ assert.equal(sidebar.querySelector('[aria-current="page"]').textContent,'Saved','entering Saved never activates Library while page metadata catches up');
+ query='';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true,savedOnly:true})));
+ assert.equal(sidebar.querySelector('[aria-current="page"]').textContent,'Library','leaving Saved follows the URL immediately even with stale Saved props');
  await React.act(()=>e.root.unmount());mounted=false;assert.equal(e.frames.size,0);
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}});
+
+test('Sidebar targets only the selected destination and keeps same-page Saved/Library changes local',async()=>{
+ const e=environment();let mounted=true,route='/docs',query='',collectionCalls=0,savedCalls=0;const navigations=[];
+ try{
+  const Empty=()=>null,Link=({href,children,onNavigate,prefetch,...props})=>React.createElement('a',{...props,href,onClick:event=>{
+   event.preventDefault();if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+   let prevented=false;onNavigate?.({preventDefault:()=>{prevented=true;}});if(!prevented)navigations.push(href);
+  }},children);
+  const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
+  Object.defineProperty(e.dom.window.HTMLElement.prototype,'offsetTop',{get(){return this.parentElement?.tagName==='NAV'?[...this.parentElement.querySelectorAll('a')].indexOf(this)*56:0;},configurable:true});
+  const render=props=>React.act(()=>e.root.render(React.createElement(Sidebar,{onCollection:()=>{collectionCalls++;query='';},onSaved:()=>{savedCalls++;query='saved=1';},...props}))),active=()=>document.querySelector('nav [aria-current="page"]').textContent,link=name=>[...document.querySelectorAll('nav a')].find(a=>a.textContent===name);
+  await render({});const sidebar=document.querySelector('aside'),nav=sidebar.querySelector('nav');
+  await React.act(()=>link('Saved').click());assert.equal(active(),'Saved','the indicator targets Saved as soon as the link is activated');assert.deepEqual(navigations,['/library?saved=1']);assert.equal(collectionCalls,0);assert.equal(savedCalls,0);
+  route='/library';query='saved=1';await render({savedOnly:false});assert.equal(active(),'Saved','stale page metadata cannot activate Library');
+  await React.act(()=>link('Library').click());assert.equal(active(),'Library');assert.equal(collectionCalls,1);assert.deepEqual(navigations,['/library?saved=1'],'same-page filtering never requests an intermediate route');await render({savedOnly:true});assert.equal(active(),'Library');
+  await React.act(()=>link('Saved').click());assert.equal(active(),'Saved');assert.equal(savedCalls,1);await render({savedOnly:false});assert.equal(active(),'Saved');
+  await React.act(()=>link('Library').dispatchEvent(new e.dom.window.MouseEvent('click',{bubbles:true,cancelable:true,ctrlKey:true})));assert.equal(active(),'Saved');assert.equal(collectionCalls,1,'modifier clicks retain native new-tab behavior');
+  query='';await render({savedOnly:true});assert.equal(active(),'Library','browser history changes follow the URL');assert.equal(document.querySelector('aside'),sidebar);assert.equal(sidebar.querySelector('nav'),nav);assert.equal(e.frames.size,0,'indicator motion needs no JavaScript animation loop');
+  await React.act(()=>e.root.unmount());mounted=false;
+ }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}
+});

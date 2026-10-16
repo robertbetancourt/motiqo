@@ -1,0 +1,11 @@
+'use client';
+import {useEffect,useRef} from 'react';
+import {createMeridianScene,type MeridianOptions} from './meridian-scene';
+export type MeridianProps={primaryRouteColor?:string;incidentColor?:string;detourGradient?:readonly [string,string,string,string];animationSpeed?:number;replay?:number;autoPlay?:boolean;scrollSensitivity?:number;cinematicIntro?:boolean;compact?:boolean;paused?:boolean;className?:string};
+const gradient=['#00f0ff','#326aff','#8b3dff','#ff0055'] as const;
+export default function Meridian({primaryRouteColor='#00f0ff',incidentColor='#ff0055',detourGradient=gradient,animationSpeed=1,replay=0,autoPlay=true,scrollSensitivity=1,cinematicIntro=true,compact=false,paused=false,className=''}:MeridianProps){
+ const host=useRef<HTMLDivElement>(null),canvas=useRef<HTMLCanvasElement>(null),scene=useRef<ReturnType<typeof createMeridianScene>|null>(null),options=useRef<MeridianOptions>({primaryRouteColor,incidentColor,detourGradient,animationSpeed,replay,paused,autoPlay,scrollSensitivity,cinematicIntro});options.current={primaryRouteColor,incidentColor,detourGradient,animationSpeed,replay,paused,autoPlay,scrollSensitivity,cinematicIntro};
+ useEffect(()=>{try{scene.current=createMeridianScene(canvas.current!,compact,()=>options.current);}catch{host.current!.dataset.failed='true';}return()=>{scene.current?.dispose();scene.current=null;};},[compact]);useEffect(()=>scene.current?.sync(),[primaryRouteColor,incidentColor,detourGradient,animationSpeed,replay,paused,autoPlay,scrollSensitivity,cinematicIntro]);
+ return <div ref={host} className={`meridian ${className}`} role="group" tabIndex={compact?-1:0} aria-label="Meridian, a three-dimensional city with animated neon routes. Scroll to scrub the routes and camera. Autoplay resumes after 2.5 seconds. Click or Space to replay."><style>{styles}</style><canvas ref={canvas} aria-hidden="true"/></div>;
+}
+const styles=`.meridian{position:relative;width:100%;height:100%;min-height:0;overflow:hidden;border:1px solid #ffffff1a;border-radius:20px;background:#050508;outline:none}.meridian canvas{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none;visibility:hidden}.meridian[data-ready=true] canvas{visibility:visible}.meridian:focus-visible{outline:1px solid #fff;outline-offset:-5px}`;

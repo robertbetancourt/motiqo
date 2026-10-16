@@ -46,8 +46,8 @@ export default function LiquidAction({ children, paused = false, liquid = true }
   </div>;
 }
 
-export function LiquidCopyButton({ text, label, ariaLabel, copy }: {
-  text: string; label: string; ariaLabel?: string; copy: (text: string) => Promise<boolean>;
+export function LiquidCopyButton({ text, label, ariaLabel, copy, disabled=false }: {
+  text: string; label: string; ariaLabel?: string; copy: (text: string) => Promise<boolean>; disabled?:boolean;
 }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -57,7 +57,7 @@ export function LiquidCopyButton({ text, label, ariaLabel, copy }: {
     setCopied(false);
     return () => { generation.current++; if (timer.current) clearTimeout(timer.current); };
   }, [text]);
-  return <button className="prompt-button" aria-label={ariaLabel || label} onClick={async () => {
+  return <button className="prompt-button" aria-label={ariaLabel || label} disabled={disabled} onClick={async () => {
     const current = generation.current;
     const success = await copy(text);
     if (current !== generation.current) return;
