@@ -15,24 +15,24 @@ A growing collection of <!-- count:start -->52<!-- count:end --> interactive Rea
 
 ## A few things to play with
 
-Static previews below; open the library to interact with the animations.
+Animated previews below; open the library to interact with the animations.
 
 <!-- gallery:start -->
 <table>
 <tr>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=sacred-lotus"><img src="docs/readme/sacred-lotus.webp" width="250" alt="SacredLotus component preview" /><br /><strong>SacredLotus</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=inkshift"><img src="docs/readme/inkshift.webp" width="250" alt="Inkshift component preview" /><br /><strong>Inkshift</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=iris-turbine"><img src="docs/readme/iris-turbine.webp" width="250" alt="IrisTurbine component preview" /><br /><strong>IrisTurbine</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=sacred-lotus"><img src="docs/readme/sacred-lotus.gif" width="250" alt="SacredLotus animated preview" /><br /><strong>SacredLotus</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=inkshift"><img src="docs/readme/inkshift.gif" width="250" alt="Inkshift animated preview" /><br /><strong>Inkshift</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=iris-turbine"><img src="docs/readme/iris-turbine.gif" width="250" alt="IrisTurbine animated preview" /><br /><strong>IrisTurbine</strong></a></td>
 </tr>
 <tr>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=thermal-smoke"><img src="docs/readme/thermal-smoke.webp" width="250" alt="ThermalSmoke component preview" /><br /><strong>ThermalSmoke</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=orbit-agent"><img src="docs/readme/orbit-agent.webp" width="250" alt="OrbitAgent component preview" /><br /><strong>OrbitAgent</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=helix"><img src="docs/readme/helix.webp" width="250" alt="Helix component preview" /><br /><strong>Helix</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=thermal-smoke"><img src="docs/readme/thermal-smoke.gif" width="250" alt="ThermalSmoke animated preview" /><br /><strong>ThermalSmoke</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=orbit-agent"><img src="docs/readme/orbit-agent.gif" width="250" alt="OrbitAgent animated preview" /><br /><strong>OrbitAgent</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=helix"><img src="docs/readme/helix.gif" width="250" alt="Helix animated preview" /><br /><strong>Helix</strong></a></td>
 </tr>
 <tr>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=aura"><img src="docs/readme/aura.webp" width="250" alt="Aura component preview" /><br /><strong>Aura</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=type-garden"><img src="docs/readme/type-garden.webp" width="250" alt="TypeGarden component preview" /><br /><strong>TypeGarden</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=caustic-button"><img src="docs/readme/caustic-button.webp" width="250" alt="CausticButton component preview" /><br /><strong>CausticButton</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=aura"><img src="docs/readme/aura.gif" width="250" alt="Aura animated preview" /><br /><strong>Aura</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=type-garden"><img src="docs/readme/type-garden.gif" width="250" alt="TypeGarden animated preview" /><br /><strong>TypeGarden</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=caustic-button"><img src="docs/readme/caustic-button.gif" width="250" alt="CausticButton animated preview" /><br /><strong>CausticButton</strong></a></td>
 </tr>
 </table>
 <!-- gallery:end -->
