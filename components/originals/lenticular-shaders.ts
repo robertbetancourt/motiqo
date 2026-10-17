@@ -3,11 +3,9 @@ export const lenticularFragment=buttonOpticsGLSL+`
 uniform vec3 uLensTint;
 uniform float uMagnification,uLensRadius,uDistortion,uGridSpacing,uIdleMotion;
 vec3 sceneAt(vec2 q){
- vec2 cell=mod(q+uGridSpacing*.5,uGridSpacing);vec2 dist=min(cell,uGridSpacing-cell);
- float aa=max(fwidth(q.x),.6);float grid=1.-smoothstep(.35,.35+aa,min(dist.x,dist.y));
- vec3 base=vec3(.031,.039,.051);base+=vec3(.045,.085,.11)*grid;
- float dotMarker=1.-smoothstep(1.1,2.,length(vec2(dist.x,dist.y)));
- return base+uLensTint*dotMarker*.18;
+ // A smooth dark light field, without grid lines or marker geometry.
+ float light=exp(-dot(q,q)/12000.)*.025;
+ return vec3(.031,.039,.051)+uLensTint*light;
 }
 void main(){
  vec2 p=vUv*uResolution-uResolution*.5;float d=capsule(p);if(d>5.){fragColor=vec4(0.);return;}float depth=max(-d,0.);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, Code2, Download, Link, Monitor, Play, SlidersHorizontal, Smartphone, Sparkles, Tablet } from 'lucide-react';
+import { ArrowLeft, Bookmark, ChevronDown, ChevronLeft, ChevronRight, Code2, Download, Link, Monitor, Play, SlidersHorizontal, Smartphone, Sparkles, Tablet } from 'lucide-react';
 import { Demo } from './demos';
 import { makePrompt, type AITool, type LibraryElement, type OriginalSources, type SourceFile } from '@/lib/catalog';
 import PromptControl from './prompt-control';
@@ -26,7 +26,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
   const [tool, setTool] = useState<AITool>(initialTool);
   const [sourceIndex, setSourceIndex] = useState(0);
   const [viewport, setViewport] = useState<Viewport>('desktop');
-  const [mobileSettings,setMobileSettings]=useState(false);
+  const [mobileInspector,setMobileInspector]=useState(false);
   const {settings,update,reset}=useComponentSettings(element.id,initialSettings);
   const controls=controlsFor(element.id);
   const moods=moodsFor(element.id);
@@ -39,6 +39,12 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
   function chooseTool(value: AITool) { setTool(value); onToolChange(value); }
   function reviewPrompt() { setTab('prompt'); root.current?.querySelector<HTMLButtonElement>('#tab-prompt')?.focus(); }
   useEffect(() => { setTool(initialTool); }, [initialTool]);
+  useEffect(()=>{
+    const media=matchMedia('(max-width: 780px)');
+    const sync=()=>setMobileInspector(media.matches);
+    sync();media.addEventListener('change',sync);
+    return()=>media.removeEventListener('change',sync);
+  },[]);
   useEffect(() => { root.current?.querySelector<HTMLElement>('#detail-title')?.focus({ preventScroll: true }); }, []);
   useEffect(()=>{
     if(tab!=='code'||files.length)return;
@@ -95,7 +101,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
           </div>
         </div>
       </div>
-      <aside className="workbench-inspector" aria-label="Component details" data-settings-open={mobileSettings||undefined}>
+      <aside className="workbench-inspector" aria-label="Component details">
         <div className="workbench-inspector-scroll">
         <header className="workbench-heading"><span className="category-label">{element.category}</span><h1 id="detail-title" tabIndex={-1}>{element.title}</h1>
           <div className="tags">{element.tags.map(tag => onTag?<button type="button" key={tag} className="tag-filter-button" aria-label={`Filter by ${tag}`} onClick={()=>onTag(tag)}>{tag}</button>:<span key={tag}>{tag}</span>)}</div>
@@ -115,8 +121,8 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
         </div>
         <div className="inspector-group"><span className="document-label">Interaction</span><p>{element.hint}</p>
         </div>
-        <button className="mobile-settings-toggle" aria-expanded={mobileSettings} aria-controls="component-settings" onClick={()=>setMobileSettings(!mobileSettings)}><SlidersHorizontal size={14}/> Customize</button>
-        <div id="component-settings" className="inspector-customization">
+        <details id="component-settings" className="inspector-customization" open={!mobileInspector}>
+        <summary className="inspector-settings-summary"><SlidersHorizontal size={14}/><span>Settings</span><ChevronDown size={16}/></summary>
         <div className="inspector-group inspector-controls" aria-label="Live component settings">
           <div className="parameter-select"><span>Mood</span><ChoiceSelect label="Mood" value={selectedMood} options={[{value:'default',label:'Default'},...moods.map(mood=>({value:mood.id,label:mood.label})),...(selectedMood==='custom'?[{value:'custom',label:'Custom'}]:[])]} onChange={value=>{const mood=moods.find(item=>item.id===value);if(mood)update(mood.settings);else if(value==='default')reset();}} paused={paused}/></div>
           {controls.map(control=>{
@@ -131,7 +137,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
           })}
           <button className="parameter-reset" onClick={reset}>Reset settings</button>
         </div>
-        </div>
+        </details>
         <div className="inspector-delivery">
           <button onClick={()=>copy(configurationUrl(window.location.href,element.id,settings).href)}><Link size={14}/> Share configuration</button>
           <a href={`/api/components/${element.id}?config=${encodeURIComponent(JSON.stringify({v:1,id:element.id,settings}))}`} download><Download size={14}/> Download component</a>

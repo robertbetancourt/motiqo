@@ -67,18 +67,18 @@ OpticalButton closes its perimeter spectrum and folded caustics with integer win
 
 ## Lenticular button
 
-A moving radial lens inverse-maps a procedural technical grid through a magnification field, with controllable barrel distortion and chromatic offsets. The preview's grid uses the same spacing and centered origin. Lettering remains a crisp HTML layer above the lens. The optical scene is self-contained and does not capture arbitrary DOM or require an external image.
+A moving radial lens refracts a smooth, dark light field through a magnification field, with controllable barrel distortion and chromatic offsets. All button previews use a plain dark background. Lettering remains a crisp HTML layer above the lens. The optical scene is self-contained and does not capture arbitrary DOM or require an external image.
 
 ```tsx
 import LenticularPreview, { LenticularButton } from './lenticular-button';
 
 export function Action() {
   return <LenticularButton magnification={1.8} lensRadius={29}
-    distortion={0.4} gridSpacing={22} tint="#91d9ed" idleMotion />;
+    distortion={0.4} tint="#91d9ed" idleMotion />;
 }
 ```
 
-Controls: magnification (1–3), lensRadius (12–40 CSS pixels), distortion (0–1), gridSpacing (12–40 CSS pixels), tint (hex color), idleMotion (boolean). The Precision mood stops the idle drift while retaining pointer control; Soft lens uses a broader, gentler lens. Clicking sends a refractive wave through the grid.
+Controls: magnification (1–3), lensRadius (12–40 CSS pixels), distortion (0–1), tint (hex color), idleMotion (boolean). The Precision mood stops the idle drift while retaining pointer control; Soft lens uses a broader, gentler lens. Clicking sends a refractive wave through the lens. The former gridSpacing prop remains accepted for compatibility.
 
 ## Photon button
 
