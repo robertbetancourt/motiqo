@@ -4,7 +4,6 @@ import { kineticClamp } from "./kinetic-math";
 import {
   opalineVertex,
   opalineFragment,
-  opalineCoreVertex,
   opalineCoreFragment,
   opalineGlowFragment,
 } from "./opaline-shaders";
@@ -78,21 +77,27 @@ export function createOpalineScene(
       side: THREE.DoubleSide,
     });
     const mesh = new THREE.Mesh(sphere, material);
-    mesh.scale.setScalar(0.88 + i * 0.2);
+    mesh.scale.setScalar(0.96 + i * 0.19);
     mesh.renderOrder = 2 + i;
     group.add(mesh);
     materials.push(material);
     shells.push(mesh);
   }
   const coreMaterial = new THREE.ShaderMaterial({
-    vertexShader: opalineCoreVertex,
+    vertexShader: opalineVertex,
     fragmentShader: opalineCoreFragment,
-    uniforms: colors,
+    uniforms: {
+      ...colors,
+      uTime: { value: 2 },
+      uLayer: { value: -0.4 },
+      uIntensity: { value: 1 },
+      uActivity: { value: 0 },
+    },
     transparent: true,
     depthWrite: false,
   });
   const core = new THREE.Mesh(sphere, coreMaterial);
-  core.scale.setScalar(0.83);
+  core.scale.setScalar(1.02);
   core.renderOrder = 1;
   group.add(core);
   const glowGeometry = new THREE.PlaneGeometry(4.6, 4.6),
@@ -154,8 +159,15 @@ export function createOpalineScene(
         u.uDensity.value = kineticClamp(o.ringDensity, 12, 100);
       });
       core.scale.setScalar(
-        0.82 + Math.sin(time * 0.7) * 0.014 + response * 0.025,
+        1.02 + Math.sin(time * 0.7) * 0.014 + response * 0.025,
       );
+      coreMaterial.uniforms.uTime.value = time;
+      coreMaterial.uniforms.uIntensity.value = kineticClamp(
+        o.morphIntensity,
+        0,
+        2.5,
+      );
+      coreMaterial.uniforms.uActivity.value = response;
       renderer.render(scene, camera);
       host.dataset.membranes = String(count);
       host.dataset.morphTime = time.toFixed(3);

@@ -4,24 +4,24 @@
   "height": 320,
   "items": {
     "sacred-lotus": {
-      "dark": "/previews/sacred-lotus-dark-506711c241cf.webp",
-      "light": "/previews/sacred-lotus-light-ea26fd5b9946.webp"
+      "dark": "/previews/sacred-lotus-dark-6927b47cddfb.webp",
+      "light": "/previews/sacred-lotus-light-a57ecce1fd76.webp"
     },
     "iris-turbine": {
-      "dark": "/previews/iris-turbine-dark-eebbf3b16574.webp",
-      "light": "/previews/iris-turbine-light-eebbf3b16574.webp"
+      "dark": "/previews/iris-turbine-dark-3eb67282f54a.webp",
+      "light": "/previews/iris-turbine-light-3eb67282f54a.webp"
     },
     "bokeh-terrain": {
       "dark": "/previews/bokeh-terrain-dark-505df25e6aea.webp",
       "light": "/previews/bokeh-terrain-light-505df25e6aea.webp"
     },
     "opaline-orb": {
-      "dark": "/previews/opaline-orb-dark-e5e8911ae6ff.webp",
-      "light": "/previews/opaline-orb-light-e5e8911ae6ff.webp"
+      "dark": "/previews/opaline-orb-dark-53e0add7726e.webp",
+      "light": "/previews/opaline-orb-light-b79f4e9eaeac.webp"
     },
     "orbit-agent": {
-      "dark": "/previews/orbit-agent-dark-0d4d6aeab955.webp",
-      "light": "/previews/orbit-agent-light-0d4d6aeab955.webp"
+      "dark": "/previews/orbit-agent-dark-2ba3531d6509.webp",
+      "light": "/previews/orbit-agent-light-2ba3531d6509.webp"
     },
     "water-ripple-carousel": {
       "dark": "/previews/water-ripple-carousel-dark-2414bead7fbd.webp",
@@ -32,8 +32,8 @@
       "light": "/previews/aperture-carousel-light-487449e574c7.webp"
     },
     "thermal-smoke": {
-      "dark": "/previews/thermal-smoke-dark-ef5e72168503.webp",
-      "light": "/previews/thermal-smoke-light-ef5e72168503.webp"
+      "dark": "/previews/thermal-smoke-dark-1f7658acd48c.webp",
+      "light": "/previews/thermal-smoke-light-1f7658acd48c.webp"
     },
     "radial-spectrum": {
       "dark": "/previews/radial-spectrum-dark-0abf53192730.webp",
@@ -112,8 +112,8 @@
       "light": "/previews/sentiment-light-fe39bf09f5a9.webp"
     },
     "companion": {
-      "dark": "/previews/companion-dark-d2b15cdaec50.webp",
-      "light": "/previews/companion-light-d2b15cdaec50.webp"
+      "dark": "/previews/companion-dark-0bdda8db9054.webp",
+      "light": "/previews/companion-light-0bdda8db9054.webp"
     },
     "helix": {
       "dark": "/previews/helix-dark-95c217e7e8ef.webp",

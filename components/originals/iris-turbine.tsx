@@ -8,12 +8,15 @@ import {
   turbineGear,
   turbineDemo,
   turbineCrowns,
+  turbineShiftPulse,
 } from "./kinetic-math";
 export type IrisTurbineProps = {
   speed?: number;
   maxSpeed?: number;
   redlineThreshold?: number;
   bladeCount?: number;
+  cruiseColor?: string;
+  ignitionColor?: string;
   autoDemo?: boolean;
   interactive?: boolean;
   showTelemetry?: boolean;
@@ -26,6 +29,8 @@ export default function IrisTurbine({
   maxSpeed = 210,
   redlineThreshold = 55,
   bladeCount = 24,
+  cruiseColor = "#9b8cff",
+  ignitionColor = "#ffbf69",
   autoDemo = true,
   interactive = true,
   showTelemetry = false,
@@ -46,6 +51,7 @@ export default function IrisTurbine({
       time: 0,
       gear: 1,
       pulse: 0,
+      shiftAge: 10,
     }),
     [setting, setSetting] = useState(9);
   const { host, canvas, invalidate } = useKineticCanvas(
@@ -78,9 +84,10 @@ export default function IrisTurbine({
         s.rotation += dt * (0.045 + s.speed * 0.0028);
       }
       const gear = turbineGear(s.speed);
-      if (gear > s.gear) s.pulse = 1;
+      if (gear > s.gear && !still) s.shiftAge = 0;
       s.gear = gear;
-      s.pulse *= Math.exp(-dt * 4);
+      s.shiftAge += dt;
+      s.pulse = turbineShiftPulse(s.shiftAge);
       if (number.current)
         number.current.textContent = String(Math.round(s.speed));
       if (gearLabel.current) gearLabel.current.textContent = String(gear);
@@ -89,10 +96,18 @@ export default function IrisTurbine({
           redlineThreshold + 10,
           s.speed,
         ),
-        red = Math.round(kineticMix(85, 255, hot)),
-        green = Math.round(kineticMix(153, 85, hot)),
-        blue = Math.round(kineticMix(255, 90, hot)),
+        rgb = (hex: string, fallback: string) =>
+          (/^#[\da-f]{6}$/i.test(hex) ? hex : fallback)
+            .slice(1)
+            .match(/../g)!
+            .map((channel) => parseInt(channel, 16)),
+        cool = rgb(cruiseColor, "#9b8cff"),
+        warm = rgb(ignitionColor, "#ffbf69"),
+        red = Math.round(kineticMix(cool[0], warm[0], hot)),
+        green = Math.round(kineticMix(cool[1], warm[1], hot)),
+        blue = Math.round(kineticMix(cool[2], warm[2], hot)),
         color = `${red},${green},${blue}`;
+      const tipColor = `rgb(${[red, green, blue].map((c) => Math.round(kineticMix(c, 255, 0.82))).join(",")})`;
       host.current?.style.setProperty("--turbine-color", `rgb(${color})`);
       host.current!.dataset.speed = s.speed.toFixed(1);
       const r = Math.min(w, h) * 0.36,
@@ -159,7 +174,7 @@ export default function IrisTurbine({
           const edge = g.createLinearGradient(inner, 0, tipX, tipY);
           edge.addColorStop(0, `rgba(${color},.16)`);
           edge.addColorStop(0.6, `rgba(${color},.95)`);
-          edge.addColorStop(1, hot > 0.5 ? "#ffe4e6" : "#e0f2fe");
+          edge.addColorStop(1, tipColor);
           g.strokeStyle = edge;
           g.lineWidth = Math.max(0.65, r / 200);
           g.shadowColor = `rgb(${color})`;
@@ -180,7 +195,7 @@ export default function IrisTurbine({
           g.strokeStyle = `rgba(${color},.24)`;
           g.lineWidth = Math.max(0.4, r / 330);
           g.stroke();
-          g.fillStyle = hot > 0.5 ? "#ffe4e6" : "#fff";
+          g.fillStyle = tipColor;
           g.beginPath();
           g.arc(tipX, tipY, Math.max(0.7, r * 0.0055), 0, Math.PI * 2);
           g.fill();

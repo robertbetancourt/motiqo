@@ -304,6 +304,18 @@
               "label": "Disabled"
             }
           ]
+        },
+        {
+          "key": "cruiseColor",
+          "label": "Cruise color",
+          "kind": "color",
+          "defaultValue": "#9b8cff"
+        },
+        {
+          "key": "ignitionColor",
+          "label": "Ignition color",
+          "kind": "color",
+          "defaultValue": "#ffbf69"
         }
       ],
       "moods": [
@@ -317,7 +329,9 @@
             "redlineThreshold": 55,
             "bladeCount": 24,
             "interactive": "enabled",
-            "showTelemetry": "disabled"
+            "showTelemetry": "disabled",
+            "cruiseColor": "#9b8cff",
+            "ignitionColor": "#ffbf69"
           }
         },
         {
@@ -330,7 +344,9 @@
             "redlineThreshold": 55,
             "bladeCount": 24,
             "interactive": "enabled",
-            "showTelemetry": "disabled"
+            "showTelemetry": "disabled",
+            "cruiseColor": "#9b8cff",
+            "ignitionColor": "#ffbf69"
           }
         },
         {
@@ -343,7 +359,9 @@
             "redlineThreshold": 55,
             "bladeCount": 24,
             "interactive": "enabled",
-            "showTelemetry": "disabled"
+            "showTelemetry": "disabled",
+            "cruiseColor": "#9b8cff",
+            "ignitionColor": "#ffbf69"
           }
         }
       ]
@@ -968,7 +986,7 @@
           "key": "autoplay",
           "label": "Autoplay · ms",
           "kind": "range",
-          "defaultValue": 4000,
+          "defaultValue": 2500,
           "min": 0,
           "max": 12000,
           "step": 500
@@ -987,7 +1005,7 @@
           "settings": {
             "duration": 2200,
             "strength": 0.45,
-            "autoplay": 4000,
+            "autoplay": 2500,
             "ink": "#f4f0e8"
           }
         },
@@ -997,7 +1015,7 @@
           "settings": {
             "duration": 1800,
             "strength": 1.7,
-            "autoplay": 4000,
+            "autoplay": 2500,
             "ink": "#f4f0e8"
           }
         }
@@ -1092,7 +1110,7 @@
           "key": "autoplay",
           "label": "Autoplay · ms",
           "kind": "range",
-          "defaultValue": 4000,
+          "defaultValue": 3000,
           "min": 0,
           "max": 12000,
           "step": 500
@@ -1110,7 +1128,7 @@
           "label": "Slow Exposure",
           "settings": {
             "duration": 2400,
-            "autoplay": 4000,
+            "autoplay": 3000,
             "ink": "#f4f0e8"
           }
         },
@@ -1119,7 +1137,7 @@
           "label": "Contact Sheet",
           "settings": {
             "duration": 700,
-            "autoplay": 4000,
+            "autoplay": 3000,
             "ink": "#f4f0e8"
           }
         }
@@ -1196,13 +1214,13 @@
           "key": "warmColor",
           "label": "Ignition",
           "kind": "color",
-          "defaultValue": "#ff2e4c"
+          "defaultValue": "#ffb55c"
         },
         {
           "key": "coldColor",
           "label": "Cold smoke",
           "kind": "color",
-          "defaultValue": "#06b6d4"
+          "defaultValue": "#729eff"
         },
         {
           "key": "smokeDensity",

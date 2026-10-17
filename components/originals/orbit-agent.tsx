@@ -1,7 +1,12 @@
 "use client";
 import { useMemo, useRef } from "react";
 import { useKineticCanvas } from "./kinetic-canvas";
-import { kineticClamp, orbitRadius, seededKinetic } from "./kinetic-math";
+import {
+  kineticClamp,
+  orbitRadius,
+  seededKinetic,
+  agentBlink,
+} from "./kinetic-math";
 export type AgentMood = "idle" | "happy" | "listening" | "sleepy";
 export type OrbitAgentProps = {
   agentMood?: AgentMood;
@@ -28,6 +33,7 @@ export default function OrbitAgent({
   const mood = agentMood;
   const state = useRef({
       time: 2,
+      faceTime: 0,
       x: 0,
       y: 0,
       tx: 0,
@@ -57,6 +63,7 @@ export default function OrbitAgent({
       if (!still) {
         s.time += dt * kineticClamp(orbitSpeed, 0.1, 3);
         s.age += dt;
+        s.faceTime += dt;
         const ease = 1 - Math.exp(-dt * 7);
         s.x += (s.tx - s.x) * ease;
         s.y += (s.ty - s.y) * ease;
@@ -77,7 +84,12 @@ export default function OrbitAgent({
         body = unit * 0.16,
         time = still ? 2 : s.time,
         flash = still ? 0 : Math.exp(-s.age * 3),
-        happy = (!still && s.age < 0.85) || mood === "happy";
+        joy =
+          mood === "happy"
+            ? 1
+            : still
+              ? 0
+              : Math.sin(Math.PI * kineticClamp(s.age / 0.9, 0, 1)) ** 2;
       g.fillStyle = "#0b0d14";
       g.fillRect(0, 0, w, h);
       for (let i = 0; i < stars.length; i++) {
@@ -187,6 +199,9 @@ export default function OrbitAgent({
       );
       g.rotate(tilt);
       g.scale(1 + s.squash * 0.09, 1 - s.squash * 0.12);
+      g.save();
+      // The pearlescent shell turns independently; gaze and expression stay upright.
+      g.rotate(time * 0.12);
       const gradient = g.createLinearGradient(-body, -body, body, body);
       gradient.addColorStop(0, "#74adff");
       gradient.addColorStop(0.4, "#b2e7ff");
@@ -265,10 +280,11 @@ export default function OrbitAgent({
       g.strokeStyle = "#ffffff80";
       g.lineWidth = body * 0.012;
       g.stroke();
+      g.restore();
       g.translate(s.x * body * 0.075, s.y * body * 0.065);
       const eyeY = -body * 0.11,
         eyeX = body * 0.235,
-        blink = still ? 1 : Math.abs(Math.sin(time * 0.37)) < 0.035 ? 0.08 : 1;
+        blink = still ? 1 : agentBlink(s.faceTime);
       g.strokeStyle = "#26112f";
       g.fillStyle = "#26112f";
       g.lineWidth = body * 0.055;
@@ -276,55 +292,17 @@ export default function OrbitAgent({
       for (const side of [-1, 1]) {
         const x = eyeX * side;
         g.beginPath();
-        if (happy) {
-          g.moveTo(x - body * 0.09, eyeY + body * 0.025);
-          g.quadraticCurveTo(
-            x,
-            eyeY - body * 0.14,
-            x + body * 0.09,
-            eyeY + body * 0.025,
-          );
-          g.stroke();
-        } else if (mood === "sleepy") {
-          g.moveTo(x - body * 0.08, eyeY);
-          g.quadraticCurveTo(x, eyeY + body * 0.05, x + body * 0.08, eyeY);
-          g.stroke();
-        } else {
-          g.ellipse(
-            x,
-            eyeY,
-            body * 0.16,
-            body * 0.265 * blink,
-            -0.12,
-            0,
-            Math.PI * 2,
-          );
-          g.fill();
-        }
-      }
-      g.strokeStyle = "#39405d";
-      g.lineWidth = body * 0.035;
-      g.beginPath();
-      if (mood === "listening" && !happy) {
         g.ellipse(
-          0,
-          body * 0.19,
-          body * 0.045,
-          body * 0.065,
-          0,
+          x,
+          eyeY + body * 0.035 * (1 - blink),
+          body * 0.16 * (1 + joy * 0.04),
+          body * 0.265 * blink * (mood === "sleepy" ? 0.42 : 1 - joy * 0.09),
+          -0.12,
           0,
           Math.PI * 2,
         );
-      } else if (happy) {
-        g.moveTo(-body * 0.07, body * 0.16);
-        g.quadraticCurveTo(
-          0,
-          body * (happy ? 0.28 : 0.22),
-          body * 0.07,
-          body * 0.16,
-        );
+        g.fill();
       }
-      g.stroke();
       for (const side of [-1, 1]) {
         const blush = g.createRadialGradient(
           side * body * 0.4,

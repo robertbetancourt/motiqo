@@ -39,6 +39,17 @@ export function turbineCrowns(time: number) {
     };
   });
 }
+/** A C1 envelope: gear changes begin and end at zero, without a radius/glow step. */
+export const turbineShiftPulse = (age: number) =>
+  age >= 0 && age < 0.75 ? Math.sin((Math.PI * age) / 0.75) ** 2 : 0;
+export function agentBlink(time: number) {
+  const cycle = Math.floor(time / 7.3),
+    phase = time - cycle * 7.3;
+  const lid = (start: number) =>
+    kineticSmooth(start, start + 0.09, phase) *
+    (1 - kineticSmooth(start + 0.11, start + 0.28, phase));
+  return 1 - 0.95 * Math.max(lid(4.15), cycle % 3 === 1 ? lid(4.59) : 0);
+}
 /** Overscan the far edge, where the perspective frustum is widest. */
 export function terrainCoverage(aspect: number, cameraZ: number, fov = 43) {
   return Math.max(

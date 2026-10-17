@@ -6,7 +6,7 @@ export type ApertureCarouselProps = OpticalGalleryProps;
 /** Iris: a six-leaf optical opening, with refraction and a luminous blade edge. */
 export default function ApertureCarousel({
   duration = 1250,
-  autoplay = 4000,
+  autoplay = 3000,
   ...props
 }: ApertureCarouselProps) {
   return (

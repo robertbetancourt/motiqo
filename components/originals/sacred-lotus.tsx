@@ -11,9 +11,9 @@ import {
 } from "./kinetic-math";
 export type LotusColors = { inner: string; middle: string; outer: string };
 const palettes: Record<string, LotusColors> = {
-  aurora: { inner: "#c026d3", middle: "#2563eb", outer: "#06b6d4" },
-  glacier: { inner: "#4f46e5", middle: "#38bdf8", outer: "#a5f3fc" },
-  ember: { inner: "#e11d48", middle: "#f97316", outer: "#fde68a" },
+  aurora: { inner: "#9f71d6", middle: "#e0a6d1", outer: "#fff0d5" },
+  glacier: { inner: "#a5b4fc", middle: "#ddd6fe", outer: "#f5f3ff" },
+  ember: { inner: "#be567d", middle: "#e9a578", outer: "#fff0ce" },
 };
 export type SacredLotusProps = {
   progress?: number;
@@ -76,9 +76,9 @@ export default function SacredLotus({
           : colorScheme;
       const safe = (hex: string, fallback: string) =>
         /^#[\da-f]{6}$/i.test(hex) ? hex : fallback;
-      const a = safe(colors.inner, "#c026d3"),
-        b = safe(colors.middle, "#2563eb"),
-        c = safe(colors.outer, "#06b6d4");
+      const a = safe(colors.inner, palettes.aurora.inner),
+        b = safe(colors.middle, palettes.aurora.middle),
+        c = safe(colors.outer, palettes.aurora.outer);
       g.fillStyle = "#000";
       g.fillRect(0, 0, w, h);
       g.save();
@@ -157,8 +157,8 @@ export default function SacredLotus({
           stroke.addColorStop(0, a + "a0");
           stroke.addColorStop(0.5, b + "c0");
           stroke.addColorStop(0.78, c);
-          stroke.addColorStop(0.9, "#bae6fd");
-          stroke.addColorStop(1, "#e0f2fe");
+          stroke.addColorStop(0.9, "#fff4e6");
+          stroke.addColorStop(1, "#fffaf2");
           g.strokeStyle = stroke;
           g.lineWidth = Math.max(0.7, radius / 160) * 1.15;
           g.shadowColor = layer === 0 ? a : c;

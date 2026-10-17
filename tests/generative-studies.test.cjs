@@ -48,13 +48,13 @@ test('Three.js studies update existing geometry and uniforms, disable interactio
  }finally{dom.window.close();saved?Object.defineProperty(globalThis,'matchMedia',saved):delete globalThis.matchMedia;}
 });
 test('Orbit agent reacts to keyboard and clicks without changing the selected mood',async()=>{
- const dom=new JSDOM('<div id="mount"></div>'),saved=new Map();let tick;const gradient={addColorStop(){}};const g=new Proxy({createLinearGradient:()=>gradient,createRadialGradient:()=>gradient},{get:(o,key)=>key in o?o[key]:()=>{}});
+ const dom=new JSDOM('<div id="mount"></div>'),saved=new Map();let tick,ovalCount=0,mouthCurveCount=0;const gradient={addColorStop(){}};const g=new Proxy({createLinearGradient:()=>gradient,createRadialGradient:()=>gradient,ellipse(){ovalCount++;},quadraticCurveTo(){mouthCurveCount++;}},{get:(o,key)=>key in o?o[key]:()=>{}});
  for(const[k,v]of Object.entries({window:dom.window,document:dom.window.document,IS_REACT_ACT_ENVIRONMENT:true})){saved.set(k,Object.getOwnPropertyDescriptor(globalThis,k));Object.defineProperty(globalThis,k,{value:v,configurable:true,writable:true});}
  const Component=load('components/originals/orbit-agent.tsx',{'./kinetic-canvas':{useKineticCanvas(render){tick=render;return{host:React.useRef(null),canvas:React.useRef(null),invalidate(){}};}}}).default;
  const root=require('react-dom/client').createRoot(document.getElementById('mount')),seen=[];
  try{await React.act(()=>root.render(React.createElement(Component,{agentMood:'listening',onAgentClick:m=>seen.push(m)})));const button=document.querySelector('[role=button]');
   for(const mood of ['listening','listening','listening','listening']){await React.act(()=>button.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Enter',bubbles:true})));assert.match(button.getAttribute('aria-label'),new RegExp(mood));tick({g,w:500,h:500,dt:.016,time:2,still:false});}
-  assert.deepEqual(seen,['listening','listening','listening','listening']);await React.act(()=>root.render(React.createElement(Component,{paused:true,onAgentClick:m=>seen.push(m)})));await React.act(()=>button.click());assert.equal(seen.length,4);
+  assert.deepEqual(seen,['listening','listening','listening','listening']);assert.equal(ovalCount,16,'two oval eyes and two cheeks per greeting frame');assert.equal(mouthCurveCount,0,'no legacy eye arches or mouth');await React.act(()=>root.render(React.createElement(Component,{paused:true,onAgentClick:m=>seen.push(m)})));await React.act(()=>button.click());assert.equal(seen.length,4);
  }finally{await React.act(()=>root.unmount());dom.window.close();for(const[k,v]of saved)v?Object.defineProperty(globalThis,k,v):delete globalThis[k];}
 });
 test('Manual turbine accelerates from its current speed, coasts on release, and freezes without jumping when paused',async()=>{
@@ -103,4 +103,16 @@ test('Bokeh far edge covers wide and portrait camera frustums with parallax over
   const halfFrustum=Math.tan(43*Math.PI/360)*(z+19)*aspect;
   assert.ok(18*scale>halfFrustum+1);
  }
+});
+
+
+test('Agent eyelids close and reopen continuously at the full oval width, including occasional double blinks',()=>{
+ assert.equal(math.agentBlink(0),1);assert.ok(math.agentBlink(4.25)<.07);assert.equal(math.agentBlink(4.5),1);
+ let previous=1;for(let t=0;t<22;t+=.001){const value=math.agentBlink(t);assert.ok(value>=.049&&value<=1);assert.ok(Math.abs(value-previous)<.017);previous=value;}
+ assert.ok(math.agentBlink(7.3+4.7)<.07);
+});
+test('Gear-shift glow has a continuous onset and end, avoiding the previous instant radius step',()=>{
+ assert.equal(math.turbineShiftPulse(0),0);assert.equal(math.turbineShiftPulse(.75),0);assert.equal(math.turbineShiftPulse(1),0);
+ assert.ok(math.turbineShiftPulse(.016)<.005);assert.ok(math.turbineShiftPulse(.375)>.999);
+ let previous=0;for(let age=0;age<1;age+=1/120){const value=math.turbineShiftPulse(age);assert.ok(Math.abs(value-previous)<.036);previous=value;}
 });

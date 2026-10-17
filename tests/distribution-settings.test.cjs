@@ -33,7 +33,7 @@ test('Component settings survive remounts and restore shared URLs and browser hi
   window.history.replaceState({},'','/library?element=water-ripple-carousel');
   window.localStorage.setItem('motiqo-settings-v1:water-ripple-carousel',JSON.stringify({autoplay:0,strength:1.4}));
   await React.act(()=>root.render(React.createElement(React.StrictMode,null,React.createElement(Fixture,{id:'water-ripple-carousel'}))));
-  assert.equal(model.settings.autoplay,4000,'old autoplay-off default upgrades once');assert.equal(model.settings.strength,1.4,'other saved edits survive');
+  assert.equal(model.settings.autoplay,2500,'old autoplay-off default upgrades once');assert.equal(model.settings.strength,1.4,'other saved edits survive');
   await React.act(()=>model.update({autoplay:0}));await React.act(()=>root.render(null));
   window.history.replaceState({},'','/library?element=water-ripple-carousel');
   await React.act(()=>root.render(React.createElement(Fixture,{id:'water-ripple-carousel'})));

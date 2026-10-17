@@ -64,7 +64,7 @@ export default memo(function CardPreview({id,paused,priority=false}:{id:ElementI
   useEffect(()=>{
     if(mounted)return observePreviewReady(host.current!,()=>{painted.current=true;setReady(true);},()=>{painted.current=false;setReady(false);setMounted(false);});
   },[mounted]);
-  return <div ref={host} className="card-preview" data-preview-id={id} data-live={mounted&&ready&&visible||undefined} data-preview-state={mounted?(visible?'live':'cached'):'poster'}>
+  return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-live={mounted&&ready&&visible||undefined} data-preview-state={mounted?(visible?'live':'cached'):'poster'}>
     <img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
     <img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
     {mounted&&<div className="card-live"><PreviewBoundary onFailure={()=>{painted.current=false;setReady(false);setMounted(false);}}><Demo id={id} paused={paused||!visible}/></PreviewBoundary></div>}
