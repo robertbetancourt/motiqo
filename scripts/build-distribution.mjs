@@ -25,13 +25,15 @@ const items=manifest.items.map(item=>{
  for(const file of files.filter(f=>/\.tsx?$/.test(f.source)))for(const match of file.content.matchAll(/['"]\/(media|branding)\/([^'"\s]+)['"]/g)){
   if(!files.some(f=>f.source===`public/${match[1]}/${match[2]}`))throw Error(`Missing public artwork ${match[0]} in ${item.id}`);
  }
+ for(const name of ['LICENSE','THIRD_PARTY_NOTICES.md']){const bytes=fs.readFileSync(path.join(root,name));files.push({source:name,target:'components/motiqo/'+name,encoding:'utf8',content:bytes.toString('utf8'),sha256:crypto.createHash('sha256').update(bytes).digest('hex')});}
  return{...item,files};
 });
 const cli=path.join(root,'packages/cli');fs.mkdirSync(path.join(cli,'skill'),{recursive:true});
 fs.writeFileSync(path.join(cli,'registry.json'),JSON.stringify({...manifest,items}));
 fs.copyFileSync(path.join(root,'skills/motiqo/SKILL.md'),path.join(cli,'skill/SKILL.md'));
 fs.writeFileSync(path.join(root,'registry/element-ids.ts'),'// Generated from manifest.json; run npm run distribution:build.\nexport const elementIds = '+JSON.stringify(items.map(i=>i.id))+' as const;\nexport type ElementId = typeof elementIds[number];\n');
-fs.writeFileSync(path.join(cli,'NOTICE.md'),'Motiqo components. Distribution terms are not yet published. Preserve source credits.\nLiquid Relic and Event Horizon use the credited Sculpture Hero particle engine by Guglielmo Giannattasio, supplied through 21st.dev.\n');
+for(const name of ['LICENSE','THIRD_PARTY_NOTICES.md'])fs.copyFileSync(path.join(root,name),path.join(cli,name));
+fs.writeFileSync(path.join(cli,'NOTICE.md'),'Motiqo code: MIT, copyright 2026 Robert Betancourt. See LICENSE and THIRD_PARTY_NOTICES.md. Artwork and audio have separate permissions.\n');
 if(process.argv.includes('--pack')){
  const destination=path.join(root,'public/downloads');fs.mkdirSync(destination,{recursive:true});
  const npm=process.env.npm_execpath??path.join(path.dirname(process.execPath),'node_modules/npm/bin/npm-cli.js');

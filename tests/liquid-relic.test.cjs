@@ -8,11 +8,11 @@ function gpu({float=true,failShader=0,incomplete=false}={}){
   let serial=0,compiled=0;const live=new Set(),uniforms=new Map(),calls={parts:0,image:0,lost:0};let active;
   const make=kind=>{const resource={kind,id:++serial};live.add(resource);return resource;};
   const free=resource=>{if(resource)assert.ok(live.delete(resource),'each GPU allocation is released exactly once');};
-  const gl={COMPILE_STATUS:1,LINK_STATUS:2,ACTIVE_UNIFORMS:3,FRAMEBUFFER_COMPLETE:4,VERTEX_SHADER:5,FRAGMENT_SHADER:6,
+  const gl={COMPILE_STATUS:1,LINK_STATUS:2,ACTIVE_UNIFORMS:3,FRAMEBUFFER_COMPLETE:4,VERTEX_SHADER:5,FRAGMENT_SHADER:6,POINTS:7,TRIANGLES:8,
     createProgram:()=>make('program'),createShader:()=>make('shader'),shaderSource:(shader,source)=>shader.source=source,compileShader:shader=>shader.compilation=++compiled,getShaderParameter:shader=>shader.compilation!==failShader,getShaderInfoLog:()=>'',attachShader:(program,shader)=>(program.shaders??=[]).push(shader),bindAttribLocation(){},linkProgram:program=>{program.uniforms=[...new Set(program.shaders.flatMap(shader=>[...shader.source.matchAll(/uniform\s+\w+\s+(\w+)\s*;/g)].map(match=>match[1])))];},getProgramParameter:(program,key)=>key===3?program.uniforms.length:true,getActiveUniform:(program,i)=>({name:program.uniforms[i]}),getUniformLocation:(_,name)=>name,getProgramInfoLog:()=>'',deleteShader:free,deleteProgram:free,
     createBuffer:()=>make('buffer'),createVertexArray:()=>make('vao'),createTexture:()=>make('texture'),createFramebuffer:()=>make('framebuffer'),deleteBuffer:free,deleteVertexArray:free,deleteTexture:free,deleteFramebuffer:free,
     bindVertexArray(){},bindBuffer(){},bufferData(){},enableVertexAttribArray(){},vertexAttribPointer(){},bindTexture(){},pixelStorei(){},texImage2D(){},texParameteri(){},bindFramebuffer(){},framebufferTexture2D(){},viewport(){},clearColor(){},clear(){},generateMipmap(){},activeTexture(){},disable(){},enable(){},blendFunc(){},checkFramebufferStatus:()=>incomplete?0:4,
-    useProgram:program=>active=program,uniform1i(){},uniform1f:(name,value)=>uniforms.set(name,value),uniform2f:(name,x,y)=>uniforms.set(name,[x,y]),uniform3f(){},uniform4f(){},drawArrays:()=>calls.image++,drawArraysInstanced:(_,__,___,n)=>{calls.parts++;calls.count=n;},getExtension:name=>name==='WEBGL_lose_context'?{loseContext:()=>calls.lost++}:float?{}:null};
+    useProgram:program=>active=program,uniform1i(){},uniform1f:(name,value)=>uniforms.set(name,value),uniform2f:(name,x,y)=>uniforms.set(name,[x,y]),uniform3f(){},uniform4f(){},drawArrays:(mode,_,n)=>{if(mode===7){calls.parts++;calls.count=n;}else calls.image++;},drawArraysInstanced:(_,__,___,n)=>{calls.parts++;calls.count=n;},getExtension:name=>name==='WEBGL_lose_context'?{loseContext:()=>calls.lost++}:float?{}:null};
   return {gl,live,uniforms,calls};
 }
 function setup(){
@@ -28,18 +28,21 @@ function setup(){
   return {dom,frames,contexts,images,media,mediaListeners,advance,disconnected:()=>disconnected,close(){dom.window.close();for(const[key,value]of old){if(value)Object.defineProperty(globalThis,key,value);else delete globalThis[key];}}};
 }
 
-test('particle engine runs the flow/particle pipeline, settles, pauses, respects reduced motion and disposes GPU resources',()=>{
+test('particle engine renders spring grains, settles, pauses, respects reduced motion and disposes GPU resources',()=>{
   const env=setup(),context=gpu(),canvas=document.querySelector('canvas');canvas.getContext=()=>context.gl;let instance;
   try{
-    instance=new LiquidEngine(canvas,{...opts},()=>assert.fail('unexpected GPU failure'));instance.resize(640,480,{x:80,y:0,w:480,h:480});instance.setImage({naturalWidth:16,naturalHeight:16});env.advance();assert.equal(env.frames.size,0);assert.ok(instance.particleCount>1000);
+    instance=new LiquidEngine(canvas,{...opts},()=>assert.fail('unexpected GPU failure'));instance.resize(640,480,{x:80,y:0,w:480,h:480});instance.setImage({naturalWidth:16,naturalHeight:16});env.advance();assert.equal(env.frames.size,0);assert.ok(instance.particleCount>900);
     instance.pointer('move',200,200,false);env.advance(2);instance.pointer('move',400,200,false);env.advance(1);assert.ok(context.uniforms.get('uMouse')[0]>120&&context.uniforms.get('uMouse')[0]<320,'pointer input interpolates instead of snapping');env.advance(80);assert.ok(context.calls.parts>0);assert.equal(context.calls.count,instance.particleCount);
     instance.setOptions({paused:true});const drawn=context.calls.image;instance.pointer('move',10,10,false);env.advance();assert.equal(context.calls.image,drawn);assert.equal(env.frames.size,0);
     instance.setOptions({paused:false});instance.pointer('leave',0,0,false);env.advance();assert.equal(env.frames.size,0,'elastic return eventually sleeps');assert.equal(context.uniforms.get('uPresence'),0);
     instance.pointer('move',350,180,false);env.advance(2);instance.setVisible(false);assert.equal(env.frames.size,0);instance.setVisible(true);assert.ok(env.frames.size>0);
     instance.setOptions({reducedMotion:true});const still=context.calls.image;instance.pointer('down',350,180,false);env.advance();assert.equal(context.calls.image,still);assert.equal(env.frames.size,0);assert.equal(context.uniforms.get('uPresence'),0);
     instance.destroy();instance=null;assert.equal(context.live.size,0);assert.equal(context.calls.lost,1);assert.equal(env.frames.size,0);
-    for(const options of [{float:false},{failShader:3}]){const failed=gpu(options);canvas.getContext=()=>failed.gl;assert.throws(()=>new LiquidEngine(canvas,{...opts},()=>{}));assert.equal(failed.live.size,0,'partial initialization frees allocated shaders/programs');}
-    const failed=gpu({incomplete:true});canvas.getContext=()=>failed.gl;instance=new LiquidEngine(canvas,{...opts},()=>{});assert.throws(()=>instance.setImage({naturalWidth:16,naturalHeight:16}));instance.destroy();instance=null;assert.equal(failed.live.size,0,'an incomplete state framebuffer leaves no GPU allocation');
+    for(const options of [1,2,3,4].map(failShader=>({failShader}))){const failed=gpu(options);canvas.getContext=()=>failed.gl;assert.throws(()=>new LiquidEngine(canvas,{...opts},()=>{}));assert.equal(failed.live.size,0,'partial initialization frees allocated shaders/programs');}
+    const fallback=gpu({float:false});canvas.getContext=()=>fallback.gl;instance=new LiquidEngine(canvas,{...opts},()=>{});instance.setImage({naturalWidth:16,naturalHeight:16});env.advance();assert.ok(fallback.calls.parts>0,'does not require floating-point texture extensions');
+    canvas.dispatchEvent(new window.Event('webglcontextlost',{cancelable:true}));assert.equal(env.frames.size,0);
+    canvas.dispatchEvent(new window.Event('webglcontextrestored'));env.advance();assert.ok(fallback.calls.parts>1);instance.destroy();instance=null;assert.equal(fallback.live.size,0);
+
   }finally{instance?.destroy();env.close();}
 });
 
@@ -52,4 +55,20 @@ test('particle wrapper survives StrictMode, exports live options and cancels ima
     await React.act(()=>root.render(React.createElement(React.StrictMode,null,React.createElement(Relic,{paused:true,strength:1.5,restStyle:'particles'}))));assert.equal(env.contexts.length,2,'live options retain the engine');assert.equal(env.frames.size,0);assert.equal(env.contexts[1].uniforms.get('uRest'),1);
     await React.act(()=>root.unmount());mounted=false;assert.ok(env.contexts.every(context=>context.live.size===0));assert.equal(env.frames.size,0);assert.equal(env.mediaListeners.size,0);assert.equal(env.disconnected(),4);
   }finally{if(mounted)await React.act(()=>root.unmount());env.close();}
+});
+
+test('spring grains remain finite at maximum controls, return home and resample deterministically',()=>{
+ const env=setup(),context=gpu(),canvas=document.querySelector('canvas');canvas.getContext=()=>context.gl;let instance;
+ try{
+  instance=new LiquidEngine(canvas,{...opts,strength:2,radius:600,spread:2,turbulence:2,liquid:2,speed:3,returnSpeed:.2},()=>{});
+  instance.resize(640,480,{x:80,y:0,w:480,h:480});instance.setImage({naturalWidth:16,naturalHeight:16});env.advance();
+  const home=Array.from(instance.positions),count=instance.particleCount;
+  instance.pointer('down',320,240,true);env.advance(300);
+  assert.ok(instance.positions.every(Number.isFinite));assert.ok(instance.velocities.every(Number.isFinite));
+  assert.ok(instance.positions.some((value,i)=>i%4<2&&Math.abs(value-home[i])>1),'pointer forces move grains away from their anchors');
+  instance.pointer('leave',0,0,true);env.advance(2000);assert.equal(env.frames.size,0);assert.deepEqual(Array.from(instance.positions),home);
+  instance.setOptions({density:.3});assert.ok(instance.particleCount>count);const anchors=Array.from(instance.anchors);
+  instance.setImage({naturalWidth:16,naturalHeight:16});assert.deepEqual(Array.from(instance.anchors),anchors);
+  instance.destroy();instance.destroy();instance=null;assert.equal(context.live.size,0);assert.equal(context.calls.lost,1);
+ }finally{instance?.destroy();env.close();}
 });

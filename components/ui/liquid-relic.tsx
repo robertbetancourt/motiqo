@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { LiquidEngine, type EngineOptions } from './liquid-particle-engine';
 
-/** Motiqo artwork and presentation; particle engine adapted from Guglielmo Giannattasio's Sculpture Hero. */
+/** Motiqo interactive artwork with its spring-grain particle engine. */
 export type LiquidRelicProps = {
   src?: string; imageAlt?: string; label?:string; compact?: boolean; paused?: boolean;
   strength?: number; radius?: number; particleSpread?: number; turbulence?: number;

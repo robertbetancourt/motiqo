@@ -12,7 +12,7 @@ export function PrismButton({children,style,...props}:PrismButtonProps){
 }
 export default function PrismPreview({compact=false,paused=false,perspective=false,className='',...settings}:OpticalPlaygroundProps){
  return <div className={`mq-prism-preview ${className}`} data-compact={compact||undefined}>
-  <style>{`.mq-prism-preview{position:relative;display:grid;place-items:center;width:100%;height:100%;min-height:180px;overflow:hidden;perspective:900px;background-color:#08080a;background-image:linear-gradient(#14141888 1px,transparent 1px),linear-gradient(90deg,#14141888 1px,transparent 1px);background-size:44px 44px}.mq-prism-pose{transition:transform .5s ease;transform-style:preserve-3d}.mq-prism-pose[data-tilted]{transform:rotateX(24deg) rotateY(-14deg) rotateZ(-5deg)}.mq-prism-preview[data-compact] .mq-prism-pose{scale:.94}@media(prefers-reduced-motion:reduce){.mq-prism-pose{transition:none}}`}</style>
+  <style>{`.mq-prism-preview{position:relative;display:grid;place-items:center;width:100%;height:100%;min-height:180px;overflow:hidden;perspective:900px;background:#08080a}.mq-prism-pose{transition:transform .5s ease;transform-style:preserve-3d}.mq-prism-pose[data-tilted]{transform:rotateX(24deg) rotateY(-14deg) rotateZ(-5deg)}.mq-prism-preview[data-compact] .mq-prism-pose{scale:.94}@media(prefers-reduced-motion:reduce){.mq-prism-pose{transition:none}}`}</style>
   <div className="mq-prism-pose" data-tilted={perspective||undefined}><PrismButton {...settings} paused={paused} compact={compact}/></div>
  </div>;
 }

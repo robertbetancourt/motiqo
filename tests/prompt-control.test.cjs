@@ -62,11 +62,11 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
   const dom = new JSDOM('<div id="mount"></div>', { pretendToBeVisual: true, url: 'http://localhost' });
   const keys = ['window', 'document', 'HTMLElement', 'IS_REACT_ACT_ENVIRONMENT', 'matchMedia', 'requestAnimationFrame', 'cancelAnimationFrame'];
   const original = new Map(keys.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
-  const frames = new Map(), mediaListeners = new Set(); let serial = 0, written = '', reviewed = 0;
+  const frames = new Map(), mediaListeners = new Set(); let serial = 0, written = '', reviewed = 0, mobileMatch=false, mobileChange;
   dom.window.HTMLElement.prototype.showPopover = function () {};
   dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   const values = { window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement, IS_REACT_ACT_ENVIRONMENT: true,
-    matchMedia: () => ({ matches: false, addEventListener: (_, fn) => mediaListeners.add(fn), removeEventListener: (_, fn) => mediaListeners.delete(fn) }),
+    matchMedia: query => ({ get matches(){return query.includes('780px')&&mobileMatch;}, addEventListener: (_, fn) => {mediaListeners.add(fn);if(query.includes('780px'))mobileChange=fn;}, removeEventListener: (_, fn) => mediaListeners.delete(fn) }),
     requestAnimationFrame: fn => { frames.set(++serial, fn); return serial; }, cancelAnimationFrame: key => frames.delete(key) };
   for (const [key, value] of Object.entries(values)) Object.defineProperty(globalThis, key, { value, writable: true, configurable: true });
   const { createRoot } = require('react-dom/client');
@@ -124,9 +124,17 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
     assert.equal(document.querySelector('dialog'), null);
     assert.equal(document.body.style.overflow, '');
     const preview = document.querySelector('[data-demo]');
+    const disclosure=document.querySelector('details.inspector-customization');
+    assert.equal(document.querySelector('.mobile-settings-toggle'),null);
+    assert.equal(disclosure.open,true,'desktop controls stay open');
+    mobileMatch=true;await React.act(()=>mobileChange());assert.equal(disclosure.open,false,'mobile uses a collapsed disclosure');
+    await React.act(()=>disclosure.querySelector('summary').click());assert.equal(disclosure.open,true);
+
     const records=document.querySelector('[aria-label=Records]');
     await React.act(()=>{Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype,'value').set.call(records,'5');records.dispatchEvent(new dom.window.Event('input',{bubbles:true}));});
-    assert.equal(preview.dataset.count,'5','live controls pass actual component props');
+    assert.equal(preview.dataset.count,'5','live controls pass actual component props');assert.equal(disclosure.open,true,'editing a control retains the expanded disclosure');
+    await React.act(()=>disclosure.querySelector('summary').click());assert.equal(disclosure.open,false);assert.equal(preview.dataset.count,'5');
+    mobileMatch=false;await React.act(()=>mobileChange());assert.equal(disclosure.open,true,'desktop restores visible controls');
     assert.equal(document.querySelector('.detail-description'), null);
     assert.equal(document.querySelector('.element-workbench select'), null);
     assert.equal(document.querySelector('.inspector-disclosure'), null,'auxiliary props and usage sections are removed');

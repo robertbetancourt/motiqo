@@ -1701,7 +1701,7 @@
       "title": "LenticularButton",
       "category": "Objects",
       "original": true,
-      "description": "A moving lens bending the grid beneath the glass.",
+      "description": "A moving lens bending soft light beneath dark glass.",
       "hint": "Move to guide the lens. Click to send a refractive wave.",
       "source": "Motiqo",
       "sourceUrl": "/docs#installation",
@@ -1715,7 +1715,7 @@
       ],
       "installNote": "Copy all seven implementation files together. The named button is independently usable and accepts native button attributes; the default preview adds its own demonstration scene. No extra runtime dependency is required.",
       "code": "import LenticularPreview, { LenticularButton } from './lenticular-button';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><LenticularPreview /></div>;\n}\n\n// Standalone: <LenticularButton />",
-      "brief": "A native WebGL2 rounded glass button containing a local magnifying lens. Render a procedural technical grid, inverse-map it through a smooth radial magnification field, apply controlled barrel distortion and wavelength offsets, and retain crisp HTML lettering above the optical scene. The lens follows the spring cursor or drifts softly while idle. Its surrounding preview grid shares the configured spacing and centered origin. Clicks distort the grid with a local radial shockwave. Expose magnification, lensRadius, distortion, gridSpacing, tint and idleMotion. This component supplies its own procedural background scene; no screenshot service or external texture is required. Respect pause, reduced motion, offscreen/document suspension, context restoration and complete GPU cleanup. All controls belong to the normal Motiqo inspector.",
+      "brief": "A native WebGL2 rounded glass button containing a local magnifying lens. Render a smooth dark light field without grid lines or markers, inverse-map it through a smooth radial magnification field, apply controlled barrel distortion and wavelength offsets, and retain crisp HTML lettering above the optical scene. The lens follows the spring cursor or drifts softly while idle. Its surrounding preview is a plain dark background. Clicks distort the light field with a local radial shockwave. Expose magnification, lensRadius, distortion, tint and idleMotion. This component supplies its own procedural background scene; no screenshot service or external texture is required. Respect pause, reduced motion, offscreen/document suspension, context restoration and complete GPU cleanup. All controls belong to the normal Motiqo inspector.",
       "entry": "lenticular-button.tsx",
       "exportName": "LenticularPreview",
       "files": [
@@ -1779,15 +1779,6 @@
           "step": 0.05
         },
         {
-          "key": "gridSpacing",
-          "label": "Grid spacing",
-          "kind": "range",
-          "defaultValue": 22,
-          "min": 12,
-          "max": 40,
-          "step": 1
-        },
-        {
           "key": "tint",
           "label": "Glass tint",
           "kind": "color",
@@ -1818,7 +1809,6 @@
             "magnification": 2.5,
             "lensRadius": 22,
             "distortion": 0.2,
-            "gridSpacing": 18,
             "tint": "#91d9ed",
             "idleMotion": "disabled"
           }
@@ -1830,7 +1820,6 @@
             "magnification": 1.4,
             "lensRadius": 34,
             "distortion": 0.25,
-            "gridSpacing": 22,
             "tint": "#c1d0ef",
             "idleMotion": "enabled"
           }
@@ -5917,9 +5906,9 @@
       "dependencies": [
         "React"
       ],
-      "installNote": "Copy event-horizon.tsx, liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts into one folder. Save event-horizon.svg in public/media. The original black-hole artwork is Motiqo’s; retain the particle engine credit to Guglielmo Giannattasio.",
+      "installNote": "Copy event-horizon.tsx, liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The current renderer is Motiqo's spring-grain engine.",
       "code": "import EventHorizon from './event-horizon';\n\nexport default function BlackHole() {\n  return <EventHorizon />;\n}",
-      "brief": "Integrate Motiqo Event Horizon, an authored black-hole illustration with a dark shadow, photon ring, lensed upper arc and copper/champagne accretion filaments. It uses the same credited GPU particle engine as Liquid Relic to dissolve and reconstruct the artwork around the hand. Preserve the original flow-map wake, curl advection and elastic return. Expose resting finish, strength, radius, particleSpread, liquid, returnSpeed and sculptureScale. Preserve Lerp pointer input, touch and keyboard, lower mobile density, static reduced motion, fallback image, visibility suspension and full GPU/listener/observer cleanup. Changing the artwork does not remove the engine attribution.",
+      "brief": "Integrate Event Horizon with Motiqo's spring-grain engine. Sample the supplied artwork into colored WebGL2 point sprites; damped springs restore each grain after radial pressure, vortex and oscillating pointer forces. Keep the current controls, smoothed pointer, touch and keyboard input, static reduced motion, mobile density cap, offscreen suspension, image fallback and complete resource cleanup. Copy the engine, shaders and local artwork with the component.",
       "entry": "event-horizon.tsx",
       "exportName": "EventHorizon",
       "files": [
@@ -6069,9 +6058,9 @@
       "dependencies": [
         "React"
       ],
-      "installNote": "Copy liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts into one folder. Save liquid-relic.svg under public/media, or supply your own CORS-readable src. Retain the engine credit to Guglielmo Giannattasio; the metallic Motiqo artwork and presentation are authored for Motiqo.",
+      "installNote": "Copy liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The current renderer is Motiqo's spring-grain engine.",
       "code": "import LiquidRelic from './liquid-relic';\n\nexport default function Sculpture() {\n  return <LiquidRelic src=\"/media/liquid-relic.svg\" />;\n}",
-      "brief": "Integrate Liquid Relic, Motiqo’s metallic emblem using the particle dynamics adapted from the supplied Sculpture Hero by Guglielmo Giannattasio. Keep its original GPU flow-map wake, curl-noise advection, complementary image/particle dissolve, velocity-stretched streaks and elastic return. Motiqo provides its own local artwork and minimal presentation, without the reference hero text or navigation. Configure strength, radius, particleSpread, liquid, returnSpeed, restStyle and sculptureScale. Preserve exponential Lerp pointer input, touch and keyboard stirring, paused/static reduced motion, lower mobile particle density and 30fps, visibility suspension, fresh canvases per lifecycle, static image fallback and complete GPU/listener/observer/RAF cleanup.",
+      "brief": "Integrate Liquid Relic with Motiqo's spring-grain engine. Sample the supplied artwork into colored WebGL2 point sprites; damped springs restore each grain after radial pressure, vortex and oscillating pointer forces. Keep the current controls, smoothed pointer, touch and keyboard input, static reduced motion, mobile density cap, offscreen suspension, image fallback and complete resource cleanup. Copy the engine, shaders and local artwork with the component.",
       "entry": "liquid-relic.tsx",
       "exportName": "LiquidRelic",
       "files": [

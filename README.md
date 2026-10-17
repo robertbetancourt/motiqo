@@ -1,141 +1,103 @@
-# Motiqo
+<p align="center"><img src="docs/readme/hero.svg" alt="Motiqo — interfaces with a little more life" width="100%" /></p>
 
-A library of original interactive elements. Fine contours, tactile objects and considered motion, with editable previews and source ready to use.
+<p align="center">
+  <a href="https://motiqo.site/">Explore Motiqo</a> &nbsp;·&nbsp;
+  <a href="https://motiqo.site/library">Component library</a> &nbsp;·&nbsp;
+  <a href="https://motiqo.site/docs">Documentation</a> &nbsp;·&nbsp;
+  <a href="LICENSE">MIT code</a>
+</p>
 
-Built with Next.js, React and TypeScript. Urbanist and IBM Plex Mono are served locally.
+# Motion you can make your own.
 
-## Run locally
+A growing collection of <!-- count:start -->52<!-- count:end --> interactive React components: tactile buttons, generative sculptures, animated typography and small interface experiences. Explore a component, tune its controls, then bring the source into your project.
 
-```sh
-npm install
-npm run dev
-```
+**Early stage · React + TypeScript · Source included · Built by [Robert Betancourt](https://github.com/robertbetancourt)**
 
-Open http://127.0.0.1:3014. No environment variables are required. An optional GitHub repository override is documented in `.env.example`.
+## A few things to play with
 
-```sh
-npm run typecheck
-npm run build
-node --test tests/*.test.cjs
-```
+Static previews below; open the library to interact with the animations.
 
-For Vercel, use the `Motiqo` project root and the Next.js preset. The prototype remains `noindex` while the library develops.
+<!-- gallery:start -->
+<table>
+<tr>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=sacred-lotus"><img src="docs/readme/sacred-lotus.webp" width="250" alt="SacredLotus component preview" /><br /><strong>SacredLotus</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=inkshift"><img src="docs/readme/inkshift.webp" width="250" alt="Inkshift component preview" /><br /><strong>Inkshift</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=gyro"><img src="docs/readme/gyro.webp" width="250" alt="Gyro component preview" /><br /><strong>Gyro</strong></a></td>
+</tr>
+<tr>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=quantum-core"><img src="docs/readme/quantum-core.webp" width="250" alt="QuantumCore component preview" /><br /><strong>QuantumCore</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=photon-button"><img src="docs/readme/photon-button.webp" width="250" alt="PhotonButton component preview" /><br /><strong>PhotonButton</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=helix"><img src="docs/readme/helix.webp" width="250" alt="Helix component preview" /><br /><strong>Helix</strong></a></td>
+</tr>
+<tr>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=aura"><img src="docs/readme/aura.webp" width="250" alt="Aura component preview" /><br /><strong>Aura</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=drawer"><img src="docs/readme/drawer.webp" width="250" alt="Drawer component preview" /><br /><strong>Drawer</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=silk-aperture"><img src="docs/readme/silk-aperture.webp" width="250" alt="Silk Aperture component preview" /><br /><strong>Silk Aperture</strong></a></td>
+</tr>
+</table>
+<!-- gallery:end -->
 
-## Explore
+## From an idea to your interface
 
-- **Home** introduces the library with Motiqo's own folded text entrance and a procedural metal sculpture.
-- **Library** contains interactive elements, search, category filters and saved items. Desktop uses four columns; narrower screens use two or one.
-- Opening a card leads to an addressable workspace at `/library?element=…`, with a large canvas and inspector. Source and Prompt share the preview's dimensions.
-- Inspector moods and controls change actual component properties. Configurations persist per element and can be shared by URL. The generated usage example and copied prompt include the selected configuration. Reset settings restores defaults.
-- Sidebar navigation includes Home, Library, Saved, Getting started, accent colour and the repository link. It collapses on mobile.
+- **Tune it live.** Controls and moods help you find the right movement. Share a URL with your settings.
+- **Own the integration.** Download a component ZIP with its helpers, local assets and a runnable example, or use the bundled CLI.
+- **Keep it portable.** Exports use React and their declared dependencies, without the Motiqo site's styles or Next.js runtime.
+- **Make room for stillness.** Components support pause and reduced motion; GPU components include fallbacks. Check the component's keyboard and touch behavior in your own layout.
 
-## Elements
+## Use a component
 
-| Element | Implementation | Adjustable properties |
-| --- | --- | --- |
-| Constellation | GPU stellar sphere with volumetric dust, curved threads and travelling light | Response, speed, stars, dust density, accent |
-| Meridian | Stepped architectural city, neon routes and cinematic tracking | Route colours, gradient, speed, replay, autoplay, scroll sensitivity, camera entrance |
-| Resonance | Harmonic ribbon ring with an incandescent rim and stippled aura | Size, speed, wave amplitude, ribbon count, palette, hover intensity |
-| Sleeve | Elastic 3D collection of twenty authored albums and hero selection | Albums, tilt, spring configuration, starting index, playback callback |
-| Deck | Isometric CAD hardware with floating actuator, raised keys and sequential light | Spring response, sequence speed, elevation, autoplay, four gradient colours |
-| Companion | Animated glass ribbon agent with cursor-tracking eyes | Response, speed, eye tracking, warm and cool light |
-| Sentiment | Illustrated market line chart with smooth period morphing and cursor inspection | Asset, period, variation, speed, line width, area light |
-| Helix | 3D double helix made entirely from points with shader curl turbulence | Particle count, rotation, dispersion, colours, interaction |
-| Stratum | Instanced isometric pillar matrix with anchored spring motion, four fields and raycast ripples | Grid, height, speed, sequence, cursor pressure/lift, palette |
-| Inkshift | Native WebGL2 threshold ink with exact XOR type and inertial word transitions | Editable words and bold groups, vorticity, fade, radius, threshold, colours, auto cycle |
-| Atelier | Paired architectural drawing and warm room joined by an organic brush portal | Images, portal, brush, fade, roughness, title, subtitle |
-| Charge | Plasma battery orb with a liquid Y-split, rising stardust and a cropped portrait frame | Percentage, status, flow speed, particle count, cyan/amber colours, animated count |
-| Holdings | Animated segmented stock portfolio with illustrative USD positions | Portfolio target, position size, speed, line width, segment gap, activity |
-| Galaxy | Inclined GPU spiral galaxy with a radiant core, dust streams and orbiting stars | Particles, orbit speed, spiral arms, inclination, glow, core and star colours |
-| Luma | Coral-to-violet particle wave with drifting dust and a cropped portrait greeting | Particles, speed, wave height, glow, gradient colours |
-| Aura | Fluid wave and particle sphere with interactive score and risk colours | Score, response, speed, waves, density |
-| Nexus | Layered network sphere with a particle core and gentle compression | Response, speed, nodes, connections, line width |
-| Orbit | Independently rotating open contours with soft 3D tilt | Response, speed, rings, line width, relief |
-| Halo | Rotating 3D particle globe that settles into latitude bands | Response, speed, particle count, dot size |
-| District | Sixteen stepped SVG buildings on an isometric city plan | Response, speed |
-| Pulse | Progressively drawn sample activity chart | Tempo, amplitude, line colour |
-| Event Horizon | Authored black-hole artwork using the credited Relic particle engine | Resting finish, response, radius, dispersion, fluidity, return, scale |
-| Liquid Relic | Image-to-particle GPU sculpture with authored Motiqo artwork | Resting finish, response, radius, dispersion, fluidity, return, scale |
-| Crate | Three.js orthographic vinyl shelf with real depth testing | Record count, response, speed |
-| Liquid Form | Native WebGL2 signed-distance-field sculpture | Knot/Orbit/Bloom, liquidity, relief, scale, metal tint |
-| Glow Nav | React navigation with one interpolated light field | Transition duration, light colour |
-| Lantern | Solid SVG petals around a warm core | Response, speed |
-| Gyro | Solid SVG gimbal rings on a plinth | Response, speed |
-| Arbor | Procedural branches and outlined leaves | Response, speed |
-| Drawer | Isometric cabinet with opening trays | Response, speed |
-| Tempo | Six spheres on a one-way conveyor | Response, speed |
-| Pleat | Twenty-five elastic lamellae | Response, speed |
-| Gilded Signal | Three.js engraved holographic card | Local background artwork |
-| Silk Aperture | SVG architectural reveal | Dawn/Dusk light |
+### Download from the library
 
-Liquid Form generates its own geometry and metallic shading. It does not use a sculpture image or an external effect engine. Crate uses fixed spacing and bounded tilt to keep records apart; its depth buffer hides rear grooves and shelf walls correctly. Glow Nav is a standalone library element with generic destinations, independent of the site's Sidebar.
+1. Open [the library](https://motiqo.site/library) and choose a component.
+2. Adjust its settings, then download the ZIP.
+3. Follow its README, install the listed dependencies and copy the component and assets into your React project.
 
-## Source structure
+The archive includes `Example.tsx`, your settings, `LICENSE` and resource notices. Some components need an explicitly sized container. Canvas and WebGL quality depends on the device and browser.
 
-- `lib/catalog.ts` — classifications, dependency instructions and prompt adapters.
-- `lib/element-controls.ts` — editable properties, defaults and generated usage examples.
-- `components/originals/` — authored component geometry, shaders and motion.
-- `components/element-workspace.tsx` — preview, inspector, source and prompt views.
-- `components/site-sidebar.tsx` — shared site navigation.
-- `components/effects/fold-text.tsx` — native Web Animations letter entrance.
-- `components/outline-field.tsx` — authored CSS bezel with interpolated pointer lighting.
-- `components/liquid-action.tsx` — reusable glass copy action.
-- `app/library/page.tsx` — reads the actual implementation files into Source.
-- `public/media/` — optimized local artwork from the supplied assets.
+### Use the CLI
 
-The source panel exports complete component files, not demo placeholders. Library requests only the initially selected component source; other sources load on demand with cancellation, retry and copy protection while loading. Components include scoped styles; standalone exports do not depend on the site's global stylesheet. Install instructions specify any additional files and packages.
-
-## Motion and accessibility
-
-Library renders local, theme-aware posters immediately. Each component has its own lazy module; code for the next row is anticipated, while visible scenes enter progressively after the page has painted. A poster remains until the real scene has drawn its first frame. Two recently viewed scenes stay paused offscreen for quick return; older scenes are disposed. Fresh paused/reduced-motion cards use the complete still composition without creating a simulation.
-
-Posters are captured from the actual compact components, including complete chart readouts. In development, open `/preview-capture/<id>?theme=dark` or `?theme=light`, wait for the surface's `data-ready="true"`, and capture its top-left 320 × 320 pixels to `screenshots/posters/<id>-<theme>.png`. Run `npm run previews:build` to generate optimized, content-addressed WebPs and `registry/previews.json`. Commit those outputs; source captures are ignored. The capture route returns 404 in production. Tests check every poster's content/hash, scene admission, readiness, cancellation and bounded retention.
-
-Pointer interactions use frame-independent exponential interpolation. Sculptures sleep when settled and suspend offscreen or in hidden tabs. Reduced motion retains a static composition. Components clean up timers, animation frames, observers, listeners and GPU resources. Native keyboard controls provide alternatives to pointer input.
-
-The workspace uses normal page navigation without a focus trap or body scroll lock. View tabs support arrow keys. Selection menus support keyboard navigation and Escape. The focus indicator is a thin white outline. Copy and viewport controls are 50px tall.
-
-Saved items migrate from the former storage key. Accent colour and prompt workflow persist locally. The loader follows actual document, font and route readiness without an artificial minimum duration. The GitHub action uses the official Invertocat asset from the [GitHub brand toolkit](https://brand.github.com/foundations/logo).
-
-Website `/lab` is separate and has not been changed.
-
-## Liquid Relic
-
-Liquid Relic retains the user-supplied Sculpture Hero particle engine by Guglielmo Giannattasio (guglielmogiannattasio.it), distributed via 21st.dev. Its flow map, curl noise, complementary image/particle dissolve, velocity streaks and elastic return remain intact. This is an adapted engine with Motiqo’s own metallic emblem artwork and minimal presentation; engine authorship is credited in source, documentation and generated prompts.
-
-Copy the three files from `components/ui/` into one folder. Save the supplied `liquid-relic.svg` in `public/media`, or pass your own same-origin/CORS-readable `src`. Inspector parameters update the live simulation and generated usage. Reduced motion remains static; pause freezes the current frame. Compact/mobile previews cap particle density and render at 30fps. Offscreen/hidden canvases suspend; unmount disposes GPU programs, shaders, textures, framebuffers, buffers, observers, listeners and queued presentation frames.
-
-## Distribution and validation
-
-```sh
-npm run distribution:build
-npm test
-npm run build
-npm run verify:exports
-```
-
-The build validates the manifest and bundles the actual implementation and artwork into `public/downloads/motiqo-cli-0.1.0.tgz`. This package is downloadable from Getting started; it is not published on npm. No remote registry is required by the installed CLI.
+Download [motiqo-cli-0.1.0.tgz](https://motiqo.site/downloads/motiqo-cli-0.1.0.tgz) into your project, then:
 
 ```sh
 npm install --save-dev ./motiqo-cli-0.1.0.tgz
-npx motiqo list --json
-npx motiqo add helix --dir src/components/motiqo --dry-run
-npx motiqo add helix --dir src/components/motiqo
-npx motiqo skill
+npx motiqo list
+npx motiqo add helix --dry-run
+npx motiqo add helix
 ```
 
-`--install` explicitly installs missing npm dependencies with lifecycle scripts disabled. Existing dependency declarations are retained. Other package managers receive dependency instructions. Conflicting files require `--overwrite`; the installer rejects traversal and symbolic-link destinations, validates bundled SHA-256 hashes and rolls back copied files after a write failure.
+The CLI is bundled for download; it is **not published on npm**. It checks file hashes and asks you to resolve conflicting files before overwriting them. Review the dry run. `--install` optionally installs missing dependencies with lifecycle scripts disabled; otherwise it prints what to install. For AI coding tools, `npx motiqo skill` installs the included integration guide.
 
-The workspace ZIP endpoint (`/api/components/<id>`) uses the same manifest. It includes complete files/assets, an example matching the selected configuration and a dependency README. Settings from URLs/storage are versioned, bounded and restricted to declared controls. A shared URL takes precedence over locally saved settings; Reset restores defaults. Clearing site storage clears locally saved configurations.
+## Run Motiqo locally
 
-`verify:exports` creates an independent temporary React project, installs the packed CLI and pinned dependencies, copies all components and assets, and typechecks the default and all registered mood examples for every component. It uses no Next.js runtime, site stylesheet or project aliases. Successful fixtures are removed; failures are retained for diagnosis. Browser checks remain necessary for visual quality and GPU support. CI runs tests, the production build and export verification without publishing or deployment.
+Use Node.js 24 and npm.
 
-Aura exposes a semantic risk meter; Holdings announces selected portfolio values. Pulse and Sentiment provide data tables and keyboard inspection. Live announcements describe interaction results rather than decorative animation frames. Reduced motion preserves data inspection.
+```sh
+git clone https://github.com/robertbetancourt/motiqo.git
+cd motiqo
+npm ci
+npm run dev
+```
 
-Future work, including MCP, hosted playgrounds, video export and public package distribution, is tracked in [PENDIENTES.md](PENDIENTES.md).
+Open [localhost:3014](http://127.0.0.1:3014). The development command prepares the downloadable CLI first.
 
-Inkshift owns a native WebGL2 ping-pong fluid solver and an XOR text texture; its bundled Urbanist font retains its OFL license. Atelier includes an original generated interior and a Sobel drawing calculated from that same image (`node scripts/build-atelier-sketch.mjs`). With a different render and no sketch, its shader derives aligned edges automatically. Image and text fields are bounded, persist with the other settings and appear in exported examples.
+```sh
+npm test                 # behavioral and regression tests
+npm run typecheck        # TypeScript
+npm run build            # production site + downloadable CLI
+npm run verify:exports   # every example in an independent React project
+npm run readme:build     # refresh the gallery after changing previews
+```
 
-The original Tidal and Atlas galleries, ThermalSmoke, RadialSpectrum and TypeGarden are documented in [Gallery, atmosphere and living type](docs/gallery-weather-garden-audio.md). Optical buttons and QuantumCore are documented in [Optical effects](docs/optical-effects.md).
+CI runs these checks, dependency auditing and secret scanning. Passing checks do not replace browser, accessibility or real-device performance reviews.
 
-SacredLotus, IrisTurbine, BokehTerrain, OpalineOrb and OrbitAgent are documented in [Generative studies](docs/generative-studies.md). Library tags are clickable filters with shareable URLs and browser history support.
+## Building in the open
+
+Motiqo is still evolving. APIs and visuals may change before a stable release. Bug reports, thoughtful ideas and small fixes are welcome. If something moves you, a star helps others find the project.
+
+[Contributing](CONTRIBUTING.md) · [Architecture](docs/architecture.md) · [Roadmap](PENDIENTES.md) · [Security policy](SECURITY.md) · [Deployment checklist](docs/security.md)
+
+## License and resources
+
+Original Motiqo code and documentation are **MIT licensed**, copyright 2026 Robert Betancourt. Keep the license notice when reusing the code.
+
+Images generated with Midjourney, music created with Suno, and brand assets have separate permissions and are **excluded from the code MIT grant**. Dependencies and fonts retain their own licenses. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing resources.
