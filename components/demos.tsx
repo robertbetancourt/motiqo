@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import {useEffect,useState} from 'react';
 import {previewLoaders} from '@/lib/preview-loaders';
 import { useReducedMotion } from 'motion/react';
 
@@ -39,12 +40,62 @@ const Helix=dynamic(previewLoaders['helix'],{ssr:false});
 const Constellation=dynamic(previewLoaders['constellation'],{ssr:false});
 const Sentiment=dynamic(previewLoaders['sentiment'],{ssr:false});
 const GildedCard=dynamic(previewLoaders['gilded-signal'],{ssr:false});
+const Stratum=dynamic(previewLoaders['stratum'],{ssr:false});
+const Charge=dynamic(previewLoaders['charge'],{ssr:false});
+const Inkshift=dynamic(previewLoaders['inkshift'],{ssr:false});
+const Atelier=dynamic(previewLoaders['atelier'],{ssr:false});
+
+const PrismPreview=dynamic(previewLoaders['prism-button'],{ssr:false});
+const SpectralPreview=dynamic(previewLoaders['spectral-button'],{ssr:false});
+const CausticPreview=dynamic(previewLoaders['caustic-button'],{ssr:false});
+const LenticularPreview=dynamic(previewLoaders['lenticular-button'],{ssr:false});
+const PhotonPreview=dynamic(previewLoaders['photon-button'],{ssr:false});
+const OpticalPlayground=dynamic(previewLoaders['optical-button'],{ssr:false});
+const QuantumCore=dynamic(previewLoaders['quantum-core'],{ssr:false});
+const Clustered=dynamic(previewLoaders['clustered'],{ssr:false});
+
+const WaterRippleCarousel=dynamic(previewLoaders['water-ripple-carousel'],{ssr:false});
+const ApertureCarousel=dynamic(previewLoaders['aperture-carousel'],{ssr:false});
+const ThermalSmoke=dynamic(previewLoaders['thermal-smoke'],{ssr:false});
+const RadialSpectrum=dynamic(previewLoaders['radial-spectrum'],{ssr:false});
+const TypeGarden=dynamic(previewLoaders['type-garden'],{ssr:false});
+
+const SacredLotus=dynamic(previewLoaders['sacred-lotus'],{ssr:false});
+const IrisTurbine=dynamic(previewLoaders['iris-turbine'],{ssr:false});
+const BokehTerrain=dynamic(previewLoaders['bokeh-terrain'],{ssr:false});
+const OpalineOrb=dynamic(previewLoaders['opaline-orb'],{ssr:false});
+const OrbitAgent=dynamic(previewLoaders['orbit-agent'],{ssr:false});
 
 export function Demo({ id, paused = false, expanded = false, silkLight, settings={},onSettingsChange }: { id: ElementId; paused?: boolean; expanded?: boolean; silkLight?: 'dawn' | 'dusk';settings?:Settings;onSettingsChange?:(patch:Settings)=>void }) {
-  const reduced = useReducedMotion();
+  const prefersReduced = useReducedMotion();
+  const [hydrated,setHydrated] = useState(false);
+  useEffect(()=>setHydrated(true),[]);
+  const reduced = hydrated && prefersReduced;
   const still = paused || reduced;
   const motion={intensity:typeof settings.intensity==='number'?settings.intensity:1,speed:typeof settings.speed==='number'?settings.speed:1};
   return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`}>
+    {id==='sacred-lotus'&&<SacredLotus {...settings} progress={settings.playback==='controlled'?Number(settings.progress??56):undefined} interactive={settings.interactive!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='iris-turbine'&&<IrisTurbine {...settings} speed={settings.mode==='controlled'?Number(settings.speed??88):undefined} autoDemo={settings.mode!=='interactive'&&settings.mode!=='controlled'} interactive={settings.interactive!=='disabled'} showTelemetry={settings.showTelemetry==='enabled'} compact={!expanded} paused={!!still}/>}
+    {id==='bokeh-terrain'&&<BokehTerrain {...settings} showStars={settings.showStars!=='disabled'} interactive={settings.interactive!=='disabled'} showTitle={settings.showTitle==='enabled'} compact={!expanded} paused={!!still}/>}
+    {id==='opaline-orb'&&<OpalineOrb {...settings} colorPalette={{coreBlue:String(settings.coreBlue??'#8ab8f8'),warmPeach:String(settings.warmPeach??'#ffbe98'),outerLavender:String(settings.outerLavender??'#c4b5fd'),lineColor:String(settings.lineColor??'#ffffff')}} interactive={settings.interactive!=='disabled'} listening={settings.listening==='enabled'} compact={!expanded} paused={!!still}/>}
+    {id==='orbit-agent'&&<OrbitAgent {...settings} agentMood={settings.agentMood as 'idle'|'happy'|'listening'|'sleepy'|undefined} interactive={settings.interactive!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='water-ripple-carousel'&&<WaterRippleCarousel {...settings} compact={!expanded} paused={!!still}/>}
+    {id==='aperture-carousel'&&<ApertureCarousel {...settings} compact={!expanded} paused={!!still}/>}
+    {id==='thermal-smoke'&&<ThermalSmoke {...settings} autoTriggerIntro={settings.autoTriggerIntro!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='radial-spectrum'&&<RadialSpectrum {...settings} preset={settings.preset as 'inception'|'interstellar'|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='type-garden'&&<TypeGarden {...settings} editable={expanded&&settings.editable!=='disabled'} palette={settings.palette as string|undefined} motionMode={settings.motionMode as 'breeze'|'grow'|'pulse'|'flutter'|undefined} showButterflies={settings.showButterflies!=='disabled'} showControls={expanded&&settings.showControls!=='disabled'} compact={!expanded} paused={!!still} onTextChange={onSettingsChange?defaultText=>onSettingsChange({defaultText}):undefined} onPaletteChange={onSettingsChange?palette=>onSettingsChange({palette}):undefined}/>}
+    {id==='prism-button'&&<PrismPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
+    {id==='spectral-button'&&<SpectralPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
+    {id==='caustic-button'&&<CausticPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
+    {id==='lenticular-button'&&<LenticularPreview {...settings} compact={!expanded} paused={!!still} idleMotion={settings.idleMotion!=='disabled'}/>}
+    {id==='photon-button'&&<PhotonPreview {...settings} compact={!expanded} paused={!!still}/>}
+    {id==='optical-button'&&<OpticalPlayground {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
+    {id==='quantum-core'&&<QuantumCore {...settings} compact={!expanded} paused={!!still} interactive={settings.interactive!=='disabled'}/>}
+    {id==='clustered'&&<Clustered {...settings} compact={!expanded} paused={!!still} interactive={settings.interactive!=='disabled'} colorPalette={[String(settings.cobalt??'#082fff'),String(settings.blue??'#3b82f6'),String(settings.ice??'#bae6fd')]}/>}
+    {id==='stratum'&&<Stratum compact={!expanded} paused={!!still} gridSize={settings.gridSize as number|undefined} maxHeight={settings.maxHeight as number|undefined} waveSpeed={settings.waveSpeed as number|undefined} sequenceMode={settings.sequenceMode as 'auto'|'perlin'|'radial'|'diagonal'|'step'|undefined} hoverEffect={settings.hoverEffect as 'retract'|'elevate'|undefined} colorPalette={{background:settings.background as string|undefined,pillars:settings.pillars as string|undefined,light:settings.light as string|undefined}}/>}
+    {id==='inkshift'&&<Inkshift compact={!expanded} paused={!!still} words={typeof settings.words==='string'?settings.words.split(/\r?\n/):undefined} vorticity={settings.vorticity as number|undefined} dissipation={settings.dissipation as number|undefined} splatRadius={settings.splatRadius as number|undefined} threshold={settings.threshold as number|undefined} backgroundColor={settings.backgroundColor as string|undefined} foregroundColor={settings.foregroundColor as string|undefined} autoCycle={settings.autoCycle!=='disabled'}/>}
+    {id==='atelier'&&<Atelier compact={!expanded} paused={!!still} renderImage={settings.renderImage as string|undefined} sketchImage={settings.sketchImage as string|undefined} portalSize={settings.portalSize as number|undefined} brushSize={settings.brushSize as number|undefined} trailFadeSpeed={settings.trailFadeSpeed as number|undefined} edgeRoughness={settings.edgeRoughness as number|undefined} title={settings.title as string|undefined} subtitle={settings.subtitle as string|undefined}/>}
+    {id==='charge'&&<Charge compact={!expanded} paused={!!still} percentage={settings.percentage as number|undefined} statusText={settings.statusText as string|undefined} flowSpeed={settings.flowSpeed as number|undefined} particleCount={settings.particleCount as number|undefined} primaryColor={settings.primaryColor as string|undefined} secondaryColor={settings.secondaryColor as string|undefined} animateCount={settings.animateCount!=='disabled'}/>}
     {id==='resonance'&&<Resonance compact={!expanded} paused={!!still} size={settings.size as number|undefined} speed={settings.speed as number|undefined} waveAmplitude={settings.waveAmplitude as number|undefined} ribbonCount={settings.ribbonCount as number|undefined} intensity={settings.intensity as number|undefined} colorPalette={[typeof settings.blue==='string'?settings.blue:'#234bff',typeof settings.light==='string'?settings.light:'#5a8cff',typeof settings.aura==='string'?settings.aura:'#1a3cff']}/>}
     {id==='meridian'&&<Meridian autoPlay={settings.autoPlay!=='disabled'} scrollSensitivity={settings.scrollSensitivity as number|undefined} cinematicIntro={settings.cinematicIntro!=='disabled'} compact={!expanded} paused={!!still} animationSpeed={settings.animationSpeed as number|undefined} replay={settings.replay as number|undefined} primaryRouteColor={settings.primaryRouteColor as string|undefined} incidentColor={settings.incidentColor as string|undefined} detourGradient={[typeof settings.detour1==='string'?settings.detour1:'#00f0ff',typeof settings.detour2==='string'?settings.detour2:'#326aff',typeof settings.detour3==='string'?settings.detour3:'#8b3dff',typeof settings.detour4==='string'?settings.detour4:'#ff0055']}/>}
     {id==='sleeve'&&<Sleeve compact={!expanded} paused={!!still} tiltAngle={settings.tiltAngle as number|undefined} initialIndex={settings.initialIndex as number|undefined} springConfig={{stiffness:typeof settings.stiffness==='number'?settings.stiffness:140,damping:typeof settings.damping==='number'?settings.damping:22}}/>}

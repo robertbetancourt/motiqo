@@ -2,7 +2,9 @@ import {notFound} from 'next/navigation';
 import {elementIds,type ElementId} from '@/registry/element-ids';
 import PreviewCapture from '@/components/preview-capture';
 
-export const dynamicParams=false;
+// Newly registered components must be capturable without restarting next dev.
+// Page still rejects every production request before resolving an id.
+export const dynamicParams=true;
 export function generateStaticParams(){
   return process.env.NODE_ENV==='development'?elementIds.map(id=>({id})):[];
 }
