@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/readme/hero.svg" alt="Motiqo — interfaces with a little more life" width="100%" /></p>
+<p align="center"><img src="docs/readme/hero.png" alt="Motiqo — Small details. Strong impressions. Interactive Elements." width="100%" /></p>
 
 <p align="center">
   <a href="https://motiqo.site/">Explore Motiqo</a> &nbsp;·&nbsp;
@@ -22,17 +22,17 @@ Static previews below; open the library to interact with the animations.
 <tr>
 <td align="center" width="33%"><a href="https://motiqo.site/library?element=sacred-lotus"><img src="docs/readme/sacred-lotus.webp" width="250" alt="SacredLotus component preview" /><br /><strong>SacredLotus</strong></a></td>
 <td align="center" width="33%"><a href="https://motiqo.site/library?element=inkshift"><img src="docs/readme/inkshift.webp" width="250" alt="Inkshift component preview" /><br /><strong>Inkshift</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=gyro"><img src="docs/readme/gyro.webp" width="250" alt="Gyro component preview" /><br /><strong>Gyro</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=iris-turbine"><img src="docs/readme/iris-turbine.webp" width="250" alt="IrisTurbine component preview" /><br /><strong>IrisTurbine</strong></a></td>
 </tr>
 <tr>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=quantum-core"><img src="docs/readme/quantum-core.webp" width="250" alt="QuantumCore component preview" /><br /><strong>QuantumCore</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=photon-button"><img src="docs/readme/photon-button.webp" width="250" alt="PhotonButton component preview" /><br /><strong>PhotonButton</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=thermal-smoke"><img src="docs/readme/thermal-smoke.webp" width="250" alt="ThermalSmoke component preview" /><br /><strong>ThermalSmoke</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=orbit-agent"><img src="docs/readme/orbit-agent.webp" width="250" alt="OrbitAgent component preview" /><br /><strong>OrbitAgent</strong></a></td>
 <td align="center" width="33%"><a href="https://motiqo.site/library?element=helix"><img src="docs/readme/helix.webp" width="250" alt="Helix component preview" /><br /><strong>Helix</strong></a></td>
 </tr>
 <tr>
 <td align="center" width="33%"><a href="https://motiqo.site/library?element=aura"><img src="docs/readme/aura.webp" width="250" alt="Aura component preview" /><br /><strong>Aura</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=drawer"><img src="docs/readme/drawer.webp" width="250" alt="Drawer component preview" /><br /><strong>Drawer</strong></a></td>
-<td align="center" width="33%"><a href="https://motiqo.site/library?element=silk-aperture"><img src="docs/readme/silk-aperture.webp" width="250" alt="Silk Aperture component preview" /><br /><strong>Silk Aperture</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=type-garden"><img src="docs/readme/type-garden.webp" width="250" alt="TypeGarden component preview" /><br /><strong>TypeGarden</strong></a></td>
+<td align="center" width="33%"><a href="https://motiqo.site/library?element=caustic-button"><img src="docs/readme/caustic-button.webp" width="250" alt="CausticButton component preview" /><br /><strong>CausticButton</strong></a></td>
 </tr>
 </table>
 <!-- gallery:end -->

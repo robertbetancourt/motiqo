@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 const manifest=JSON.parse(fs.readFileSync('registry/manifest.json','utf8'));
 const previews=JSON.parse(fs.readFileSync('registry/previews.json','utf8'));
-const ids=['sacred-lotus','inkshift','gyro','quantum-core','photon-button','helix','aura','drawer','silk-aperture'];
+const ids=['sacred-lotus','inkshift','iris-turbine','thermal-smoke','orbit-agent','helix','aura','type-garden','caustic-button'];
 fs.mkdirSync('docs/readme',{recursive:true});
 const cells=ids.map(id=>{
  const item=manifest.items.find(item=>item.id===id),poster=previews.items[id]?.dark;

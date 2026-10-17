@@ -11,3 +11,6 @@ out/
 /packages/cli/registry.json
 /packages/cli/skill/
 /public/downloads/
+
+# Local reference research and captures
+research/
