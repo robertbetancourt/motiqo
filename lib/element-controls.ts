@@ -27,6 +27,9 @@ export function normalizeSettings(id:ElementId,input:unknown):Settings {
   if(id==='inkshift'&&['ui**xNin**ja\npr**odu**ct\nd**esi**gn\nsy**stem**s\nen**gineer**ing','mo**ti**qo\nsmall **details**\nin **motion**'].includes(String(result.words)))result.words=defaultsFor(id).words;
   if(id==='atelier'&&result.title==='Designing the feeling of a room.')result.title=defaultsFor(id).title;
   if(id==='sacred-lotus'&&result.statusText==='Generating...')result.statusText='Loading...';
+  if(id==='thermal-smoke'&&result.warmColor==='#ff2e4c'&&result.coldColor==='#06b6d4'){
+    result.warmColor=defaultsFor(id).warmColor;result.coldColor=defaultsFor(id).coldColor;
+  }
   return result;
 }
 export function decodeSettings(id:ElementId,raw:string|null):Settings|null {

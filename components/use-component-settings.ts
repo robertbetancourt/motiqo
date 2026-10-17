@@ -12,14 +12,15 @@ export default function useComponentSettings(id:ElementId,initial?:Settings){
       const params=new URL(window.location.href).searchParams;
       const shared=decodeSettings(id,params.get('config'));
       let stored:unknown;try{stored=JSON.parse(window.localStorage.getItem(storageKey(id))??'null');}catch{}
-      // Upgrade the former autoplay-off default once, retaining other saved edits.
+      // Upgrade former autoplay defaults once, retaining other saved edits.
       // Explicit shared configurations and subsequent autoplay choices still win.
       if(!shared&&(id==='water-ripple-carousel'||id==='aperture-carousel')){
         try{
-          const migrationKey=storageKey(id)+':autoplay-default-4000';
+          const autoplay=defaultsFor(id).autoplay;
+          const migrationKey=storageKey(id)+':autoplay-default-'+autoplay;
           if(!window.localStorage.getItem(migrationKey)){
-            if(stored&&typeof stored==='object'&&!Array.isArray(stored)&&(stored as Settings).autoplay===0){
-              stored={...stored,autoplay:4000};
+            if(stored&&typeof stored==='object'&&!Array.isArray(stored)&&[0,4000].includes(Number((stored as Settings).autoplay))){
+              stored={...stored,autoplay};
               window.localStorage.setItem(storageKey(id),JSON.stringify(stored));
             }
             window.localStorage.setItem(migrationKey,'1');

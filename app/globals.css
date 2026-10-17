@@ -1067,3 +1067,5 @@ html[data-theme=light] .card-poster-light{display:block}
 .demo-sacred-lotus>.mq-lotus,.demo-iris-turbine>.mq-turbine,.demo-bokeh-terrain>.mq-bokeh,.demo-opaline-orb>.mq-opaline,.demo-orbit-agent>.mq-orbit-agent{width:100%;height:100%}
 @media(prefers-reduced-motion:reduce){.tags .tag-filter-button{transition:none}}
 @media(pointer:coarse){.tags .tag-filter-button{min-height:38px}.tags{gap:8px}}
+
+.card-stage .card-preview-open{position:absolute;inset:0;z-index:4;width:100%;height:100%;padding:0;border:0;border-radius:inherit;background:transparent;cursor:pointer;appearance:none}.card-preview-open:focus-visible{outline:2px solid var(--accent);outline-offset:-4px}

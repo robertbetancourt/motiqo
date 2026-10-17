@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import '@fontsource-variable/urbanist';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
@@ -16,5 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en" data-scroll-behavior="smooth" data-theme="dark" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeBootScript}}/></head><body><AmbientBackground /><InitialPageLoader /><ThemeProvider><SiteShell>{children}</SiteShell></ThemeProvider></body></html>;
+  return <html lang="en" data-scroll-behavior="smooth" data-theme="dark" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeBootScript}}/></head><body><AmbientBackground /><InitialPageLoader /><ThemeProvider><SiteShell>{children}</SiteShell></ThemeProvider><Analytics /></body></html>;
 }

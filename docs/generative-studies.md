@@ -26,7 +26,7 @@ import IrisTurbine from './iris-turbine';
 </div>
 ```
 
-`speed` optionally controls the km/h target, with damped interpolation. Otherwise, `autoDemo` follows a 24-second acceleration/deceleration sequence; disable it for manual driving with a slider. Hold the preview or Space to accelerate, release to coast, or use the wheel and arrow keys. A slider-selected target is sustained. Two staggered crowns of 24 curved petal blades expand from the inner aperture. Each incoming crown grows to replace the fading outer one without a visible reset. Speed controls angular motion, fill and glow. At `redlineThreshold`, blue begins smoothly transitioning to warm red. Gear boundaries are 25, 50, 85, 125 and 160 km/h, with an impulse on an upward shift. `showTelemetry` optionally adds the reference's small static temperature/time detail. This is illustrative telemetry, not vehicle data.
+`speed` optionally controls the km/h target, with damped interpolation. Otherwise, `autoDemo` follows a 24-second acceleration/deceleration sequence; disable it for manual driving with a slider. Hold the preview or Space to accelerate, release to coast, or use the wheel and arrow keys. A slider-selected target is sustained. Two staggered crowns of 24 curved petal blades expand from the inner aperture. Each incoming crown grows to replace the fading outer one without a visible reset. Speed controls angular motion, fill and glow. Gear pulses use a continuous envelope. `cruiseColor` and `ignitionColor` configure both palettes. At `redlineThreshold`, violet begins smoothly transitioning to amber. Gear boundaries are 25, 50, 85, 125 and 160 km/h, with an impulse on an upward shift. `showTelemetry` optionally adds the reference's small static temperature/time detail. This is illustrative telemetry, not vehicle data.
 
 ## BokehTerrain
 
@@ -55,7 +55,7 @@ import OpalineOrb from './opaline-orb';
 </div>
 ```
 
-A dark ink background separates the luminous membranes from their backdrop. High-subdivision spheres share one geometry and have separate phase-shifted shader uniforms. Six-lobed displacement and simplex noise deform each membrane. Derivative-antialiased contours, micropoints and Fresnel light expose the layers around the soft core. The inspector exposes the palette's four colors separately; exported examples reconstruct `colorPalette` as an object. `listening` adds an elastic increase in activity; it is a visual state and does not request microphone access.
+A dark ink background separates the luminous membranes from their backdrop. High-subdivision spheres share one geometry and have separate phase-shifted shader uniforms. Six-lobed displacement and simplex noise deform each membrane. Concentric, derivative-antialiased dotted contours follow the viewing axis; five-lobed phase-shifted membranes surround a softly deformed luminous core. The inspector exposes the palette's four colors separately; exported examples reconstruct `colorPalette` as an object. `listening` adds an elastic increase in activity; it is a visual state and does not request microphone access.
 
 ## OrbitAgent
 
@@ -68,7 +68,7 @@ import OrbitAgent from './orbit-agent';
 </div>
 ```
 
-The larger iridescent scalloped agent follows the pointer with its oval eyes, blinks and breathes. Its expression is selected with `agentMood`; click, Enter or Space trigger a temporary happy greeting without changing that selection. A click adds independent damped jump, squash and orbital expansion impulses, plus a star burst. Twenty-three seeded stars and closed Catmull-Rom loops form its atmosphere. `agentMood` defaults to `idle`. `onAgentClick` reports the currently selected mood; it does not request a mood change.
+The larger iridescent scalloped agent follows the pointer with its oval eyes, blinks and breathes. Its rotating shell stays independent of the face. Continuous eyelids retain the full width of its oval eyes; there is no mouth. Its expression is selected with `agentMood`; click, Enter or Space trigger a temporary happy greeting without changing that selection. A click adds independent damped jump, squash and orbital expansion impulses, plus a star burst. Twenty-three seeded stars and closed Catmull-Rom loops form its atmosphere. `agentMood` defaults to `idle`. `onAgentClick` reports the currently selected mood; it does not request a mood change.
 
 ## Library tags
 

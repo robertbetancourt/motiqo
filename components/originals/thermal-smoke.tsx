@@ -84,8 +84,8 @@ function Smoke({
             uDensity: nativeClamp(o.density, 0.2, 2.5),
             uIntro: 1 - Math.pow(1 - intro, 3),
             uSpeed: nativeClamp(o.speed, 0, 3),
-            uWarm: nativeColor(o.warm, "#ff2e4c"),
-            uCold: nativeColor(o.cold, "#06b6d4"),
+            uWarm: nativeColor(o.warm, "#ffb55c"),
+            uCold: nativeColor(o.cold, "#729eff"),
             uMini: mini ? 1 : 0,
           });
           const count = Math.min(2, Math.floor(intro * 2.99));
@@ -139,8 +139,8 @@ export default function ThermalSmoke({
   city = "Stockholm",
   temperature = 26,
   condition = "Partly cloudy",
-  warmColor = "#ff2e4c",
-  coldColor = "#06b6d4",
+  warmColor = "#ffb55c",
+  coldColor = "#729eff",
   smokeDensity = 1.35,
   flowSpeed = 0.8,
   autoTriggerIntro = true,
@@ -231,6 +231,6 @@ const styles = `
 .mq-thermal-metrics{display:flex;justify-content:center;gap:6cqw;margin:3cqw 0;color:#b5b5bc}
 .mq-thermal-metrics span{display:flex;gap:1.5cqw;align-items:center;font-size:2.8cqw}
 .mq-thermal-metrics svg{width:4.5cqw;height:4.5cqw;fill:none;stroke:currentColor;stroke-width:1;opacity:.65}
-.mq-thermal-smoke-failed:after{content:'';position:absolute;left:25%;top:25%;width:50%;height:50%;border:1px solid var(--thermal-warm,#ff2e4c);border-radius:50%}
+.mq-thermal-smoke-failed:after{content:'';position:absolute;left:25%;top:25%;width:50%;height:50%;border:1px solid var(--thermal-warm,#ffb55c);border-radius:50%}
 @media(prefers-reduced-motion:reduce){.mq-thermal-card *{animation:none!important;transition:none!important}}
 `;

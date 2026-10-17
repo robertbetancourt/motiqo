@@ -5,7 +5,7 @@ export type { GallerySlide } from "./carousel-art";
 export type WaterRippleCarouselProps = OpticalGalleryProps;
 /** Tidal: a refractive wavefront with a smaller trailing capillary wake. */
 export default function WaterRippleCarousel({
-  autoplay = 4000,
+  autoplay = 2500,
   ...props
 }: WaterRippleCarouselProps) {
   return (

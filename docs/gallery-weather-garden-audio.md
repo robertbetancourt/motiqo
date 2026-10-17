@@ -9,7 +9,7 @@ import WaterRippleCarousel from './water-ripple-carousel';
 
 export default function Example() {
   return <div style={{ height: 620 }}>
-    <WaterRippleCarousel duration={1450} strength={1} autoplay={4000}
+    <WaterRippleCarousel duration={1450} strength={1} autoplay={2500}
       slides={[
         { image: '/coast.jpg', title: 'Where the water rests.', caption: 'COASTAL STUDIES' },
         { image: '/mountain.jpg', title: 'A quieter latitude.', caption: 'NORTHERN LIGHT' },
@@ -18,7 +18,7 @@ export default function Example() {
 }
 ```
 
-A native WebGL2 wavefront refracts both images, with a smaller trailing capillary wake. Pointer activation supplies the exact wave origin. Only the image and two SVG arrow buttons are visible. Navigation also supports swipes and arrow keys while the stage is focused. Every change starts a new wave; the static fallback layer is used only when WebGL2 is unavailable. Requests during a transition retain the latest requested destination. Autoplay starts a new transition every four seconds (including the previous animation time) and waits while hovered, focused, hidden, offscreen, paused or reduced motion is enabled.
+A native WebGL2 wavefront refracts both images, with a smaller trailing capillary wake. Pointer activation supplies the exact wave origin. Only the image and two SVG arrow buttons are visible. Navigation also supports swipes and arrow keys while the stage is focused. Every change starts a new wave; the static fallback layer is used only when WebGL2 is unavailable. Requests during a transition retain the latest requested destination. Autoplay starts a new transition every 2.5 seconds (including the previous animation time) and waits while hovered, focused, hidden, offscreen, paused or reduced motion is enabled.
 
 `slides` accepts `image`, `title`, `caption`, `alt`, `palette` (`tide`, `ember`, `glacier`, `violet`) and `seed`. Missing or failed images use original generated landscape studies. Cross-origin photographs must allow CORS for texture upload. Images use cover sampling without stretching. A DOM crossfade remains usable if WebGL2 is unavailable. Additional props: `ink`, `height`, `style`, `className`, `onChange`, `ariaLabel`, `paused` and `compact`.
 
@@ -29,12 +29,12 @@ import ApertureCarousel from './aperture-carousel';
 
 export default function Example() {
   return <div style={{ height: 620 }}>
-    <ApertureCarousel duration={1250} autoplay={4000} />
+    <ApertureCarousel duration={1250} autoplay={3000} />
   </div>;
 }
 ```
 
-The same image and navigation contract with a distinct six-leaf iris, an illuminated opening and edge refraction on every change. The local image sequence starts at a different photograph. The stage contains only the image and arrows.
+The same image and navigation contract with a distinct six-leaf iris, an illuminated opening and edge refraction on every change. The local image sequence starts at a different photograph. The stage contains only the image and arrows. Autoplay starts a new reveal every three seconds.
 
 ## ThermalSmoke
 
@@ -44,7 +44,7 @@ import ThermalSmoke from './thermal-smoke';
 export default function Example() {
   return <div style={{ height: 650 }}>
     <ThermalSmoke city="Stockholm" temperature={26} condition="Partly cloudy"
-      warmColor="#ff2e4c" coldColor="#06b6d4" smokeDensity={1.35}
+      warmColor="#ffb55c" coldColor="#729eff" smokeDensity={1.35}
       flowSpeed={0.8} autoTriggerIntro />
   </div>;
 }
