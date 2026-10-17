@@ -3,6 +3,94 @@
   "width": 320,
   "height": 320,
   "items": {
+    "sacred-lotus": {
+      "dark": "/previews/sacred-lotus-dark-506711c241cf.webp",
+      "light": "/previews/sacred-lotus-light-ea26fd5b9946.webp"
+    },
+    "iris-turbine": {
+      "dark": "/previews/iris-turbine-dark-eebbf3b16574.webp",
+      "light": "/previews/iris-turbine-light-eebbf3b16574.webp"
+    },
+    "bokeh-terrain": {
+      "dark": "/previews/bokeh-terrain-dark-505df25e6aea.webp",
+      "light": "/previews/bokeh-terrain-light-505df25e6aea.webp"
+    },
+    "opaline-orb": {
+      "dark": "/previews/opaline-orb-dark-e5e8911ae6ff.webp",
+      "light": "/previews/opaline-orb-light-e5e8911ae6ff.webp"
+    },
+    "orbit-agent": {
+      "dark": "/previews/orbit-agent-dark-0d4d6aeab955.webp",
+      "light": "/previews/orbit-agent-light-0d4d6aeab955.webp"
+    },
+    "water-ripple-carousel": {
+      "dark": "/previews/water-ripple-carousel-dark-2414bead7fbd.webp",
+      "light": "/previews/water-ripple-carousel-light-2414bead7fbd.webp"
+    },
+    "aperture-carousel": {
+      "dark": "/previews/aperture-carousel-dark-487449e574c7.webp",
+      "light": "/previews/aperture-carousel-light-487449e574c7.webp"
+    },
+    "thermal-smoke": {
+      "dark": "/previews/thermal-smoke-dark-ef5e72168503.webp",
+      "light": "/previews/thermal-smoke-light-ef5e72168503.webp"
+    },
+    "radial-spectrum": {
+      "dark": "/previews/radial-spectrum-dark-0abf53192730.webp",
+      "light": "/previews/radial-spectrum-light-0abf53192730.webp"
+    },
+    "type-garden": {
+      "dark": "/previews/type-garden-dark-8451a9cbc5d5.webp",
+      "light": "/previews/type-garden-light-8451a9cbc5d5.webp"
+    },
+    "lenticular-button": {
+      "dark": "/previews/lenticular-button-dark-5c89027e6678.webp",
+      "light": "/previews/lenticular-button-light-5c89027e6678.webp"
+    },
+    "photon-button": {
+      "dark": "/previews/photon-button-dark-ec4dcc026150.webp",
+      "light": "/previews/photon-button-light-ec4dcc026150.webp"
+    },
+    "optical-button": {
+      "dark": "/previews/optical-button-dark-9c6944aea91e.webp",
+      "light": "/previews/optical-button-light-9c6944aea91e.webp"
+    },
+    "spectral-button": {
+      "dark": "/previews/spectral-button-dark-78cd6f08d1d4.webp",
+      "light": "/previews/spectral-button-light-78cd6f08d1d4.webp"
+    },
+    "caustic-button": {
+      "dark": "/previews/caustic-button-dark-42853f4267f1.webp",
+      "light": "/previews/caustic-button-light-42853f4267f1.webp"
+    },
+    "prism-button": {
+      "dark": "/previews/prism-button-dark-b69cf8865448.webp",
+      "light": "/previews/prism-button-light-b69cf8865448.webp"
+    },
+    "quantum-core": {
+      "dark": "/previews/quantum-core-dark-fddf8132b5a9.webp",
+      "light": "/previews/quantum-core-light-fddf8132b5a9.webp"
+    },
+    "clustered": {
+      "dark": "/previews/clustered-dark-d1e9396e567f.webp",
+      "light": "/previews/clustered-light-d1e9396e567f.webp"
+    },
+    "stratum": {
+      "dark": "/previews/stratum-dark-2f144f0f3c11.webp",
+      "light": "/previews/stratum-light-2f144f0f3c11.webp"
+    },
+    "inkshift": {
+      "dark": "/previews/inkshift-dark-0d05ca229684.webp",
+      "light": "/previews/inkshift-light-0d05ca229684.webp"
+    },
+    "atelier": {
+      "dark": "/previews/atelier-dark-3c179d01dbd9.webp",
+      "light": "/previews/atelier-light-3c179d01dbd9.webp"
+    },
+    "charge": {
+      "dark": "/previews/charge-dark-d148af24d005.webp",
+      "light": "/previews/charge-light-935d0149bb60.webp"
+    },
     "resonance": {
       "dark": "/previews/resonance-dark-74761e1d3a99.webp",
       "light": "/previews/resonance-light-74761e1d3a99.webp"

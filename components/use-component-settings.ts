@@ -12,6 +12,20 @@ export default function useComponentSettings(id:ElementId,initial?:Settings){
       const params=new URL(window.location.href).searchParams;
       const shared=decodeSettings(id,params.get('config'));
       let stored:unknown;try{stored=JSON.parse(window.localStorage.getItem(storageKey(id))??'null');}catch{}
+      // Upgrade the former autoplay-off default once, retaining other saved edits.
+      // Explicit shared configurations and subsequent autoplay choices still win.
+      if(!shared&&(id==='water-ripple-carousel'||id==='aperture-carousel')){
+        try{
+          const migrationKey=storageKey(id)+':autoplay-default-4000';
+          if(!window.localStorage.getItem(migrationKey)){
+            if(stored&&typeof stored==='object'&&!Array.isArray(stored)&&(stored as Settings).autoplay===0){
+              stored={...stored,autoplay:4000};
+              window.localStorage.setItem(storageKey(id),JSON.stringify(stored));
+            }
+            window.localStorage.setItem(migrationKey,'1');
+          }
+        }catch{}
+      }
       setSettings(shared??normalizeSettings(id,stored));setReady(true);
     }
     restore();window.addEventListener('popstate',restore);

@@ -9,10 +9,12 @@ import ElementWorkspace from './element-workspace';
 import SiteFrame from './site-frame';
 import OutlineField from './outline-field';
 import {decodeSettings} from '@/lib/element-controls';
+import {filterTaggedElements,normalizeTag} from '@/lib/tag-filter';
 
-export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false }: { originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean }) {
+export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false, initialTag = '' }: { originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean; initialTag?:string }) {
   const [category,setCategory] = useState<Category>('All elements');
   const [query,setQuery] = useState('');
+  const [tag,setTag] = useState(initialTag);
   const [saved,setSaved] = useState<string[]>([]);
   const [savedOnly,setSavedOnly] = useState(initialSaved);
   const [selected,setSelected] = useState<LibraryElement | null>(() => elements.find(element => element.id === initialElement) || null);
@@ -26,7 +28,10 @@ export default function Library({ originalSource, initialElement, initialConfigu
   const collectionScroll = useRef(0);
   const restoreCollection = useRef(false);
   const lastElement = useRef(initialElement);
-  const reduced = useReducedMotion();
+  const prefersReduced = useReducedMotion();
+  const [hydrated,setHydrated] = useState(false);
+  useEffect(()=>setHydrated(true),[]);
+  const reduced = hydrated && prefersReduced;
   const still = paused || !!reduced;
   const timing = {duration:still ? 0 : .32,ease:[.22,1,.36,1] as [number,number,number,number]};
 
@@ -34,8 +39,8 @@ export default function Library({ originalSource, initialElement, initialConfigu
   // when the brand or another route brings the visitor back here.
   useEffect(() => {
     setSelected(elements.find(element=>element.id===initialElement)||null);
-    setSavedOnly(initialSaved);setInitialTab('preview');
-  },[initialElement,initialSaved]);
+    setSavedOnly(initialSaved);setTag(initialTag);setInitialTab('preview');
+  },[initialElement,initialSaved,initialTag]);
 
   useEffect(() => {
     try {
@@ -48,7 +53,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
     const sync = () => {
       const params=new URL(window.location.href).searchParams;
       const rawId=params.get('element'),id=rawId==='watt'?'holdings':rawId;
-      setSavedOnly(params.get('saved')==='1');
+      setSavedOnly(params.get('saved')==='1');setTag(params.get('tag')??'');
       if(!id) restoreCollection.current=true;
       setSelected(elements.find(e=>e.id===id) || null); setInitialTab('preview');
     };
@@ -95,28 +100,34 @@ export default function Library({ originalSource, initialElement, initialConfigu
   }
   function collection(onlySaved=false){
     if(selected)restoreCollection.current=true;
-    setSelected(null);setSavedOnly(onlySaved);setCategory('All elements');setQuery('');
-    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');if(onlySaved)url.searchParams.set('saved','1');else url.searchParams.delete('saved');window.history.replaceState({},'',url);
+    setSelected(null);setSavedOnly(onlySaved);setCategory('All elements');setQuery('');setTag('');
+    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('tag');if(onlySaved)url.searchParams.set('saved','1');else url.searchParams.delete('saved');window.history.replaceState({},'',url);
+  }
+  function chooseTag(value:string){
+    const next=normalizeTag(value)===normalizeTag(tag)?'':value;
+    setTag(next);setCategory('All elements');setQuery('');setSelected(null);restoreCollection.current=false;
+    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');if(next)url.searchParams.set('tag',next);else url.searchParams.delete('tag');window.history.pushState({},'',url);window.scrollTo({top:0,behavior:still?'instant':'smooth'});
   }
   function showSaved(){collection(true);}
-  const filtered=elements.filter(e=>(category==='All elements'||e.category===category)&&(!savedOnly||saved.includes(e.id))&&`${e.title} ${e.tags.join(' ')} ${e.category}`.toLowerCase().includes(query.toLowerCase()));
+  const filtered=filterTaggedElements(elements,{category,query,savedOnly,saved,tag});
 
   return <>
     <a href={selected?'#detail-title':'#collection'} className="skip-link">{selected?'Skip to component':'Skip to collection'}</a>
     <SiteFrame collection workspace={!!selected} paused={still} savedOnly={savedOnly} savedCount={saved.length} onCollection={()=>collection()} onSaved={showSaved}>
       <AnimatePresence mode="wait" initial={false}>
       {selected ? <motion.div key="workspace" initial={still?false:{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}} transition={{...timing,duration:still?0:.38}}>
-        <ElementWorkspace key={`${selected.id}-${initialTab}`} element={selected} initialSettings={decodeSettings(selected.id,initialConfiguration??null)??undefined} onBack={close} onPrevious={()=>navigate(-1)} onNext={()=>navigate(1)} index={elements.findIndex(element=>element.id===selected.id)} total={elements.length} saved={saved.includes(selected.id)} onSave={()=>toggleSave(selected.id)} paused={paused} copy={copy} initialTab={initialTab} initialTool={tool} onToolChange={chooseTool} originalSource={originalSource}/>
+        <ElementWorkspace key={`${selected.id}-${initialTab}`} element={selected} initialSettings={decodeSettings(selected.id,initialConfiguration??null)??undefined} onBack={close} onPrevious={()=>navigate(-1)} onNext={()=>navigate(1)} index={elements.findIndex(element=>element.id===selected.id)} total={elements.length} saved={saved.includes(selected.id)} onSave={()=>toggleSave(selected.id)} paused={paused} copy={copy} initialTab={initialTab} initialTool={tool} onToolChange={chooseTool} originalSource={originalSource} onTag={chooseTag}/>
       </motion.div> : <motion.div key="collection" className="collection-view" initial={false} exit={{opacity:0,y:-8}} transition={timing} ref={node=>{
         if(node&&restoreCollection.current){restoreCollection.current=false;window.scrollTo({top:collectionScroll.current,behavior:'instant'});node.querySelector<HTMLButtonElement>(`[data-element="${lastElement.current}"] .card-title`)?.focus({preventScroll:true});}
       }}>
         <header className="library-heading"><h1>{savedOnly?'Saved':'Library'}</h1><span>{filtered.length} elements</span></header>
         <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
           <div className="filter-row"><div className="filters" aria-label="Filter by category">{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?'selected':''} onClick={()=>setCategory(c)}>{c}</button>)}</div><div className="search-tools"><button className="motion-control" aria-pressed={paused} disabled={!!reduced} onClick={()=>setPaused(!paused)}>{still?<Play size={13}/>:<Pause size={13}/>} {reduced?'Reduced motion':paused?'Resume motion':'Pause motion'}</button><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>
+          {tag&&<div className="active-tag-filter" role="status"><span>Tagged</span><button type="button" aria-label={`Clear ${tag} filter`} onClick={()=>chooseTag(tag)}>{tag}<span aria-hidden="true">×</span></button><span>{filtered.length} {filtered.length===1?'element':'elements'}</span></div>}
           <motion.div className="element-grid" layout transition={timing}><AnimatePresence key={savedOnly?'saved':'library'}>
             {(!savedOnly||storageReady)&&filtered.map((element,index)=><motion.article key={element.id} layout data-element={element.id} className={`element-card card-${element.id}`} style={{'--entry-delay':`${Math.min(index,7)*45+120}ms`} as CSSProperties} initial={false} animate={{opacity:1}} exit={{opacity:0,scale:.97}} transition={{...timing,layout:timing}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea')&&!window.getSelection()?.toString())open(element);}}>
               <div className="card-stage"><CardPreview id={element.id} paused={still} priority={index<4}/><span className="stage-hint">{element.hint}</span><button className={`save-button preview-save ${saved.includes(element.id)?'is-saved':''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={16} fill={saved.includes(element.id)?'currentColor':'none'}/></button></div>
-              <div className="card-info"><div className="card-title-row"><button className="card-title" onClick={()=>open(element)}><h2>{element.title}</h2></button><span className="category-label">{element.category}</span></div><div className="tags">{element.tags.map(t=><span key={t}>{t}</span>)}</div></div>
+              <div className="card-info"><div className="card-title-row"><button className="card-title" onClick={()=>open(element)}><h2>{element.title}</h2></button><span className="category-label">{element.category}</span></div><div className="tags">{element.tags.map(t=><button type="button" key={t} className="tag-filter-button" aria-label={`Filter by ${t}`} aria-pressed={normalizeTag(tag)===normalizeTag(t)} onClick={()=>chooseTag(t)}>{t}</button>)}</div></div>
             </motion.article>)}
           </AnimatePresence></motion.div>
           {savedOnly&&!storageReady&&<div className="collection-restoring" aria-label="Loading saved elements" aria-busy="true"/>}

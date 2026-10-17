@@ -3,6 +3,3908 @@
   "version": "0.1.0",
   "items": [
     {
+      "id": "sacred-lotus",
+      "number": "48",
+      "title": "SacredLotus",
+      "category": "Motion",
+      "original": true,
+      "description": "A luminous lotus unfolds through three states of becoming.",
+      "hint": "Watch the geometry unfold. Move over the petals to open them gently.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Geometry",
+        "Loader"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the entry and all companion files together. Scoped styles, pause, visibility and reduced-motion handling are included.",
+      "code": "import SacredLotus from './sacred-lotus';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><SacredLotus /></div>;\n}",
+      "brief": "A luminous lotus unfolds through three states of becoming. Watch the geometry unfold. Move over the petals to open them gently. Keep the effect as the focus; configuration belongs in the normal inspector. Provide all declared props, keyboard support where interactive, bounded DPR, offscreen suspension and complete resource cleanup.",
+      "entry": "sacred-lotus.tsx",
+      "exportName": "SacredLotus",
+      "files": [
+        {
+          "source": "components/originals/sacred-lotus.tsx",
+          "target": "components/motiqo/sacred-lotus.tsx"
+        },
+        {
+          "source": "components/originals/kinetic-canvas.ts",
+          "target": "components/motiqo/kinetic-canvas.ts"
+        },
+        {
+          "source": "components/originals/kinetic-math.ts",
+          "target": "components/motiqo/kinetic-math.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "playback",
+          "label": "Progress mode",
+          "kind": "select",
+          "defaultValue": "automatic",
+          "choices": [
+            {
+              "value": "automatic",
+              "label": "Automatic"
+            },
+            {
+              "value": "controlled",
+              "label": "Controlled"
+            }
+          ]
+        },
+        {
+          "key": "progress",
+          "label": "Progress · %",
+          "kind": "range",
+          "defaultValue": 56,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "duration",
+          "label": "Duration · seconds",
+          "kind": "range",
+          "defaultValue": 10,
+          "min": 4,
+          "max": 24,
+          "step": 0.5
+        },
+        {
+          "key": "petalCount",
+          "label": "Petals",
+          "kind": "range",
+          "defaultValue": 12,
+          "min": 6,
+          "max": 24,
+          "step": 1
+        },
+        {
+          "key": "layerCount",
+          "label": "Layers",
+          "kind": "range",
+          "defaultValue": 3,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "key": "statusText",
+          "label": "Status",
+          "kind": "text",
+          "defaultValue": "Loading...",
+          "maxLength": 80
+        },
+        {
+          "key": "colorScheme",
+          "label": "Palette",
+          "kind": "select",
+          "defaultValue": "aurora",
+          "choices": [
+            {
+              "value": "aurora",
+              "label": "Aurora"
+            },
+            {
+              "value": "glacier",
+              "label": "Glacier"
+            },
+            {
+              "value": "ember",
+              "label": "Ember"
+            }
+          ]
+        },
+        {
+          "key": "interactive",
+          "label": "Pointer response",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "glacier",
+          "label": "Glacier",
+          "settings": {
+            "playback": "automatic",
+            "progress": 56,
+            "duration": 16,
+            "petalCount": 16,
+            "layerCount": 3,
+            "statusText": "Loading...",
+            "colorScheme": "glacier",
+            "interactive": "enabled"
+          }
+        },
+        {
+          "id": "halo",
+          "label": "Halo",
+          "settings": {
+            "playback": "controlled",
+            "progress": 100,
+            "duration": 10,
+            "petalCount": 12,
+            "layerCount": 3,
+            "statusText": "Loading...",
+            "colorScheme": "aurora",
+            "interactive": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iris-turbine",
+      "number": "49",
+      "title": "IrisTurbine",
+      "category": "Motion",
+      "original": true,
+      "description": "Twenty-four blades. A mechanical breath. An electric redline.",
+      "hint": "Hold the preview or Space to accelerate. Arrow keys and scrolling also change speed.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Kinetic",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the entry and all companion files together. Scoped styles, pause, visibility and reduced-motion handling are included.",
+      "code": "import IrisTurbine from './iris-turbine';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><IrisTurbine /></div>;\n}",
+      "brief": "Twenty-four blades. A mechanical breath. An electric redline. Hold the preview or Space to accelerate. Arrow keys and scrolling also change speed. Keep the effect as the focus; configuration belongs in the normal inspector. Provide all declared props, keyboard support where interactive, bounded DPR, offscreen suspension and complete resource cleanup.",
+      "entry": "iris-turbine.tsx",
+      "exportName": "IrisTurbine",
+      "files": [
+        {
+          "source": "components/originals/iris-turbine.tsx",
+          "target": "components/motiqo/iris-turbine.tsx"
+        },
+        {
+          "source": "components/originals/kinetic-canvas.ts",
+          "target": "components/motiqo/kinetic-canvas.ts"
+        },
+        {
+          "source": "components/originals/kinetic-math.ts",
+          "target": "components/motiqo/kinetic-math.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "mode",
+          "label": "Drive mode",
+          "kind": "select",
+          "defaultValue": "demo",
+          "choices": [
+            {
+              "value": "demo",
+              "label": "Automatic demo"
+            },
+            {
+              "value": "interactive",
+              "label": "Interactive"
+            },
+            {
+              "value": "controlled",
+              "label": "Controlled speed"
+            }
+          ]
+        },
+        {
+          "key": "speed",
+          "label": "Speed · km/h",
+          "kind": "range",
+          "defaultValue": 88,
+          "min": 0,
+          "max": 250,
+          "step": 1
+        },
+        {
+          "key": "maxSpeed",
+          "label": "Maximum speed",
+          "kind": "range",
+          "defaultValue": 210,
+          "min": 60,
+          "max": 300,
+          "step": 1
+        },
+        {
+          "key": "redlineThreshold",
+          "label": "Redline · km/h",
+          "kind": "range",
+          "defaultValue": 55,
+          "min": 30,
+          "max": 150,
+          "step": 1
+        },
+        {
+          "key": "bladeCount",
+          "label": "Blades",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 12,
+          "max": 48,
+          "step": 1
+        },
+        {
+          "key": "interactive",
+          "label": "Acceleration",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "showTelemetry",
+          "label": "Telemetry",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "cruise",
+          "label": "Cruise",
+          "settings": {
+            "mode": "controlled",
+            "speed": 38,
+            "maxSpeed": 210,
+            "redlineThreshold": 55,
+            "bladeCount": 24,
+            "interactive": "enabled",
+            "showTelemetry": "disabled"
+          }
+        },
+        {
+          "id": "ignition",
+          "label": "Ignition",
+          "settings": {
+            "mode": "controlled",
+            "speed": 178,
+            "maxSpeed": 210,
+            "redlineThreshold": 55,
+            "bladeCount": 24,
+            "interactive": "enabled",
+            "showTelemetry": "disabled"
+          }
+        },
+        {
+          "id": "manual",
+          "label": "Manual",
+          "settings": {
+            "mode": "interactive",
+            "speed": 88,
+            "maxSpeed": 210,
+            "redlineThreshold": 55,
+            "bladeCount": 24,
+            "interactive": "enabled",
+            "showTelemetry": "disabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bokeh-terrain",
+      "number": "50",
+      "title": "BokehTerrain",
+      "category": "Motion",
+      "original": true,
+      "description": "A particle ocean, caught between sharp light and soft focus.",
+      "hint": "Move across the field to bend the light and shift its perspective.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Particles",
+        "Bokeh"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy the entry and all companion files together. Scoped styles, pause, visibility and reduced-motion handling are included.",
+      "code": "import BokehTerrain from './bokeh-terrain';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><BokehTerrain /></div>;\n}",
+      "brief": "A particle ocean, caught between sharp light and soft focus. Move across the field to bend the light and shift its perspective. Keep the effect as the focus; configuration belongs in the normal inspector. Provide all declared props, keyboard support where interactive, bounded DPR, offscreen suspension and complete resource cleanup.",
+      "entry": "bokeh-terrain.tsx",
+      "exportName": "BokehTerrain",
+      "files": [
+        {
+          "source": "components/originals/bokeh-terrain.tsx",
+          "target": "components/motiqo/bokeh-terrain.tsx"
+        },
+        {
+          "source": "components/originals/bokeh-scene.ts",
+          "target": "components/motiqo/bokeh-scene.ts"
+        },
+        {
+          "source": "components/originals/bokeh-shaders.ts",
+          "target": "components/motiqo/bokeh-shaders.ts"
+        },
+        {
+          "source": "components/originals/kinetic-noise.ts",
+          "target": "components/motiqo/kinetic-noise.ts"
+        },
+        {
+          "source": "components/originals/generative-scene.ts",
+          "target": "components/motiqo/generative-scene.ts"
+        },
+        {
+          "source": "components/originals/kinetic-math.ts",
+          "target": "components/motiqo/kinetic-math.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "lineCount",
+          "label": "Rows",
+          "kind": "range",
+          "defaultValue": 70,
+          "min": 16,
+          "max": 120,
+          "step": 1
+        },
+        {
+          "key": "pointsPerLine",
+          "label": "Points per row",
+          "kind": "range",
+          "defaultValue": 220,
+          "min": 40,
+          "max": 320,
+          "step": 10
+        },
+        {
+          "key": "waveSpeed",
+          "label": "Wave speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "waveHeight",
+          "label": "Wave height",
+          "kind": "range",
+          "defaultValue": 1.5,
+          "min": 0,
+          "max": 4,
+          "step": 0.1
+        },
+        {
+          "key": "primaryColor",
+          "label": "Cobalt",
+          "kind": "color",
+          "defaultValue": "#2563eb"
+        },
+        {
+          "key": "secondaryColor",
+          "label": "Violet",
+          "kind": "color",
+          "defaultValue": "#7c3aed"
+        },
+        {
+          "key": "accentColor",
+          "label": "Crests",
+          "kind": "color",
+          "defaultValue": "#fef9c3"
+        },
+        {
+          "key": "showStars",
+          "label": "Stardust",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "interactive",
+          "label": "Parallax",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "showTitle",
+          "label": "Hero text",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "moonwater",
+          "label": "Moonwater",
+          "settings": {
+            "lineCount": 70,
+            "pointsPerLine": 220,
+            "waveSpeed": 0.65,
+            "waveHeight": 1.1,
+            "primaryColor": "#0891b2",
+            "secondaryColor": "#1e40af",
+            "accentColor": "#ecfeff",
+            "showStars": "enabled",
+            "interactive": "enabled",
+            "showTitle": "disabled"
+          }
+        },
+        {
+          "id": "afterglow",
+          "label": "Afterglow",
+          "settings": {
+            "lineCount": 70,
+            "pointsPerLine": 220,
+            "waveSpeed": 0.8,
+            "waveHeight": 2.2,
+            "primaryColor": "#c026d3",
+            "secondaryColor": "#4338ca",
+            "accentColor": "#fde68a",
+            "showStars": "enabled",
+            "interactive": "enabled",
+            "showTitle": "disabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "opaline-orb",
+      "number": "51",
+      "title": "OpalineOrb",
+      "category": "Motion",
+      "original": true,
+      "description": "Iridescent silk membranes around a luminous, breathing core.",
+      "hint": "Move over the orb to stir its membranes. Listening adds a softer elastic response.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Shaders",
+        "Orb"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy the entry and all companion files together. Scoped styles, pause, visibility and reduced-motion handling are included.",
+      "code": "import OpalineOrb from './opaline-orb';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><OpalineOrb /></div>;\n}",
+      "brief": "Iridescent silk membranes around a luminous, breathing core. Move over the orb to stir its membranes. Listening adds a softer elastic response. Keep the effect as the focus; configuration belongs in the normal inspector. Provide all declared props, keyboard support where interactive, bounded DPR, offscreen suspension and complete resource cleanup.",
+      "entry": "opaline-orb.tsx",
+      "exportName": "OpalineOrb",
+      "files": [
+        {
+          "source": "components/originals/opaline-orb.tsx",
+          "target": "components/motiqo/opaline-orb.tsx"
+        },
+        {
+          "source": "components/originals/opaline-scene.ts",
+          "target": "components/motiqo/opaline-scene.ts"
+        },
+        {
+          "source": "components/originals/opaline-shaders.ts",
+          "target": "components/motiqo/opaline-shaders.ts"
+        },
+        {
+          "source": "components/originals/kinetic-noise.ts",
+          "target": "components/motiqo/kinetic-noise.ts"
+        },
+        {
+          "source": "components/originals/generative-scene.ts",
+          "target": "components/motiqo/generative-scene.ts"
+        },
+        {
+          "source": "components/originals/kinetic-math.ts",
+          "target": "components/motiqo/kinetic-math.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "layerCount",
+          "label": "Membranes",
+          "kind": "range",
+          "defaultValue": 4,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "key": "ringDensity",
+          "label": "Contour density",
+          "kind": "range",
+          "defaultValue": 38,
+          "min": 12,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "morphSpeed",
+          "label": "Morph speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "morphIntensity",
+          "label": "Morph intensity",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2.5,
+          "step": 0.05
+        },
+        {
+          "key": "coreBlue",
+          "label": "Core blue",
+          "kind": "color",
+          "defaultValue": "#8ab8f8"
+        },
+        {
+          "key": "warmPeach",
+          "label": "Warm peach",
+          "kind": "color",
+          "defaultValue": "#ffbe98"
+        },
+        {
+          "key": "outerLavender",
+          "label": "Outer lavender",
+          "kind": "color",
+          "defaultValue": "#c4b5fd"
+        },
+        {
+          "key": "lineColor",
+          "label": "Contours",
+          "kind": "color",
+          "defaultValue": "#ffffff"
+        },
+        {
+          "key": "interactive",
+          "label": "Pointer response",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "listening",
+          "label": "Listening",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "pearl",
+          "label": "Pearl",
+          "settings": {
+            "layerCount": 4,
+            "ringDensity": 55,
+            "morphSpeed": 1,
+            "morphIntensity": 0.7,
+            "coreBlue": "#a5d8e8",
+            "warmPeach": "#fbcfe8",
+            "outerLavender": "#c7d2fe",
+            "lineColor": "#ffffff",
+            "interactive": "enabled",
+            "listening": "disabled"
+          }
+        },
+        {
+          "id": "listening",
+          "label": "Listening",
+          "settings": {
+            "layerCount": 4,
+            "ringDensity": 38,
+            "morphSpeed": 1.2,
+            "morphIntensity": 1.5,
+            "coreBlue": "#8ab8f8",
+            "warmPeach": "#ffbe98",
+            "outerLavender": "#c4b5fd",
+            "lineColor": "#ffffff",
+            "interactive": "enabled",
+            "listening": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "orbit-agent",
+      "number": "52",
+      "title": "OrbitAgent",
+      "category": "Motion",
+      "original": true,
+      "description": "A little spirit with a universe of feelings.",
+      "hint": "Move to meet its gaze. Click or press Enter for a joyful greeting. Choose its expression in the panel.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Character",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the entry and all companion files together. Scoped styles, pause, visibility and reduced-motion handling are included.",
+      "code": "import OrbitAgent from './orbit-agent';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><OrbitAgent /></div>;\n}",
+      "brief": "A little spirit with a universe of feelings. Move to meet its gaze. Click or press Enter for a joyful greeting. Choose its expression in the panel. Keep the effect as the focus; configuration belongs in the normal inspector. Provide all declared props, keyboard support where interactive, bounded DPR, offscreen suspension and complete resource cleanup.",
+      "entry": "orbit-agent.tsx",
+      "exportName": "OrbitAgent",
+      "files": [
+        {
+          "source": "components/originals/orbit-agent.tsx",
+          "target": "components/motiqo/orbit-agent.tsx"
+        },
+        {
+          "source": "components/originals/kinetic-canvas.ts",
+          "target": "components/motiqo/kinetic-canvas.ts"
+        },
+        {
+          "source": "components/originals/kinetic-math.ts",
+          "target": "components/motiqo/kinetic-math.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "agentMood",
+          "label": "Expression",
+          "kind": "select",
+          "defaultValue": "idle",
+          "choices": [
+            {
+              "value": "idle",
+              "label": "Idle"
+            },
+            {
+              "value": "happy",
+              "label": "Happy"
+            },
+            {
+              "value": "listening",
+              "label": "Listening"
+            },
+            {
+              "value": "sleepy",
+              "label": "Sleepy"
+            }
+          ]
+        },
+        {
+          "key": "ringCount",
+          "label": "Orbit rings",
+          "kind": "range",
+          "defaultValue": 5,
+          "min": 3,
+          "max": 8,
+          "step": 1
+        },
+        {
+          "key": "orbitSpeed",
+          "label": "Orbit speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.1,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "accentColor",
+          "label": "Aura",
+          "kind": "color",
+          "defaultValue": "#c4b5fd"
+        },
+        {
+          "key": "interactive",
+          "label": "Interaction",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "stargazer",
+          "label": "Stargazer",
+          "settings": {
+            "agentMood": "listening",
+            "ringCount": 5,
+            "orbitSpeed": 0.7,
+            "accentColor": "#93c5fd",
+            "interactive": "enabled"
+          }
+        },
+        {
+          "id": "dreamer",
+          "label": "Dreamer",
+          "settings": {
+            "agentMood": "sleepy",
+            "ringCount": 5,
+            "orbitSpeed": 0.4,
+            "accentColor": "#f9a8d4",
+            "interactive": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "water-ripple-carousel",
+      "number": "57",
+      "title": "WaterRippleCarousel",
+      "category": "Motion",
+      "original": true,
+      "description": "A tidal lens carries one landscape into the next.",
+      "hint": "Click to release a wave. Swipe or use the arrow keys.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Refraction",
+        "Carousel"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the complete implementation and its helpers together. No site styles, Next.js APIs or remote default assets are needed. ",
+      "code": "import WaterRippleCarousel from './water-ripple-carousel';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><WaterRippleCarousel /></div>;\n}",
+      "brief": "A tidal lens carries one landscape into the next. Click to release a wave. Swipe or use the arrow keys. Keep the live preview minimal. Expose all declared props, respect reduced motion and pause, release resources on unmount, and keep source and ZIP exports self-contained.",
+      "entry": "water-ripple-carousel.tsx",
+      "exportName": "WaterRippleCarousel",
+      "files": [
+        {
+          "source": "components/originals/water-ripple-carousel.tsx",
+          "target": "components/motiqo/water-ripple-carousel.tsx"
+        },
+        {
+          "source": "components/originals/optical-gallery.tsx",
+          "target": "components/motiqo/optical-gallery.tsx"
+        },
+        {
+          "source": "components/originals/carousel-art.ts",
+          "target": "components/motiqo/carousel-art.ts"
+        },
+        {
+          "source": "components/originals/gallery-shaders.ts",
+          "target": "components/motiqo/gallery-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "duration",
+          "label": "Transition · ms",
+          "kind": "range",
+          "defaultValue": 1450,
+          "min": 300,
+          "max": 3000,
+          "step": 50
+        },
+        {
+          "key": "strength",
+          "label": "Refraction",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "autoplay",
+          "label": "Autoplay · ms",
+          "kind": "range",
+          "defaultValue": 4000,
+          "min": 0,
+          "max": 12000,
+          "step": 500
+        },
+        {
+          "key": "ink",
+          "label": "Navigation color",
+          "kind": "color",
+          "defaultValue": "#f4f0e8"
+        }
+      ],
+      "moods": [
+        {
+          "id": "still-water",
+          "label": "Still Water",
+          "settings": {
+            "duration": 2200,
+            "strength": 0.45,
+            "autoplay": 4000,
+            "ink": "#f4f0e8"
+          }
+        },
+        {
+          "id": "undertow",
+          "label": "Undertow",
+          "settings": {
+            "duration": 1800,
+            "strength": 1.7,
+            "autoplay": 4000,
+            "ink": "#f4f0e8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aperture-carousel",
+      "number": "58",
+      "title": "ApertureCarousel",
+      "category": "Motion",
+      "original": true,
+      "description": "An opening in the light. Six iris leaves reveal a new perspective.",
+      "hint": "Tap a point to open the iris. Swipe or use the arrow keys.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Iris",
+        "Carousel"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the complete implementation and its helpers together. No site styles, Next.js APIs or remote default assets are needed. ",
+      "code": "import ApertureCarousel from './aperture-carousel';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><ApertureCarousel /></div>;\n}",
+      "brief": "An opening in the light. Six iris leaves reveal a new perspective. Tap a point to open the iris. Swipe or use the arrow keys. Keep the live preview minimal. Expose all declared props, respect reduced motion and pause, release resources on unmount, and keep source and ZIP exports self-contained.",
+      "entry": "aperture-carousel.tsx",
+      "exportName": "ApertureCarousel",
+      "files": [
+        {
+          "source": "components/originals/aperture-carousel.tsx",
+          "target": "components/motiqo/aperture-carousel.tsx"
+        },
+        {
+          "source": "components/originals/optical-gallery.tsx",
+          "target": "components/motiqo/optical-gallery.tsx"
+        },
+        {
+          "source": "components/originals/carousel-art.ts",
+          "target": "components/motiqo/carousel-art.ts"
+        },
+        {
+          "source": "components/originals/gallery-shaders.ts",
+          "target": "components/motiqo/gallery-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "duration",
+          "label": "Iris duration · ms",
+          "kind": "range",
+          "defaultValue": 1250,
+          "min": 300,
+          "max": 3000,
+          "step": 50
+        },
+        {
+          "key": "autoplay",
+          "label": "Autoplay · ms",
+          "kind": "range",
+          "defaultValue": 4000,
+          "min": 0,
+          "max": 12000,
+          "step": 500
+        },
+        {
+          "key": "ink",
+          "label": "Navigation color",
+          "kind": "color",
+          "defaultValue": "#f4f0e8"
+        }
+      ],
+      "moods": [
+        {
+          "id": "slow-exposure",
+          "label": "Slow Exposure",
+          "settings": {
+            "duration": 2400,
+            "autoplay": 4000,
+            "ink": "#f4f0e8"
+          }
+        },
+        {
+          "id": "contact-sheet",
+          "label": "Contact Sheet",
+          "settings": {
+            "duration": 700,
+            "autoplay": 4000,
+            "ink": "#f4f0e8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "thermal-smoke",
+      "number": "59",
+      "title": "ThermalSmoke",
+      "category": "Objects",
+      "original": true,
+      "description": "Coral ignition. Cold vapor. A weather study in fluid light.",
+      "hint": "Watch the smoke ignite around the temperature. Customize the light and flow.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Smoke",
+        "Weather"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the complete implementation and its helpers together. No site styles, Next.js APIs or remote default assets are needed. ",
+      "code": "import ThermalSmoke from './thermal-smoke';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><ThermalSmoke /></div>;\n}",
+      "brief": "A minimal weather study in the same responsive portrait frame as Luma. Keep only the city, temperature, condition, wind, humidity and pressure around the existing warm/cold smoke ring. Watch the smoke ignite around the temperature. Customize the light and flow.",
+      "entry": "thermal-smoke.tsx",
+      "exportName": "ThermalSmoke",
+      "files": [
+        {
+          "source": "components/originals/thermal-smoke.tsx",
+          "target": "components/motiqo/thermal-smoke.tsx"
+        },
+        {
+          "source": "components/originals/thermal-shaders.ts",
+          "target": "components/motiqo/thermal-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "city",
+          "label": "City",
+          "kind": "text",
+          "defaultValue": "Stockholm",
+          "maxLength": 60
+        },
+        {
+          "key": "temperature",
+          "label": "Temperature · °C",
+          "kind": "range",
+          "defaultValue": 26,
+          "min": -50,
+          "max": 55,
+          "step": 1
+        },
+        {
+          "key": "condition",
+          "label": "Condition",
+          "kind": "text",
+          "defaultValue": "Partly cloudy",
+          "maxLength": 60
+        },
+        {
+          "key": "warmColor",
+          "label": "Ignition",
+          "kind": "color",
+          "defaultValue": "#ff2e4c"
+        },
+        {
+          "key": "coldColor",
+          "label": "Cold smoke",
+          "kind": "color",
+          "defaultValue": "#06b6d4"
+        },
+        {
+          "key": "smokeDensity",
+          "label": "Smoke density",
+          "kind": "range",
+          "defaultValue": 1.35,
+          "min": 0.2,
+          "max": 2.5,
+          "step": 0.05
+        },
+        {
+          "key": "flowSpeed",
+          "label": "Flow speed",
+          "kind": "range",
+          "defaultValue": 0.8,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "autoTriggerIntro",
+          "label": "Ignition on entry",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "arctic",
+          "label": "Arctic",
+          "settings": {
+            "city": "Reykjavík",
+            "temperature": -3,
+            "condition": "Clear sky",
+            "warmColor": "#7dd3fc",
+            "coldColor": "#4f46e5",
+            "smokeDensity": 1.6,
+            "flowSpeed": 0.8,
+            "autoTriggerIntro": "enabled"
+          }
+        },
+        {
+          "id": "ember",
+          "label": "Ember",
+          "settings": {
+            "city": "Stockholm",
+            "temperature": 26,
+            "condition": "Partly cloudy",
+            "warmColor": "#ff663f",
+            "coldColor": "#be185d",
+            "smokeDensity": 1.8,
+            "flowSpeed": 1.15,
+            "autoTriggerIntro": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "radial-spectrum",
+      "number": "60",
+      "title": "RadialSpectrum",
+      "category": "Motion",
+      "original": true,
+      "description": "Momentum and Temporal, traced in 260 audio-reactive silver needles.",
+      "hint": "Click the center to play. Listen as the ring follows the actual spectrum.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Web Audio",
+        "FFT"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the complete implementation and its helpers together. No site styles, Next.js APIs or remote default assets are needed. ",
+      "code": "import RadialSpectrum from './radial-spectrum';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><RadialSpectrum /></div>;\n}",
+      "brief": "Momentum and Temporal, traced in 260 audio-reactive silver needles. Select either local recording directly below Mood. Keep playback content centered and drive needles with the actual FFT and waveform energy.",
+      "entry": "radial-spectrum.tsx",
+      "exportName": "RadialSpectrum",
+      "files": [
+        {
+          "source": "components/originals/radial-spectrum.tsx",
+          "target": "components/motiqo/radial-spectrum.tsx"
+        },
+        {
+          "source": "components/originals/score-engine.ts",
+          "target": "components/motiqo/score-engine.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "components/originals/spectrum-analysis.ts",
+          "target": "components/motiqo/spectrum-analysis.ts"
+        },
+        {
+          "source": "public/media/music/Momentum.mp3",
+          "target": "public/media/music/Momentum.mp3"
+        },
+        {
+          "source": "public/media/music/Temporal.mp3",
+          "target": "public/media/music/Temporal.mp3"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "track",
+          "label": "Track",
+          "kind": "select",
+          "defaultValue": "momentum",
+          "choices": [
+            {
+              "value": "momentum",
+              "label": "Momentum"
+            },
+            {
+              "value": "temporal",
+              "label": "Temporal"
+            }
+          ]
+        },
+        {
+          "key": "trackTitle",
+          "label": "Title override",
+          "kind": "text",
+          "defaultValue": "",
+          "maxLength": 80
+        },
+        {
+          "key": "subtitleTop",
+          "label": "Upper subtitle",
+          "kind": "text",
+          "defaultValue": "",
+          "maxLength": 60
+        },
+        {
+          "key": "subtitleBottom",
+          "label": "Lower subtitle",
+          "kind": "text",
+          "defaultValue": "MOTIQO",
+          "maxLength": 60
+        },
+        {
+          "key": "barCount",
+          "label": "Needles",
+          "kind": "range",
+          "defaultValue": 260,
+          "min": 80,
+          "max": 520,
+          "step": 10
+        },
+        {
+          "key": "radius",
+          "label": "Radius",
+          "kind": "range",
+          "defaultValue": 175,
+          "min": 100,
+          "max": 210,
+          "step": 5
+        },
+        {
+          "key": "sensitivity",
+          "label": "Audio sensitivity",
+          "kind": "range",
+          "defaultValue": 1.2,
+          "min": 0.3,
+          "max": 3,
+          "step": 0.1
+        }
+      ],
+      "moods": [
+        {
+          "id": "nocturne",
+          "label": "Nocturne",
+          "settings": {
+            "trackTitle": "",
+            "subtitleTop": "",
+            "subtitleBottom": "MOTIQO",
+            "barCount": 260,
+            "radius": 175,
+            "sensitivity": 1.5,
+            "track": "temporal"
+          }
+        },
+        {
+          "id": "fine-grain",
+          "label": "Fine Grain",
+          "settings": {
+            "trackTitle": "",
+            "subtitleTop": "",
+            "subtitleBottom": "MOTIQO",
+            "barCount": 420,
+            "radius": 160,
+            "sensitivity": 0.7,
+            "track": "momentum"
+          }
+        }
+      ]
+    },
+    {
+      "id": "type-garden",
+      "number": "61",
+      "title": "TypeGarden",
+      "category": "Motion",
+      "original": true,
+      "description": "A thought in bloom. Living botanical detail grows around every letter.",
+      "hint": "Click the text and write. Change the palette to grow a different garden.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "SVG",
+        "Typography",
+        "Botanical"
+      ],
+      "dependencies": [
+        "React",
+        "Motion"
+      ],
+      "installNote": "Copy the complete implementation and its helpers together. No site styles, Next.js APIs or remote default assets are needed. Requires motion.",
+      "code": "import TypeGarden from './type-garden';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><TypeGarden /></div>;\n}",
+      "brief": "A thought in bloom. Living botanical detail grows around every letter. Click the text and write. Change the palette to grow a different garden. Keep the live preview minimal. Expose all declared props, respect reduced motion and pause, release resources on unmount, and keep source and ZIP exports self-contained. Include rose, cosmos, poppy, tulip and mixed species, plus wild, climbing and meadow arrangements with deterministic varied branches and bloom timing.",
+      "entry": "type-garden.tsx",
+      "exportName": "TypeGarden",
+      "files": [
+        {
+          "source": "components/originals/type-garden.tsx",
+          "target": "components/motiqo/type-garden.tsx"
+        },
+        {
+          "source": "components/originals/garden-botany.tsx",
+          "target": "components/motiqo/garden-botany.tsx"
+        },
+        {
+          "source": "components/originals/garden-sprouts.tsx",
+          "target": "components/motiqo/garden-sprouts.tsx"
+        }
+      ],
+      "packageDependencies": {
+        "motion": "^12.42.2"
+      },
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "defaultText",
+          "label": "Garden text",
+          "kind": "text",
+          "defaultValue": "Type Garden",
+          "maxLength": 160,
+          "multiline": true
+        },
+        {
+          "key": "editable",
+          "label": "Editable text",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "palette",
+          "label": "Palette",
+          "kind": "select",
+          "defaultValue": "Rose Noir",
+          "choices": [
+            {
+              "value": "Rose Noir",
+              "label": "Rose Noir"
+            },
+            {
+              "value": "Midnight",
+              "label": "Midnight"
+            },
+            {
+              "value": "Orchid",
+              "label": "Orchid"
+            },
+            {
+              "value": "Tomato",
+              "label": "Tomato"
+            },
+            {
+              "value": "Moss",
+              "label": "Moss"
+            },
+            {
+              "value": "Paper",
+              "label": "Paper"
+            }
+          ]
+        },
+        {
+          "key": "flowerType",
+          "label": "Flowers",
+          "kind": "select",
+          "defaultValue": "rose",
+          "choices": [
+            {
+              "value": "rose",
+              "label": "Rose"
+            },
+            {
+              "value": "cosmos",
+              "label": "Cosmos"
+            },
+            {
+              "value": "poppy",
+              "label": "Poppy"
+            },
+            {
+              "value": "tulip",
+              "label": "Tulip"
+            },
+            {
+              "value": "mixed",
+              "label": "Wildflower mix"
+            }
+          ]
+        },
+        {
+          "key": "arrangement",
+          "label": "Growth pattern",
+          "kind": "select",
+          "defaultValue": "wild",
+          "choices": [
+            {
+              "value": "wild",
+              "label": "Wild garden"
+            },
+            {
+              "value": "climbing",
+              "label": "Climbing vines"
+            },
+            {
+              "value": "meadow",
+              "label": "Airy meadow"
+            }
+          ]
+        },
+        {
+          "key": "motionMode",
+          "label": "Motion",
+          "kind": "select",
+          "defaultValue": "breeze",
+          "choices": [
+            {
+              "value": "breeze",
+              "label": "Breeze"
+            },
+            {
+              "value": "grow",
+              "label": "Grow"
+            },
+            {
+              "value": "pulse",
+              "label": "Pulse"
+            },
+            {
+              "value": "flutter",
+              "label": "Flutter"
+            }
+          ]
+        },
+        {
+          "key": "floralDensity",
+          "label": "Floral density",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.5,
+          "max": 2,
+          "step": 0.1
+        },
+        {
+          "key": "showButterflies",
+          "label": "Butterflies",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "showControls",
+          "label": "Palette bar",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "paper-garden",
+          "label": "Paper Garden",
+          "settings": {
+            "defaultText": "Still growing.",
+            "editable": "enabled",
+            "palette": "Paper",
+            "motionMode": "grow",
+            "floralDensity": 1.5,
+            "showButterflies": "enabled",
+            "showControls": "enabled",
+            "flowerType": "cosmos",
+            "arrangement": "meadow"
+          }
+        },
+        {
+          "id": "orchid",
+          "label": "Orchid",
+          "settings": {
+            "defaultText": "Type Garden",
+            "editable": "enabled",
+            "palette": "Orchid",
+            "motionMode": "flutter",
+            "floralDensity": 1.8,
+            "showButterflies": "enabled",
+            "showControls": "enabled",
+            "flowerType": "rose",
+            "arrangement": "wild"
+          }
+        },
+        {
+          "id": "wild-at-heart",
+          "label": "Wild at Heart",
+          "settings": {
+            "defaultText": "Wild\nat heart",
+            "editable": "enabled",
+            "palette": "Moss",
+            "motionMode": "pulse",
+            "floralDensity": 1.4,
+            "showButterflies": "enabled",
+            "showControls": "enabled",
+            "flowerType": "mixed",
+            "arrangement": "wild"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lenticular-button",
+      "number": "55",
+      "title": "LenticularButton",
+      "category": "Objects",
+      "original": true,
+      "description": "A moving lens bending the grid beneath the glass.",
+      "hint": "Move to guide the lens. Click to send a refractive wave.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Glass",
+        "Refraction"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all seven implementation files together. The named button is independently usable and accepts native button attributes; the default preview adds its own demonstration scene. No extra runtime dependency is required.",
+      "code": "import LenticularPreview, { LenticularButton } from './lenticular-button';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><LenticularPreview /></div>;\n}\n\n// Standalone: <LenticularButton />",
+      "brief": "A native WebGL2 rounded glass button containing a local magnifying lens. Render a procedural technical grid, inverse-map it through a smooth radial magnification field, apply controlled barrel distortion and wavelength offsets, and retain crisp HTML lettering above the optical scene. The lens follows the spring cursor or drifts softly while idle. Its surrounding preview grid shares the configured spacing and centered origin. Clicks distort the grid with a local radial shockwave. Expose magnification, lensRadius, distortion, gridSpacing, tint and idleMotion. This component supplies its own procedural background scene; no screenshot service or external texture is required. Respect pause, reduced motion, offscreen/document suspension, context restoration and complete GPU cleanup. All controls belong to the normal Motiqo inspector.",
+      "entry": "lenticular-button.tsx",
+      "exportName": "LenticularPreview",
+      "files": [
+        {
+          "source": "components/originals/lenticular-button.tsx",
+          "target": "components/motiqo/lenticular-button.tsx"
+        },
+        {
+          "source": "components/originals/lenticular-shaders.ts",
+          "target": "components/motiqo/lenticular-shaders.ts"
+        },
+        {
+          "source": "components/originals/button-optics.ts",
+          "target": "components/motiqo/button-optics.ts"
+        },
+        {
+          "source": "components/originals/optical-button.tsx",
+          "target": "components/motiqo/optical-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "magnification",
+          "label": "Magnification",
+          "kind": "range",
+          "defaultValue": 1.8,
+          "min": 1,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "lensRadius",
+          "label": "Lens radius",
+          "kind": "range",
+          "defaultValue": 29,
+          "min": 12,
+          "max": 40,
+          "step": 1
+        },
+        {
+          "key": "distortion",
+          "label": "Lens distortion",
+          "kind": "range",
+          "defaultValue": 0.4,
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "gridSpacing",
+          "label": "Grid spacing",
+          "kind": "range",
+          "defaultValue": 22,
+          "min": 12,
+          "max": 40,
+          "step": 1
+        },
+        {
+          "key": "tint",
+          "label": "Glass tint",
+          "kind": "color",
+          "defaultValue": "#91d9ed"
+        },
+        {
+          "key": "idleMotion",
+          "label": "Idle lens motion",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "precision",
+          "label": "Precision",
+          "settings": {
+            "magnification": 2.5,
+            "lensRadius": 22,
+            "distortion": 0.2,
+            "gridSpacing": 18,
+            "tint": "#91d9ed",
+            "idleMotion": "disabled"
+          }
+        },
+        {
+          "id": "soft",
+          "label": "Soft lens",
+          "settings": {
+            "magnification": 1.4,
+            "lensRadius": 34,
+            "distortion": 0.25,
+            "gridSpacing": 22,
+            "tint": "#c1d0ef",
+            "idleMotion": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "photon-button",
+      "number": "56",
+      "title": "PhotonButton",
+      "category": "Objects",
+      "original": true,
+      "description": "Luminous heads and fading trails, circling quiet glass.",
+      "hint": "Hover to energize the pulses. Click for a light wave.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Glass",
+        "Light trails"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all seven implementation files together. The named button is independently usable and accepts native button attributes; the default preview adds its own demonstration scene. No extra runtime dependency is required.",
+      "code": "import PhotonPreview, { PhotonButton } from './photon-button';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><PhotonPreview /></div>;\n}\n\n// Standalone: <PhotonButton />",
+      "brief": "A native WebGL2 dark glass capsule with one to three luminous heads and exponential trailing light. Use a continuous SDF capsule arc-length parameter, circular phase differences and a smooth tail envelope so heads and trails cross the cap joins without cuts. Confine the pulses to the beveled glass edge, fade the perimeter chart near its medial axis and add a subtle interior reflection. Hover increases energy; clicking emits a radial light wave from the exact action point. Expose pulseCount, speed, trailLength, pulseWidth, energy, pulseColor and trailColor. Preserve a clean single-button preview and an independently usable accessible action. Respect pause, reduced motion, offscreen/document suspension, context restoration and complete GPU cleanup. All controls belong to the normal Motiqo inspector.",
+      "entry": "photon-button.tsx",
+      "exportName": "PhotonPreview",
+      "files": [
+        {
+          "source": "components/originals/photon-button.tsx",
+          "target": "components/motiqo/photon-button.tsx"
+        },
+        {
+          "source": "components/originals/photon-shaders.ts",
+          "target": "components/motiqo/photon-shaders.ts"
+        },
+        {
+          "source": "components/originals/button-optics.ts",
+          "target": "components/motiqo/button-optics.ts"
+        },
+        {
+          "source": "components/originals/optical-button.tsx",
+          "target": "components/motiqo/optical-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "pulseCount",
+          "label": "Light pulses",
+          "kind": "range",
+          "defaultValue": 2,
+          "min": 1,
+          "max": 3,
+          "step": 1
+        },
+        {
+          "key": "speed",
+          "label": "Orbit speed",
+          "kind": "range",
+          "defaultValue": 0.85,
+          "min": 0,
+          "max": 2.5,
+          "step": 0.05
+        },
+        {
+          "key": "trailLength",
+          "label": "Trail length",
+          "kind": "range",
+          "defaultValue": 0.12,
+          "min": 0.04,
+          "max": 0.22,
+          "step": 0.01
+        },
+        {
+          "key": "pulseWidth",
+          "label": "Pulse width",
+          "kind": "range",
+          "defaultValue": 0.009,
+          "min": 0.003,
+          "max": 0.025,
+          "step": 0.001
+        },
+        {
+          "key": "energy",
+          "label": "Light energy",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.2,
+          "max": 2.5,
+          "step": 0.05
+        },
+        {
+          "key": "pulseColor",
+          "label": "Pulse head",
+          "kind": "color",
+          "defaultValue": "#ecf7ff"
+        },
+        {
+          "key": "trailColor",
+          "label": "Pulse trail",
+          "kind": "color",
+          "defaultValue": "#638fff"
+        }
+      ],
+      "moods": [
+        {
+          "id": "single",
+          "label": "Single pulse",
+          "settings": {
+            "pulseCount": 1,
+            "speed": 0.65,
+            "trailLength": 0.18,
+            "pulseWidth": 0.009,
+            "energy": 1.2,
+            "pulseColor": "#ecf7ff",
+            "trailColor": "#638fff"
+          }
+        },
+        {
+          "id": "warm",
+          "label": "Warm filament",
+          "settings": {
+            "pulseCount": 2,
+            "speed": 0.6,
+            "trailLength": 0.12,
+            "pulseWidth": 0.012,
+            "energy": 1,
+            "pulseColor": "#fff2ce",
+            "trailColor": "#ffa967"
+          }
+        }
+      ]
+    },
+    {
+      "id": "optical-button",
+      "number": "48",
+      "title": "OpticalButton",
+      "category": "Objects",
+      "original": true,
+      "description": "A prism of light on a dark glass edge.",
+      "hint": "Move across the edge. Click to bend the light.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "SDF",
+        "Optics"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all 4 implementation files together. Give the parent a defined height. Self-contained styles work in React and Tailwind projects. No extra runtime dependency is required.",
+      "code": "import OpticalPlayground, { OpticalButton } from './optical-button';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><OpticalPlayground /></div>;\n}\n\n// Standalone: <OpticalButton>Optical Button</OpticalButton>",
+      "brief": "Native WebGL2 rounded-box SDF pill button. Derive a 3D bevel profile and normals from the distance field. Wavelength-dependent refraction samples domain-warped animated caustics with configurable penetration, clear center, frost, rim and light angle. Spring cursor velocity advects and swirls the optical field; exact click origins emit radial shockwaves. Expose all optical uniforms as props with optional perspective. Keep all settings in the consuming inspector; the canvas contains one button labeled Optical Button and no embedded controls. All button edges and colors are shader-generated; accessible HTML buttons overlay crisp text and SVG icons. Pause offscreen/hidden/reduced motion and dispose GPU resources. Independent named OpticalButton and default OpticalPlayground exports.",
+      "entry": "optical-button.tsx",
+      "exportName": "OpticalPlayground",
+      "files": [
+        {
+          "source": "components/originals/optical-button.tsx",
+          "target": "components/motiqo/optical-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "refraction",
+          "label": "Refraction",
+          "kind": "range",
+          "defaultValue": 56,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "thickness",
+          "label": "Thickness",
+          "kind": "range",
+          "defaultValue": 32,
+          "min": 0,
+          "max": 64,
+          "step": 1
+        },
+        {
+          "key": "bevelWidth",
+          "label": "Bevel width",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 1,
+          "max": 30,
+          "step": 1
+        },
+        {
+          "key": "frost",
+          "label": "Frost",
+          "kind": "range",
+          "defaultValue": 28,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "dispersion",
+          "label": "Dispersion",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightSheen",
+          "label": "Light sheen",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightAngle",
+          "label": "Light angle",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 0,
+          "max": 360,
+          "step": 1
+        },
+        {
+          "key": "darkness",
+          "label": "Darkness",
+          "kind": "range",
+          "defaultValue": 12,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "edgeRim",
+          "label": "Edge rim",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 50,
+          "step": 1
+        },
+        {
+          "key": "brightness",
+          "label": "Brightness",
+          "kind": "range",
+          "defaultValue": 40,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "waveSpeed",
+          "label": "Wave speed",
+          "kind": "range",
+          "defaultValue": 80,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "waveScale",
+          "label": "Wave scale",
+          "kind": "range",
+          "defaultValue": 88,
+          "min": 10,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "auraWidth",
+          "label": "Aura width",
+          "kind": "range",
+          "defaultValue": 10,
+          "min": 1,
+          "max": 40,
+          "step": 1
+        },
+        {
+          "key": "centerClarity",
+          "label": "Center clarity",
+          "kind": "range",
+          "defaultValue": 90,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "borderBeam",
+          "label": "Border beam",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "hoverGlow",
+          "label": "Hover glow",
+          "kind": "range",
+          "defaultValue": 180,
+          "min": 0,
+          "max": 300,
+          "step": 1
+        },
+        {
+          "key": "cursorFlow",
+          "label": "Cursor flow",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "clickRipple",
+          "label": "Click ripple",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "perspective",
+          "label": "3D perspective",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "tilted",
+          "label": "Optical Study",
+          "settings": {
+            "refraction": 11,
+            "thickness": 43,
+            "bevelWidth": 16,
+            "frost": 28,
+            "dispersion": 96,
+            "lightSheen": 16,
+            "lightAngle": 24,
+            "darkness": 12,
+            "edgeRim": 16,
+            "brightness": 40,
+            "waveSpeed": 80,
+            "waveScale": 88,
+            "auraWidth": 20,
+            "centerClarity": 96,
+            "borderBeam": 96,
+            "hoverGlow": 180,
+            "cursorFlow": 100,
+            "clickRipple": 100,
+            "perspective": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spectral-button",
+      "number": "52",
+      "title": "SpectralButton",
+      "category": "Objects",
+      "original": true,
+      "description": "A fine spectrum tracing the edge of glass.",
+      "hint": "A counterclockwise spectrum. Hover or click to bend it.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Glass",
+        "Spectrum"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all five implementation files together. The named button export is independently usable; the default preview supplies a full-size canvas. No additional runtime dependency is required.",
+      "code": "import SpectralPreview, { SpectralButton } from './spectral-button';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><SpectralPreview /></div>;\n}\n\n// Standalone: <SpectralButton>Spectral Button</SpectralButton>",
+      "brief": "SpectralButton is the former OpticalButton Prism edge mood promoted to an independent element. Use its original 32 brightness, 2px aura width and 100 percent center clarity, plus every other optical parameter. Offset the cycle by 7.3 seconds, reverse its time at 0.73 speed and offset the hue by 0.27 so it does not synchronize with OpticalButton. Keep a dark clear center and a fine traveling rainbow edge on the SDF capsule. Share the corrected optical engine, periodic spectrum, pointer spring, click ripple and lifecycle. A clean single-button preview shows Spectral Button with all settings in the usual inspector.",
+      "entry": "spectral-button.tsx",
+      "exportName": "SpectralPreview",
+      "files": [
+        {
+          "source": "components/originals/spectral-button.tsx",
+          "target": "components/motiqo/spectral-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-button.tsx",
+          "target": "components/motiqo/optical-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "refraction",
+          "label": "Refraction",
+          "kind": "range",
+          "defaultValue": 56,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "thickness",
+          "label": "Thickness",
+          "kind": "range",
+          "defaultValue": 32,
+          "min": 0,
+          "max": 64,
+          "step": 1
+        },
+        {
+          "key": "bevelWidth",
+          "label": "Bevel width",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 1,
+          "max": 30,
+          "step": 1
+        },
+        {
+          "key": "frost",
+          "label": "Frost",
+          "kind": "range",
+          "defaultValue": 28,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "dispersion",
+          "label": "Dispersion",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightSheen",
+          "label": "Light sheen",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightAngle",
+          "label": "Light angle",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 0,
+          "max": 360,
+          "step": 1
+        },
+        {
+          "key": "darkness",
+          "label": "Darkness",
+          "kind": "range",
+          "defaultValue": 12,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "edgeRim",
+          "label": "Edge rim",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 50,
+          "step": 1
+        },
+        {
+          "key": "brightness",
+          "label": "Brightness",
+          "kind": "range",
+          "defaultValue": 32,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "waveSpeed",
+          "label": "Wave speed",
+          "kind": "range",
+          "defaultValue": 80,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "waveScale",
+          "label": "Wave scale",
+          "kind": "range",
+          "defaultValue": 88,
+          "min": 10,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "auraWidth",
+          "label": "Aura width",
+          "kind": "range",
+          "defaultValue": 2,
+          "min": 1,
+          "max": 40,
+          "step": 1
+        },
+        {
+          "key": "centerClarity",
+          "label": "Center clarity",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "borderBeam",
+          "label": "Border beam",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "hoverGlow",
+          "label": "Hover glow",
+          "kind": "range",
+          "defaultValue": 180,
+          "min": 0,
+          "max": 300,
+          "step": 1
+        },
+        {
+          "key": "cursorFlow",
+          "label": "Cursor flow",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "clickRipple",
+          "label": "Click ripple",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "perspective",
+          "label": "3D perspective",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "caustic-button",
+      "number": "53",
+      "title": "CausticButton",
+      "category": "Objects",
+      "original": true,
+      "description": "Refracted light filling a dark glass volume.",
+      "hint": "Move to stir the caustic light. Click for a radial wave.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Glass",
+        "Caustics"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all five implementation files together. The named button export is independently usable; the default preview supplies a full-size canvas. No additional runtime dependency is required.",
+      "code": "import CausticPreview, { CausticButton } from './caustic-button';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><CausticPreview /></div>;\n}\n\n// Standalone: <CausticButton>Caustic Button</CausticButton>",
+      "brief": "CausticButton is the former OpticalButton Liquid Bath mood promoted to an independent element. Preserve its exact 48 frost, 24px aura width and 12 percent center clarity, plus every other optical parameter. Light penetrates the rounded capsule as vivid caustic folds, with a continuous Cartesian volume and a closed perimeter spectrum. Share the corrected optical engine, cursor spring, click ripple and lifecycle. The clean single-button preview shows Caustic Button and keeps every setting in the usual inspector.",
+      "entry": "caustic-button.tsx",
+      "exportName": "CausticPreview",
+      "files": [
+        {
+          "source": "components/originals/caustic-button.tsx",
+          "target": "components/motiqo/caustic-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-button.tsx",
+          "target": "components/motiqo/optical-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "refraction",
+          "label": "Refraction",
+          "kind": "range",
+          "defaultValue": 56,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "thickness",
+          "label": "Thickness",
+          "kind": "range",
+          "defaultValue": 32,
+          "min": 0,
+          "max": 64,
+          "step": 1
+        },
+        {
+          "key": "bevelWidth",
+          "label": "Bevel width",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 1,
+          "max": 30,
+          "step": 1
+        },
+        {
+          "key": "frost",
+          "label": "Frost",
+          "kind": "range",
+          "defaultValue": 48,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "dispersion",
+          "label": "Dispersion",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightSheen",
+          "label": "Light sheen",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightAngle",
+          "label": "Light angle",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 0,
+          "max": 360,
+          "step": 1
+        },
+        {
+          "key": "darkness",
+          "label": "Darkness",
+          "kind": "range",
+          "defaultValue": 12,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "edgeRim",
+          "label": "Edge rim",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 50,
+          "step": 1
+        },
+        {
+          "key": "brightness",
+          "label": "Brightness",
+          "kind": "range",
+          "defaultValue": 40,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "waveSpeed",
+          "label": "Wave speed",
+          "kind": "range",
+          "defaultValue": 80,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "waveScale",
+          "label": "Wave scale",
+          "kind": "range",
+          "defaultValue": 88,
+          "min": 10,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "auraWidth",
+          "label": "Aura width",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 1,
+          "max": 40,
+          "step": 1
+        },
+        {
+          "key": "centerClarity",
+          "label": "Center clarity",
+          "kind": "range",
+          "defaultValue": 12,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "borderBeam",
+          "label": "Border beam",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "hoverGlow",
+          "label": "Hover glow",
+          "kind": "range",
+          "defaultValue": 180,
+          "min": 0,
+          "max": 300,
+          "step": 1
+        },
+        {
+          "key": "cursorFlow",
+          "label": "Cursor flow",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "clickRipple",
+          "label": "Click ripple",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "perspective",
+          "label": "3D perspective",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "prism-button",
+      "number": "51",
+      "title": "PrismButton",
+      "category": "Objects",
+      "original": true,
+      "description": "The original liquid prism, in motion.",
+      "hint": "Hover to stir the light. Click for a ripple.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Caustics",
+        "Liquid"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all six implementation files together. No additional runtime dependency is required. PrismButton works independently; PrismPreview adds a full-size demonstration canvas.",
+      "code": "import PrismPreview, { PrismButton } from './prism-button';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><PrismPreview /></div>;\n}\n\n// Standalone: <PrismButton>Prism Button</PrismButton>",
+      "brief": "The original Motiqo optical button, preserved as a separate component. Use a Cartesian domain-warped liquid field sampled at seven wavelength-dependent refracted paths, a rounded-box SDF bevel and finite-difference normals. It has a softer liquid interior and spectral caustics, distinct from OpticalButton's perimeter beam. Expose every glass, fluid and interaction setting as props, preserve the cursor spring and exact click ripple. A clean preview shows a single Prism Button; controls belong to the inspector. Independent named PrismButton and default PrismPreview exports. Share the optical renderer and lifecycle helpers without copying GPU ownership code.",
+      "entry": "prism-button.tsx",
+      "exportName": "PrismPreview",
+      "files": [
+        {
+          "source": "components/originals/prism-button.tsx",
+          "target": "components/motiqo/prism-button.tsx"
+        },
+        {
+          "source": "components/originals/prism-shaders.ts",
+          "target": "components/motiqo/prism-shaders.ts"
+        },
+        {
+          "source": "components/originals/optical-button.tsx",
+          "target": "components/motiqo/optical-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "refraction",
+          "label": "Refraction",
+          "kind": "range",
+          "defaultValue": 56,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "thickness",
+          "label": "Thickness",
+          "kind": "range",
+          "defaultValue": 32,
+          "min": 0,
+          "max": 64,
+          "step": 1
+        },
+        {
+          "key": "bevelWidth",
+          "label": "Bevel width",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 1,
+          "max": 30,
+          "step": 1
+        },
+        {
+          "key": "frost",
+          "label": "Frost",
+          "kind": "range",
+          "defaultValue": 28,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "dispersion",
+          "label": "Dispersion",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightSheen",
+          "label": "Light sheen",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "lightAngle",
+          "label": "Light angle",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 0,
+          "max": 360,
+          "step": 1
+        },
+        {
+          "key": "darkness",
+          "label": "Darkness",
+          "kind": "range",
+          "defaultValue": 12,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "edgeRim",
+          "label": "Edge rim",
+          "kind": "range",
+          "defaultValue": 16,
+          "min": 0,
+          "max": 50,
+          "step": 1
+        },
+        {
+          "key": "brightness",
+          "label": "Brightness",
+          "kind": "range",
+          "defaultValue": 40,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "waveSpeed",
+          "label": "Wave speed",
+          "kind": "range",
+          "defaultValue": 80,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "waveScale",
+          "label": "Wave scale",
+          "kind": "range",
+          "defaultValue": 88,
+          "min": 10,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "auraWidth",
+          "label": "Aura width",
+          "kind": "range",
+          "defaultValue": 6,
+          "min": 1,
+          "max": 40,
+          "step": 1
+        },
+        {
+          "key": "centerClarity",
+          "label": "Center clarity",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "borderBeam",
+          "label": "Border beam",
+          "kind": "range",
+          "defaultValue": 96,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "hoverGlow",
+          "label": "Hover glow",
+          "kind": "range",
+          "defaultValue": 180,
+          "min": 0,
+          "max": 300,
+          "step": 1
+        },
+        {
+          "key": "cursorFlow",
+          "label": "Cursor flow",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "clickRipple",
+          "label": "Click ripple",
+          "kind": "range",
+          "defaultValue": 100,
+          "min": 0,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "key": "perspective",
+          "label": "3D perspective",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "liquid",
+          "label": "Liquid bath",
+          "settings": {
+            "refraction": 56,
+            "thickness": 32,
+            "bevelWidth": 16,
+            "frost": 48,
+            "dispersion": 96,
+            "lightSheen": 16,
+            "lightAngle": 24,
+            "darkness": 12,
+            "edgeRim": 16,
+            "brightness": 40,
+            "waveSpeed": 80,
+            "waveScale": 88,
+            "auraWidth": 24,
+            "centerClarity": 12,
+            "borderBeam": 96,
+            "hoverGlow": 180,
+            "cursorFlow": 100,
+            "clickRipple": 100,
+            "perspective": "disabled"
+          }
+        },
+        {
+          "id": "rim",
+          "label": "Subtle",
+          "settings": {
+            "refraction": 56,
+            "thickness": 32,
+            "bevelWidth": 16,
+            "frost": 28,
+            "dispersion": 96,
+            "lightSheen": 16,
+            "lightAngle": 24,
+            "darkness": 12,
+            "edgeRim": 16,
+            "brightness": 32,
+            "waveSpeed": 80,
+            "waveScale": 88,
+            "auraWidth": 2,
+            "centerClarity": 100,
+            "borderBeam": 96,
+            "hoverGlow": 180,
+            "cursorFlow": 100,
+            "clickRipple": 100,
+            "perspective": "disabled"
+          }
+        },
+        {
+          "id": "tilted",
+          "label": "Glass study",
+          "settings": {
+            "refraction": 11,
+            "thickness": 43,
+            "bevelWidth": 16,
+            "frost": 28,
+            "dispersion": 96,
+            "lightSheen": 16,
+            "lightAngle": 24,
+            "darkness": 12,
+            "edgeRim": 16,
+            "brightness": 40,
+            "waveSpeed": 80,
+            "waveScale": 88,
+            "auraWidth": 20,
+            "centerClarity": 96,
+            "borderBeam": 96,
+            "hoverGlow": 180,
+            "cursorFlow": 100,
+            "clickRipple": 100,
+            "perspective": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quantum-core",
+      "number": "49",
+      "title": "QuantumCore",
+      "category": "Objects",
+      "original": true,
+      "description": "Orbital light around an abyssal core.",
+      "hint": "Move your pointer to shape the light.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Three.js",
+        "GLSL",
+        "HUD"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy all 3 implementation files together. Give the parent a defined height. Self-contained styles work in React and Tailwind projects. Install three and @types/three.",
+      "code": "import QuantumCore from './quantum-core';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><QuantumCore /></div>;\n}",
+      "brief": "A glossy dark 3D core enclosed by two interwoven, open-pole spherical metal shells, parallel blue HDR edge traces, and beveled turbine fins with varied inclination. Render physical metal, clearcoat, a blue studio environment, selective bloom and a fine SVG diamond reticle. Include pointer parallax and respect reduced motion, pause and GPU cleanup.",
+      "entry": "quantum-core.tsx",
+      "exportName": "QuantumCore",
+      "files": [
+        {
+          "source": "components/originals/quantum-core.tsx",
+          "target": "components/motiqo/quantum-core.tsx"
+        },
+        {
+          "source": "components/originals/quantum-scene.ts",
+          "target": "components/motiqo/quantum-scene.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "coreColor",
+          "label": "Core color",
+          "kind": "color",
+          "defaultValue": "#050b24"
+        },
+        {
+          "key": "accentColor",
+          "label": "Accent color",
+          "kind": "color",
+          "defaultValue": "#315bff"
+        },
+        {
+          "key": "rotationSpeed",
+          "label": "Rotation speed",
+          "kind": "range",
+          "defaultValue": 0.22,
+          "min": 0,
+          "max": 2,
+          "step": 0.01
+        },
+        {
+          "key": "finCount",
+          "label": "Turbine fins",
+          "kind": "range",
+          "defaultValue": 28,
+          "min": 24,
+          "max": 32,
+          "step": 1
+        },
+        {
+          "key": "bloomIntensity",
+          "label": "Bloom intensity",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "interactive",
+          "label": "Pointer parallax",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "ice",
+          "label": "Ice",
+          "settings": {
+            "coreColor": "#050b24",
+            "accentColor": "#8eeaff",
+            "rotationSpeed": 0.22,
+            "finCount": 28,
+            "bloomIntensity": 0.4,
+            "interactive": "enabled"
+          }
+        },
+        {
+          "id": "violet",
+          "label": "Violet",
+          "settings": {
+            "coreColor": "#050b24",
+            "accentColor": "#927dff",
+            "rotationSpeed": 0.16,
+            "finCount": 28,
+            "bloomIntensity": 0.65,
+            "interactive": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "clustered",
+      "number": "50",
+      "title": "Clustered",
+      "category": "Linework",
+      "original": true,
+      "description": "Silk currents carrying falling light.",
+      "hint": "Move your pointer to shape the light.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Additive",
+        "Filaments"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all 2 implementation files together. Give the parent a defined height. Self-contained styles work in React and Tailwind projects. No extra runtime dependency is required.",
+      "code": "import Clustered from './clustered';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Clustered /></div>;\n}",
+      "brief": "Only the opening clustered vertical fiber-optic curtain. Canvas 2D additive blending, 50–70 narrow sine-composed filaments in 5–6 organic bundles with dark gaps. A quarter-resolution cobalt atmospheric aura layer and thin electric blue/ice filaments; falling 6–14 bead trains and comet-like local brightening use the exact same mathematical X(y,time) path. Sixty drifting dust particles, optional pointer bending, DPR-aware sizing, cached buffers, independent fallSpeed/pulseFrequency/glowIntensity/colorPalette. No text, buttons, camera transition, terrain or DNA sequence. Respect pause, reduced motion, offscreen/hidden suspension and full cleanup. Give each curtain its own wind, drift, opening width and wave travel speed; fine threads should fan out, cross and regroup in denser luminous sheets. Expose motionIntensity independently of fallSpeed and pulseFrequency.",
+      "entry": "clustered.tsx",
+      "exportName": "Clustered",
+      "files": [
+        {
+          "source": "components/originals/clustered.tsx",
+          "target": "components/motiqo/clustered.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "strandCount",
+          "label": "Filaments",
+          "kind": "range",
+          "defaultValue": 64,
+          "min": 50,
+          "max": 70,
+          "step": 1
+        },
+        {
+          "key": "clusterCount",
+          "label": "Organic clusters",
+          "kind": "range",
+          "defaultValue": 6,
+          "min": 5,
+          "max": 6,
+          "step": 1
+        },
+        {
+          "key": "fallSpeed",
+          "label": "Fall speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "pulseFrequency",
+          "label": "Pulse frequency",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "glowIntensity",
+          "label": "Glow intensity",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "motionIntensity",
+          "label": "Curtain motion",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2.5,
+          "step": 0.05
+        },
+        {
+          "key": "cobalt",
+          "label": "Cobalt aura",
+          "kind": "color",
+          "defaultValue": "#082fff"
+        },
+        {
+          "key": "blue",
+          "label": "Filaments",
+          "kind": "color",
+          "defaultValue": "#3b82f6"
+        },
+        {
+          "key": "ice",
+          "label": "Pulse light",
+          "kind": "color",
+          "defaultValue": "#bae6fd"
+        },
+        {
+          "key": "interactive",
+          "label": "Pointer interaction",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "calm",
+          "label": "Calm",
+          "settings": {
+            "strandCount": 64,
+            "clusterCount": 6,
+            "fallSpeed": 0.5,
+            "pulseFrequency": 0.5,
+            "glowIntensity": 0.7,
+            "motionIntensity": 1,
+            "cobalt": "#082fff",
+            "blue": "#3b82f6",
+            "ice": "#bae6fd",
+            "interactive": "enabled"
+          }
+        },
+        {
+          "id": "surge",
+          "label": "Surge",
+          "settings": {
+            "strandCount": 64,
+            "clusterCount": 6,
+            "fallSpeed": 1.6,
+            "pulseFrequency": 1.8,
+            "glowIntensity": 1.4,
+            "motionIntensity": 1,
+            "cobalt": "#082fff",
+            "blue": "#3b82f6",
+            "ice": "#bae6fd",
+            "interactive": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stratum",
+      "number": "47",
+      "title": "Stratum",
+      "category": "Motion",
+      "original": true,
+      "description": "An anchored landscape, always in motion.",
+      "hint": "Hover shapes the field. Click for a ripple; Space pauses.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Three.js",
+        "Instanced",
+        "Kinetic"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy the three implementation files together and install three and @types/three. Give the parent a defined height. No site stylesheet or React Three Fiber is required.",
+      "code": "import Stratum from './stratum';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Stratum /></div>;\n}",
+      "brief": "Integrate Stratum, a self-contained Three.js isometric kinetic pillar matrix. Use one InstancedMesh for a dense 24x24 grid (configurable 8–25). Create BoxGeometry(0.12,1,0.12) translated (0,0.5,0) so every pillar stays anchored at y=0. Never change x/z or y translation: animate only scale.y within 0.05–4.5 using damped springs and retained matrix buffers. Blend between gradient Perlin terrain, concentric radial ripples, a diagonal retracting cascade and alternating stepped rows/columns. An invisible base plane captures raycast pointer coordinates for Gaussian retraction or elevation; clicking emits a bounded radial shockwave from that exact point. Use a fixed orthographic three-quarter camera, charcoal #101114 floor/background, cool silver #9ca3af roughness 0.4/metalness 0.1 pillars, real soft directional shadows and neutral silver #eef0f4 illumination. Expose gridSize, maxHeight, waveSpeed, sequenceMode, hoverEffect, colorPalette, compact and paused. Fit the whole anchored volume at all viewport sizes. Include keyboard ripple/cursor/pause/reset, deterministic SVG fallback, reduced motion, hidden/offscreen suspension, context restoration and complete GPU/observer/listener/RAF cleanup. No surrounding interface.",
+      "entry": "stratum.tsx",
+      "exportName": "Stratum",
+      "files": [
+        {
+          "source": "components/originals/stratum.tsx",
+          "target": "components/motiqo/stratum.tsx"
+        },
+        {
+          "source": "components/originals/stratum-scene.ts",
+          "target": "components/motiqo/stratum-scene.ts"
+        },
+        {
+          "source": "components/originals/stratum-math.ts",
+          "target": "components/motiqo/stratum-math.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "gridSize",
+          "label": "Grid size",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 8,
+          "max": 25,
+          "step": 1
+        },
+        {
+          "key": "maxHeight",
+          "label": "Maximum height",
+          "kind": "range",
+          "defaultValue": 4.5,
+          "min": 0.3,
+          "max": 4.5,
+          "step": 0.05
+        },
+        {
+          "key": "waveSpeed",
+          "label": "Wave speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.1,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "sequenceMode",
+          "label": "Sequence",
+          "kind": "select",
+          "defaultValue": "auto",
+          "choices": [
+            {
+              "value": "auto",
+              "label": "Auto choreography"
+            },
+            {
+              "value": "perlin",
+              "label": "Organic Perlin field"
+            },
+            {
+              "value": "radial",
+              "label": "Radial ripple"
+            },
+            {
+              "value": "diagonal",
+              "label": "Diagonal cascade"
+            },
+            {
+              "value": "step",
+              "label": "Step matrix"
+            }
+          ]
+        },
+        {
+          "key": "hoverEffect",
+          "label": "Cursor effect",
+          "kind": "select",
+          "defaultValue": "retract",
+          "choices": [
+            {
+              "value": "retract",
+              "label": "Touch pressure"
+            },
+            {
+              "value": "elevate",
+              "label": "Magnetic lift"
+            }
+          ]
+        },
+        {
+          "key": "background",
+          "label": "Ground",
+          "kind": "color",
+          "defaultValue": "#101114"
+        },
+        {
+          "key": "pillars",
+          "label": "Pillars",
+          "kind": "color",
+          "defaultValue": "#9ca3af"
+        },
+        {
+          "key": "light",
+          "label": "Key light",
+          "kind": "color",
+          "defaultValue": "#eef0f4"
+        }
+      ],
+      "moods": [
+        {
+          "id": "tidal",
+          "label": "Tidal",
+          "settings": {
+            "gridSize": 24,
+            "maxHeight": 3.9,
+            "waveSpeed": 0.75,
+            "sequenceMode": "radial",
+            "hoverEffect": "elevate",
+            "background": "#101114",
+            "pillars": "#9ca3af",
+            "light": "#eef0f4"
+          }
+        },
+        {
+          "id": "monolith",
+          "label": "Monolith",
+          "settings": {
+            "gridSize": 24,
+            "maxHeight": 4,
+            "waveSpeed": 0.65,
+            "sequenceMode": "step",
+            "hoverEffect": "retract",
+            "background": "#08090b",
+            "pillars": "#5b626d",
+            "light": "#d9e0e8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "inkshift",
+      "number": "45",
+      "title": "Inkshift",
+      "category": "Motion",
+      "original": true,
+      "description": "Type meets a living field of ink.",
+      "hint": "Move to stir. Scroll or use arrow keys to change words.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Fluid",
+        "Typography"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the five implementation files together and place inkshift-latin.woff2 and its OFL license in public/media. No Three.js, Pixi or site stylesheet is required. Give the parent a defined height. Put **bold** markers in each word to choose the heavy letter group.",
+      "code": "import Inkshift from './inkshift';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Inkshift /></div>;\n}",
+      "brief": "Integrate Inkshift, a native WebGL2 threshold fluid and dual-weight kinetic typography canvas. Solve velocity splats, curl/vorticity confinement, divergence, 18 Jacobi pressure iterations, gradient subtraction and bilinear advection using ping-pong floating-point framebuffers. Render only solid cream #f3f2ed ink on #0b0c10, with an antialiased density threshold and turbulent torn edges. Upload individually clipped and vertically staggered 100/800 weight letters to a text texture and perform exact abs(fluidMask-textMask) XOR in the final shader. Defaults: Mo**ti**qo, D**esi**gn, M**oti**on, Cr**eati**ve. Wheel/touch inertia and arrow keys change words and inject force bursts; autoplay cycles when idle. Expose words, vorticity, dissipation, splatRadius, threshold, backgroundColor, foregroundColor, autoCycle, compact and paused. Preserve responsive fitted type, GPU resource ownership, context restoration, static fallback, reduced motion, hidden/offscreen suspension and bounded input queues. Include the bundled Urbanist variable font and OFL license. Exclude author branding, header, contact and footer.",
+      "entry": "inkshift.tsx",
+      "exportName": "Inkshift",
+      "files": [
+        {
+          "source": "components/originals/inkshift.tsx",
+          "target": "components/motiqo/inkshift.tsx"
+        },
+        {
+          "source": "components/originals/inkshift-engine.ts",
+          "target": "components/motiqo/inkshift-engine.ts"
+        },
+        {
+          "source": "components/originals/inkshift-shaders.ts",
+          "target": "components/motiqo/inkshift-shaders.ts"
+        },
+        {
+          "source": "components/originals/inkshift-math.ts",
+          "target": "components/motiqo/inkshift-math.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "public/media/inkshift-latin.woff2",
+          "target": "public/media/inkshift-latin.woff2"
+        },
+        {
+          "source": "public/media/inkshift-font-license.txt",
+          "target": "public/media/inkshift-font-license.txt"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "words",
+          "label": "Words · **bold**",
+          "kind": "text",
+          "defaultValue": "Mo**ti**qo\nD**esi**gn\nM**oti**on\nCr**eati**ve",
+          "maxLength": 700,
+          "multiline": true
+        },
+        {
+          "key": "vorticity",
+          "label": "Vorticity",
+          "kind": "range",
+          "defaultValue": 40,
+          "min": 0,
+          "max": 80,
+          "step": 1
+        },
+        {
+          "key": "dissipation",
+          "label": "Ink fade",
+          "kind": "range",
+          "defaultValue": 0.55,
+          "min": 0.08,
+          "max": 2,
+          "step": 0.01
+        },
+        {
+          "key": "splatRadius",
+          "label": "Brush radius",
+          "kind": "range",
+          "defaultValue": 0.12,
+          "min": 0.025,
+          "max": 0.22,
+          "step": 0.005
+        },
+        {
+          "key": "threshold",
+          "label": "Ink threshold",
+          "kind": "range",
+          "defaultValue": 0.5,
+          "min": 0.1,
+          "max": 0.9,
+          "step": 0.01
+        },
+        {
+          "key": "backgroundColor",
+          "label": "Background",
+          "kind": "color",
+          "defaultValue": "#0b0c10"
+        },
+        {
+          "key": "foregroundColor",
+          "label": "Ink and type",
+          "kind": "color",
+          "defaultValue": "#f3f2ed"
+        },
+        {
+          "key": "autoCycle",
+          "label": "Auto cycle",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "editorial",
+          "label": "Editorial",
+          "settings": {
+            "words": "Mo**ti**qo\nD**esi**gn\nM**oti**on\nCr**eati**ve",
+            "vorticity": 26,
+            "dissipation": 0.55,
+            "splatRadius": 0.12,
+            "threshold": 0.5,
+            "backgroundColor": "#eeece6",
+            "foregroundColor": "#151515",
+            "autoCycle": "enabled"
+          }
+        },
+        {
+          "id": "turbulent",
+          "label": "Turbulent",
+          "settings": {
+            "words": "Mo**ti**qo\nD**esi**gn\nM**oti**on\nCr**eati**ve",
+            "vorticity": 68,
+            "dissipation": 0.32,
+            "splatRadius": 0.15,
+            "threshold": 0.5,
+            "backgroundColor": "#0b0c10",
+            "foregroundColor": "#f3f2ed",
+            "autoCycle": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "atelier",
+      "number": "46",
+      "title": "Atelier",
+      "category": "Motion",
+      "original": true,
+      "description": "A room, revealed through its drawing.",
+      "hint": "Paint to reveal. Arrow keys move the brush; Escape clears it.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Architecture",
+        "Reveal"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the five implementation files together and both atelier-room.webp and atelier-sketch.webp to public/media. The supplied pair shares exact pixel geometry; leaving sketchImage empty derives edges for a custom render. Custom remote images must allow CORS. Give the parent a defined height.",
+      "code": "import Atelier from './atelier';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Atelier /></div>;\n}",
+      "brief": "Integrate Atelier, a native WebGL2 architectural sketch-to-render brush reveal. Use the original Motiqo warm living-room photo and its exact Sobel-derived graphite drawing, with identical cover coordinates for perfect registration. Render a persistent horizontal oval portal plus a bounded interpolated cursor/touch trail with 0.8-second shrinking lifetimes. Sum Gaussian fields in one mask framebuffer before thresholding so brush strokes and portal fuse as metaballs. Distort the contour with medium/high-frequency fractal noise, add a charcoal edge shadow and fade the surrounding drawing towards white. A custom render without a paired sketch uses GPU Sobel automatically. Expose sketchImage, renderImage, portalSize, brushSize, trailFadeSpeed, edgeRoughness, title, subtitle, compact and paused. Keep the clean configurable heading above the portal and caption below. Support arrow-key brush control and Escape, idle sleep, hidden/offscreen suspension, reduced motion, cancellation of pending image loads, WebGL context restoration and full cleanup. No other website interface or branding.",
+      "entry": "atelier.tsx",
+      "exportName": "Atelier",
+      "files": [
+        {
+          "source": "components/originals/atelier.tsx",
+          "target": "components/motiqo/atelier.tsx"
+        },
+        {
+          "source": "components/originals/atelier-engine.ts",
+          "target": "components/motiqo/atelier-engine.ts"
+        },
+        {
+          "source": "components/originals/atelier-shaders.ts",
+          "target": "components/motiqo/atelier-shaders.ts"
+        },
+        {
+          "source": "components/originals/atelier-math.ts",
+          "target": "components/motiqo/atelier-math.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "public/media/atelier-room.webp",
+          "target": "public/media/atelier-room.webp"
+        },
+        {
+          "source": "public/media/atelier-sketch.webp",
+          "target": "public/media/atelier-sketch.webp"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "renderImage",
+          "label": "Render image",
+          "kind": "text",
+          "defaultValue": "/media/atelier-room.webp",
+          "maxLength": 1024,
+          "multiline": false
+        },
+        {
+          "key": "sketchImage",
+          "label": "Sketch image · auto if empty",
+          "kind": "text",
+          "defaultValue": "",
+          "maxLength": 1024,
+          "multiline": false
+        },
+        {
+          "key": "portalSize",
+          "label": "Portal size",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.4,
+          "max": 1.7,
+          "step": 0.05
+        },
+        {
+          "key": "brushSize",
+          "label": "Brush size",
+          "kind": "range",
+          "defaultValue": 64,
+          "min": 16,
+          "max": 150,
+          "step": 2
+        },
+        {
+          "key": "trailFadeSpeed",
+          "label": "Trail fade",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.25,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "edgeRoughness",
+          "label": "Paper roughness",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "title",
+          "label": "Title",
+          "kind": "text",
+          "defaultValue": "From quiet lines to warm spaces.",
+          "maxLength": 160,
+          "multiline": false
+        },
+        {
+          "key": "subtitle",
+          "label": "Subtitle",
+          "kind": "text",
+          "defaultValue": "Light, material and the spaces between.",
+          "maxLength": 160,
+          "multiline": false
+        }
+      ],
+      "moods": [
+        {
+          "id": "immersive",
+          "label": "Immersive",
+          "settings": {
+            "renderImage": "/media/atelier-room.webp",
+            "sketchImage": "",
+            "portalSize": 1.3,
+            "brushSize": 96,
+            "trailFadeSpeed": 1,
+            "edgeRoughness": 1.2,
+            "title": "Rooms with a little more feeling.",
+            "subtitle": "Light, material and the spaces between."
+          }
+        },
+        {
+          "id": "draft",
+          "label": "Draft",
+          "settings": {
+            "renderImage": "/media/atelier-room.webp",
+            "sketchImage": "",
+            "portalSize": 0.7,
+            "brushSize": 42,
+            "trailFadeSpeed": 1.7,
+            "edgeRoughness": 1.5,
+            "title": "From a line to a place.",
+            "subtitle": "Light, material and the spaces between."
+          }
+        }
+      ]
+    },
+    {
+      "id": "charge",
+      "number": "44",
+      "title": "Charge",
+      "category": "Motion",
+      "original": true,
+      "description": "A little energy, endlessly flowing.",
+      "hint": "Space pauses the energy flow.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Three.js",
+        "Plasma",
+        "Energy"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Install three and copy charge.tsx, charge-scene.ts, charge-math.ts and charge-shaders.ts into one folder. Give the parent a defined height. No site styles or assets are required.",
+      "code": "import Charge from './charge';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Charge percentage={46} statusText=\"Quick Charge\" /></div>;\n}",
+      "brief": "Integrate Charge, a Motiqo plasma charging orb in a minimal cropped portrait frame on pure black. A white/cyan energy inlet rises from the lower edge and blends through a smooth liquid Y-junction into two fine organic perimeter currents that travel upwards. Include a bright top condensation flare, a subtle inner blue mist, a diffuse electric-blue bloom with amber outer filaments, and 150 to 300 independently rising white/cyan/gold particles. Particles accelerate along the stem, divide between both perimeter arcs and the interior, then fade at the top. Render the energy field with an animated shader and additive soft circular THREE.Points, keeping buffers and one 60Hz-target RAF. Overlay the battery percentage and a configurable status. Expose percentage, statusText, flowSpeed, particleCount, primaryColor, secondaryColor, animateCount, compact and paused. Keep the accessible progressbar tied to the real target rather than announcing decorative counter frames. Support Space to pause, reduced-motion stills, offscreen/hidden suspension, live controls, WebGL context restoration, a complete static SVG fallback and complete disposal. Exclude phone hardware and external lock-screen content.",
+      "entry": "charge.tsx",
+      "exportName": "Charge",
+      "files": [
+        {
+          "source": "components/originals/charge.tsx",
+          "target": "components/motiqo/charge.tsx"
+        },
+        {
+          "source": "components/originals/charge-scene.ts",
+          "target": "components/motiqo/charge-scene.ts"
+        },
+        {
+          "source": "components/originals/charge-math.ts",
+          "target": "components/motiqo/charge-math.ts"
+        },
+        {
+          "source": "components/originals/charge-shaders.ts",
+          "target": "components/motiqo/charge-shaders.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "percentage",
+          "label": "Battery charge",
+          "kind": "range",
+          "defaultValue": 46,
+          "min": 0,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "key": "statusText",
+          "label": "Status",
+          "kind": "select",
+          "defaultValue": "Quick Charge",
+          "choices": [
+            {
+              "value": "Quick Charge",
+              "label": "Quick Charge"
+            },
+            {
+              "value": "Charging",
+              "label": "Charging"
+            },
+            {
+              "value": "Fully Charged",
+              "label": "Fully Charged"
+            }
+          ]
+        },
+        {
+          "key": "flowSpeed",
+          "label": "Flow speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.1,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "particleCount",
+          "label": "Stardust",
+          "kind": "range",
+          "defaultValue": 240,
+          "min": 150,
+          "max": 300,
+          "step": 10
+        },
+        {
+          "key": "primaryColor",
+          "label": "Plasma",
+          "kind": "color",
+          "defaultValue": "#00e5ff"
+        },
+        {
+          "key": "secondaryColor",
+          "label": "Amber aura",
+          "kind": "color",
+          "defaultValue": "#ffb52e"
+        },
+        {
+          "key": "animateCount",
+          "label": "Animate percentage",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "supercharge",
+          "label": "Supercharge",
+          "settings": {
+            "percentage": 78,
+            "statusText": "Quick Charge",
+            "flowSpeed": 1.6,
+            "particleCount": 300,
+            "primaryColor": "#5dbdff",
+            "secondaryColor": "#f4d38a",
+            "animateCount": "enabled"
+          }
+        },
+        {
+          "id": "ember",
+          "label": "Ember",
+          "settings": {
+            "percentage": 62,
+            "statusText": "Quick Charge",
+            "flowSpeed": 0.65,
+            "particleCount": 240,
+            "primaryColor": "#ffd59b",
+            "secondaryColor": "#ff6536",
+            "animateCount": "enabled"
+          }
+        }
+      ]
+    },
+    {
       "id": "resonance",
       "number": "43",
       "title": "Resonance",

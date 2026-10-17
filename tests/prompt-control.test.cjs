@@ -78,8 +78,9 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
   }
   let mounted = true;
   try {
-    assert.deepEqual(catalog.elements.map(e => e.id).sort(), ['arbor', 'aura', 'companion', 'constellation', 'crate', 'deck', 'district', 'drawer', 'event-horizon', 'galaxy', 'gilded-signal', 'glow-nav', 'gyro', 'halo', 'helix', 'holdings', 'lantern', 'liquid-relic', 'liquid-sculpture', 'luma', 'meridian', 'nexus', 'orbit', 'pleat', 'pulse', 'resonance', 'sentiment', 'silk-aperture', 'sleeve', 'tempo']);
-    assert.deepEqual(catalog.elements.filter(e=>e.category==='Linework').map(e=>e.id).sort(), ['arbor','crate','deck','district','drawer','gyro','lantern','pleat','tempo']);
+    const registered = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../registry/manifest.json'), 'utf8')).items.map(item => item.id).sort();
+    assert.deepEqual(catalog.elements.map(e => e.id).sort(), registered);
+    assert.deepEqual(catalog.elements.filter(e=>e.category==='Linework').map(e=>e.id).sort(), ['arbor','clustered','crate','deck','district','drawer','gyro','lantern','pleat','tempo']);
     assert.ok(catalog.elements.every(e => !e.tags.includes('Original') && catalog.categories.includes(e.category)));
     await React.act(() => root.render(React.createElement(Fixture)));
     await React.act(() => document.querySelector('.prompt-select').click());

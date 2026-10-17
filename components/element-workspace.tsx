@@ -16,9 +16,9 @@ type Viewport = 'desktop' | 'tablet' | 'mobile';
 const views: View[] = ['preview', 'code', 'prompt'];
 
 /** An addressable collection section: no overlay, focus trap or body scroll lock. */
-export default function ElementWorkspace({ element, onBack, onPrevious, onNext, index, total, saved, onSave, paused, copy, originalSource, onToolChange, initialSettings, initialTab = 'preview', initialTool = 'Universal' }: {
+export default function ElementWorkspace({ element, onBack, onPrevious, onNext, index, total, saved, onSave, paused, copy, originalSource, onToolChange, initialSettings, initialTab = 'preview', initialTool = 'Universal', onTag }: {
   element: LibraryElement; onBack: () => void; onPrevious: () => void; onNext: () => void; index: number; total: number;
-  saved: boolean; onSave: () => void; paused: boolean; initialSettings?:Settings;
+  onTag?:(tag:string)=>void; saved: boolean; onSave: () => void; paused: boolean; initialSettings?:Settings;
   copy: (text: string) => Promise<boolean>; originalSource: OriginalSources; initialTab?: View; initialTool?: AITool; onToolChange: (tool: AITool) => void;
 }) {
   const root = useRef<HTMLElement>(null);
@@ -69,7 +69,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
                   : <span className="document-filename">{files[0]?.name || `${element.id}.tsx`}</span>
                   : <ChoiceSelect label="AI tool" options={workflowOptions} value={tool} onChange={value => chooseTool(value as AITool)} paused={paused}/>}
               </div>
-              {tab === 'code' ? files.length?<SourceView code={code}/>:<div className="document-loading" role="status">{sourceState==='error'?<>Source could not be loaded. <button onClick={()=>setSourceRetry(value=>value+1)}>Try again</button></>:'Loading source…'}</div> : <div className="prompt-document" aria-label="Prompt text">
+              {tab === 'code' ? files.length?<SourceView code={code} filename={files[sourceIndex]?.name}/>:<div className="document-loading" role="status">{sourceState==='error'?<>Source could not be loaded. <button onClick={()=>setSourceRetry(value=>value+1)}>Try again</button></>:'Loading source…'}</div> : <div className="prompt-document" aria-label="Prompt text">
                 {prompt.split('\n\n').map((paragraph, paragraphIndex) => paragraph.startsWith('Usage example:')
                   ? <pre className="prompt-example" key={paragraphIndex}><code>{paragraph}</code></pre>
                   : <p key={paragraphIndex}>{paragraph}</p>)}
@@ -96,8 +96,9 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
         </div>
       </div>
       <aside className="workbench-inspector" aria-label="Component details" data-settings-open={mobileSettings||undefined}>
+        <div className="workbench-inspector-scroll">
         <header className="workbench-heading"><span className="category-label">{element.category}</span><h1 id="detail-title" tabIndex={-1}>{element.title}</h1>
-          <div className="tags">{element.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+          <div className="tags">{element.tags.map(tag => onTag?<button type="button" key={tag} className="tag-filter-button" aria-label={`Filter by ${tag}`} onClick={()=>onTag(tag)}>{tag}</button>:<span key={tag}>{tag}</span>)}</div>
         </header>
         <div className="detail-tabs" role="tablist" aria-label="Element views" style={{ '--segment-index': views.indexOf(tab) } as CSSProperties} onKeyDown={event => {
           if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
@@ -119,10 +120,13 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
         <div className="inspector-group inspector-controls" aria-label="Live component settings">
           <div className="parameter-select"><span>Mood</span><ChoiceSelect label="Mood" value={selectedMood} options={[{value:'default',label:'Default'},...moods.map(mood=>({value:mood.id,label:mood.label})),...(selectedMood==='custom'?[{value:'custom',label:'Custom'}]:[])]} onChange={value=>{const mood=moods.find(item=>item.id===value);if(mood)update(mood.settings);else if(value==='default')reset();}} paused={paused}/></div>
           {controls.map(control=>{
+            if(element.id==='iris-turbine'&&control.key==='speed'&&settings.mode!=='controlled')return null;
+            if(element.id==='sacred-lotus'&&control.key==='progress'&&settings.playback!=='controlled')return null;
             const value=settings[control.key]??control.defaultValue;
             const change=(next:string|number)=>update({[control.key]:next});
             if(control.kind==='range')return <label key={control.key} className="parameter-range" style={{'--range-fill':`${(Number(value)-control.min!)/(control.max!-control.min!)*100}%`} as CSSProperties}><span>{control.label}</span><output>{control.step!==undefined&&Number.isInteger(control.step)?value:Number(value).toFixed(2)}</output><input aria-label={control.label} type="range" min={control.min} max={control.max} step={control.step} value={value} onChange={event=>change(Number(event.target.value))}/></label>;
             if(control.kind==='color')return <label key={control.key} className="parameter-colour"><span>{control.label}</span><div><input aria-label={control.label} type="color" value={String(value)} onChange={event=>change(event.target.value)}/><code>{String(value).toUpperCase()}</code></div></label>;
+            if(control.kind==='text')return <label key={control.key} className="parameter-text"><span>{control.label}</span>{control.multiline?<textarea aria-label={control.label} rows={4} maxLength={control.maxLength??200} value={String(value)} onChange={event=>change(event.target.value)}/>:<input aria-label={control.label} type="text" maxLength={control.maxLength??200} value={String(value)} onChange={event=>change(event.target.value)}/>}</label>;
             return <div key={control.key} className="parameter-select"><span>{control.label}</span><ChoiceSelect label={control.label} value={String(value)} options={control.choices!} onChange={change} paused={paused}/></div>;
           })}
           <button className="parameter-reset" onClick={reset}>Reset settings</button>
@@ -133,6 +137,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
           <a href={`/api/components/${element.id}?config=${encodeURIComponent(JSON.stringify({v:1,id:element.id,settings}))}`} download><Download size={14}/> Download component</a>
         </div>
         <div className="inspector-group inspector-dependencies"><span className="document-label">Dependencies</span><div className="tags">{element.dependencies.map(tag => <span key={tag}>{tag}</span>)}</div></div>
+        </div>
       </aside>
     </div>
   </section>;

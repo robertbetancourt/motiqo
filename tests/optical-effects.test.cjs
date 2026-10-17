@@ -1,0 +1,15 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');
+const file=path.resolve(__dirname,'../components/originals/effect-runtime.ts'),m=new Module(file,module);m.filename=file;m.paths=Module._nodeModulePaths(path.dirname(file));m._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,file);
+test('visual clocks suspend on pause, visibility and reduced motion, and release all subscriptions',()=>{
+ const frames=new Map(),events=new Map(),media=new Set(),saved=new Map();let next=0,now=1000,ro,io;const document={hidden:false,addEventListener:(name,fn)=>events.set(name,fn),removeEventListener:(name)=>events.delete(name)},query={matches:false,addEventListener:(_,fn)=>media.add(fn),removeEventListener:(_,fn)=>media.delete(fn)};
+ const globals={document,matchMedia:()=>query,devicePixelRatio:3,requestAnimationFrame:fn=>{frames.set(++next,fn);return next;},cancelAnimationFrame:id=>frames.delete(id),ResizeObserver:class{constructor(fn){this.fn=fn;ro=this;}observe(){this.fn();}disconnect(){this.stopped=true;}},IntersectionObserver:class{constructor(fn){this.fn=fn;io=this;}observe(){this.fn([{isIntersecting:true}]);}disconnect(){this.stopped=true;}}};
+ for(const [key,value]of Object.entries(globals)){saved.set(key,Object.getOwnPropertyDescriptor(globalThis,key));Object.defineProperty(globalThis,key,{value,configurable:true,writable:true});}
+ const host={clientWidth:300,clientHeight:200,dataset:{}},canvas={},draws=[];let paused=false;
+ function tick(){now+=16;const work=[...frames.values()];frames.clear();work.forEach(fn=>fn(now));}
+ try{const clock=m.exports.effectRuntime(host,canvas,(time,dt)=>draws.push({time,dt}),()=>paused,undefined,true);tick();tick();assert.equal(host.dataset.ready,'true');assert.equal(canvas.width,450);assert.equal(canvas.height,300);assert.ok(draws[1].time>draws[0].time);
+ paused=true;clock.invalidate();tick();assert.equal(draws.at(-1).dt,0);assert.equal(frames.size,0);const last=draws.at(-1).time;clock.invalidate();tick();assert.equal(draws.at(-1).time,last);
+ paused=false;clock.invalidate();tick();io.fn([{isIntersecting:false}]);assert.equal(frames.size,0);const count=draws.length;clock.invalidate();tick();assert.equal(draws.length,count);io.fn([{isIntersecting:true}]);tick();assert.equal(draws.length,count+1);
+ document.hidden=true;events.get('visibilitychange')();assert.equal(frames.size,0);document.hidden=false;events.get('visibilitychange')();tick();query.matches=true;media.forEach(fn=>fn());tick();assert.equal(frames.size,0);assert.equal(draws.at(-1).dt,0);
+ clock.dispose();assert.equal(events.size,0);assert.equal(media.size,0);assert.ok(ro.stopped&&io.stopped);clock.invalidate();assert.equal(frames.size,0);
+ }finally{for(const [key,descriptor]of saved)descriptor?Object.defineProperty(globalThis,key,descriptor):delete globalThis[key];}
+});

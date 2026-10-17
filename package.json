@@ -25,6 +25,8 @@
     "lucide-react": "^1.27.0",
     "motion": "^12.42.2",
     "next": "16.3.4",
+    "prettier": "^3.9.10",
+    "prism-react-renderer": "^2.4.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "three": "^0.172.0"

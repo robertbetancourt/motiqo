@@ -41,6 +41,10 @@ For Vercel, use the `Motiqo` project root and the Next.js preset. The prototype 
 | Companion | Animated glass ribbon agent with cursor-tracking eyes | Response, speed, eye tracking, warm and cool light |
 | Sentiment | Illustrated market line chart with smooth period morphing and cursor inspection | Asset, period, variation, speed, line width, area light |
 | Helix | 3D double helix made entirely from points with shader curl turbulence | Particle count, rotation, dispersion, colours, interaction |
+| Stratum | Instanced isometric pillar matrix with anchored spring motion, four fields and raycast ripples | Grid, height, speed, sequence, cursor pressure/lift, palette |
+| Inkshift | Native WebGL2 threshold ink with exact XOR type and inertial word transitions | Editable words and bold groups, vorticity, fade, radius, threshold, colours, auto cycle |
+| Atelier | Paired architectural drawing and warm room joined by an organic brush portal | Images, portal, brush, fade, roughness, title, subtitle |
+| Charge | Plasma battery orb with a liquid Y-split, rising stardust and a cropped portrait frame | Percentage, status, flow speed, particle count, cyan/amber colours, animated count |
 | Holdings | Animated segmented stock portfolio with illustrative USD positions | Portfolio target, position size, speed, line width, segment gap, activity |
 | Galaxy | Inclined GPU spiral galaxy with a radiant core, dust streams and orbiting stars | Particles, orbit speed, spiral arms, inclination, glow, core and star colours |
 | Luma | Coral-to-violet particle wave with drifting dust and a cropped portrait greeting | Particles, speed, wave height, glow, gradient colours |
@@ -124,8 +128,14 @@ npx motiqo skill
 
 The workspace ZIP endpoint (`/api/components/<id>`) uses the same manifest. It includes complete files/assets, an example matching the selected configuration and a dependency README. Settings from URLs/storage are versioned, bounded and restricted to declared controls. A shared URL takes precedence over locally saved settings; Reset restores defaults. Clearing site storage clears locally saved configurations.
 
-`verify:exports` creates an independent temporary React project, installs the packed CLI and pinned dependencies, copies all components and assets, and typechecks the default and both mood examples for every component. It uses no Next.js runtime, site stylesheet or project aliases. Successful fixtures are removed; failures are retained for diagnosis. Browser checks remain necessary for visual quality and GPU support. CI runs tests, the production build and export verification without publishing or deployment.
+`verify:exports` creates an independent temporary React project, installs the packed CLI and pinned dependencies, copies all components and assets, and typechecks the default and all registered mood examples for every component. It uses no Next.js runtime, site stylesheet or project aliases. Successful fixtures are removed; failures are retained for diagnosis. Browser checks remain necessary for visual quality and GPU support. CI runs tests, the production build and export verification without publishing or deployment.
 
 Aura exposes a semantic risk meter; Holdings announces selected portfolio values. Pulse and Sentiment provide data tables and keyboard inspection. Live announcements describe interaction results rather than decorative animation frames. Reduced motion preserves data inspection.
 
 Future work, including MCP, hosted playgrounds, video export and public package distribution, is tracked in [PENDIENTES.md](PENDIENTES.md).
+
+Inkshift owns a native WebGL2 ping-pong fluid solver and an XOR text texture; its bundled Urbanist font retains its OFL license. Atelier includes an original generated interior and a Sobel drawing calculated from that same image (`node scripts/build-atelier-sketch.mjs`). With a different render and no sketch, its shader derives aligned edges automatically. Image and text fields are bounded, persist with the other settings and appear in exported examples.
+
+The original Tidal and Atlas galleries, ThermalSmoke, RadialSpectrum and TypeGarden are documented in [Gallery, atmosphere and living type](docs/gallery-weather-garden-audio.md). Optical buttons and QuantumCore are documented in [Optical effects](docs/optical-effects.md).
+
+SacredLotus, IrisTurbine, BokehTerrain, OpalineOrb and OrbitAgent are documented in [Generative studies](docs/generative-studies.md). Library tags are clickable filters with shareable URLs and browser history support.

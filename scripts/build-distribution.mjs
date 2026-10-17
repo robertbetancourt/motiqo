@@ -10,11 +10,11 @@ const items=manifest.items.map(item=>{
  if(!/^[a-z][a-z0-9-]*$/.test(item.id)||ids.has(item.id))throw Error(`Invalid or duplicate id: ${item.id}`);ids.add(item.id);
  const controls=new Map(item.controls.map(c=>[c.key,c]));if(controls.size!==item.controls.length)throw Error(`Duplicate controls: ${item.id}`);
  for(const mood of item.moods)for(const[key,value]of Object.entries(mood.settings)){
-  const c=controls.get(key);if(!c||c.kind==='range'&&(!Number.isFinite(value)||value<c.min||value>c.max)||c.kind==='select'&&!c.choices.some(v=>v.value===value)||c.kind==='color'&&!/^#[\da-f]{6}$/i.test(value))throw Error(`Invalid mood ${item.id}/${mood.id}/${key}`);
+  const c=controls.get(key);if(!c||c.kind==='range'&&(!Number.isFinite(value)||value<c.min||value>c.max)||c.kind==='select'&&!c.choices.some(v=>v.value===value)||c.kind==='color'&&!/^#[\da-f]{6}$/i.test(value)||c.kind==='text'&&(typeof value!=='string'||value.length>(c.maxLength??200)))throw Error(`Invalid mood ${item.id}/${mood.id}/${key}`);
  }
  const files=item.files.map(file=>{
   if(file.source.includes('..')||file.target.includes('..')||!file.source.startsWith('components/')&&!file.source.startsWith('public/'))throw Error(`Unsafe source: ${file.source}`);
-  const bytes=fs.readFileSync(path.join(root,file.source)),encoding=/\.(webp|png|jpe?g|woff2?)$/.test(file.source)?'base64':'utf8';
+  const bytes=fs.readFileSync(path.join(root,file.source)),encoding=/\.(webp|png|jpe?g|woff2?|mp3|wav)$/.test(file.source)?'base64':'utf8';
   if(encoding==='utf8'&&!Buffer.from(bytes.toString('utf8')).equals(bytes))throw Error(`Invalid UTF-8 source: ${file.source}`);
   return{...file,encoding,content:bytes.toString(encoding),sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
  });
