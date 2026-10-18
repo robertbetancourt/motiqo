@@ -19,6 +19,7 @@ export type RadialSpectrumProps = {
   preset?: ScorePreset;
   paused?: boolean;
   compact?: boolean;
+  autoDemo?: boolean;
   className?: string;
 };
 export default function RadialSpectrum({
@@ -33,6 +34,7 @@ export default function RadialSpectrum({
   preset = "interstellar",
   paused = false,
   compact = false,
+  autoDemo = false,
   className = "",
 }: RadialSpectrumProps) {
   const recording = spectrumTracks[track] ?? spectrumTracks.momentum,
@@ -40,16 +42,27 @@ export default function RadialSpectrum({
     title = trackTitle || recording.title;
   const host = useRef<HTMLDivElement>(null),
     canvas = useRef<HTMLCanvasElement>(null),
-    button = useRef<HTMLButtonElement>(null),
+    ring = useRef({
+      width: 0,
+      height: 0,
+      base: 0,
+      count: 0,
+      amplitudes: new Float32Array(720),
+    }),
     engine = useRef<ReturnType<typeof createScoreEngine> | null>(null),
-    busy = useRef(false),
+    request = useRef(0),
+    wantsPlayback = useRef(false),
     playingRef = useRef(false),
     draw = useRef<() => void>(() => {}),
     [playing, setPlaying] = useState(false),
+    [position, setPosition] = useState(0),
+    [duration, setDuration] = useState(0),
     [error, setError] = useState("");
-  const options = useRef({ barCount, radius, sensitivity, paused });
-  options.current = { barCount, radius, sensitivity, paused };
+  const options = useRef({ barCount, radius, sensitivity, paused, autoDemo });
+  options.current = { barCount, radius, sensitivity, paused, autoDemo };
   const stop = () => {
+    request.current++;
+    wantsPlayback.current = false;
     playingRef.current = false;
     setPlaying(false);
     void engine.current?.pause().catch(() => {});
@@ -66,7 +79,7 @@ export default function RadialSpectrum({
     const bins = new Uint8Array(512),
       waveform = new Uint8Array(1024);
     let energy = 0;
-    const amplitudes = new Float32Array(720);
+    const amplitudes = ring.current.amplitudes;
     const clock = effectRuntime(
       element,
       surface,
@@ -84,6 +97,24 @@ export default function RadialSpectrum({
         } else {
           bins.fill(0);
           waveform.fill(128);
+          // Silent illustrative signal for cards; audio still requires explicit playback.
+          if (o.autoDemo && compact) {
+            for (let i = 0; i < bins.length; i++)
+              bins[i] = Math.round(
+                180 *
+                  Math.exp(-i / 190) *
+                  (0.5 + 0.5 * Math.sin(i * 0.075 - time * 3)) *
+                  (0.65 + 0.35 * Math.sin(time * 1.8) ** 2),
+              );
+            for (let i = 0; i < waveform.length; i++)
+              waveform[i] =
+                128 +
+                Math.round(
+                  26 *
+                    Math.sin(i * 0.12 + time * 5) *
+                    (0.6 + 0.4 * Math.sin(time * 2)),
+                );
+          }
         }
         const rms = spectrumRms(waveform);
         let bass = 0;
@@ -101,27 +132,22 @@ export default function RadialSpectrum({
             (1 + energy * 0.025),
           cx = w / 2,
           cy = h / 2 + Math.min(w, h) * 0.012;
+        Object.assign(ring.current, { width: w, height: h, base, count });
+        const media = engine.current?.media;
+        const progress =
+          media && Number.isFinite(media.duration) && media.duration > 0
+            ? media.currentTime / media.duration
+            : 0;
         for (let i = 0; i < count; i++) {
           const u = i / (count - 1),
-            angle = ((-55 + 290 * u) * Math.PI) / 180,
-            window =
-              0.14 +
-              1.3 * Math.exp(-Math.pow((u - 0.97) / 0.065, 2)) +
-              0.7 * Math.exp(-Math.pow((u - 0.5) / 0.065, 2)) +
-              0.45 * Math.exp(-Math.pow((u - 0.22) / 0.1, 2));
+            angle = ((-55 + 290 * u) * Math.PI) / 180;
           const fft = spectrumBand(bins, u, engine.current?.context.sampleRate);
-          const organic =
-              0.6 +
-              0.4 * Math.sin(i * 0.47 + Math.sin(i * 0.13) * 2 + time * 0.35),
-            travel = 0.5 + 0.5 * Math.sin(u * 38 - time * 2.5);
           const target =
-            (0.007 +
-              window * 0.027 * organic +
-              fft *
-                o.sensitivity *
-                (0.065 + 0.14 * window) *
-                (0.8 + travel * 0.2) +
-              rms * 0.025 * o.sensitivity) *
+            (0.012 +
+              0.065 *
+                Math.tanh(
+                  (fft * 0.85 + rms * 0.12) * Math.max(0, o.sensitivity),
+                )) *
             Math.min(w, h);
           amplitudes[i] +=
             (target - amplitudes[i]) *
@@ -129,8 +155,9 @@ export default function RadialSpectrum({
           const amplitude = amplitudes[i];
           const sx = Math.cos(angle),
             sy = Math.sin(angle);
-          g.strokeStyle = `rgba(245,247,250,${Math.min(0.85, 0.19 + window * 0.18 + fft * 0.45)})`;
-          g.lineWidth = compact ? 0.72 : 1;
+          const played = progress > 0 && u <= progress;
+          g.strokeStyle = `rgba(245,247,250,${played ? 0.95 : 0.48 + fft * 0.27})`;
+          g.lineWidth = compact ? 0.9 : 1.25;
           g.lineCap = "round";
           g.beginPath();
           g.moveTo(
@@ -143,7 +170,7 @@ export default function RadialSpectrum({
           );
           g.stroke();
         }
-        button.current?.style.setProperty("--score-energy", String(energy));
+        element.style.setProperty("--score-energy", String(energy));
         element.dataset.audioEnergy = energy.toFixed(3);
       },
       () => options.current.paused,
@@ -151,19 +178,9 @@ export default function RadialSpectrum({
       compact,
     );
     draw.current = clock.invalidate;
-    const hidden = () => {
-      if (document.hidden) stop();
-    };
-    document.addEventListener("visibilitychange", hidden);
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) stop();
-    });
-    observer.observe(element);
     return () => {
       clock.dispose();
       draw.current = () => {};
-      document.removeEventListener("visibilitychange", hidden);
-      observer.disconnect();
     };
   }, [compact]);
   useEffect(() => {
@@ -172,42 +189,73 @@ export default function RadialSpectrum({
   }, [paused, barCount, radius, sensitivity]);
   useEffect(() => {
     stop();
+    setPosition(0);
+    setDuration(0);
     return () => {
+      request.current++;
+      wantsPlayback.current = false;
       const current = engine.current;
       engine.current = null;
       playingRef.current = false;
       void current?.dispose();
     };
   }, [source, preset]);
-  async function toggle() {
-    if (busy.current || paused) return;
-    if (playingRef.current) {
-      stop();
-      return;
-    }
-    busy.current = true;
+  useEffect(() => {
+    if (!compact && !paused) void start(true);
+    return stop;
+  }, [source, preset, compact, paused]);
+  async function start(automatic = false) {
+    const ticket = ++request.current;
+    wantsPlayback.current = true;
     setError("");
+    let current = engine.current;
     try {
-      engine.current ??= createScoreEngine(source, preset);
-      const current = engine.current;
+      if (!current) {
+        current = createScoreEngine(source, preset);
+        engine.current = current;
+        const media = current.media;
+        const sync = () => {
+          if (engine.current !== current) return;
+          setPosition(media?.currentTime || 0);
+          setDuration(
+            media && Number.isFinite(media.duration) ? media.duration : 0,
+          );
+          draw.current();
+        };
+        media?.addEventListener("timeupdate", sync);
+        media?.addEventListener("loadedmetadata", sync);
+        media?.addEventListener("durationchange", sync);
+      }
       await current.play();
-      if (engine.current !== current) {
-        await current.dispose();
+      if (engine.current !== current || ticket !== request.current) {
+        if (!wantsPlayback.current) await current.pause();
         return;
       }
       playingRef.current = true;
       setPlaying(true);
       draw.current();
-    } catch {
+    } catch (cause) {
+      if (engine.current !== current || ticket !== request.current) return;
       stop();
-      setError(
-        audioUrl
-          ? "The track could not be loaded. Please try again."
-          : "Audio is unavailable in this browser.",
-      );
-    } finally {
-      busy.current = false;
+      if (automatic && (cause as { name?: string })?.name === "NotAllowedError")
+        return;
+      setError("The track could not be played. Press Play to try again.");
     }
+  }
+  function toggle() {
+    if (playingRef.current) {
+      stop();
+      return;
+    }
+    void start();
+  }
+  function seek(seconds: number) {
+    const media = engine.current?.media;
+    if (!media || !Number.isFinite(media.duration) || media.duration <= 0)
+      return;
+    media.currentTime = Math.max(0, Math.min(media.duration, seconds));
+    setPosition(media.currentTime);
+    draw.current();
   }
   return (
     <div
@@ -215,16 +263,57 @@ export default function RadialSpectrum({
       className={`mq-score ${compact ? "mq-score-compact" : ""} ${className}`}
     >
       <style>{styles}</style>
-      <canvas ref={canvas} aria-hidden="true" />
-      <button
-        ref={button}
-        className="mq-score-center"
-        type="button"
-        onClick={toggle}
-        disabled={paused}
-        aria-label={`${playing ? "Pause" : "Play"} ${title}`}
-        aria-pressed={playing}
-      >
+      <canvas
+        ref={canvas}
+        role="slider"
+        tabIndex={0}
+        aria-label={`Playback position of ${title}`}
+        aria-valuemin={0}
+        aria-valuemax={duration || 0}
+        aria-valuenow={position}
+        aria-valuetext={`${Math.floor(position)} of ${Math.floor(duration)} seconds`}
+        onKeyDown={(event) => {
+          const value =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? duration
+                : event.key === "ArrowRight" || event.key === "ArrowUp"
+                  ? position + 5
+                  : event.key === "ArrowLeft" || event.key === "ArrowDown"
+                    ? position - 5
+                    : null;
+          if (value === null) return;
+          event.preventDefault();
+          event.stopPropagation();
+          seek(value);
+        }}
+        onClick={(event) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          const layout = ring.current;
+          if (!layout.count || !rect.width || !rect.height) return;
+          const x =
+            ((event.clientX - rect.left) * layout.width) / rect.width -
+            layout.width / 2;
+          const y =
+            ((event.clientY - rect.top) * layout.height) / rect.height -
+            layout.height / 2 -
+            Math.min(layout.width, layout.height) * 0.012;
+          const angle = ((Math.atan2(y, x) * 180) / Math.PI + 55 + 360) % 360;
+          if (angle > 290) return;
+          const index = Math.round((angle / 290) * (layout.count - 1));
+          const amplitude = layout.amplitudes[index];
+          const distance = Math.hypot(x, y);
+          if (
+            distance < layout.base - amplitude * 0.45 - 12 ||
+            distance > layout.base + amplitude * 0.55 + 12
+          )
+            return;
+          event.stopPropagation();
+          seek((angle / 290) * duration);
+        }}
+      />
+      <div className="mq-score-center">
         <span className="mq-score-top">
           {playing ? "PLAYING" : "LISTEN"}
           <br />
@@ -232,10 +321,16 @@ export default function RadialSpectrum({
         </span>
         <strong>{title}</strong>
         <span className="mq-score-bottom">{subtitleBottom}</span>
-        <span className="mq-score-play" aria-hidden="true">
-          {playing ? "Ⅱ" : "▷"}
-        </span>
-      </button>
+        <button
+          className="mq-score-play"
+          type="button"
+          onClick={toggle}
+          aria-label={`${playing ? "Pause" : "Play"} ${title}`}
+          aria-pressed={playing}
+        >
+          <span aria-hidden="true">{playing ? "Ⅱ" : "▷"}</span>
+        </button>
+      </div>
       {error && (
         <p className="mq-score-error" role="status">
           {error}
@@ -246,13 +341,12 @@ export default function RadialSpectrum({
 }
 const styles = `
 .mq-score{position:relative;width:100%;height:100%;min-height:220px;overflow:hidden;background:#000;color:#f5f5f5;container-type:size}
-.mq-score>canvas{position:absolute;inset:0;width:100%;height:100%}
-.mq-score .mq-score-center{position:absolute;inset:0;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;width:62%;height:fit-content;max-height:64%;padding:12px 0;gap:clamp(14px,5cqmin,30px);background:transparent;border:0;color:inherit;font-family:inherit;cursor:pointer;text-align:center;transform:none;box-shadow:none}
-.mq-score .mq-score-center:active,.mq-score .mq-score-center[aria-pressed=true]{transform:none;background:transparent;box-shadow:none;color:inherit}
+.mq-score>canvas{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+.mq-score>canvas:focus-visible{outline:1px solid #ffffff80;outline-offset:-4px}
+.mq-score .mq-score-center{position:absolute;inset:0;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;width:62%;height:fit-content;max-height:64%;padding:12px 0;gap:clamp(14px,5cqmin,30px);color:inherit;font-family:inherit;pointer-events:none;text-align:center}
 .mq-score-center strong{max-width:100%;font-weight:400;font-size:clamp(12px,3.2cqmin,22px);letter-spacing:.29em;line-height:1.8;overflow-wrap:anywhere;transition:color .5s;text-shadow:0 0 calc(var(--score-energy,0)*18px) #ffffff65}
 .mq-score-top,.mq-score-bottom{font-size:clamp(7px,1.6cqmin,10px);letter-spacing:.3em;line-height:2.1;color:#77777c}
-.mq-score-play{position:absolute;top:calc(100% + 10px);font-size:13px;color:#777;opacity:0;transform:translateY(3px);transition:opacity .35s,transform .35s}
-.mq-score-center:hover .mq-score-play,.mq-score-center:focus-visible .mq-score-play{opacity:1;transform:translateY(0)}
-.mq-score-center:hover strong{color:#fff}.mq-score-center:focus-visible{outline:1px solid #ffffff59;border-radius:20px;outline-offset:14px}.mq-score-center:disabled{cursor:default}
+.mq-score .mq-score-play{position:absolute;top:100%;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:transparent;box-shadow:none;transform:none;font-family:inherit;font-size:18px;color:#ccc;cursor:pointer;pointer-events:auto}
+.mq-score .mq-score-play:hover{background:#ffffff10;color:#fff}.mq-score .mq-score-play:focus-visible{outline:1px solid #ffffff80;outline-offset:3px}
 .mq-score-error{position:absolute;bottom:15px;left:10%;width:80%;font-size:10px;text-align:center;color:#b19898}@media(prefers-reduced-motion:reduce){.mq-score *{transition:none!important}}
 `;

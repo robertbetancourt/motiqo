@@ -1083,6 +1083,13 @@ html[data-theme=light] .card-poster-light{display:block}
 @media(pointer:coarse){.tags .tag-filter-button{min-height:38px}.tags{gap:8px}}
 
 .card-stage .card-preview-open{position:absolute;inset:0;z-index:4;width:100%;height:100%;padding:0;border:0;border-radius:inherit;background:transparent;cursor:pointer;appearance:none}.card-preview-open:focus-visible{outline:2px solid var(--accent);outline-offset:-4px}
+.card-context-menu{position:fixed;z-index:150;width:226px;max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px);overflow:auto;padding:5px;border:1px solid color-mix(in srgb,var(--text) 11%,transparent);border-radius:12px;background:color-mix(in srgb,var(--raised) 86%,transparent);backdrop-filter:blur(28px) saturate(1.45);-webkit-backdrop-filter:blur(28px) saturate(1.45);color:var(--text);box-shadow:0 16px 44px #0004,0 3px 10px #0002,inset 0 1px 0 #ffffff0b;font:500 12px/1.3 var(--sans);isolation:isolate}
+.card-context-menu :is(button,a){position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:34px;padding:8px 10px;border:0;border-radius:7px;background:transparent;color:inherit;font:inherit;letter-spacing:.005em;text-align:left;cursor:pointer;outline:none;transition:background-color 140ms ease,color 140ms ease}
+.card-context-menu :is(button,a):is(:hover,:focus-visible,[data-submenu-open=true]){background:color-mix(in srgb,var(--text) 10%,transparent)}.card-context-menu :is(button,a):focus-visible{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--text) 13%,transparent)}.card-context-menu svg{flex-shrink:0;color:var(--muted);stroke-width:1.65;transition:color 140ms ease}.card-context-menu :is(button,a):is(:hover,:focus-visible) svg{color:var(--text)}.card-context-menu .menu-trailing{margin-left:auto;width:13px;opacity:.65}.card-context-menu [role=separator]{height:1px;margin:5px 5px;background:color-mix(in srgb,var(--text) 9%,transparent)}
+.card-context-submenu{z-index:151;width:180px}.card-context-menu .menu-check{display:flex;align-items:center;justify-content:center;width:15px;flex-shrink:0}.card-context-menu .menu-check svg{color:var(--text);stroke-width:2}
+@media(pointer:coarse){.card-context-menu :is(button,a){min-height:44px}}
+@media(prefers-reduced-motion:reduce){.card-context-menu :is(button,a),.card-context-menu svg{transition:none}}
+
 
 .tags>span{display:inline-flex;align-items:center;justify-content:center;line-height:1;min-height:24px}
 @media(prefers-reduced-motion:reduce){.inspector-settings-summary>svg:last-child{transition:none}}

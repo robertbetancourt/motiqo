@@ -66,7 +66,7 @@ const BokehTerrain=dynamic(previewLoaders['bokeh-terrain'],{ssr:false});
 const OpalineOrb=dynamic(previewLoaders['opaline-orb'],{ssr:false});
 const OrbitAgent=dynamic(previewLoaders['orbit-agent'],{ssr:false});
 
-export function Demo({ id, paused = false, expanded = false, silkLight, settings={},onSettingsChange }: { id: ElementId; paused?: boolean; expanded?: boolean; silkLight?: 'dawn' | 'dusk';settings?:Settings;onSettingsChange?:(patch:Settings)=>void }) {
+export function Demo({ id, paused = false, expanded = false, autoDemo=false, silkLight, settings={},onSettingsChange }: { id: ElementId; paused?: boolean; expanded?: boolean; autoDemo?:boolean; silkLight?: 'dawn' | 'dusk';settings?:Settings;onSettingsChange?:(patch:Settings)=>void }) {
   const prefersReduced = useReducedMotion();
   const [hydrated,setHydrated] = useState(false);
   useEffect(()=>setHydrated(true),[]);
@@ -82,7 +82,7 @@ export function Demo({ id, paused = false, expanded = false, silkLight, settings
     {id==='water-ripple-carousel'&&<WaterRippleCarousel {...settings} compact={!expanded} paused={!!still}/>}
     {id==='aperture-carousel'&&<ApertureCarousel {...settings} compact={!expanded} paused={!!still}/>}
     {id==='thermal-smoke'&&<ThermalSmoke {...settings} autoTriggerIntro={settings.autoTriggerIntro!=='disabled'} compact={!expanded} paused={!!still}/>}
-    {id==='radial-spectrum'&&<RadialSpectrum {...settings} preset={settings.preset as 'inception'|'interstellar'|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='radial-spectrum'&&<RadialSpectrum {...settings} autoDemo={autoDemo} preset={settings.preset as 'inception'|'interstellar'|undefined} compact={!expanded} paused={!!still}/>}
     {id==='type-garden'&&<TypeGarden {...settings} editable={expanded&&settings.editable!=='disabled'} palette={settings.palette as string|undefined} motionMode={settings.motionMode as 'breeze'|'grow'|'pulse'|'flutter'|undefined} showButterflies={settings.showButterflies!=='disabled'} showControls={expanded&&settings.showControls!=='disabled'} compact={!expanded} paused={!!still} onTextChange={onSettingsChange?defaultText=>onSettingsChange({defaultText}):undefined} onPaletteChange={onSettingsChange?palette=>onSettingsChange({palette}):undefined}/>}
     {id==='prism-button'&&<PrismPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
     {id==='spectral-button'&&<SpectralPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}

@@ -1,6 +1,9 @@
 export type BrushPoint={x:number;y:number;radius:number;age:number};
 export const brushCapacity=32;
 export function addBrushStroke(points:BrushPoint[],from:{x:number;y:number}|undefined,to:{x:number;y:number},radius:number){
+ const head=points.at(-1),anchor=points.at(-2),spacing=Math.max(4,radius*.22);
+ // Coalesce dense input into a moving tip, preserving trail capacity for its full fade.
+ if(from&&head&&anchor&&Math.hypot(to.x-(anchor??head).x,to.y-(anchor??head).y)<spacing){head.x=to.x;head.y=to.y;head.radius=radius;head.age=0;return;}
  const start=from??to,distance=Math.hypot(to.x-start.x,to.y-start.y),steps=Math.max(1,Math.min(12,Math.ceil(distance/Math.max(4,radius*.22))));
  for(let i=1;i<=steps;i++){const t=i/steps;points.push({x:start.x+(to.x-start.x)*t,y:start.y+(to.y-start.y)*t,radius,age:0});}
  if(points.length>brushCapacity)points.splice(0,points.length-brushCapacity);

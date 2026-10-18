@@ -62,6 +62,15 @@ test('Brush interpolation is bounded, fades in 0.8 seconds and uses one exact co
  const points=[];brushMath.addBrushStroke(points,undefined,{x:0,y:0},64);brushMath.addBrushStroke(points,{x:0,y:0},{x:140,y:0},64);for(let i=1;i<points.length;i++)assert.ok(points[i].x-points[i-1].x<=64*.22);const initial=brushMath.brushRadius(points[0]);brushMath.ageBrush(points,.4,1);assert.ok(brushMath.brushRadius(points[0])<initial);brushMath.ageBrush(points,.4,1);assert.equal(points.length,0);for(let i=0;i<100;i++)brushMath.addBrushStroke(points,undefined,{x:i,y:i},60);assert.equal(points.length,32);brushMath.ageBrush(points,.4,2);assert.equal(points.length,0);assert.deepEqual(brushMath.coverUV(1600,900,1600,900),[1,1]);assert.deepEqual(brushMath.coverUV(400,800,1600,900),[.28125,1]);
 });
 
+test('A slow 60Hz Atelier sweep keeps a full fading trail without churning its point capacity',()=>{
+ const points=[];let previous;
+ for(let i=0;i<600;i++){
+  brushMath.ageBrush(points,1/60,1);const next={x:150+72*Math.sin(i/60*Math.PI/6),y:110+32*Math.sin(i/60*Math.PI/3)};
+  brushMath.addBrushStroke(points,previous,next,38);previous=next;
+  assert.ok(points.length<20,'dense input coalesces rather than evicting still-visible brush points');assert.equal(points.at(-1).age,0);assert.ok(points.every(p=>Number.isFinite(brushMath.brushRadius(p))));
+ }
+});
+
 test('Atelier waits for the aligned image pair, rejects stale loads, sleeps at rest and owns every resource across live images and context restoration',()=>{
  const f=fixture();let options={renderImage:'/media/atelier-room.webp',sketchImage:'',portalSize:1,brushSize:64,trailFadeSpeed:1,edgeRoughness:1,paused:false},engine;
  try{

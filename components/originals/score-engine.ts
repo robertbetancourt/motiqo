@@ -169,9 +169,11 @@ export function createScoreEngine(
     media,
     async play() {
       if (disposed) return;
-      await context.resume();
-      if (media) await media.play();
+      const resuming = context.resume();
+      // Request both inside the user gesture; a blocked resume can remain pending.
+      if (media) await Promise.all([resuming, media.play()]);
       else {
+        await resuming;
         schedule();
         timer ??= setInterval(schedule, 25);
       }
