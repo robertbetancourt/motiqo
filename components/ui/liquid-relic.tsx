@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { LiquidEngine, type EngineOptions } from './liquid-particle-engine';
 
-/** Motiqo interactive artwork with its spring-grain particle engine. */
+/** Motiqo interactive artwork with its elastic material and filament engine. */
 export type LiquidRelicProps = {
   src?: string; imageAlt?: string; label?:string; compact?: boolean; paused?: boolean;
   strength?: number; radius?: number; particleSpread?: number; turbulence?: number;
@@ -99,7 +99,7 @@ export default function LiquidRelic({
   useEffect(()=>sync.current?.(),[paused,strength,radius,particleSpread,turbulence,liquid,returnSpeed,speed,dotSize,particleDensity,restStyle,sculptureScale]);
   return <div ref={root} className={`liquid-relic ${className}`} role="group" aria-label={label} tabIndex={compact?-1:0}>
     <style>{styles}</style><img ref={image} className="lr-fallback" src={src} alt={imageAlt} draggable={false}/>
-    <span className="lr-help">Move or touch to turn the artwork into particles. Arrow keys move the disturbance; Space stirs the material and Home lets it settle.</span>
+    <span className="lr-help">Move or touch to draw liquid trails through the artwork. Arrow keys move the disturbance; Space stirs the material and Home lets it settle.</span>
   </div>;
 }
 

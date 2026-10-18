@@ -12,7 +12,7 @@ import {decodeSettings,encodeSettings,type Settings} from '@/lib/element-control
 import CardContextMenu,{type CardMenuPosition} from './card-context-menu';
 import {filterTaggedElements,normalizeTag} from '@/lib/tag-filter';
 
-export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false, initialTag = '' }: { originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean; initialTag?:string }) {
+export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false, initialTag = '', initialView = 'preview' }: { originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean; initialTag?:string; initialView?:'preview'|'code'|'prompt' }) {
   const [category,setCategory] = useState<Category>('All elements');
   const [query,setQuery] = useState('');
   const [tag,setTag] = useState(initialTag);
@@ -20,7 +20,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
   const [savedOnly,setSavedOnly] = useState(initialSaved);
   const [selected,setSelected] = useState<LibraryElement | null>(() => elements.find(element => element.id === initialElement) || null);
   const [storageReady,setStorageReady] = useState(false);
-  const [initialTab,setInitialTab] = useState<'preview' | 'code' | 'prompt'>('preview');
+  const [initialTab,setInitialTab] = useState<'preview' | 'code' | 'prompt'>(initialView);
   const [tool,setTool] = useState<AITool>('Universal');
   const [toast,setToast] = useState('');
   const [paused,setPaused] = useState(false);
@@ -46,8 +46,8 @@ export default function Library({ originalSource, initialElement, initialConfigu
   useEffect(() => {
     setSelected(elements.find(element=>element.id===initialElement)||null);
     setWorkspaceSettings(undefined);setContextMenu(null);
-    setSavedOnly(initialSaved);setTag(initialTag);setInitialTab('preview');
-  },[initialElement,initialSaved,initialTag]);
+    setSavedOnly(initialSaved);setTag(initialTag);setInitialTab(initialView);
+  },[initialElement,initialSaved,initialTag,initialView]);
 
   useEffect(() => {
     try {
@@ -62,7 +62,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
       const rawId=params.get('element'),id=rawId==='watt'?'holdings':rawId;
       setSavedOnly(params.get('saved')==='1');setTag(params.get('tag')??'');
       if(!id) restoreCollection.current=true;
-      setSelected(elements.find(e=>e.id===id) || null); setInitialTab('preview');
+      setSelected(elements.find(e=>e.id===id) || null);const view=params.get('view');setInitialTab(view==='code'||view==='prompt'?view:'preview');
       const element=elements.find(e=>e.id===id);setWorkspaceSettings(element?decodeSettings(element.id,params.get('config'))??undefined:undefined);setContextMenu(null);
     };
     window.addEventListener('popstate',sync);
@@ -93,28 +93,28 @@ export default function Library({ originalSource, initialElement, initialConfigu
     if(!selected) collectionScroll.current=window.scrollY;
     lastElement.current=element.id;
     setSelected(element);setInitialTab(tab);setWorkspaceSettings(cardSettings[element.id]);setContextMenu(null);
-    const url=new URL(window.location.href);url.hash='';url.searchParams.delete('config');if(cardSettings[element.id])url.searchParams.set('config',encodeSettings(element.id,cardSettings[element.id]));url.searchParams.set('element',element.id);window.history.pushState({motiqoElement:true},'',url);
+    const url=new URL(window.location.href);url.hash='';url.searchParams.delete('config');url.searchParams.delete('view');if(tab!=='preview')url.searchParams.set('view',tab);if(cardSettings[element.id])url.searchParams.set('config',encodeSettings(element.id,cardSettings[element.id]));url.searchParams.set('element',element.id);window.history.pushState({motiqoElement:true},'',url);
     window.scrollTo({top:0,behavior:'instant'});
   }
   function close(){
     restoreCollection.current=true;
     if(window.history.state?.motiqoElement){window.history.back();return;}
-    setSelected(null);const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');window.history.replaceState({},'',url);
+    setSelected(null);const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('view');window.history.replaceState({},'',url);
   }
   function navigate(offset:number){
     const next=elements[(elements.findIndex(element=>element.id===selected?.id)+offset+elements.length)%elements.length];
     lastElement.current=next.id;setSelected(next);setInitialTab('preview');setWorkspaceSettings(undefined);
-    const url=new URL(window.location.href);url.searchParams.delete('config');url.searchParams.set('element',next.id);window.history.replaceState(window.history.state,'',url);
+    const url=new URL(window.location.href);url.searchParams.delete('config');url.searchParams.delete('view');url.searchParams.set('element',next.id);window.history.replaceState(window.history.state,'',url);
   }
   function collection(onlySaved=false){
     if(selected)restoreCollection.current=true;
     setSelected(null);setSavedOnly(onlySaved);setCategory('All elements');setQuery('');setTag('');
-    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('tag');if(onlySaved)url.searchParams.set('saved','1');else url.searchParams.delete('saved');window.history.replaceState({},'',url);
+    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('view');url.searchParams.delete('tag');if(onlySaved)url.searchParams.set('saved','1');else url.searchParams.delete('saved');window.history.replaceState({},'',url);
   }
   function chooseTag(value:string){
     const next=normalizeTag(value)===normalizeTag(tag)?'':value;
     setTag(next);setCategory('All elements');setQuery('');setSelected(null);restoreCollection.current=false;
-    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');if(next)url.searchParams.set('tag',next);else url.searchParams.delete('tag');window.history.pushState({},'',url);window.scrollTo({top:0,behavior:still?'instant':'smooth'});
+    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('view');if(next)url.searchParams.set('tag',next);else url.searchParams.delete('tag');window.history.pushState({},'',url);window.scrollTo({top:0,behavior:still?'instant':'smooth'});
   }
   function showSaved(){collection(true);}
   const filtered=filterTaggedElements(elements,{category,query,savedOnly,saved,tag});

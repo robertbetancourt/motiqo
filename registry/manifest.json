@@ -5906,9 +5906,9 @@
       "dependencies": [
         "React"
       ],
-      "installNote": "Copy event-horizon.tsx, liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The current renderer is Motiqo's spring-grain engine.",
+      "installNote": "Copy event-horizon.tsx, liquid-relic.tsx, liquid-particle-engine.ts, liquid-material-wake.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The renderer is Motiqo's elastic material lattice with velocity-aligned filaments.",
       "code": "import EventHorizon from './event-horizon';\n\nexport default function BlackHole() {\n  return <EventHorizon />;\n}",
-      "brief": "Integrate Event Horizon with Motiqo's spring-grain engine. Sample the supplied artwork into colored WebGL2 point sprites; damped springs restore each grain after radial pressure, vortex and oscillating pointer forces. Keep the current controls, smoothed pointer, touch and keyboard input, static reduced motion, mobile density cap, offscreen suspension, image fallback and complete resource cleanup. Copy the engine, shaders and local artwork with the component.",
+      "brief": "Integrate Event Horizon with Motiqo's original elastic material engine. An advected displacement lattice continuously warps the intact artwork while fast strokes release dense, velocity-aligned colored filaments. Carry the disturbance behind the cursor, then use damped springs to restore the exact image. Preserve live controls without resetting the simulation, pointer, touch and keyboard input, static reduced motion, mobile density limits, offscreen suspension, image fallback, context restoration and complete resource cleanup. Include liquid-material-wake.ts with the engine, shaders and local artwork.",
       "entry": "event-horizon.tsx",
       "exportName": "EventHorizon",
       "files": [
@@ -5923,6 +5923,10 @@
         {
           "source": "components/ui/liquid-particle-engine.ts",
           "target": "components/motiqo/liquid-particle-engine.ts"
+        },
+        {
+          "source": "components/ui/liquid-material-wake.ts",
+          "target": "components/motiqo/liquid-material-wake.ts"
         },
         {
           "source": "components/ui/liquid-particle-shaders.ts",
@@ -6058,9 +6062,9 @@
       "dependencies": [
         "React"
       ],
-      "installNote": "Copy liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The current renderer is Motiqo's spring-grain engine.",
+      "installNote": "Copy liquid-relic.tsx, liquid-particle-engine.ts, liquid-material-wake.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The renderer is Motiqo's elastic material lattice with velocity-aligned filaments.",
       "code": "import LiquidRelic from './liquid-relic';\n\nexport default function Sculpture() {\n  return <LiquidRelic src=\"/media/liquid-relic.svg\" />;\n}",
-      "brief": "Integrate Liquid Relic with Motiqo's spring-grain engine. Sample the supplied artwork into colored WebGL2 point sprites; damped springs restore each grain after radial pressure, vortex and oscillating pointer forces. Keep the current controls, smoothed pointer, touch and keyboard input, static reduced motion, mobile density cap, offscreen suspension, image fallback and complete resource cleanup. Copy the engine, shaders and local artwork with the component.",
+      "brief": "Integrate Liquid Relic with Motiqo's original elastic material engine. An advected displacement lattice continuously warps the intact artwork while fast strokes release dense, velocity-aligned colored filaments. Carry the disturbance behind the cursor, then use damped springs to restore the exact image. Preserve live controls without resetting the simulation, pointer, touch and keyboard input, static reduced motion, mobile density limits, offscreen suspension, image fallback, context restoration and complete resource cleanup. Include liquid-material-wake.ts with the engine, shaders and local artwork.",
       "entry": "liquid-relic.tsx",
       "exportName": "LiquidRelic",
       "files": [
@@ -6071,6 +6075,10 @@
         {
           "source": "components/ui/liquid-particle-engine.ts",
           "target": "components/motiqo/liquid-particle-engine.ts"
+        },
+        {
+          "source": "components/ui/liquid-material-wake.ts",
+          "target": "components/motiqo/liquid-material-wake.ts"
         },
         {
           "source": "components/ui/liquid-particle-shaders.ts",
