@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { ArrowRight, Bookmark, Check, Command, Pause, Play, Search, SlidersHorizontal } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { aiTools, categories, elements, makePrompt, type AITool, type Category, type LibraryElement, type OriginalSources } from '@/lib/catalog';
+import { aiTools, elements, makePrompt, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
+import { componentGroups, componentGroupFor, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import CardPreview from './card-preview';
 import ElementWorkspace from './element-workspace';
 import SiteFrame from './site-frame';
@@ -12,8 +13,8 @@ import {decodeSettings,encodeSettings,type Settings} from '@/lib/element-control
 import CardContextMenu,{type CardMenuPosition} from './card-context-menu';
 import {filterTaggedElements,normalizeTag} from '@/lib/tag-filter';
 
-export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false, initialTag = '', initialView = 'preview' }: { originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean; initialTag?:string; initialView?:'preview'|'code'|'prompt' }) {
-  const [category,setCategory] = useState<Category>('All elements');
+export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false, initialTag = '', initialGroup, initialView = 'preview' }: { originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean; initialTag?:string; initialGroup?:ComponentGroup; initialView?:'preview'|'code'|'prompt' }) {
+  const [group,setGroup] = useState(initialGroup);
   const [query,setQuery] = useState('');
   const [tag,setTag] = useState(initialTag);
   const [saved,setSaved] = useState<string[]>([]);
@@ -46,8 +47,8 @@ export default function Library({ originalSource, initialElement, initialConfigu
   useEffect(() => {
     setSelected(elements.find(element=>element.id===initialElement)||null);
     setWorkspaceSettings(undefined);setContextMenu(null);
-    setSavedOnly(initialSaved);setTag(initialTag);setInitialTab(initialView);
-  },[initialElement,initialSaved,initialTag,initialView]);
+    setSavedOnly(initialSaved);setTag(initialTag);setGroup(initialGroup);setQuery('');setInitialTab(initialView);
+  },[initialElement,initialSaved,initialTag,initialGroup,initialView]);
 
   useEffect(() => {
     try {
@@ -60,7 +61,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
     const sync = () => {
       const params=new URL(window.location.href).searchParams;
       const rawId=params.get('element'),id=rawId==='watt'?'holdings':rawId;
-      setSavedOnly(params.get('saved')==='1');setTag(params.get('tag')??'');
+      setSavedOnly(params.get('saved')==='1');setTag(params.get('tag')??'');setGroup(readComponentGroup(params.get('group')));setQuery('');
       if(!id) restoreCollection.current=true;
       setSelected(elements.find(e=>e.id===id) || null);const view=params.get('view');setInitialTab(view==='code'||view==='prompt'?view:'preview');
       const element=elements.find(e=>e.id===id);setWorkspaceSettings(element?decodeSettings(element.id,params.get('config'))??undefined:undefined);setContextMenu(null);
@@ -90,6 +91,8 @@ export default function Library({ originalSource, initialElement, initialConfigu
     try{localStorage.setItem('motiqo-saved',JSON.stringify(next));}catch{}
   }
   function open(element:LibraryElement,tab:'preview'|'code'|'prompt'='preview'){
+    // Outgoing cards can still receive the second click during their exit animation.
+    if(new URL(window.location.href).searchParams.has('element'))return;
     if(!selected) collectionScroll.current=window.scrollY;
     lastElement.current=element.id;
     setSelected(element);setInitialTab(tab);setWorkspaceSettings(cardSettings[element.id]);setContextMenu(null);
@@ -106,40 +109,41 @@ export default function Library({ originalSource, initialElement, initialConfigu
     lastElement.current=next.id;setSelected(next);setInitialTab('preview');setWorkspaceSettings(undefined);
     const url=new URL(window.location.href);url.searchParams.delete('config');url.searchParams.delete('view');url.searchParams.set('element',next.id);window.history.replaceState(window.history.state,'',url);
   }
-  function collection(onlySaved=false){
-    if(selected)restoreCollection.current=true;
-    setSelected(null);setSavedOnly(onlySaved);setCategory('All elements');setQuery('');setTag('');
-    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('view');url.searchParams.delete('tag');if(onlySaved)url.searchParams.set('saved','1');else url.searchParams.delete('saved');window.history.replaceState({},'',url);
+  function collection(onlySaved=false,nextGroup?:ComponentGroup){
+    restoreCollection.current=false;collectionScroll.current=0;
+    setSelected(null);setSavedOnly(onlySaved);setGroup(nextGroup);setQuery('');setTag('');
+    const url=new URL(window.location.href);url.hash='';url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('view');url.searchParams.delete('tag');if(nextGroup)url.searchParams.set('group',nextGroup);else url.searchParams.delete('group');if(onlySaved)url.searchParams.set('saved','1');else url.searchParams.delete('saved');if(url.href!==window.location.href)window.history.pushState({},'',url);window.scrollTo({top:0,behavior:'instant'});
   }
   function chooseTag(value:string){
     const next=normalizeTag(value)===normalizeTag(tag)?'':value;
-    setTag(next);setCategory('All elements');setQuery('');setSelected(null);restoreCollection.current=false;
-    const url=new URL(window.location.href);url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('view');if(next)url.searchParams.set('tag',next);else url.searchParams.delete('tag');window.history.pushState({},'',url);window.scrollTo({top:0,behavior:still?'instant':'smooth'});
+    setTag(next);setGroup(undefined);setQuery('');setSelected(null);restoreCollection.current=false;
+    const url=new URL(window.location.href);url.searchParams.delete('group');url.searchParams.delete('element');url.searchParams.delete('config');url.searchParams.delete('view');if(next)url.searchParams.set('tag',next);else url.searchParams.delete('tag');window.history.pushState({},'',url);window.scrollTo({top:0,behavior:still?'instant':'smooth'});
   }
   function showSaved(){collection(true);}
-  const filtered=filterTaggedElements(elements,{category,query,savedOnly,saved,tag});
-  function elementHref(element:LibraryElement){return `/library?element=${element.id}${cardSettings[element.id]?`&config=${encodeURIComponent(encodeSettings(element.id,cardSettings[element.id]))}`:''}`;}
-  function follow(event:MouseEvent<HTMLAnchorElement>,element:LibraryElement){if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();open(element);}
+  const filtered=filterTaggedElements(elements,{query,savedOnly,saved,tag}).filter(element=>!group||componentGroupFor(element)===group);
+  const groupTitle=componentGroups.find(item=>item.id===group)?.title;
+  function elementHref(element:LibraryElement){return `/library?element=${element.id}${group?`&group=${group}`:''}${savedOnly?'&saved=1':''}${tag?`&tag=${encodeURIComponent(tag)}`:''}${cardSettings[element.id]?`&config=${encodeURIComponent(encodeSettings(element.id,cardSettings[element.id]))}`:''}`;}
+  function follow(event:MouseEvent<HTMLAnchorElement>,element:LibraryElement){if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();if(event.detail<2)open(element);}
 
   return <>
     <a href={selected?'#detail-title':'#collection'} className="skip-link">{selected?'Skip to component':'Skip to collection'}</a>
-    <SiteFrame collection workspace={!!selected} paused={still} savedOnly={savedOnly} savedCount={saved.length} onCollection={()=>collection()} onSaved={showSaved}>
+    <SiteFrame collection workspace={!!selected} paused={still} savedOnly={savedOnly} savedCount={saved.length} onCollection={group=>collection(false,group)} onSaved={showSaved}>
       <AnimatePresence mode="wait" initial={false}>
       {selected ? <motion.div key="workspace" initial={still?false:{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}} transition={{...timing,duration:still?0:.38}}>
         <ElementWorkspace key={`${selected.id}-${initialTab}`} element={selected} initialSettings={workspaceSettings??decodeSettings(selected.id,initialConfiguration??null)??undefined} onBack={close} onPrevious={()=>navigate(-1)} onNext={()=>navigate(1)} index={elements.findIndex(element=>element.id===selected.id)} total={elements.length} saved={saved.includes(selected.id)} onSave={()=>toggleSave(selected.id)} paused={paused} copy={copy} initialTab={initialTab} initialTool={tool} onToolChange={chooseTool} originalSource={originalSource} onTag={chooseTag}/>
       </motion.div> : <motion.div key="collection" className="collection-view" initial={false} exit={{opacity:0,y:-8}} transition={timing} ref={node=>{
         if(node&&restoreCollection.current){restoreCollection.current=false;window.scrollTo({top:collectionScroll.current,behavior:'instant'});node.querySelector<HTMLElement>(`[data-element="${lastElement.current}"] .card-title`)?.focus({preventScroll:true});}
       }}>
-        <header className="library-heading"><h1>{savedOnly?'Saved':'Library'}</h1><span>{filtered.length} elements</span></header>
+        <h1 className="sr-only">{savedOnly?'Saved':groupTitle??'Library'}</h1>
         <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
-          <div className="filter-row"><div className="filters" aria-label="Filter by category">{categories.map(c=><button key={c} aria-pressed={category===c} className={category===c?'selected':''} onClick={()=>setCategory(c)}>{c}</button>)}</div><div className="search-tools"><button className="motion-control" aria-pressed={paused} disabled={!!reduced} onClick={()=>setPaused(!paused)}>{still?<Play size={13}/>:<Pause size={13}/>} {reduced?'Reduced motion':paused?'Resume motion':'Pause motion'}</button><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>
+          <div className="filter-row collection-toolbar"><span className="collection-label">{groupTitle}</span><div className="search-tools"><button className="motion-control" aria-pressed={paused} disabled={!!reduced} onClick={()=>setPaused(!paused)}>{still?<Play size={13}/>:<Pause size={13}/>} {reduced?'Reduced motion':paused?'Resume motion':'Pause motion'}</button><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>
           {tag&&<div className="active-tag-filter" role="status"><span>Tagged</span><button type="button" aria-label={`Clear ${tag} filter`} onClick={()=>chooseTag(tag)}>{tag}<span aria-hidden="true">×</span></button><span>{filtered.length} {filtered.length===1?'element':'elements'}</span></div>}
-          <motion.div className="element-grid" layout transition={timing}><AnimatePresence key={savedOnly?'saved':'library'}>
-            {(!savedOnly||storageReady)&&filtered.map((element,index)=><motion.article key={element.id} layout data-element={element.id} className={`element-card card-${element.id}`} style={{'--entry-delay':`${Math.min(index,7)*45+120}ms`} as CSSProperties} initial={false} animate={{opacity:1}} exit={{opacity:0,scale:.97}} transition={{...timing,layout:timing}} onContextMenu={event=>{if(event.shiftKey)return;event.preventDefault();const trigger=event.currentTarget.querySelector<HTMLElement>('.card-preview-open')!;const box=trigger.getBoundingClientRect();menuTrigger.current=trigger;setContextMenu({element,x:event.clientX||box.left+20,y:event.clientY||box.top+20,trigger});}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea')&&!window.getSelection()?.toString())open(element);}}>
+          <div className="element-grid">
+            {(!savedOnly||storageReady)&&filtered.map((element,index)=><article key={element.id} data-element={element.id} className={`element-card card-${element.id}`} style={{'--entry-delay':`${Math.min(index,7)*45+120}ms`} as CSSProperties} onContextMenu={event=>{if(event.shiftKey)return;event.preventDefault();const trigger=event.currentTarget.querySelector<HTMLElement>('.card-preview-open')!;const box=trigger.getBoundingClientRect();menuTrigger.current=trigger;setContextMenu({element,x:event.clientX||box.left+20,y:event.clientY||box.top+20,trigger});}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea')&&!window.getSelection()?.toString()&&e.detail<2)open(element);}}>
               <div className="card-stage"><CardPreview id={element.id} paused={still} priority={index<4} settings={cardSettings[element.id]}/><span className="stage-hint">{element.hint}</span><a href={elementHref(element)} className="card-preview-open" aria-label={`Preview and edit ${element.title}`} onClick={event=>follow(event,element)}/><button className={`save-button preview-save ${saved.includes(element.id)?'is-saved':''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={16} fill={saved.includes(element.id)?'currentColor':'none'}/></button></div>
               <div className="card-info"><div className="card-title-row"><a className="card-title" href={elementHref(element)} onClick={event=>follow(event,element)}><h2>{element.title}</h2></a><span className="category-label">{element.category}</span></div><div className="tags">{element.tags.map(t=><button type="button" key={t} className="tag-filter-button" aria-label={`Filter by ${t}`} aria-pressed={normalizeTag(tag)===normalizeTag(t)} onClick={()=>chooseTag(t)}>{t}</button>)}</div></div>
-            </motion.article>)}
-          </AnimatePresence></motion.div>
+            </article>)}
+          </div>
           {savedOnly&&!storageReady&&<div className="collection-restoring" aria-label="Loading saved elements" aria-busy="true"/>}
           {(!savedOnly||storageReady)&&filtered.length===0&&<motion.div className="empty-results" initial={{opacity:0}} animate={{opacity:1}} transition={timing}><SlidersHorizontal size={24}/><h2>{savedOnly&&saved.length===0?'Keep the good ones close.':'Nothing here. Yet.'}</h2><p>{savedOnly&&saved.length===0?'Bookmark an element and it will be waiting here.':'Try another search or explore the whole collection.'}</p><button className="secondary-button" onClick={()=>collection()}>Explore all elements <ArrowRight size={15}/></button></motion.div>}
         </section>

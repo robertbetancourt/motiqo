@@ -7,7 +7,7 @@ function setup(html){
  const dom=new JSDOM(`<main>${html}</main>`,{pretendToBeVisual:true}),jobs=new Map(),listeners=new Set();let now=0,serial=0;
  const media={matches:false,addEventListener:(_,fn)=>listeners.add(fn),removeEventListener:(_,fn)=>listeners.delete(fn)};
  dom.window.matchMedia=()=>media;
- const values={window:dom.window,document:dom.window.document,PointerEvent:dom.window.MouseEvent,WheelEvent:dom.window.WheelEvent,KeyboardEvent:dom.window.KeyboardEvent,performance:{now:()=>now},requestAnimationFrame:fn=>{jobs.set(++serial,fn);return serial;},cancelAnimationFrame:id=>jobs.delete(id)},old=new Map(Object.keys(values).map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
+ const values={window:dom.window,document:dom.window.document,MouseEvent:dom.window.MouseEvent,PointerEvent:dom.window.MouseEvent,WheelEvent:dom.window.WheelEvent,KeyboardEvent:dom.window.KeyboardEvent,performance:{now:()=>now},requestAnimationFrame:fn=>{jobs.set(++serial,fn);return serial;},cancelAnimationFrame:id=>jobs.delete(id)},old=new Map(Object.keys(values).map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
  Object.entries(values).forEach(([k,v])=>Object.defineProperty(globalThis,k,{value:v,writable:true,configurable:true}));
  const root=document.querySelector('main');
  root.querySelectorAll('*').forEach(node=>node.getBoundingClientRect=()=>({left:100,top:50,width:300,height:200}));
@@ -29,12 +29,32 @@ test('Hover demos sweep inside the scene, rest, repeat and release all work on p
 test('Sleeve automatically browses forward and back without sending scroll to the page',()=>{
  const env=setup('<div class="sleeve" data-cursor="0"><div class="sleeve-viewport"></div></div>'),sleeve=env.root.firstElementChild,screen=sleeve.firstElementChild;let min=Infinity,max=0,pageScroll=0,forward=false,back=false;
  screen.addEventListener('wheel',event=>{const before=Number(sleeve.dataset.cursor),next=Math.max(0,Math.min(19,before+event.deltaY/250));forward||=next>before;back||=next<before;min=Math.min(min,next);max=Math.max(max,next);sleeve.dataset.cursor=next.toFixed(3);});env.root.addEventListener('wheel',()=>pageScroll++);
- try{const stop=startPreviewDemo(env.root,'sleeve');env.advance(260);assert.ok(forward&&back);assert.ok(max>2.9&&min<.1);assert.equal(pageScroll,0);stop();assert.equal(env.jobs.size,0);}finally{env.restore();}
+ try{const stop=startPreviewDemo(env.root,'sleeve');env.advance(650);assert.ok(forward&&back);assert.ok(max>2.9&&min<.1);assert.equal(pageScroll,0);stop();assert.equal(env.jobs.size,0);}finally{env.restore();}
 });
 
 test('Reduced motion starts idle, unrelated scenes do not allocate a loop, late scenes can load',()=>{
  const env=setup('');
  try{assert.equal(startPreviewDemo(env.root,'charge'),undefined);assert.equal(env.jobs.size,0);env.reduce(true);const stop=startPreviewDemo(env.root,'helix');assert.equal(env.jobs.size,0);env.reduce(false);env.advance();env.root.innerHTML='<div class="helix"></div>';let moves=0;env.root.firstElementChild.addEventListener('pointermove',()=>moves++);env.advance();assert.equal(moves,1);stop();assert.equal(env.listeners.size,0);}finally{env.restore();}
+});
+
+test('Sonic card opens, holds its lyrics, closes and repeats without recording',()=>{
+ const env=setup('<div class="sonic-aperture"><button class="sa-mic" aria-pressed="false"></button></div>'),button=env.root.querySelector('button');let opens=0,closes=0;
+ button.addEventListener('click',()=>{const open=button.getAttribute('aria-pressed')!=='true';button.setAttribute('aria-pressed',String(open));open?opens++:closes++;});
+ try{const stop=startPreviewDemo(env.root,'sonic-aperture');env.advance(50);assert.equal(opens,1);assert.equal(closes,0);env.advance(120);assert.equal(closes,0);env.advance(40);assert.equal(closes,1);env.advance(140);assert.equal(opens,2);env.reduce(true);const before=opens+closes;env.advance(400);assert.equal(opens+closes,before);stop();assert.equal(env.jobs.size,0);assert.equal(env.listeners.size,0);}finally{env.restore();}
+});
+
+test('Sleeve opens a record, returns it, resumes browsing and never starts playback',()=>{
+ const env=setup('<div class="sleeve" data-cursor="0"><div class="sleeve-viewport"></div><div class="sleeve-card" data-album="3"><button class="sleeve-art"></button><button class="sleeve-play"></button></div></div>');
+ const sleeve=env.root.firstElementChild,screen=sleeve.querySelector('.sleeve-viewport'),card=sleeve.querySelector('.sleeve-card');let opened=0,returned=0,played=0,scrolledAfter=false;
+ screen.addEventListener('wheel',event=>{if(returned)scrolledAfter=true;sleeve.dataset.cursor=String(Number(sleeve.dataset.cursor)+event.deltaY/250);});
+ card.querySelector('.sleeve-art').addEventListener('click',()=>{if(card.dataset.active){delete card.dataset.active;returned++;}else{card.dataset.active='true';opened++;}});
+ card.querySelector('.sleeve-play').addEventListener('click',()=>played++);
+ try{const stop=startPreviewDemo(env.root,'sleeve');env.advance(601);assert.equal(opened,1);assert.equal(returned,1);assert.ok(scrolledAfter);assert.equal(played,0);stop();assert.equal(env.jobs.size,0);}finally{env.restore();}
+});
+
+test('Gilded Signal demonstrates both sides and releases its demo on pause',()=>{
+ const env=setup('<canvas class="gc-canvas"></canvas>');let flips=0;env.root.firstElementChild.addEventListener('dblclick',()=>flips++);
+ try{const stop=startPreviewDemo(env.root,'gilded-signal');env.advance(520);assert.equal(flips,2);env.reduce(true);const before=flips;env.advance(300);assert.equal(flips,before);stop();}finally{env.restore();}
 });
 
 test('Optical hover reaches React handlers inside an inert card without activating its button',async()=>{
@@ -47,7 +67,7 @@ test('Optical hover reaches React handlers inside an inert card without activati
 });
 
 test('All requested pointer-driven previews receive local input without leaking it to window',()=>{
- const targets={gyro:'gyro',drawer:'drawer',arbor:'arbor',lantern:'lantern',crate:'crate-stage',pulse:'pulse','event-horizon':'liquid-relic',sentiment:'sentiment-plot','opaline-orb':'mq-opaline','orbit-agent':'mq-orbit-agent'};
+ const targets={district:'district','liquid-sculpture':'liquid-form','gilded-signal':'gc-canvas',gyro:'gyro',drawer:'drawer',arbor:'arbor',lantern:'lantern',crate:'crate-stage',pulse:'pulse','event-horizon':'prism-bloom',sentiment:'sentiment-plot','opaline-orb':'mq-opaline','orbit-agent':'mq-orbit-agent'};
  for(const[id,className]of Object.entries(targets)){
   const env=setup(`<div class="${className}"></div>`);let moves=0,globalMoves=0;env.root.firstElementChild.addEventListener('pointermove',()=>moves++);window.addEventListener('pointermove',()=>globalMoves++);
   try{const stop=startPreviewDemo(env.root,id);env.advance(5);assert.ok(moves>0,`${id} receives a demo`);if(id!=='orbit-agent')assert.equal(globalMoves,0,`${id} stays scoped to its card`);stop();}finally{env.restore();}

@@ -136,7 +136,7 @@ function Smoke({
   );
 }
 export default function ThermalSmoke({
-  city = "Stockholm",
+  city = "Buenos Aires",
   temperature = 26,
   condition = "Partly cloudy",
   warmColor = "#ffb55c",

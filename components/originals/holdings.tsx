@@ -31,9 +31,9 @@ export default function Holdings({holdings=sampleHoldings,target=80000,scale=1,s
     function draw(dt=0){
       const o=options.current,still=media.matches||o.paused,p=still?1:entry*entry*entry*(entry*(entry*6-15)+10);
       load=still?o.scale:load+(o.scale-load)*(1-Math.exp(-dt*7));
-      const values=o.data.map((d,i)=>d.value*holdingsClamp(load,0,2)*p*(still?1:1+Math.sin(time*(.55+i*.06)+i)*.025*holdingsClamp(o.activity,0,1)));
+      const values=o.data.map((d,i)=>d.value*holdingsClamp(load,0,2)*p*(still?1:1+Math.sin(time*(.2+i*.02)+i)*.012*holdingsClamp(o.activity,0,1)));
       const spans=holdingsSegments(values,Math.max(1,o.target),o.gap),sum=values.reduce((a,b)=>a+b,0),target=o.active>=0?(values[o.active]??sum):sum;
-      metric=still?target:metric+(target-metric)*(1-Math.exp(-dt*9));
+      metric=still?target:metric+(target-metric)*(1-Math.exp(-dt*5));
       if(readout.current)readout.current.textContent=`$${Math.round(metric).toLocaleString('en-US')}`;
       spans.forEach((arc,i)=>{
         paths.current[i]?.setAttribute('d',holdingsArc(arc.start,arc.end));

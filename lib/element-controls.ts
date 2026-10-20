@@ -1,6 +1,6 @@
 import type { ElementId, LibraryElement } from './catalog';
 export type Settings=Record<string,string|number>;
-export type Control={key:string;label:string;kind:'range'|'select'|'color'|'text';defaultValue:string|number;min?:number;max?:number;step?:number;maxLength?:number;multiline?:boolean;choices?:{value:string;label:string}[]};
+export type Control={key:string;label:string;kind:'range'|'select'|'color'|'text';hidden?:boolean;defaultValue:string|number;min?:number;max?:number;step?:number;maxLength?:number;multiline?:boolean;choices?:{value:string;label:string}[]};
 import * as registry from '../registry/manifest.json';
 export function controlsFor(id:ElementId):Control[]{return (registry.items.find(item=>item.id===id)?.controls??[]) as Control[];}
 export const defaultsFor=(id:ElementId):Settings=>Object.fromEntries(controlsFor(id).map(control=>[control.key,control.defaultValue]));
@@ -14,7 +14,7 @@ export function normalizeSettings(id:ElementId,input:unknown):Settings {
   const values=input as Record<string,unknown>;
   for(const control of controlsFor(id)){
     if(!Object.hasOwn(values,control.key))continue;
-    const value=values[control.key];
+    const value=id==='gilded-signal'&&control.key==='backgroundSrc'&&values[control.key]==='/media/tiger.webp'?'/media/starlit-cat.webp':values[control.key];
     if(control.kind==='range'&&typeof value==='number'&&Number.isFinite(value)){
       const min=control.min!,max=control.max!,step=control.step??1;
       result[control.key]=Number(Math.min(max,Math.max(min,min+Math.round((Math.min(max,Math.max(min,value))-min)/step)*step)).toFixed(6));
@@ -25,8 +25,14 @@ export function normalizeSettings(id:ElementId,input:unknown):Settings {
   if(id==='stratum'&&result.background==='#7e92d4'&&result.pillars==='#a6baf7'&&result.light==='#eff5ff'){const defaults=defaultsFor(id);result.background=defaults.background;result.pillars=defaults.pillars;result.light=defaults.light;}
   // Refresh the former reference copy in saved/shared defaults, preserving custom copy.
   if(id==='inkshift'&&['ui**xNin**ja\npr**odu**ct\nd**esi**gn\nsy**stem**s\nen**gineer**ing','mo**ti**qo\nsmall **details**\nin **motion**'].includes(String(result.words)))result.words=defaultsFor(id).words;
+  if(id==='sonic-aperture'&&result.lyrics==="My broken\npieces, you\npick them up\n\nDon't leave\nme hanging\nHanging come\ngive me some")result.lyrics=defaultsFor(id).lyrics;
+  if(id==='sonic-aperture'&&result.lyrics==='Come be\nthe man\nI need')result.lyrics=defaultsFor(id).lyrics;
   if(id==='atelier'&&result.title==='Designing the feeling of a room.')result.title=defaultsFor(id).title;
   if(id==='sacred-lotus'&&result.statusText==='Generating...')result.statusText='Loading...';
+  if(id==='elevation-matrix'&&result.unitLabel==='contribuciones')result.unitLabel='contributions';
+  // The previous image brush used pixel units; retain only its meaningful settings.
+  if(id==='event-horizon'&&input&&typeof input==='object'&&Number((input as Settings).radius)>10){result.radius=defaultsFor(id).radius;}
+  if(id==='thermal-smoke'&&result.city==='Stockholm')result.city='Buenos Aires';
   if(id==='thermal-smoke'&&result.warmColor==='#ff2e4c'&&result.coldColor==='#06b6d4'){
     result.warmColor=defaultsFor(id).warmColor;result.coldColor=defaultsFor(id).coldColor;
   }
@@ -42,8 +48,16 @@ export function configurationUrl(href:string,id:ElementId,settings:Settings){
 }
 export function usageFor(element:LibraryElement,settings?:Settings){
   if(!settings||!Object.keys(settings).length)return element.code;
-  const name=element.id==='event-horizon'?'EventHorizon':element.id==='liquid-relic'?'LiquidRelic':element.id==='liquid-sculpture'?'LiquidForm':element.id==='glow-nav'?'GlowNav':element.id==='gilded-signal'?'GildedCard':element.id==='silk-aperture'?'SilkAperture':element.title;
-  const filename=element.id==='liquid-sculpture'?'liquid-form':element.id==='gilded-signal'?'gilded-card':element.id;
+  const name=element.id==='sonic-aperture'?'SonicAperture':element.id==='prism-core'?'PrismCore':element.id==='aperture-loader'?'ApertureLoader':element.id==='event-horizon'?'PrismBloom':element.id==='liquid-artifact-hero'?'LiquidArtifact':element.id==='liquid-sculpture'?'LiquidForm':element.id==='glow-nav'?'GlowNav':element.id==='gilded-signal'?'GildedCard':element.id==='silk-aperture'?'SilkAperture':element.title;
+  if(['sonic-aperture','prism-core','aperture-loader'].includes(element.id)){
+    const configured=Object.entries(settings).map(([key,value])=>key+'={'+(key==='lyrics'?JSON.stringify(String(value).split(/\n\s*\n/).map(v=>v.split('\n'))):['interactive','autoPlay'].includes(key)?String(value!=='disabled'):key==='defaultListening'?String(value==='open'):JSON.stringify(value))+'}').join(' ');
+    return `import ${name} from './${element.id}';\n\nexport default function Example(){return <div style={{height:560}}><${name} ${configured}/></div>;}`;
+  }
+  if(element.id==='liquid-artifact-hero'){
+    const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(key==='defaultShape'?Number(value):JSON.stringify(value))+'}').join(' ');
+    return `import LiquidArtifact from './liquid-artifact';\n\nexport default function Example() {\n  return <div style={{ height: 720 }}><LiquidArtifact ${configured} /></div>;\n}`;
+  }
+  const filename=element.id==='event-horizon'?'prism-bloom':element.id==='liquid-sculpture'?'liquid-form':element.id==='gilded-signal'?'gilded-card':element.id;
   const props=Object.entries(settings).map(([key,value])=>`${key}=${typeof value==='number'?`{${value}}`:JSON.stringify(value)}`).join(' ');
   if(['sacred-lotus','iris-turbine','bokeh-terrain','opaline-orb','orbit-agent'].includes(element.id)){
     const flags=['interactive','showStars','showTitle','showTelemetry','listening'];
@@ -53,7 +67,7 @@ export function usageFor(element:LibraryElement,settings?:Settings){
     if(element.id==='opaline-orb')configured+=' colorPalette={'+JSON.stringify({coreBlue:settings.coreBlue??'#8ab8f8',warmPeach:settings.warmPeach??'#ffbe98',outerLavender:settings.outerLavender??'#c4b5fd',lineColor:settings.lineColor??'#ffffff'})+'}';
     return `import ${name} from './${filename}';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><${name} ${configured} /></div>;\n}`;
   }
-  if(['water-ripple-carousel','aperture-carousel','thermal-smoke','radial-spectrum','type-garden'].includes(element.id)){
+  if(['water-ripple-carousel','aperture-carousel','thermal-smoke','vapor-ring','radial-spectrum','type-garden'].includes(element.id)){
     const flags=['autoTriggerIntro','editable','showButterflies','showControls'];
     const configured=Object.entries(settings).map(([key,value])=>key+'='+(flags.includes(key)?'{'+(value!=='disabled')+'}':typeof value==='number'?'{'+value+'}':JSON.stringify(value))).join(' ');
     return `import ${name} from './${filename}';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><${name} ${configured} /></div>;\n}`;

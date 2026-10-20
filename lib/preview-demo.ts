@@ -2,19 +2,25 @@ import type {ElementId} from '@/lib/catalog';
 
 // Only card previews opt in. Reuse each scene's input handling without changing exports.
 const pointerTargets:Partial<Record<ElementId,string>>={
+  'sonic-aperture':'.sonic-aperture',
+  'prism-core':'.prism-core',
+  'aperture-loader':'.aperture-loader',
   'stratum':'.stratum',
   'atelier':'.atelier',
   'inkshift':'.inkshift',
   'helix':'.helix',
   'pleat':'.pleat',
   'gyro':'.gyro',
+  'district':'.district',
+  'liquid-sculpture':'.liquid-form',
+  'gilded-signal':'.gc-canvas',
   'drawer':'.drawer',
   'arbor':'.arbor',
   'lantern':'.lantern',
   'crate':'.crate-stage',
   'pulse':'.pulse',
-  'event-horizon':'.liquid-relic',
-  'liquid-relic':'.liquid-relic',
+  'event-horizon':'.prism-bloom',
+  'liquid-artifact-hero':'.lah-root',
   'sentiment':'.sentiment-plot',
   'opaline-orb':'.mq-opaline',
   'orbit-agent':'.mq-orbit-agent',
@@ -46,7 +52,7 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
     if(now-last<1000/60-.5){frame=requestAnimationFrame(tick);return;}
     const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;
     if(id==='holdings'||id==='glow-nav'){
-      const targets=root.querySelectorAll<HTMLElement>(selector!),next=Math.floor(time/2.4)%(targets.length+1);
+      const targets=root.querySelectorAll<HTMLElement>(selector!),next=Math.floor(time/(id==='holdings'?4.8:2.4))%(targets.length+1);
       if(next!==step){leave();step=next;target=targets[next]??null;
         if(target){pointer('pointerover',true);pointer('pointerenter');entered=true;
           if(id==='glow-nav')target.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
@@ -54,12 +60,19 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
       }
     }else target=root.querySelector<HTMLElement>(selector!);
     if(target){
-      if(id==='sleeve'){
-        // Browse three records and return; never scroll the page or trigger playback.
+      if(id==='sonic-aperture'){
+        const button=target.querySelector<HTMLButtonElement>('.sa-mic');
+        const open=time%12>=1.5&&time%12<8;
+        if(button&&button.getAttribute('aria-pressed')!==String(open))button.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
+      }else if(id==='sleeve'){
+        // Browse, lift a sleeve, return it, then continue through the collection.
         const cursor=Number(target.closest<HTMLElement>('.sleeve')?.dataset.cursor??0);
-        const wanted=1.5*(1-Math.cos(time*Math.PI/5));
-        target.dispatchEvent(new WheelEvent('wheel',{deltaY:(wanted-cursor)*250,deltaMode:0,cancelable:true}));
+        const phase=time%24,album=3+Math.floor(time/24)%3,stage=phase<6?0:phase<10?1:2;
+        const wanted=phase<6?album*(1-Math.cos(phase*Math.PI/6))/2:phase<12?album:album*(1+Math.cos((phase-12)*Math.PI/12))/2;
+        if(stage!==step){const starting=step<0;step=stage;if(stage===1)root.querySelector<HTMLElement>(`.sleeve-card[data-album="${album}"] .sleeve-art`)?.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));else if(starting||stage===2)root.querySelector<HTMLElement>('.sleeve-card[data-active=true] .sleeve-art')?.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));}
+        if(stage!==1)target.dispatchEvent(new WheelEvent('wheel',{deltaY:(wanted-cursor)*250,deltaMode:0,cancelable:true}));
       }else if(id!=='holdings'&&id!=='glow-nav'){
+        if(id==='gilded-signal'){const turn=Math.floor(time/10);if(turn!==step){if(turn>0)target.dispatchEvent(new MouseEvent('dblclick',{bubbles:true}));step=turn;}}
         const phase=time%8;
         if(id==='atelier'||phase<5.5){
           // A closed, slow path keeps the brush continuous across loop boundaries.

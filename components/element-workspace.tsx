@@ -58,7 +58,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
 
   return <section ref={root} className="element-workbench" data-paused={paused || undefined} aria-labelledby="detail-title">
     <div className="workbench-toolbar">
-      <button className="workbench-back" onClick={onBack}><ArrowLeft size={16}/> Library</button>
+      <button className="workbench-back" onClick={event=>{if(event.detail<2)onBack();}}><ArrowLeft size={16}/> Library</button>
     </div>
     <div className="workbench-layout">
       <div className="workbench-canvas">
@@ -69,7 +69,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
             </div>
             {tab !== 'preview' && <div key={tab} className={`document-surface panel-enter ${tab === 'code' ? 'source-surface' : 'prompt-surface'}`}>
               <div className="document-toolbar">
-                <span className="document-label">{tab === 'code' ? files[sourceIndex]?.name.endsWith('.svg') ? 'SVG / Artwork' : 'React / TSX' : 'Prompt'}</span>
+                <span className="document-label">{tab === 'code' ? files[sourceIndex]?.name.endsWith('.svg') ? 'SVG / Artwork' : files[sourceIndex]?.name.endsWith('.css') ? 'CSS / Styles' : 'React / TSX' : 'Prompt'}</span>
                 {tab === 'code' ? files.length > 1 ? <ChoiceSelect className="source-file-picker" label="Source file" value={String(sourceIndex)}
                   onChange={value => setSourceIndex(Number(value))} options={files.map((file, fileIndex) => ({ value: String(fileIndex), label: file.name }))} paused={paused}/>
                   : <span className="document-filename">{files[0]?.name || `${element.id}.tsx`}</span>
@@ -86,9 +86,9 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
         </div>
         <div className="workbench-bottom-bar">
           <div className="workbench-pagination" aria-label="Browse components">
-            <button className="icon-button" aria-label="Previous component" onClick={onPrevious}><ChevronLeft size={16}/></button>
+            <button className="icon-button" aria-label="Previous component" onClick={event=>{if(event.detail<2)onPrevious();}}><ChevronLeft size={16}/></button>
             <span>{String(index + 1).padStart(2, '0')} <span>/ {String(total).padStart(2, '0')}</span></span>
-            <button className="icon-button" aria-label="Next component" onClick={onNext}><ChevronRight size={16}/></button>
+            <button className="icon-button" aria-label="Next component" onClick={event=>{if(event.detail<2)onNext();}}><ChevronRight size={16}/></button>
           </div>
           <div className="workbench-viewport" role="group" aria-label="Preview viewport">
           {(['mobile', 'tablet', 'desktop'] as const).map(size => <button key={size} aria-label={`${size} preview`} aria-pressed={viewport === size}
@@ -103,7 +103,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
       </div>
       <aside className="workbench-inspector" aria-label="Component details">
         <div className="workbench-inspector-scroll">
-        <header className="workbench-heading"><span className="category-label">{element.category}</span><h1 id="detail-title" tabIndex={-1}>{element.title}</h1>
+        <header className="workbench-heading"><h1 id="detail-title" tabIndex={-1}>{element.title}</h1>
           <div className="tags">{element.tags.map(tag => onTag?<button type="button" key={tag} className="tag-filter-button" aria-label={`Filter by ${tag}`} onClick={()=>onTag(tag)}>{tag}</button>:<span key={tag}>{tag}</span>)}</div>
         </header>
         <div className="detail-tabs" role="tablist" aria-label="Element views" style={{ '--segment-index': views.indexOf(tab) } as CSSProperties} onKeyDown={event => {
@@ -119,13 +119,11 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
             {view === 'code' ? 'Source' : view === 'preview' ? 'Preview' : 'Prompt'}
           </button>)}
         </div>
-        <div className="inspector-group"><span className="document-label">Interaction</span><p>{element.hint}</p>
-        </div>
         <details id="component-settings" className="inspector-customization" open={!mobileInspector}>
         <summary className="inspector-settings-summary"><SlidersHorizontal size={14}/><span>Settings</span><ChevronDown size={16}/></summary>
         <div className="inspector-group inspector-controls" aria-label="Live component settings">
-          <div className="parameter-select"><span>Mood</span><ChoiceSelect label="Mood" value={selectedMood} options={[{value:'default',label:'Default'},...moods.map(mood=>({value:mood.id,label:mood.label})),...(selectedMood==='custom'?[{value:'custom',label:'Custom'}]:[])]} onChange={value=>{const mood=moods.find(item=>item.id===value);if(mood)update(mood.settings);else if(value==='default')reset();}} paused={paused}/></div>
-          {controls.map(control=>{
+          {moods.length>0&&<div className="parameter-select"><span>Mood</span><ChoiceSelect label="Mood" value={selectedMood} options={[{value:'default',label:'Default'},...moods.map(mood=>({value:mood.id,label:mood.label})),...(selectedMood==='custom'?[{value:'custom',label:'Custom'}]:[])]} onChange={value=>{const mood=moods.find(item=>item.id===value);if(mood)update(mood.settings);else if(value==='default')reset();}} paused={paused}/></div>}
+          {controls.filter(control=>!control.hidden).map(control=>{
             if(element.id==='iris-turbine'&&control.key==='speed'&&settings.mode!=='controlled')return null;
             if(element.id==='sacred-lotus'&&control.key==='progress'&&settings.playback!=='controlled')return null;
             const value=settings[control.key]??control.defaultValue;

@@ -22,6 +22,6 @@ export default function PreviewCapture({id,theme,motion=false}:{id:ElementId;the
   },[prepared]);
   return <div ref={root} className="preview-capture" data-testid="poster-surface" data-ready={ready||undefined} data-motion={motion||undefined} aria-label={`${id} ${theme} poster`}>
     <style>{`.preview-capture{position:fixed!important;left:0;top:0;width:320px;height:320px;z-index:999999;background:var(--bg);overflow:hidden;isolation:isolate}.preview-capture>.demo{width:100%;height:100%}${motion?'':'.preview-capture *{transition:none!important;animation:none!important}'}`}</style>
-    {prepared&&<Demo id={id}/>}
+    {prepared&&<Demo id={id} autoDemo={id==='elevation-matrix'&&!motion}/>}
   </div>;
 }

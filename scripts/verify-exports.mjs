@@ -13,7 +13,7 @@ new Function('require','module','exports',ts.transpileModule(source,{compilerOpt
 const npm=process.env.npm_execpath??path.join(path.dirname(process.execPath),'node_modules/npm/bin/npm-cli.js');
 function command(bin,args){const result=spawnSync(bin,args,{cwd:fixture,stdio:'inherit',env:{...process.env,npm_config_cache:path.join(root,'screenshots/.npm-cache')}});if(result.error||result.status!==0)throw Error(`Export verification failed: ${args[0]}`);}
 try{
-  const dependencies=Object.fromEntries(['react','react-dom','three','motion'].map(name=>[name,lock.packages[`node_modules/${name}`].version]));
+  const dependencies=Object.fromEntries(['react','react-dom','three','motion','lucide-react'].map(name=>[name,lock.packages[`node_modules/${name}`].version]));
   const devDependencies=Object.fromEntries(['typescript','@types/react','@types/react-dom','@types/three','@types/node'].map(name=>[name,lock.packages[`node_modules/${name}`].version]));
   devDependencies['@motiqo/cli']=`file:${path.join(root,'public/downloads/motiqo-cli-0.1.0.tgz').replaceAll('\\','/')}`;
   fs.writeFileSync(path.join(fixture,'package.json'),JSON.stringify({name:'motiqo-independent-react-proof',private:true,type:'module',dependencies,devDependencies},null,2));
