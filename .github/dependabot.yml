@@ -5,6 +5,20 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # TypeScript 7 does not yet expose the JS compiler API used by test fixtures.
+      - dependency-name: typescript-compiler-api
+        update-types: ["version-update:semver-major"]
+    groups:
+      react-runtime:
+        patterns:
+          - react
+          - react-dom
+      react-runtime-security:
+        applies-to: security-updates
+        patterns:
+          - react
+          - react-dom
   - package-ecosystem: github-actions
     directory: /
     schedule:
