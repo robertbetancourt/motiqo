@@ -14,6 +14,8 @@ Brand names, logos and identity assets are also excluded from the code MIT grant
 
 The bundled Urbanist font retains its SIL Open Font License in public/media/inkshift-font-license.txt (included when exporting Inkshift). @fontsource fonts and npm dependencies retain the licenses in their packages. Install dependencies from their declared package manifests; preserve their notices when redistributing them.
 
+Clash Display Semibold is copyright Indian Type Foundry and licensed under the ITF Free Font License (FFL), available from https://www.fontshare.com/fonts/clash-display. Motiqo self-hosts an unmodified official webfont for its own interface; its license is in public/media/clash-display-license.txt. Component downloads do not redistribute this font. Aperture Loader uses Fontshare's official CDN by default; consumers can obtain their own copy from Fontshare and supply its URL through fontUrl.
+
 ## Historical particle engine
 
 Earlier revisions of liquid-particle-engine.ts and liquid-particle-shaders.ts adapted Liquid Sculpture Hero by Guglielmo Giannattasio (gughigug), supplied through https://21st.dev/@gughigug/components/liquid-sculpture-hero, whose listing identifies MIT. The current spring-grain implementation replaces that engine and its shaders. This notice records provenance; it does not assert that all historical assets or components were independently audited. If distributing an earlier revision, retain its original notices and obtain the original license text from that source.

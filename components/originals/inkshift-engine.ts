@@ -9,7 +9,7 @@ export function createInkshiftEngine(canvas:HTMLCanvasElement,compact:boolean,re
  if(!ctx)throw Error('Text canvas unavailable');
  let gpu:ReturnType<typeof createNativeGL>|undefined,passes:Record<string,GLPass>={},velocity:Pair,dye:Pair,pressure:Pair,curl:GLTarget,divergence:GLTarget,textTexture:WebGLTexture;
  let targets:GLTarget[]=[],frame=0,disposed=false,lost=false,visible=true,width=0,height=0,time=0,last=0,energyUntil=8,fontReady=false,textDirty=true,words=kineticWords(read().words),wordsKey=JSON.stringify(words),from=0,transition=-10,direction=1;
- let lastPointer:{x:number;y:number}|undefined,dragY:number|undefined,pointerId:number|undefined,nextAmbient=.7;
+ let lastPointer:{x:number;y:number}|undefined,dragY:number|undefined,pointerId:number|undefined,pulseStarted=-10;
  const state:KineticState={position:0,velocity:0,index:0,lastInput:-10,lastCycle:0},queue:Splat[]=[];
  const swap=(p:Pair)=>{[p.read,p.write]=[p.write,p.read];};
  function stop(){cancelAnimationFrame(frame);frame=0;}
@@ -21,11 +21,13 @@ export function createInkshiftEngine(canvas:HTMLCanvasElement,compact:boolean,re
  function makePair(w:number,h:number):Pair{const a=gpu!.target(w,h,true),b=gpu!.target(w,h,true);targets.push(a,b);return{read:a,write:b};}
  function enqueue(s:Splat){queue.push(s);if(queue.length>24)queue.shift();energyUntil=time+8;}
  function burst(){
-  for(let i=0;i<6;i++){const a=i*2.399+state.index*.7;enqueue({x:.5+Math.cos(a)*.19,y:.5+Math.sin(a)*.14,dx:Math.sin(a)*230,dy:Math.cos(a)*220,dye:2.5});}
+  pulseStarted=time;energyUntil=time+8;
  }
  function change(index:number,manual:boolean,stepDirection:number){from=state.index;state.index=index;transition=time;direction=stepDirection;textDirty=true;state.lastCycle=time;burst();onWord(index,manual);}
  function step(dt:number){
   if(!gpu)return;const o=read(),vTexel=[1/velocity.read.width,1/velocity.read.height],dTexel=[1/dye.read.width,1/dye.read.height];
+  const age=time-pulseStarted;
+  if(age>=0&&age<1.1){const envelope=Math.sin(age/1.1*Math.PI);for(let i=0;i<6;i++){const a=i*2.399+state.index*.7+age*.3;enqueue({x:.5+Math.cos(a)*.19,y:.5+Math.sin(a)*.14,dx:Math.sin(a)*110*dt*envelope,dy:Math.cos(a)*105*dt*envelope,dye:2.1*dt*envelope});}}
   for(const s of queue.splice(0,8)){
    const params={uPoint:[s.x,s.y],uRadius:nativeClamp(o.splatRadius,.025,.22),uAspect:width/height};
    gpu.draw(passes.inkSplat,velocity.write,{...params,uSource:velocity.read,uForce:[s.dx,s.dy],uDye:0});swap(velocity);
@@ -62,7 +64,7 @@ export function createInkshiftEngine(canvas:HTMLCanvasElement,compact:boolean,re
    time+=dt;const previous=state.index,velocitySign=state.velocity<0?-1:1;
    if(kineticAdvance(state,dt,time,words.length,read().autoCycle)){const next=state.index;state.index=previous;change(next,time-state.lastInput<2.5,velocitySign);}
    // Replenish ink gently between word bursts instead of letting the idle canvas drain.
-   if(read().autoCycle&&time>=nextAmbient){nextAmbient=time+.65;const a=time*1.7;enqueue({x:.5+Math.cos(a)*.17,y:.5+Math.sin(a)*.16,dx:Math.sin(a)*65,dy:Math.cos(a)*55,dye:2.2});}
+   if(read().autoCycle){const a=time*.7;enqueue({x:.5+Math.cos(a)*.17,y:.5+Math.sin(a)*.16,dx:Math.sin(a)*45*dt,dy:Math.cos(a)*40*dt,dye:1.5*dt});}
    step(dt);if(time-transition<1.5)textDirty=true;
   }
   draw();if(!read().paused&&!media.matches&&(read().autoCycle||time<energyUntil||time-transition<1.5))frame=requestAnimationFrame(tick);
@@ -75,7 +77,7 @@ export function createInkshiftEngine(canvas:HTMLCanvasElement,compact:boolean,re
   try{velocity=makePair(Math.max(16,vw),Math.max(16,vh));pressure=makePair(Math.max(16,vw),Math.max(16,vh));dye=makePair(Math.max(32,dw),Math.max(32,dh));curl=gpu.target(Math.max(16,vw),Math.max(16,vh),true);divergence=gpu.target(Math.max(16,vw),Math.max(16,vh),true);targets.push(curl,divergence);burst();for(let i=0;i<10;i++)step(1/60);textDirty=true;draw();wake();}catch{fail();}
  }
  function sync(){stop();const next=kineticWords(read().words),key=JSON.stringify(next);if(key!==wordsKey){wordsKey=key;words=next;state.position=state.index=0;from=0;transition=-10;textDirty=true;burst();onWord(0,false);}if(media.matches){transition=-10;textDirty=true;}draw();wake();}
- function point(event:PointerEvent){if(read().paused||media.matches)return;const r=host.getBoundingClientRect(),p={x:nativeClamp((event.clientX-r.left)/r.width,0,1),y:nativeClamp(1-(event.clientY-r.top)/r.height,0,1)};if(lastPointer){enqueue({...p,dx:nativeClamp((p.x-lastPointer.x)*2200,-450,450),dy:nativeClamp((p.y-lastPointer.y)*2200,-450,450),dye:1.3});}lastPointer=p;state.lastInput=time;if(dragY!==undefined&&event.pointerId===pointerId){state.velocity=nativeClamp(state.velocity+(dragY-event.clientY)*.035,-6,6);dragY=event.clientY;}wake();}
+ function point(event:PointerEvent){if(read().paused||media.matches)return;const r=host.getBoundingClientRect(),p={x:nativeClamp((event.clientX-r.left)/r.width,0,1),y:nativeClamp(1-(event.clientY-r.top)/r.height,0,1)};if(lastPointer){const distance=Math.hypot(p.x-lastPointer.x,p.y-lastPointer.y);enqueue({...p,dx:nativeClamp((p.x-lastPointer.x)*1400,-300,300),dy:nativeClamp((p.y-lastPointer.y)*1400,-300,300),dye:Math.min(.2,distance*3)});}lastPointer=p;state.lastInput=time;if(dragY!==undefined&&event.pointerId===pointerId){state.velocity=nativeClamp(state.velocity+(dragY-event.clientY)*.035,-6,6);dragY=event.clientY;}wake();}
  function leave(){lastPointer=undefined;}
  function down(e:PointerEvent){if(compact)return;pointerId=e.pointerId;dragY=e.clientY;host.setPointerCapture(e.pointerId);state.lastInput=time;point(e);}
  function up(e:PointerEvent){if(pointerId===e.pointerId){if(host.hasPointerCapture(e.pointerId))host.releasePointerCapture(e.pointerId);pointerId=undefined;dragY=undefined;lastPointer=undefined;}}

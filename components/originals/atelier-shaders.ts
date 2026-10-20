@@ -4,7 +4,7 @@ float fbm(vec2 p){return noise(p)*.57+noise(p*2.03)*.28+noise(p*4.1)*.15;}
 void main(){vec2 uv=vUv;vec2 warp=vec2(fbm(uv*17.+.02*uTime),fbm(uv*19.+31.-.015*uTime))-.5;uv+=warp*.034*uRoughness;
  vec2 portalRadii=vec2(.255,min(.185,.155*uResolution.x/uResolution.y))*uPortal;
  vec2 ellipse=(uv-vec2(.5,.42))/portalRadii;float field=1.45*exp(-dot(ellipse,ellipse)*1.3);
- for(int i=0;i<32;i++){if(float(i)>=uBrushCount)break;vec4 b=uBrush[i];vec2 d=(uv-b.xy)*uResolution/max(1.,b.z);field+=1.45*exp(-dot(d,d)*1.4)*b.w;}
+ for(int i=0;i<32;i++){if(float(i)>=uBrushCount)break;vec4 b=uBrush[i];vec2 d=(uv-b.xy)*uResolution/max(1.,b.z);field=max(field,1.45*exp(-dot(d,d)*1.4)*b.w);}
  float dry=(noise(vUv*uResolution*.18)-.5)*.125*uRoughness+(noise(vUv*uResolution*.055+19.)-.5)*.12*uRoughness;
  fragColor=vec4(clamp(field+dry,0.,1.),0,0,1.);}`;
 export const atelierComposite=`uniform sampler2D uRender,uSketch,uMask;uniform vec2 uCover,uSketchCover,uImageTexel,uResolution;uniform float uHasSketch;

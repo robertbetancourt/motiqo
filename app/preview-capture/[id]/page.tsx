@@ -10,9 +10,9 @@ export function generateStaticParams(){
 }
 
 /** Internal asset authoring fixture. Never available in a production build. */
-export default async function Page({params,searchParams}:{params:Promise<{id:string}>;searchParams:Promise<{theme?:string}>}){
+export default async function Page({params,searchParams}:{params:Promise<{id:string}>;searchParams:Promise<{theme?:string;motion?:string}>}){
   if(process.env.NODE_ENV!=='development')notFound();
-  const {id}=await params,{theme}=await searchParams;
+  const {id}=await params,{theme,motion}=await searchParams;
   if(!elementIds.includes(id as ElementId))notFound();
-  return <PreviewCapture key={`${id}-${theme}`} id={id as ElementId} theme={theme==='light'?'light':'dark'}/>;
+  return <PreviewCapture key={`${id}-${theme}-${motion}`} id={id as ElementId} theme={theme==='light'?'light':'dark'} motion={motion==='1'}/>;
 }

@@ -49,7 +49,7 @@ test('Inkshift runs a feedback-free pressure pipeline, retains its renderer on c
  const f=fixture(),changes=[];let options={words:inkMath.inkshiftWords,vorticity:40,dissipation:.55,splatRadius:.12,threshold:.5,backgroundColor:'#0b0c10',foregroundColor:'#f3f2ed',autoCycle:true,paused:false},engine;
  try{
   const {createInkshiftEngine}=load('components/originals/inkshift-engine.ts',{'./native-gl':native,'./inkshift-math':inkMath,'./inkshift-shaders':load('components/originals/inkshift-shaders.ts')});engine=createInkshiftEngine(f.canvas,false,()=>options,(...args)=>changes.push(args));await Promise.resolve();await Promise.resolve();await Promise.resolve();assert.equal(f.host.dataset.ready,'true');
-  const programs=[...f.owned].filter(o=>o.kind==='program').length;let start=f.draws.length;f.advance(120);const display=f.draws.slice(start).filter(d=>d.source.includes('abs(ink-text)'));assert.equal(display.length,120,'one rendered frame per 60Hz tick');assert.equal(f.draws.slice(start).filter(d=>d.source.includes('(l+r+b+t-d)*.25')).length,120*18,'18 pressure iterations per frame');
+  const programs=[...f.owned].filter(o=>o.kind==='program').length;let start=f.draws.length;f.advance(120);const display=f.draws.slice(start).filter(d=>d.source.includes('abs(ink-text)'));assert.equal(display.length,120,'one rendered frame per 60Hz tick');const inkDoses=f.draws.slice(start).filter(draw=>draw.uniforms.uDye>0).map(draw=>draw.uniforms.uDye);assert.ok(inkDoses.length>100);assert.ok(Math.max(...inkDoses)<.1,'ink enters continuously rather than flashing as a large periodic splat');assert.equal(f.draws.slice(start).filter(d=>d.source.includes('(l+r+b+t-d)*.25')).length,120*18,'18 pressure iterations per frame');
   start=f.draws.length;f.advance(120,120);assert.equal(f.draws.slice(start).filter(d=>d.source.includes('abs(ink-text)')).length,60,'120Hz displays do not double simulation cost');
   options={...options,vorticity:70,dissipation:1.2};engine.sync();f.advance(1);assert.equal([...f.owned].filter(o=>o.kind==='program').length,programs);assert.ok(f.draws.slice(-35).some(d=>d.uniforms.uStrength===70));assert.ok(f.draws.slice(-35).some(d=>d.uniforms.uDecay===1.2));
   f.key('ArrowRight');f.advance(65);assert.ok(changes.some(c=>c[1]===true));options={...options,words:['one','two']};engine.sync();assert.equal(f.host.dataset.word,'0');
@@ -60,6 +60,15 @@ test('Inkshift runs a feedback-free pressure pipeline, retains its renderer on c
 
 test('Brush interpolation is bounded, fades in 0.8 seconds and uses one exact cover transform for a paired room',()=>{
  const points=[];brushMath.addBrushStroke(points,undefined,{x:0,y:0},64);brushMath.addBrushStroke(points,{x:0,y:0},{x:140,y:0},64);for(let i=1;i<points.length;i++)assert.ok(points[i].x-points[i-1].x<=64*.22);const initial=brushMath.brushRadius(points[0]);brushMath.ageBrush(points,.4,1);assert.ok(brushMath.brushRadius(points[0])<initial);brushMath.ageBrush(points,.4,1);assert.equal(points.length,0);for(let i=0;i<100;i++)brushMath.addBrushStroke(points,undefined,{x:i,y:i},60);assert.equal(points.length,32);brushMath.ageBrush(points,.4,2);assert.equal(points.length,0);assert.deepEqual(brushMath.coverUV(1600,900,1600,900),[1,1]);assert.deepEqual(brushMath.coverUV(400,800,1600,900),[.28125,1]);
+});
+
+test('A slow 60Hz Atelier sweep keeps a full fading trail without churning its point capacity',()=>{
+ const points=[];let previous;
+ for(let i=0;i<600;i++){
+  brushMath.ageBrush(points,1/60,1);const next={x:150+72*Math.sin(i/60*Math.PI/6),y:110+32*Math.sin(i/60*Math.PI/3)};
+  brushMath.addBrushStroke(points,previous,next,38);previous=next;
+  assert.ok(points.length<20,'dense input coalesces rather than evicting still-visible brush points');assert.equal(points.at(-1).age,0);assert.ok(points.every(p=>Number.isFinite(brushMath.brushRadius(p))));
+ }
 });
 
 test('Atelier waits for the aligned image pair, rejects stale loads, sleeps at rest and owns every resource across live images and context restoration',()=>{

@@ -19,6 +19,6 @@ export async function componentBundle(id:string){
 }
 export async function originalSources(ids?:readonly string[]):Promise<OriginalSources>{
  return Object.fromEntries(await Promise.all(registry.items.filter(item=>!ids||ids.includes(item.id)).map(async item=>[item.id,
-  await Promise.all(item.files.filter(f=>/\.(tsx?|svg)$/.test(f.source)).map(async file=>({name:path.basename(file.target),code:await formatSource(await readFile(sourcePath(file.source),'utf8'),file.target)})))
+  await Promise.all(item.files.filter(f=>/\.(tsx?|svg|css)$/.test(f.source)).map(async file=>({name:path.basename(file.target),code:await formatSource(await readFile(sourcePath(file.source),'utf8'),file.target)})))
  ]))) as Record<ElementId,{name:string;code:string}[]>;
 }

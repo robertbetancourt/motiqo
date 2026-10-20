@@ -7,6 +7,8 @@ function once<T>(load:()=>Promise<T>){
   return()=>pending??=load().catch(error=>{pending=undefined;throw error;});
 }
 export const previewLoaders={
+  'vapor-ring':once(()=>import('../components/originals/vapor-ring')),
+  'elevation-matrix':once(()=>import('../components/originals/elevation-matrix')),
   'sacred-lotus':once(()=>import('../components/originals/sacred-lotus')),
   'iris-turbine':once(()=>import('../components/originals/iris-turbine')),
   'bokeh-terrain':once(()=>import('../components/originals/bokeh-terrain')),
@@ -40,8 +42,8 @@ export const previewLoaders={
   'crate':once(()=>import('../components/originals/crate')),
   'glow-nav':once(()=>import('../components/originals/glow-nav-demo')),
   'liquid-sculpture':once(()=>import('../components/originals/liquid-form')),
-  'liquid-relic':once(()=>import('../components/ui/liquid-relic')),
-  'event-horizon':once(()=>import('../components/ui/event-horizon')),
+  'liquid-artifact-hero':once(()=>import('../components/ui/liquid-artifact')),
+  'event-horizon':once(()=>import('../components/ui/prism-bloom')),
   'pulse':once(()=>import('../components/originals/pulse')),
   'district':once(()=>import('../components/originals/district')),
   'halo':once(()=>import('../components/originals/halo')),
@@ -60,5 +62,8 @@ export const previewLoaders={
   'constellation':once(()=>import('../components/originals/constellation')),
   'sentiment':once(()=>import('../components/originals/sentiment')),
   'gilded-signal':once(()=>import('../components/originals/gilded-card')),
+  'sonic-aperture':once(()=>import('../components/ui/sonic-aperture')),
+  'prism-core':once(()=>import('../components/ui/prism-core')),
+  'aperture-loader':once(()=>import('../components/ui/aperture-loader')),
 } satisfies Record<ElementId,()=>Promise<unknown>>;
 export const preloadPreview=(id:ElementId)=>previewLoaders[id]();

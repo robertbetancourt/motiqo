@@ -3,6 +3,781 @@
   "version": "0.1.0",
   "items": [
     {
+      "id": "sonic-aperture",
+      "number": "64",
+      "title": "Sonic Aperture",
+      "category": "Motion",
+      "original": true,
+      "description": "A liquid sphere opens into a blue particle veil.",
+      "hint": "Explore the component with pointer, touch or keyboard.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Interactive",
+        "Shader"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy all included implementation files together and install three and @types/three. The microphone uses Motiqo OpticalButton and toggles the visual aperture.",
+      "code": "import SonicAperture from './sonic-aperture';\n\nexport default function Example(){ return <div style={{height:560}}><SonicAperture/></div>; }",
+      "brief": "Create SonicAperture on a pure black canvas, containing only a centered organic blue particle sphere, the central short Human Nature excerpt when expanded, and an OpticalButton microphone toggle at the bottom. A 224x224 Points grid (160x160 in compact previews) uses original simplex noise and spring morphing into a folded annular veil. Fine, individually resolved luminous points form the translucent sphere; fine crisp blue/cyan points form the open ring. Reveal the supplied customisable stanzas character by character after the aperture opens. The microphone icon toggles the visual state; it does not record or request microphone access. Preserve clean closing, pointer tilt, touch and keyboard button access, reduced motion, visibility suspension, context restoration, fallback and disposal. No phone frame, pedestal, external decoration or audio permission.",
+      "entry": "sonic-aperture.tsx",
+      "exportName": "SonicAperture",
+      "files": [
+        {
+          "source": "components/ui/sonic-aperture.tsx",
+          "target": "components/motiqo/sonic-aperture.tsx"
+        },
+        {
+          "source": "components/ui/kinetic-loop.ts",
+          "target": "components/motiqo/kinetic-loop.ts"
+        },
+        {
+          "source": "components/originals/optical-button.tsx",
+          "target": "components/motiqo/optical-button.tsx"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "defaultListening",
+          "label": "Initial state",
+          "kind": "select",
+          "defaultValue": "closed",
+          "choices": [
+            {
+              "value": "closed",
+              "label": "Sphere"
+            },
+            {
+              "value": "open",
+              "label": "Open aperture"
+            }
+          ]
+        },
+        {
+          "key": "lyrics",
+          "label": "Lyrics",
+          "kind": "text",
+          "defaultValue": "Why, why?\nTell 'em that\nit's human nature",
+          "multiline": true,
+          "maxLength": 1500
+        },
+        {
+          "key": "primaryColor",
+          "label": "Primary",
+          "kind": "color",
+          "defaultValue": "#1d4ed8"
+        },
+        {
+          "key": "accentColor",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#38bdf8"
+        }
+      ],
+      "moods": [
+        {
+          "id": "sphere",
+          "label": "Sphere",
+          "settings": {
+            "defaultListening": "closed",
+            "lyrics": "Why, why?\nTell 'em that\nit's human nature",
+            "primaryColor": "#1d4ed8",
+            "accentColor": "#38bdf8"
+          }
+        },
+        {
+          "id": "aperture",
+          "label": "Aperture",
+          "settings": {
+            "defaultListening": "open",
+            "lyrics": "Why, why?\nTell 'em that\nit's human nature",
+            "primaryColor": "#1d4ed8",
+            "accentColor": "#38bdf8"
+          }
+        },
+        {
+          "id": "ice",
+          "label": "Ice",
+          "settings": {
+            "defaultListening": "closed",
+            "lyrics": "Why, why?\nTell 'em that\nit's human nature",
+            "primaryColor": "#2563eb",
+            "accentColor": "#e0f2fe"
+          }
+        }
+      ]
+    },
+    {
+      "id": "prism-core",
+      "number": "65",
+      "title": "Prism Core",
+      "category": "Objects",
+      "original": true,
+      "description": "A fluid planet, refracted through a dichroic cube.",
+      "hint": "Explore the component with pointer, touch or keyboard.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Interactive",
+        "Shader"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy prism-core.tsx and kinetic-loop.ts, and install three and @types/three. Controls are external to the artwork. All required local assets are included.",
+      "code": "import PrismCore from './prism-core';\n\nexport default function Example(){ return <div style={{height:560}}><PrismCore/></div>; }",
+      "brief": "Create only a refractive dichroic cube and its procedural planetary core on pure black. Use front and back cube passes, flat per-face refracted view rays and analytic ray/sphere intersections. Domain-warped four-octave simplex fBm shades the spherical core; spectral cyan, emerald, magenta, amber and cobalt colors evolve continuously. Include exact white edges and a faint second cage 1.018 times larger. Preserve default x .55/z .42 inclination, automatic rotation, damped parallax, pointer/touch dragging with inertia, arrow keys and Home, configurable optical properties, responsive framing, static reduced motion, hidden suspension, context restoration and disposal. Exclude all reference website headings, buttons, branding, background and navigation.",
+      "entry": "prism-core.tsx",
+      "exportName": "PrismCore",
+      "files": [
+        {
+          "source": "components/ui/prism-core.tsx",
+          "target": "components/motiqo/prism-core.tsx"
+        },
+        {
+          "source": "components/ui/kinetic-loop.ts",
+          "target": "components/motiqo/kinetic-loop.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "size",
+          "label": "Size",
+          "kind": "range",
+          "defaultValue": 2.35,
+          "min": 1.2,
+          "max": 3.2,
+          "step": 0.05
+        },
+        {
+          "key": "ior",
+          "label": "Refraction",
+          "kind": "range",
+          "defaultValue": 1.52,
+          "min": 1.01,
+          "max": 2.2,
+          "step": 0.01
+        },
+        {
+          "key": "prismOffset",
+          "label": "Prism offset",
+          "kind": "range",
+          "defaultValue": 0.1,
+          "min": 0,
+          "max": 0.7,
+          "step": 0.01
+        },
+        {
+          "key": "rotationSpeed",
+          "label": "Rotation speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "colorCycleSpeed",
+          "label": "Color cycle",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "wireframeOpacity",
+          "label": "Edges",
+          "kind": "range",
+          "defaultValue": 0.6,
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "interactive",
+          "label": "Interactive",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "spectral",
+          "label": "Spectral",
+          "settings": {
+            "size": 2.35,
+            "ior": 1.52,
+            "prismOffset": 0.1,
+            "rotationSpeed": 1,
+            "colorCycleSpeed": 1,
+            "wireframeOpacity": 0.6,
+            "interactive": "enabled",
+            "autoPlay": "enabled"
+          }
+        },
+        {
+          "id": "slow",
+          "label": "Slow optics",
+          "settings": {
+            "size": 2.35,
+            "ior": 1.52,
+            "prismOffset": 0.1,
+            "rotationSpeed": 0.45,
+            "colorCycleSpeed": 0.5,
+            "wireframeOpacity": 0.6,
+            "interactive": "enabled",
+            "autoPlay": "enabled"
+          }
+        },
+        {
+          "id": "obsidian",
+          "label": "Obsidian",
+          "settings": {
+            "size": 2.35,
+            "ior": 1.9,
+            "prismOffset": 0.55,
+            "rotationSpeed": 1,
+            "colorCycleSpeed": 0.6,
+            "wireframeOpacity": 0.6,
+            "interactive": "enabled",
+            "autoPlay": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aperture-loader",
+      "number": "66",
+      "title": "Aperture Loader",
+      "category": "Motion",
+      "original": true,
+      "description": "Twelve photographs. One precise loading rhythm.",
+      "hint": "Explore the component with pointer, touch or keyboard.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Photography",
+        "Loader"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy aperture-loader.tsx and kinetic-loop.ts. Controls are external to the artwork. All required local assets are included. Clash Display loads from Fontshare’s official CDN; supply fontUrl to self-host your own licensed copy. The font is excluded from component downloads.",
+      "code": "import ApertureLoader from './aperture-loader';\n\nexport default function Example(){ return <div style={{height:560}}><ApertureLoader/></div>; }",
+      "brief": "Create ApertureLoader as a clean full-container pure black Canvas2D component. Preload twelve bundled local photographs; show only clean photos clipped into a central 160px circle and a white bottom-right percentage set in Clash Display Semibold. No overlay text on the photos, outer card or external background. Use a monotone organic three-phase 1-to-100 percent curve over 3200ms, twelve image thresholds, damped incoming micro-zoom, a 900ms hold with a subtle circle pulse, then loop if autoPlay. Click or Enter replays; drag and arrow keys scrub, with bounded 8px magnetic drift. Accept fontUrl for an independently obtained Clash Display webfont, custom images, duration, circleSize, autoPlay, loopDelay and onComplete, firing once per real cycle. Handle failed assets, cancellation, static reduced motion, responsive sizing, visibility suspension and cleanup.",
+      "entry": "aperture-loader.tsx",
+      "exportName": "ApertureLoader",
+      "files": [
+        {
+          "source": "components/ui/aperture-loader.tsx",
+          "target": "components/motiqo/aperture-loader.tsx"
+        },
+        {
+          "source": "components/ui/kinetic-loop.ts",
+          "target": "components/motiqo/kinetic-loop.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-08.webp",
+          "target": "public/media/gallery/image-08.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "duration",
+          "label": "Duration (ms)",
+          "kind": "range",
+          "defaultValue": 3200,
+          "min": 800,
+          "max": 8000,
+          "step": 100
+        },
+        {
+          "key": "circleSize",
+          "label": "Circle size",
+          "kind": "range",
+          "defaultValue": 160,
+          "min": 80,
+          "max": 260,
+          "step": 5
+        },
+        {
+          "key": "loopDelay",
+          "label": "Hold (ms)",
+          "kind": "range",
+          "defaultValue": 900,
+          "min": 0,
+          "max": 2400,
+          "step": 100
+        },
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "interactive",
+          "label": "Interactive",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "editorial",
+          "label": "Editorial",
+          "settings": {
+            "duration": 3200,
+            "circleSize": 160,
+            "loopDelay": 900,
+            "autoPlay": "enabled",
+            "interactive": "enabled"
+          }
+        },
+        {
+          "id": "quick",
+          "label": "Quick",
+          "settings": {
+            "duration": 1800,
+            "circleSize": 140,
+            "loopDelay": 900,
+            "autoPlay": "enabled",
+            "interactive": "enabled"
+          }
+        },
+        {
+          "id": "slow",
+          "label": "Slow",
+          "settings": {
+            "duration": 5000,
+            "circleSize": 180,
+            "loopDelay": 900,
+            "autoPlay": "enabled",
+            "interactive": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vapor-ring",
+      "number": "63",
+      "title": "VaporRing",
+      "category": "Objects",
+      "original": true,
+      "description": "Ember-lit vapor billows around a quiet weather aperture.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL2",
+        "Volume",
+        "Smoke",
+        "Weather"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy vapor-ring.tsx, vapor-engine.ts, vapor-shaders.ts, vapor-flow.ts, native-gl.ts and effect-runtime.ts together. Give the parent a defined height. No external assets, textures or libraries beyond React are required. Weather values are illustrative, not a live forecast. A static CSS fallback remains available without WebGL2. Motion sleeps when hidden, offscreen, paused or reduced; pixel and frame budgets are bounded.",
+      "code": "import VaporRing from './vapor-ring';\n\nexport default function Example() {\n  return <div style={{ height: 620 }}><VaporRing /></div>;\n}",
+      "brief": "Create VaporRing as a new Motiqo component, preserving ThermalSmoke. Keep its minimal portrait weather composition: city, central temperature and condition, and three illustrative weather metrics. Build the smoke as a procedural 3D density field integrated front-to-back through eighteen view-aligned depth samples. Use smooth multi-scale 3D noise, broad domain deformation, rotating advection and unequal diagonal plumes. Preserve the original continuous volumetric ring and color palette. Add a persistent two-pigment flow field transported through two GPU ping-pong textures: opposing diagonal currents stretch sheets from the ring while multi-scale curl rolls their edges. Continuously emit around the aperture, mix both pigments, and dissipate the transported field with distance and time. Do not replace the volume with separate Gaussian particles or regularly spaced blobs. Seed the flow at startup so paused and reduced-motion views are complete. Keep the simulation resolution bounded and never sample the framebuffer being written. Retain the accumulated simulation clock through live speed changes. Combine a dense toroidal emitter with softer dissolving outer billows, not thin iso-noise contours or a dominant neon outline. Use Beer-Lambert extinction to accumulate colored scattering and preserve depth, translucent edges and dark gaps between folds. Mix coral embers and desaturated teal vapor with restrained internal light. Leave the central aperture clear for the temperature. Expose city, temperature, condition, warmColor, coldColor, smokeDensity, flowSpeed, turbulence, ringRadius, compact, paused and className. All customization belongs in the existing Motiqo inspector; no controls or instructional copy inside the artwork. Keep one WebGL2 canvas, a bounded pixel budget and at most 60 drawn frames per second. Reuse native-gl and effect-runtime, update uniforms in place, suspend while hidden/offscreen/paused, show a complete static reduced-motion composition and release GPU programs, observers, events and RAF on unmount or context loss. Restore safely after WebGL context recovery and preserve a CSS fallback when WebGL2 fails. No external images, videos, particle sprites, remote APIs or additional GPU libraries. Register the full source, prompt, moods, controls, CLI bundle and faithful dark/light gallery posters.",
+      "entry": "vapor-ring.tsx",
+      "exportName": "VaporRing",
+      "files": [
+        {
+          "source": "components/originals/vapor-ring.tsx",
+          "target": "components/motiqo/vapor-ring.tsx"
+        },
+        {
+          "source": "components/originals/vapor-engine.ts",
+          "target": "components/motiqo/vapor-engine.ts"
+        },
+        {
+          "source": "components/originals/vapor-shaders.ts",
+          "target": "components/motiqo/vapor-shaders.ts"
+        },
+        {
+          "source": "components/originals/vapor-flow.ts",
+          "target": "components/motiqo/vapor-flow.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "city",
+          "label": "City",
+          "kind": "text",
+          "defaultValue": "Buenos Aires",
+          "maxLength": 60
+        },
+        {
+          "key": "temperature",
+          "label": "Temperature · °C",
+          "kind": "range",
+          "defaultValue": 26,
+          "min": -50,
+          "max": 55,
+          "step": 1
+        },
+        {
+          "key": "condition",
+          "label": "Condition",
+          "kind": "text",
+          "defaultValue": "Partly cloudy",
+          "maxLength": 60
+        },
+        {
+          "key": "warmColor",
+          "label": "Ember tint",
+          "kind": "color",
+          "defaultValue": "#ff5549"
+        },
+        {
+          "key": "coldColor",
+          "label": "Vapor tint",
+          "kind": "color",
+          "defaultValue": "#4ca9ad"
+        },
+        {
+          "key": "smokeDensity",
+          "label": "Density",
+          "kind": "range",
+          "defaultValue": 1.25,
+          "min": 0.2,
+          "max": 2.5,
+          "step": 0.05
+        },
+        {
+          "key": "flowSpeed",
+          "label": "Flow speed",
+          "kind": "range",
+          "defaultValue": 0.7,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "turbulence",
+          "label": "Turbulence",
+          "kind": "range",
+          "defaultValue": 1.1,
+          "min": 0.2,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "ringRadius",
+          "label": "Aperture radius",
+          "kind": "range",
+          "defaultValue": 0.25,
+          "min": 0.18,
+          "max": 0.3,
+          "step": 0.01
+        }
+      ],
+      "moods": [
+        {
+          "id": "glacial",
+          "label": "Glacial",
+          "settings": {
+            "city": "Reykjavík",
+            "temperature": -3,
+            "condition": "Cloudy",
+            "warmColor": "#97d8ee",
+            "coldColor": "#6485ba",
+            "smokeDensity": 1.5,
+            "flowSpeed": 0.45,
+            "turbulence": 0.8,
+            "ringRadius": 0.25
+          }
+        },
+        {
+          "id": "cinder",
+          "label": "Cinder",
+          "settings": {
+            "city": "Buenos Aires",
+            "temperature": 26,
+            "condition": "Partly cloudy",
+            "warmColor": "#ff6b45",
+            "coldColor": "#8e5268",
+            "smokeDensity": 1.7,
+            "flowSpeed": 0.9,
+            "turbulence": 1.4,
+            "ringRadius": 0.25
+          }
+        }
+      ]
+    },
+    {
+      "id": "elevation-matrix",
+      "number": "62",
+      "title": "ElevationMatrix",
+      "category": "Motion",
+      "original": true,
+      "description": "A year of small steps, seen in a new dimension.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "CSS 3D",
+        "Data",
+        "Spring",
+        "Heatmap"
+      ],
+      "dependencies": [
+        "React",
+        "Motion",
+        "Lucide React"
+      ],
+      "installNote": "Copy elevation-matrix.tsx, elevation-data.ts and elevation-matrix.css together. Install motion and lucide-react; React and React DOM are required. The component imports its scoped CSS and works without site styles or a Tailwind build. Pass data as unique YYYY-MM-DD dates and non-negative finite values. The deterministic demo covers 365 days ending on 2026-10-18. A trailing year uses 53 calendar columns. Intensity uses four equal positive-value bands. Set view, theme and perspective from your own controls; only the centered intensity legend remains inside the component.",
+      "code": "import ElevationMatrix from './elevation-matrix';\n\nexport default function Example() {\n  return <ElevationMatrix />;\n}",
+      "brief": "Build ElevationMatrix, an original Motiqo React and TypeScript activity explorer using motion/react and lucide-react. Use data?: Array<{ date: string; value: number; meta?: string }>, unitLabel, defaultView (2d or 3d) and defaultTheme (emerald, violet, amber or cyan). Include a deterministic 365-day example with streaks and peaks; normalize a trailing 365-day UTC calendar, reject invalid dates, duplicate dates and negative/non-finite values, and fill missing dates with zero. Use 53 calendar columns because 52 x 7 only accommodates 364 dates. Morph a flat heatmap into CSS 3D at rotateX(55deg) rotateZ(-38deg) with a spring of stiffness 220 and damping 24. Stagger tower extrusion by weekIndex * 0.008 + dayIndex * 0.004 only during view changes. Build exactly three visible faces per tower, using transform-only extrusion and directional side shading. In 3D, lift the hovered tower by 14px and Manhattan-distance-one neighbors by 6px. The five-level legend previews on hover or focus and toggles a persistent spotlight on click, dimming other faces to opacity 0.15 and compressing towers to 1px. Keep the component as a bare data sculpture without card chrome, headings, KPIs, camera selectors, view toggles, status captions or instructional copy. Expose view, theme and perspective (iso, front, wide) as props for the host inspector. Use English tooltip labels, dates, sample metadata and accessibility instructions. Center a compact Less-to-More intensity legend below the matrix, matching Motiqo typography and spacing. All view, palette and camera controls belong in the external settings panel. Use exactly one shared glass tooltip in a portal, following the pointer through motion values and a 400/28 spring; do not set React state for cursor coordinates or render per-cell tooltips. Support keyboard date exploration, touch, responsive sizing and static reduced motion. Preserve compact gallery rendering, paused motion, externally controlled view/theme/perspective, and complete observer/listener cleanup. Keep styles scoped and include all source files. No WebGL, Three.js, walking controls or free camera dragging. Optimize for smooth motion without claiming universal 60 FPS.",
+      "entry": "elevation-matrix.tsx",
+      "exportName": "ElevationMatrix",
+      "files": [
+        {
+          "source": "components/originals/elevation-matrix.tsx",
+          "target": "components/motiqo/elevation-matrix.tsx"
+        },
+        {
+          "source": "components/originals/elevation-data.ts",
+          "target": "components/motiqo/elevation-data.ts"
+        },
+        {
+          "source": "components/originals/elevation-matrix.css",
+          "target": "components/motiqo/elevation-matrix.css"
+        }
+      ],
+      "packageDependencies": {
+        "motion": "^12.42.2",
+        "lucide-react": "^1.27.0"
+      },
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "unitLabel",
+          "label": "Unit label",
+          "kind": "text",
+          "defaultValue": "contributions",
+          "maxLength": 50
+        },
+        {
+          "key": "defaultView",
+          "label": "View",
+          "kind": "select",
+          "defaultValue": "3d",
+          "choices": [
+            {
+              "value": "2d",
+              "label": "Flat 2D"
+            },
+            {
+              "value": "3d",
+              "label": "Elevation 3D"
+            }
+          ]
+        },
+        {
+          "key": "perspective",
+          "label": "Perspective",
+          "kind": "select",
+          "defaultValue": "iso",
+          "choices": [
+            {
+              "value": "iso",
+              "label": "Isometric"
+            },
+            {
+              "value": "front",
+              "label": "Tilted front"
+            },
+            {
+              "value": "wide",
+              "label": "Panoramic"
+            }
+          ]
+        },
+        {
+          "key": "defaultTheme",
+          "label": "Palette",
+          "kind": "select",
+          "defaultValue": "emerald",
+          "choices": [
+            {
+              "value": "emerald",
+              "label": "Emerald"
+            },
+            {
+              "value": "violet",
+              "label": "Violet"
+            },
+            {
+              "value": "amber",
+              "label": "Amber"
+            },
+            {
+              "value": "cyan",
+              "label": "Cyan"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "violet",
+          "label": "Violet skyline",
+          "settings": {
+            "unitLabel": "contributions",
+            "defaultView": "3d",
+            "defaultTheme": "violet",
+            "perspective": "iso"
+          }
+        },
+        {
+          "id": "flat",
+          "label": "Cyan heatmap",
+          "settings": {
+            "unitLabel": "contributions",
+            "defaultView": "2d",
+            "defaultTheme": "cyan",
+            "perspective": "iso"
+          }
+        }
+      ]
+    },
+    {
       "id": "sacred-lotus",
       "number": "48",
       "title": "SacredLotus",
@@ -959,6 +1734,46 @@
         {
           "source": "public/media/gallery/image-06.webp",
           "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-08.webp",
+          "target": "public/media/gallery/image-08.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        },
+        {
+          "source": "public/media/gallery/image-13.webp",
+          "target": "public/media/gallery/image-13.webp"
+        },
+        {
+          "source": "public/media/gallery/image-14.webp",
+          "target": "public/media/gallery/image-14.webp"
+        },
+        {
+          "source": "public/media/gallery/image-15.webp",
+          "target": "public/media/gallery/image-15.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
         }
       ],
       "packageDependencies": {},
@@ -1092,6 +1907,46 @@
         {
           "source": "public/media/gallery/image-06.webp",
           "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-08.webp",
+          "target": "public/media/gallery/image-08.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        },
+        {
+          "source": "public/media/gallery/image-13.webp",
+          "target": "public/media/gallery/image-13.webp"
+        },
+        {
+          "source": "public/media/gallery/image-14.webp",
+          "target": "public/media/gallery/image-14.webp"
+        },
+        {
+          "source": "public/media/gallery/image-15.webp",
+          "target": "public/media/gallery/image-15.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
         }
       ],
       "packageDependencies": {},
@@ -1191,7 +2046,7 @@
           "key": "city",
           "label": "City",
           "kind": "text",
-          "defaultValue": "Stockholm",
+          "defaultValue": "Buenos Aires",
           "maxLength": 60
         },
         {
@@ -1276,7 +2131,7 @@
           "id": "ember",
           "label": "Ember",
           "settings": {
-            "city": "Stockholm",
+            "city": "Buenos Aires",
             "temperature": 26,
             "condition": "Partly cloudy",
             "warmColor": "#ff663f",
@@ -5891,71 +6746,41 @@
     {
       "id": "event-horizon",
       "number": "18",
-      "title": "Event Horizon",
+      "title": "Prism Bloom",
       "category": "Motion",
-      "original": false,
-      "description": "Where light comes undone.",
-      "hint": "Move or touch to disturb the accretion disk.",
+      "original": true,
+      "description": "Pearlescent glass, unfolding around your touch.",
+      "hint": "Move or touch to flex the petals. Arrow keys explore; Home releases.",
       "source": "Motiqo",
       "sourceUrl": "/docs#installation",
       "tags": [
-        "WebGL2",
-        "Particles",
-        "Cosmic"
+        "WebGL",
+        "Glass",
+        "Sculpture",
+        "Interactive"
       ],
       "dependencies": [
-        "React"
+        "React",
+        "Three.js"
       ],
-      "installNote": "Copy event-horizon.tsx, liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The current renderer is Motiqo's spring-grain engine.",
-      "code": "import EventHorizon from './event-horizon';\n\nexport default function BlackHole() {\n  return <EventHorizon />;\n}",
-      "brief": "Integrate Event Horizon with Motiqo's spring-grain engine. Sample the supplied artwork into colored WebGL2 point sprites; damped springs restore each grain after radial pressure, vortex and oscillating pointer forces. Keep the current controls, smoothed pointer, touch and keyboard input, static reduced motion, mobile density cap, offscreen suspension, image fallback and complete resource cleanup. Copy the engine, shaders and local artwork with the component.",
-      "entry": "event-horizon.tsx",
-      "exportName": "EventHorizon",
+      "installNote": "Copy prism-bloom.tsx and install three and @types/three. Petal geometry, shader deformation, procedural studio lighting and fallback are included. No model or HDR download is required.",
+      "code": "import PrismBloom from './prism-bloom';\n\nexport default function Example() {\n  return <div style={{height: 640}}><PrismBloom /></div>;\n}",
+      "brief": "Integrate Prism Bloom, an original self-contained Motiqo sculpture of eleven asymmetrical pearlescent glass petals. Generate closed thin curved laminae with actual depth and MeshPhysicalMaterial transmission, thin-film iridescence and clearcoat. Generate studio reflections locally with RoomEnvironment and PMREM. Restore the original broad cupped petals, twisting centreline, close inner tier at z .34 and initial radial arrangement. A GPU brush bends only nearby material, updates surface normals for coherent moving highlights, and returns with a damped spring. Keep a restrained idle breath and bounded camera-relative tilt. Expose strength, radius, returnSpeed, iridescence, bloom, sculptureScale, compact and paused. Preserve touch and keyboard interaction, theme-aware rendering, static reduced motion, adaptive mobile detail, offscreen and hidden suspension, context restoration, vector fallback and complete GPU cleanup. No black hole, particle swarm, internal interface, image asset, remote HDR or external model.",
+      "entry": "prism-bloom.tsx",
+      "exportName": "PrismBloom",
       "files": [
         {
-          "source": "components/ui/event-horizon.tsx",
-          "target": "components/motiqo/event-horizon.tsx"
-        },
-        {
-          "source": "components/ui/liquid-relic.tsx",
-          "target": "components/motiqo/liquid-relic.tsx"
-        },
-        {
-          "source": "components/ui/liquid-particle-engine.ts",
-          "target": "components/motiqo/liquid-particle-engine.ts"
-        },
-        {
-          "source": "components/ui/liquid-particle-shaders.ts",
-          "target": "components/motiqo/liquid-particle-shaders.ts"
-        },
-        {
-          "source": "public/media/event-horizon.svg",
-          "target": "public/media/event-horizon.svg"
-        },
-        {
-          "source": "public/media/liquid-relic.svg",
-          "target": "public/media/liquid-relic.svg"
+          "source": "components/ui/prism-bloom.tsx",
+          "target": "components/motiqo/prism-bloom.tsx"
         }
       ],
-      "packageDependencies": {},
-      "devDependencies": {},
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
       "controls": [
-        {
-          "key": "restStyle",
-          "label": "Resting finish",
-          "kind": "select",
-          "defaultValue": "image",
-          "choices": [
-            {
-              "value": "image",
-              "label": "Solid image"
-            },
-            {
-              "value": "particles",
-              "label": "Particles"
-            }
-          ]
-        },
         {
           "key": "strength",
           "label": "Response",
@@ -5969,27 +6794,9 @@
           "key": "radius",
           "label": "Brush radius",
           "kind": "range",
-          "defaultValue": 220,
-          "min": 80,
-          "max": 400,
-          "step": 5
-        },
-        {
-          "key": "particleSpread",
-          "label": "Dispersion",
-          "kind": "range",
-          "defaultValue": 1,
-          "min": 0,
-          "max": 2,
-          "step": 0.05
-        },
-        {
-          "key": "liquid",
-          "label": "Fluidity",
-          "kind": "range",
-          "defaultValue": 1,
-          "min": 0,
-          "max": 2,
+          "defaultValue": 0.85,
+          "min": 0.3,
+          "max": 1.6,
           "step": 0.05
         },
         {
@@ -5997,8 +6804,26 @@
           "label": "Return",
           "kind": "range",
           "defaultValue": 1,
-          "min": 0.2,
+          "min": 0.3,
           "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "iridescence",
+          "label": "Iridescence",
+          "kind": "range",
+          "defaultValue": 0.85,
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "bloom",
+          "label": "Bloom",
+          "kind": "range",
+          "defaultValue": 0.85,
+          "min": 0.35,
+          "max": 1.25,
           "step": 0.05
         },
         {
@@ -6007,179 +6832,171 @@
           "kind": "range",
           "defaultValue": 1,
           "min": 0.6,
-          "max": 1.2,
+          "max": 1.25,
           "step": 0.05
         }
       ],
       "moods": [
         {
-          "id": "calm",
-          "label": "Calm",
+          "id": "pearl",
+          "label": "Pearl",
           "settings": {
-            "restStyle": "image",
             "strength": 1,
-            "radius": 220,
-            "particleSpread": 1,
-            "liquid": 1,
+            "radius": 0.85,
             "returnSpeed": 1,
+            "iridescence": 0.85,
+            "bloom": 0.85,
             "sculptureScale": 1
           }
         },
         {
-          "id": "expressive",
-          "label": "Expressive",
+          "id": "iris",
+          "label": "Iris",
           "settings": {
-            "restStyle": "image",
-            "strength": 1,
-            "radius": 220,
-            "particleSpread": 1,
-            "liquid": 1,
+            "strength": 1.2,
+            "radius": 0.85,
             "returnSpeed": 1,
+            "iridescence": 1,
+            "bloom": 1.05,
+            "sculptureScale": 1
+          }
+        },
+        {
+          "id": "frost",
+          "label": "Frost",
+          "settings": {
+            "strength": 0.6,
+            "radius": 0.85,
+            "returnSpeed": 1,
+            "iridescence": 0.35,
+            "bloom": 0.6,
             "sculptureScale": 1
           }
         }
       ]
     },
     {
-      "id": "liquid-relic",
+      "id": "liquid-artifact-hero",
       "number": "17",
-      "title": "Liquid Relic",
+      "title": "Liquid Artifact",
       "category": "Motion",
-      "original": false,
-      "description": "Metal, momentarily undone.",
-      "hint": "Move or touch to dissolve the metal into particles.",
+      "original": true,
+      "description": "A fixed accretion sculpture, alive with flowing particles.",
+      "hint": "Hover to spin the particles into a rapid local vortex. Click to release a wave.",
       "source": "Motiqo",
       "sourceUrl": "/docs#installation",
       "tags": [
         "WebGL2",
         "Particles",
-        "Flow"
+        "Interactive",
+        "Morphing"
       ],
       "dependencies": [
         "React"
       ],
-      "installNote": "Copy liquid-relic.tsx, liquid-particle-engine.ts and liquid-particle-shaders.ts together. Keep the included SVG in public/media or supply your own CORS-readable artwork. The current renderer is Motiqo's spring-grain engine.",
-      "code": "import LiquidRelic from './liquid-relic';\n\nexport default function Sculpture() {\n  return <LiquidRelic src=\"/media/liquid-relic.svg\" />;\n}",
-      "brief": "Integrate Liquid Relic with Motiqo's spring-grain engine. Sample the supplied artwork into colored WebGL2 point sprites; damped springs restore each grain after radial pressure, vortex and oscillating pointer forces. Keep the current controls, smoothed pointer, touch and keyboard input, static reduced motion, mobile density cap, offscreen suspension, image fallback and complete resource cleanup. Copy the engine, shaders and local artwork with the component.",
-      "entry": "liquid-relic.tsx",
-      "exportName": "LiquidRelic",
+      "installNote": "Copy the single liquid-artifact.tsx file. Geometry, GPU shaders and styles are included; only React is required. Configure particleDensity, vortexSpeed and vortexRadius through props or the Motiqo panel.",
+      "code": "import LiquidArtifact from './liquid-artifact';\n\nexport default function Example() {\n  return <div style={{ height: 720 }}><LiquidArtifact /></div>;\n}",
+      "brief": "Render Liquid Artifact as a standalone particle component with no visible title or internal interface. Default to a fixed black-hole silhouette with a luminous accretion disk and photon ring. Advect individual particles along this fixed surface; never rotate the black hole as an object. Do not add an opaque background circle or a fixed circular clipping mask. The external Motiqo panel offers Black Hole, Aether and Chalice through Mood, plus particle density, vortex speed and vortex radius (default 0.40). Keep the redundant Sculptural form selector hidden. Use a smooth Gaussian far-side lens with an inner rim matching the photon ring to avoid square shoulders and clipped joins. Follow site theme. Preserve cursor vortices with thin stretched filaments, click shockwaves, adaptive density, reduced motion, fallback, visibility suspension and complete cleanup.",
+      "entry": "liquid-artifact.tsx",
+      "exportName": "LiquidArtifact",
       "files": [
         {
-          "source": "components/ui/liquid-relic.tsx",
-          "target": "components/motiqo/liquid-relic.tsx"
-        },
-        {
-          "source": "components/ui/liquid-particle-engine.ts",
-          "target": "components/motiqo/liquid-particle-engine.ts"
-        },
-        {
-          "source": "components/ui/liquid-particle-shaders.ts",
-          "target": "components/motiqo/liquid-particle-shaders.ts"
-        },
-        {
-          "source": "public/media/liquid-relic.svg",
-          "target": "public/media/liquid-relic.svg"
+          "source": "components/ui/liquid-artifact.tsx",
+          "target": "components/motiqo/liquid-artifact.tsx"
         }
       ],
       "packageDependencies": {},
       "devDependencies": {},
       "controls": [
         {
-          "key": "restStyle",
-          "label": "Resting finish",
+          "key": "defaultShape",
+          "label": "Sculptural form",
           "kind": "select",
-          "defaultValue": "image",
+          "hidden": true,
+          "defaultValue": "2",
           "choices": [
             {
-              "value": "image",
-              "label": "Solid image"
+              "value": "2",
+              "label": "Black Hole"
             },
             {
-              "value": "particles",
-              "label": "Particles"
+              "value": "0",
+              "label": "Aether"
+            },
+            {
+              "value": "1",
+              "label": "Chalice"
             }
           ]
         },
         {
-          "key": "strength",
-          "label": "Response",
+          "key": "particleDensity",
+          "label": "Particle density",
+          "kind": "select",
+          "defaultValue": "auto",
+          "choices": [
+            {
+              "value": "auto",
+              "label": "Adaptive"
+            },
+            {
+              "value": "high",
+              "label": "High"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            }
+          ]
+        },
+        {
+          "key": "vortexSpeed",
+          "label": "Vortex speed",
           "kind": "range",
-          "defaultValue": 1,
+          "defaultValue": 16,
           "min": 0,
-          "max": 2,
-          "step": 0.05
+          "max": 30,
+          "step": 1
         },
         {
-          "key": "radius",
-          "label": "Brush radius",
+          "key": "vortexRadius",
+          "label": "Vortex radius",
           "kind": "range",
-          "defaultValue": 220,
-          "min": 80,
-          "max": 400,
-          "step": 5
-        },
-        {
-          "key": "particleSpread",
-          "label": "Dispersion",
-          "kind": "range",
-          "defaultValue": 1,
-          "min": 0,
-          "max": 2,
-          "step": 0.05
-        },
-        {
-          "key": "liquid",
-          "label": "Fluidity",
-          "kind": "range",
-          "defaultValue": 1,
-          "min": 0,
-          "max": 2,
-          "step": 0.05
-        },
-        {
-          "key": "returnSpeed",
-          "label": "Return",
-          "kind": "range",
-          "defaultValue": 1,
+          "defaultValue": 0.4,
           "min": 0.2,
-          "max": 2,
-          "step": 0.05
-        },
-        {
-          "key": "sculptureScale",
-          "label": "Scale",
-          "kind": "range",
-          "defaultValue": 1,
-          "min": 0.6,
-          "max": 1.2,
+          "max": 1.6,
           "step": 0.05
         }
       ],
       "moods": [
         {
-          "id": "calm",
-          "label": "Calm",
+          "id": "black-hole",
+          "label": "Black Hole",
           "settings": {
-            "restStyle": "image",
-            "strength": 1,
-            "radius": 220,
-            "particleSpread": 1,
-            "liquid": 1,
-            "returnSpeed": 1,
-            "sculptureScale": 1
+            "defaultShape": "2",
+            "particleDensity": "auto",
+            "vortexSpeed": 16,
+            "vortexRadius": 0.4
           }
         },
         {
-          "id": "expressive",
-          "label": "Expressive",
+          "id": "aether",
+          "label": "Aether",
           "settings": {
-            "restStyle": "image",
-            "strength": 1,
-            "radius": 220,
-            "particleSpread": 1,
-            "liquid": 1,
-            "returnSpeed": 1,
-            "sculptureScale": 1
+            "defaultShape": "0",
+            "particleDensity": "auto",
+            "vortexSpeed": 16,
+            "vortexRadius": 0.4
+          }
+        },
+        {
+          "id": "chalice",
+          "label": "Chalice",
+          "settings": {
+            "defaultShape": "1",
+            "particleDensity": "auto",
+            "vortexSpeed": 16,
+            "vortexRadius": 0.4
           }
         }
       ]
@@ -6955,8 +7772,8 @@
           "target": "public/media/atmosphere.webp"
         },
         {
-          "source": "public/media/tiger.webp",
-          "target": "public/media/tiger.webp"
+          "source": "public/media/starlit-cat.webp",
+          "target": "public/media/starlit-cat.webp"
         },
         {
           "source": "public/branding/Isotype.svg",
@@ -6981,8 +7798,8 @@
               "label": "Botanical"
             },
             {
-              "value": "/media/tiger.webp",
-              "label": "Tiger"
+              "value": "/media/starlit-cat.webp",
+              "label": "Starlit cat"
             }
           ]
         }
@@ -6997,9 +7814,9 @@
         },
         {
           "id": "expressive",
-          "label": "Tiger",
+          "label": "Starlit cat",
           "settings": {
-            "backgroundSrc": "/media/tiger.webp"
+            "backgroundSrc": "/media/starlit-cat.webp"
           }
         }
       ]

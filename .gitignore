@@ -11,3 +11,30 @@ out/
 /packages/cli/registry.json
 /packages/cli/skill/
 /public/downloads/
+
+# Local reference research and captures
+research/
+
+# Private working notes and local agent configuration
+/docs/*
+!/docs/readme/
+/AGENTS.md
+/CLAUDE.md
+/PENDIENTES.md
+/.cursor/
+/.agents/
+/.codex/
+/.claude/
+/.private-*/
+
+# Markdown is private by default; publish only intentional project documents.
+*.md
+!/README.md
+!/CONTRIBUTING.md
+!/SECURITY.md
+!/THIRD_PARTY_NOTICES.md
+!/LICENSE.md
+!/packages/cli/NOTICE.md
+!/packages/cli/THIRD_PARTY_NOTICES.md
+!/skills/motiqo/SKILL.md
+!**/*LICENSE*.md

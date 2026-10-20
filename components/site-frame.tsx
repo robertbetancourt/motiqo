@@ -11,7 +11,7 @@ export default function SiteFrame({children, paused=false, workspace=false, ...n
   const publish=useSiteNavigation(),actions=useRef(navigation);actions.current=navigation;
   const {collection,savedOnly,savedCount}=navigation;
   useLayoutEffect(()=>{
-    publish({collection,savedOnly,savedCount,onCollection:collection?()=>actions.current.onCollection?.():undefined,onSaved:collection?()=>actions.current.onSaved?.():undefined});
+    publish({collection,savedOnly,savedCount,onCollection:collection?(group)=>actions.current.onCollection?.(group):undefined,onSaved:collection?()=>actions.current.onSaved?.():undefined});
   },[publish,collection,savedOnly,savedCount]);
   useLayoutEffect(()=>()=>publish({}),[publish]);
   return <>

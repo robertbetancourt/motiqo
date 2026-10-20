@@ -1,8 +1,10 @@
 'use client';
 import {Component,memo,startTransition,useEffect,useRef,useState,type ReactNode} from 'react';
 import type {ElementId} from '@/lib/catalog';
+import type {Settings} from '@/lib/element-controls';
 import {preloadPreview} from '@/lib/preview-loaders';
 import {observePreviewReady} from '@/lib/preview-ready';
+import {startPreviewDemo} from '@/lib/preview-demo';
 import {schedulePreview,retainPreview,releasePreview} from '@/lib/preview-scheduler';
 import * as posters from '@/registry/previews.json';
 import {Demo} from './demos';
@@ -15,11 +17,14 @@ class PreviewBoundary extends Component<{children:ReactNode;onFailure:()=>void},
 }
 
 /** Posters render with the page. Only visible, loaded scenes may enter the GPU. */
-export default memo(function CardPreview({id,paused,priority=false}:{id:ElementId;paused:boolean;priority?:boolean}){
+export default memo(function CardPreview({id,paused,priority=false,settings}:{id:ElementId;paused:boolean;priority?:boolean;settings?:Settings}){
+  // A 2D poster avoids constructing 365 animated, three-faced towers in the grid.
+  const staticPreview=id==='elevation-matrix';
   const host=useRef<HTMLDivElement>(null),[mounted,setMounted]=useState(false),[visible,setVisible]=useState(false),[ready,setReady]=useState(false);
   const painted=useRef(false),stopped=useRef(paused),wake=useRef<()=>void>(()=>{});stopped.current=paused;
-  const artwork=posters.items[id];
+  const artwork=(posters.items as Partial<Record<ElementId,{dark:string;light:string}>>)[id];
   useEffect(()=>{
+    if(staticPreview)return;
     const root=host.current!,key=Symbol(id);
     let gone=false,active=false,near=false,live=false,loaded=false,loading=false,cancelLoad:(()=>void)|undefined,cancelMount:(()=>void)|undefined;
     const distance=()=>{const r=root.getBoundingClientRect();return r.bottom>0&&r.top<window.innerHeight?Math.max(0,r.top):100000+Math.abs(r.top);};
@@ -59,14 +64,17 @@ export default memo(function CardPreview({id,paused,priority=false}:{id:ElementI
     },{rootMargin:'200px'});
     actual.observe(root);anticipate.observe(root);
     return()=>{gone=true;wake.current=()=>{};actual.disconnect();anticipate.disconnect();cancelLoad?.();cancelMount?.();releasePreview(key);};
-  },[id]);
+  },[id,staticPreview]);
   useEffect(()=>wake.current(),[paused]);
   useEffect(()=>{
     if(mounted)return observePreviewReady(host.current!,()=>{painted.current=true;setReady(true);},()=>{painted.current=false;setReady(false);setMounted(false);});
   },[mounted]);
-  return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-live={mounted&&ready&&visible||undefined} data-preview-state={mounted?(visible?'live':'cached'):'poster'}>
-    <img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
-    <img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
-    {mounted&&<div className="card-live"><PreviewBoundary onFailure={()=>{painted.current=false;setReady(false);setMounted(false);}}><Demo id={id} paused={paused||!visible}/></PreviewBoundary></div>}
+  useEffect(()=>{
+    if(mounted&&ready&&visible&&!paused)return startPreviewDemo(host.current!,id);
+  },[id,mounted,ready,visible,paused]);
+  return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-preview-mode={staticPreview?'static-2d':undefined} data-live={mounted&&ready&&visible||undefined} data-preview-state={mounted?(visible?'live':'cached'):'poster'}>
+    {artwork&&<><img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
+    <img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></>}
+    {mounted&&<div className="card-live"><PreviewBoundary onFailure={()=>{painted.current=false;setReady(false);setMounted(false);}}><Demo id={id} paused={paused||!visible} autoDemo settings={settings}/></PreviewBoundary></div>}
   </div>;
 });

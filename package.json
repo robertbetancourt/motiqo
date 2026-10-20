@@ -18,9 +18,15 @@
     "pretest": "npm run distribution:build",
     "preverify:exports": "npm run distribution:pack",
     "predev": "npm run distribution:pack",
-    "readme:build": "node scripts/build-readme.mjs"
+    "readme:build": "node scripts/build-readme.mjs",
+    "readme:gifs": "node scripts/build-readme-gifs.mjs",
+    "assets:sync": "node scripts/sync-image-assets.mjs",
+    "predistribution:build": "npm run assets:sync",
+    "predistribution:pack": "npm run assets:sync",
+    "publication:check": "node scripts/check-public-files.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/merriweather-sans": "^5.3.0",
     "@fontsource-variable/urbanist": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@vercel/analytics": "^2.0.1",
