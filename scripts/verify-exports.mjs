@@ -6,7 +6,7 @@ import {spawnSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),fixture=fs.mkdtempSync(path.join(os.tmpdir(),'motiqo-react-export-'));
-const require=createRequire(import.meta.url),ts=require('typescript'),manifest=JSON.parse(fs.readFileSync(path.join(root,'registry/manifest.json'),'utf8')),lock=JSON.parse(fs.readFileSync(path.join(root,'package-lock.json'),'utf8'));
+const require=createRequire(import.meta.url),ts=require('typescript-compiler-api'),manifest=JSON.parse(fs.readFileSync(path.join(root,'registry/manifest.json'),'utf8')),lock=JSON.parse(fs.readFileSync(path.join(root,'package-lock.json'),'utf8'));
 // Evaluate the pure prop/example adapter without a Next.js runtime or alias.
 const source=fs.readFileSync(path.join(root,'lib/element-controls.ts'),'utf8'),adapter={exports:{}};
 new Function('require','module','exports',ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name==='../registry/manifest.json'?manifest:require(name),adapter,adapter.exports);

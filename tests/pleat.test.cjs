@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const Module = require('node:module');
-const ts = require('typescript');
+const ts = require('typescript-compiler-api');
 const React = require('react');
 const { JSDOM } = require('jsdom');
 
