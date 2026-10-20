@@ -10,7 +10,12 @@ import type {SentimentProps} from './originals/sentiment';
 import type { ElementId } from '@/lib/catalog';
 import type { Settings } from '@/lib/element-controls';
 
+const SonicAperture=dynamic(previewLoaders['sonic-aperture'],{ssr:false});
+const PrismCore=dynamic(previewLoaders['prism-core'],{ssr:false});
+const ApertureLoader=dynamic(previewLoaders['aperture-loader'],{ssr:false});
 const SilkAperture=dynamic(previewLoaders['silk-aperture'],{ssr:false});
+const ElevationMatrix=dynamic(previewLoaders['elevation-matrix'],{ssr:false});
+const VaporRing=dynamic(previewLoaders['vapor-ring'],{ssr:false});
 const Pleat=dynamic(previewLoaders['pleat'],{ssr:false});
 const Arbor=dynamic(previewLoaders['arbor'],{ssr:false});
 const Drawer=dynamic(previewLoaders['drawer'],{ssr:false});
@@ -20,8 +25,8 @@ const Lantern=dynamic(previewLoaders['lantern'],{ssr:false});
 const Crate=dynamic(previewLoaders['crate'],{ssr:false});
 const GlowNavDemo=dynamic(previewLoaders['glow-nav'],{ssr:false});
 const LiquidForm=dynamic(previewLoaders['liquid-sculpture'],{ssr:false});
-const LiquidRelic=dynamic(previewLoaders['liquid-relic'],{ssr:false});
-const EventHorizon=dynamic(previewLoaders['event-horizon'],{ssr:false});
+const LiquidArtifact=dynamic(previewLoaders['liquid-artifact-hero'],{ssr:false});
+const PrismBloom=dynamic(previewLoaders['event-horizon'],{ssr:false});
 const Pulse=dynamic(previewLoaders['pulse'],{ssr:false});
 const District=dynamic(previewLoaders['district'],{ssr:false});
 const Halo=dynamic(previewLoaders['halo'],{ssr:false});
@@ -74,6 +79,7 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, sil
   const still = paused || reduced;
   const motion={intensity:typeof settings.intensity==='number'?settings.intensity:1,speed:typeof settings.speed==='number'?settings.speed:1};
   return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`}>
+    {id==='elevation-matrix'&&<ElevationMatrix unitLabel={settings.unitLabel as string|undefined} view={autoDemo?'2d':settings.defaultView as '2d'|'3d'|undefined} theme={settings.defaultTheme as 'emerald'|'violet'|'amber'|'cyan'|undefined} perspective={settings.perspective as 'iso'|'front'|'wide'|undefined} compact={!expanded} paused={autoDemo||!!still}/>}
     {id==='sacred-lotus'&&<SacredLotus {...settings} progress={settings.playback==='controlled'?Number(settings.progress??56):undefined} interactive={settings.interactive!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='iris-turbine'&&<IrisTurbine {...settings} speed={settings.mode==='controlled'?Number(settings.speed??88):undefined} autoDemo={settings.mode!=='interactive'&&settings.mode!=='controlled'} interactive={settings.interactive!=='disabled'} showTelemetry={settings.showTelemetry==='enabled'} compact={!expanded} paused={!!still}/>}
     {id==='bokeh-terrain'&&<BokehTerrain {...settings} showStars={settings.showStars!=='disabled'} interactive={settings.interactive!=='disabled'} showTitle={settings.showTitle==='enabled'} compact={!expanded} paused={!!still}/>}
@@ -82,8 +88,9 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, sil
     {id==='water-ripple-carousel'&&<WaterRippleCarousel {...settings} compact={!expanded} paused={!!still}/>}
     {id==='aperture-carousel'&&<ApertureCarousel {...settings} compact={!expanded} paused={!!still}/>}
     {id==='thermal-smoke'&&<ThermalSmoke {...settings} autoTriggerIntro={settings.autoTriggerIntro!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='vapor-ring'&&<VaporRing {...settings} compact={!expanded} paused={!!still}/>}
     {id==='radial-spectrum'&&<RadialSpectrum {...settings} autoDemo={autoDemo} preset={settings.preset as 'inception'|'interstellar'|undefined} compact={!expanded} paused={!!still}/>}
-    {id==='type-garden'&&<TypeGarden {...settings} editable={expanded&&settings.editable!=='disabled'} palette={settings.palette as string|undefined} motionMode={settings.motionMode as 'breeze'|'grow'|'pulse'|'flutter'|undefined} showButterflies={settings.showButterflies!=='disabled'} showControls={expanded&&settings.showControls!=='disabled'} compact={!expanded} paused={!!still} onTextChange={onSettingsChange?defaultText=>onSettingsChange({defaultText}):undefined} onPaletteChange={onSettingsChange?palette=>onSettingsChange({palette}):undefined}/>}
+    {id==='type-garden'&&<TypeGarden {...settings} autoDemo={autoDemo} editable={expanded&&settings.editable!=='disabled'} palette={settings.palette as string|undefined} motionMode={settings.motionMode as 'breeze'|'grow'|'pulse'|'flutter'|undefined} showButterflies={settings.showButterflies!=='disabled'} showControls={expanded&&settings.showControls!=='disabled'} compact={!expanded} paused={!!still} onTextChange={onSettingsChange?defaultText=>onSettingsChange({defaultText}):undefined} onPaletteChange={onSettingsChange?palette=>onSettingsChange({palette}):undefined}/>}
     {id==='prism-button'&&<PrismPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
     {id==='spectral-button'&&<SpectralPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
     {id==='caustic-button'&&<CausticPreview {...settings} compact={!expanded} paused={!!still} perspective={settings.perspective==='enabled'}/>}
@@ -98,7 +105,7 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, sil
     {id==='charge'&&<Charge compact={!expanded} paused={!!still} percentage={settings.percentage as number|undefined} statusText={settings.statusText as string|undefined} flowSpeed={settings.flowSpeed as number|undefined} particleCount={settings.particleCount as number|undefined} primaryColor={settings.primaryColor as string|undefined} secondaryColor={settings.secondaryColor as string|undefined} animateCount={settings.animateCount!=='disabled'}/>}
     {id==='resonance'&&<Resonance compact={!expanded} paused={!!still} size={settings.size as number|undefined} speed={settings.speed as number|undefined} waveAmplitude={settings.waveAmplitude as number|undefined} ribbonCount={settings.ribbonCount as number|undefined} intensity={settings.intensity as number|undefined} colorPalette={[typeof settings.blue==='string'?settings.blue:'#234bff',typeof settings.light==='string'?settings.light:'#5a8cff',typeof settings.aura==='string'?settings.aura:'#1a3cff']}/>}
     {id==='meridian'&&<Meridian autoPlay={settings.autoPlay!=='disabled'} scrollSensitivity={settings.scrollSensitivity as number|undefined} cinematicIntro={settings.cinematicIntro!=='disabled'} compact={!expanded} paused={!!still} animationSpeed={settings.animationSpeed as number|undefined} replay={settings.replay as number|undefined} primaryRouteColor={settings.primaryRouteColor as string|undefined} incidentColor={settings.incidentColor as string|undefined} detourGradient={[typeof settings.detour1==='string'?settings.detour1:'#00f0ff',typeof settings.detour2==='string'?settings.detour2:'#326aff',typeof settings.detour3==='string'?settings.detour3:'#8b3dff',typeof settings.detour4==='string'?settings.detour4:'#ff0055']}/>}
-    {id==='sleeve'&&<Sleeve compact={!expanded} paused={!!still} tiltAngle={settings.tiltAngle as number|undefined} initialIndex={settings.initialIndex as number|undefined} springConfig={{stiffness:typeof settings.stiffness==='number'?settings.stiffness:140,damping:typeof settings.damping==='number'?settings.damping:22}}/>}
+    {id==='sleeve'&&<Sleeve autoDemo={autoDemo} compact={!expanded} paused={!!still} tiltAngle={settings.tiltAngle as number|undefined} initialIndex={settings.initialIndex as number|undefined} springConfig={{stiffness:typeof settings.stiffness==='number'?settings.stiffness:140,damping:typeof settings.damping==='number'?settings.damping:22}}/>}
     {id==='deck'&&<Deck compact={!expanded} paused={!!still} springSpeed={settings.springSpeed as number|undefined} speed={settings.speed as number|undefined} elevation={settings.elevation as number|undefined} autoPlay={settings.autoPlay!=='disabled'} colors={[typeof settings.green==='string'?settings.green:'#bdde83',typeof settings.cyan==='string'?settings.cyan:'#5ee7d3',typeof settings.violet==='string'?settings.violet:'#a791f4',typeof settings.gold==='string'?settings.gold:'#e6ce84']}/>}
     {id==='sentiment'&&<Sentiment compact={!expanded} paused={!!still} asset={settings.asset as SentimentProps['asset']} range={settings.range as SentimentProps['range']} amplitude={settings.amplitude as number|undefined} speed={settings.speed as number|undefined} strokeWidth={settings.strokeWidth as number|undefined} fillOpacity={settings.fillOpacity as number|undefined} onRangeChange={onSettingsChange?range=>onSettingsChange({range}):undefined}/>}
     {id==='companion'&&<Companion {...motion} compact={!expanded} paused={!!still} eyeResponse={settings.eyeResponse as number|undefined} warmColor={settings.warmColor as string|undefined} coolColor={settings.coolColor as string|undefined}/>}
@@ -113,8 +120,11 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, sil
     {id==='constellation'&&<Constellation {...motion} compact={!expanded} paused={!!still} nodes={settings.nodes as number|undefined} density={settings.density as number|undefined} accent={settings.accent as string|undefined}/>}
     {id==='district'&&<District {...motion} compact={!expanded} paused={!!still}/>}
     {id==='pulse'&&<Pulse compact={!expanded} paused={!!still} speed={settings.speed as number|undefined} amplitude={settings.amplitude as number|undefined} accent={settings.accent as string|undefined}/>}
-    {id==='event-horizon'&&<EventHorizon compact={!expanded} paused={!!still} restStyle={settings.restStyle as 'image'|'particles'|undefined} strength={settings.strength as number|undefined} radius={settings.radius as number|undefined} particleSpread={settings.particleSpread as number|undefined} liquid={settings.liquid as number|undefined} returnSpeed={settings.returnSpeed as number|undefined} sculptureScale={settings.sculptureScale as number|undefined}/>}
-    {id==='liquid-relic'&&<LiquidRelic compact={!expanded} paused={!!still} restStyle={settings.restStyle as 'image'|'particles'|undefined} strength={settings.strength as number|undefined} radius={settings.radius as number|undefined} particleSpread={settings.particleSpread as number|undefined} liquid={settings.liquid as number|undefined} returnSpeed={settings.returnSpeed as number|undefined} sculptureScale={settings.sculptureScale as number|undefined}/>}
+    {id==='sonic-aperture'&&<SonicAperture defaultListening={settings.defaultListening==='open'} lyrics={typeof settings.lyrics==='string'?settings.lyrics.split(/\n\s*\n/).map(v=>v.split('\n')):undefined} primaryColor={settings.primaryColor as string|undefined} accentColor={settings.accentColor as string|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='prism-core'&&<PrismCore {...settings} interactive={settings.interactive!=='disabled'} autoPlay={settings.autoPlay!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='aperture-loader'&&<ApertureLoader fontUrl="/media/clash-display-semibold.woff2" {...settings} interactive={settings.interactive!=='disabled'} autoPlay={settings.autoPlay!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='event-horizon'&&<PrismBloom {...settings} strength={settings.strength as number|undefined} radius={settings.radius as number|undefined} returnSpeed={settings.returnSpeed as number|undefined} iridescence={settings.iridescence as number|undefined} bloom={settings.bloom as number|undefined} sculptureScale={settings.sculptureScale as number|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='liquid-artifact-hero'&&<LiquidArtifact {...settings} defaultShape={Number(settings.defaultShape??2) as 0|1|2} particleDensity={settings.particleDensity as 'auto'|'high'|'medium'|undefined} compact={!expanded} paused={!!still}/>}
     {id === 'crate' && <Crate {...motion} count={typeof settings.count==='number'?settings.count:8} compact={!expanded} paused={!!still} />}
     {id === 'glow-nav' && <GlowNavDemo compact={!expanded} paused={!!still} duration={typeof settings.duration==='number'?settings.duration:.65} accent={typeof settings.accent==='string'?settings.accent:undefined}/>}
     {id === 'liquid-sculpture' && <LiquidForm compact={!expanded} paused={!!still} shape={settings.shape as 'knot'|'orbit'|'bloom'|undefined} liquidity={settings.liquidity as number|undefined} relief={settings.relief as number|undefined} scale={settings.scale as number|undefined} tint={settings.tint as string|undefined}/>}

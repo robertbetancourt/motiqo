@@ -47,14 +47,14 @@ test('Shared shell preserves the sidebar node and tool state across page replace
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}});
 test('Sidebar light follows the route even while prior Library metadata is being cleared',async()=>{const e=environment();let mounted=true,route='/library',query='';try{
  const Empty=()=>null,Link=({href,children,onNavigate,prefetch,...props})=>React.createElement('a',{href,...props},children);
- const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
+ const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'@/lib/component-groups':load('lib/component-groups.ts'),'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./component-navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
  Object.defineProperty(e.dom.window.HTMLElement.prototype,'offsetTop',{get(){return this.parentElement?.tagName==='NAV'?[...this.parentElement.querySelectorAll('a')].indexOf(this)*56:0;},configurable:true});
  await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();const sidebar=document.querySelector('aside');route='/docs';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();
  const active=[...sidebar.querySelectorAll('[aria-current="page"]')];assert.equal(active.length,1);assert.equal(active[0].textContent,'Getting started');assert.ok(Math.abs(parseFloat(sidebar.querySelector('nav').style.getPropertyValue('--nav-y'))-168)<.1);assert.equal(document.querySelector('aside'),sidebar);
  route='/library';query='saved=1';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:false,savedOnly:false})));
  assert.equal(sidebar.querySelector('[aria-current="page"]').textContent,'Saved','entering Saved never activates Library while page metadata catches up');
  query='';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true,savedOnly:true})));
- assert.equal(sidebar.querySelector('[aria-current="page"]').textContent,'Library','leaving Saved follows the URL immediately even with stale Saved props');
+ assert.equal(sidebar.querySelector('[aria-current="page"]').textContent,'Browse all','leaving Saved follows the URL immediately even with stale Saved props');
  await React.act(()=>e.root.unmount());mounted=false;assert.equal(e.frames.size,0);
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}});
 
@@ -65,16 +65,44 @@ test('Sidebar targets only the selected destination and keeps same-page Saved/Li
    event.preventDefault();if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
    let prevented=false;onNavigate?.({preventDefault:()=>{prevented=true;}});if(!prevented)navigations.push(href);
   }},children);
-  const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
+  const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'@/lib/component-groups':load('lib/component-groups.ts'),'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./component-navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
   Object.defineProperty(e.dom.window.HTMLElement.prototype,'offsetTop',{get(){return this.parentElement?.tagName==='NAV'?[...this.parentElement.querySelectorAll('a')].indexOf(this)*56:0;},configurable:true});
   const render=props=>React.act(()=>e.root.render(React.createElement(Sidebar,{onCollection:()=>{collectionCalls++;query='';},onSaved:()=>{savedCalls++;query='saved=1';},...props}))),active=()=>document.querySelector('nav [aria-current="page"]').textContent,link=name=>[...document.querySelectorAll('nav a')].find(a=>a.textContent===name);
   await render({});const sidebar=document.querySelector('aside'),nav=sidebar.querySelector('nav');
   await React.act(()=>link('Saved').click());assert.equal(active(),'Saved','the indicator targets Saved as soon as the link is activated');assert.deepEqual(navigations,['/library?saved=1']);assert.equal(collectionCalls,0);assert.equal(savedCalls,0);
   route='/library';query='saved=1';await render({savedOnly:false});assert.equal(active(),'Saved','stale page metadata cannot activate Library');
-  await React.act(()=>link('Library').click());assert.equal(active(),'Library');assert.equal(collectionCalls,1);assert.deepEqual(navigations,['/library?saved=1'],'same-page filtering never requests an intermediate route');await render({savedOnly:true});assert.equal(active(),'Library');
+  await React.act(()=>link('Components').click());assert.equal(active(),'Browse all');assert.equal(collectionCalls,1);assert.deepEqual(navigations,['/library?saved=1'],'same-page filtering never requests an intermediate route');await render({savedOnly:true});assert.equal(active(),'Browse all');
+  await React.act(()=>document.querySelector('[aria-label="Back to main navigation"]').click());assert.equal(active(),'Components');
   await React.act(()=>link('Saved').click());assert.equal(active(),'Saved');assert.equal(savedCalls,1);await render({savedOnly:false});assert.equal(active(),'Saved');
-  await React.act(()=>link('Library').dispatchEvent(new e.dom.window.MouseEvent('click',{bubbles:true,cancelable:true,ctrlKey:true})));assert.equal(active(),'Saved');assert.equal(collectionCalls,1,'modifier clicks retain native new-tab behavior');
-  query='';await render({savedOnly:true});assert.equal(active(),'Library','browser history changes follow the URL');assert.equal(document.querySelector('aside'),sidebar);assert.equal(sidebar.querySelector('nav'),nav);assert.equal(e.frames.size,0,'indicator motion needs no JavaScript animation loop');
+  await React.act(()=>link('Components').dispatchEvent(new e.dom.window.MouseEvent('click',{bubbles:true,cancelable:true,ctrlKey:true})));assert.equal(active(),'Saved');assert.equal(collectionCalls,1,'modifier clicks retain native new-tab behavior');
+  query='';await render({savedOnly:true});assert.equal(active(),'Browse all','browser history changes follow the URL');assert.equal(document.querySelector('aside'),sidebar);assert.equal(sidebar.querySelector('nav'),nav);assert.equal(e.frames.size,0,'indicator motion needs no JavaScript animation loop');
   await React.act(()=>e.root.unmount());mounted=false;
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}
+});
+
+test('Component groups cover the catalog once and reserve empty interface types for Soon',()=>{
+ const {componentGroups,componentGroupFor,componentGroupCounts,readComponentGroup}=load('lib/component-groups.ts'),items=require('../registry/manifest.json').items;
+ assert.equal(Object.values(componentGroupCounts).reduce((sum,count)=>sum+count,0),items.length);
+ for(const item of items)assert.equal(componentGroups.filter(group=>group.id===componentGroupFor(item)).length,1);
+ for(const id of ['buttons','carousels','navigation','loaders','typography','data','objects','linework','backgrounds'])assert.ok(componentGroupCounts[id]>0);
+ assert.deepEqual(componentGroups.filter(group=>componentGroupCounts[group.id]===0).map(group=>group.id),['cards','forms','dialogs']);
+ assert.equal(componentGroupFor(items.find(item=>item.id==='elevation-matrix')),'data');
+ assert.equal(componentGroupFor(items.find(item=>item.id==='water-ripple-carousel')),'carousels');
+ assert.equal(readComponentGroup('buttons'),'buttons');assert.equal(readComponentGroup('unknown'),undefined);
+});
+
+test('Components drill-down supports direct category links, Soon states, focus return and browser history',async()=>{
+ const e=environment();let route='/library',query='group=buttons';
+ try{
+  const Empty=()=>null,Link=React.forwardRef(({href,children,onNavigate,prefetch,...props},ref)=>React.createElement('a',{...props,ref,href,onClick:event=>{event.preventDefault();onNavigate?.({preventDefault(){}});}},children));
+  const groups=load('lib/component-groups.ts'),Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'@/lib/component-groups':groups,'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./component-navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
+  const render=()=>React.act(()=>e.root.render(React.createElement(Sidebar,{onCollection:group=>{query=group?`group=${group}`:'';}}))),selected=()=>document.querySelector('nav [aria-current=page]'),link=name=>[...document.querySelectorAll('nav a')].find(node=>node.textContent===name),back=()=>document.querySelector('[aria-label="Back to main navigation"]');
+  await render();assert.equal(selected().textContent,'Buttons');assert.equal(selected().getAttribute('href'),'/library?group=buttons');
+  assert.deepEqual([...document.querySelectorAll('nav button:disabled')].map(node=>node.textContent),['CardsSoon','FormsSoon','DialogsSoon']);
+  await React.act(()=>back().click());assert.equal(selected().textContent,'Components');assert.equal(document.activeElement,link('Components'));
+  await React.act(()=>link('Components').click());await render();assert.equal(selected().textContent,'Browse all');assert.equal(document.activeElement,back());
+  await React.act(()=>link('Carousels').click());await render();assert.equal(selected().textContent,'Carousels');
+  query='group=buttons';await render();assert.equal(selected().textContent,'Buttons','Back restores the active type');
+  route='/docs';query='';await render();assert.equal(back(),null);assert.equal(selected().textContent,'Getting started');
+ }finally{await React.act(()=>e.root.unmount());e.restore();}
 });

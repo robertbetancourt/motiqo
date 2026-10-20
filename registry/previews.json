@@ -24,16 +24,16 @@
       "light": "/previews/orbit-agent-light-2ba3531d6509.webp"
     },
     "water-ripple-carousel": {
-      "dark": "/previews/water-ripple-carousel-dark-2414bead7fbd.webp",
-      "light": "/previews/water-ripple-carousel-light-2414bead7fbd.webp"
+      "dark": "/previews/water-ripple-carousel-dark-bb9176c6b458.webp",
+      "light": "/previews/water-ripple-carousel-light-bb9176c6b458.webp"
     },
     "aperture-carousel": {
-      "dark": "/previews/aperture-carousel-dark-487449e574c7.webp",
-      "light": "/previews/aperture-carousel-light-487449e574c7.webp"
+      "dark": "/previews/aperture-carousel-dark-5ed14ba13c16.webp",
+      "light": "/previews/aperture-carousel-light-5ed14ba13c16.webp"
     },
     "thermal-smoke": {
-      "dark": "/previews/thermal-smoke-dark-1f7658acd48c.webp",
-      "light": "/previews/thermal-smoke-light-1f7658acd48c.webp"
+      "dark": "/previews/thermal-smoke-dark-3a9cc8168c24.webp",
+      "light": "/previews/thermal-smoke-light-3a9cc8168c24.webp"
     },
     "radial-spectrum": {
       "dark": "/previews/radial-spectrum-dark-0abf53192730.webp",
@@ -100,8 +100,8 @@
       "light": "/previews/sleeve-light-abb1f8867b9a.webp"
     },
     "meridian": {
-      "dark": "/previews/meridian-dark-6353036df085.webp",
-      "light": "/previews/meridian-light-1be7d77150a1.webp"
+      "dark": "/previews/meridian-dark-8c093413c781.webp",
+      "light": "/previews/meridian-light-dfeb5a4db4ac.webp"
     },
     "deck": {
       "dark": "/previews/deck-dark-ab006b43d2f8.webp",
@@ -128,8 +128,8 @@
       "light": "/previews/galaxy-light-e8f555b6166a.webp"
     },
     "luma": {
-      "dark": "/previews/luma-dark-6ab48bcb99c6.webp",
-      "light": "/previews/luma-light-94f5c80c7ec6.webp"
+      "dark": "/previews/luma-dark-9b4d9e259bc8.webp",
+      "light": "/previews/luma-light-aa39f206859d.webp"
     },
     "constellation": {
       "dark": "/previews/constellation-dark-4a9f52b31ca7.webp",
@@ -160,12 +160,12 @@
       "light": "/previews/pulse-light-94165c4e342b.webp"
     },
     "event-horizon": {
-      "dark": "/previews/event-horizon-dark-083d8d25a3ac.webp",
-      "light": "/previews/event-horizon-light-dceef385613b.webp"
+      "dark": "/previews/event-horizon-dark-4022c451e9fc.webp",
+      "light": "/previews/event-horizon-light-37ec1b1a77ea.webp"
     },
-    "liquid-relic": {
-      "dark": "/previews/liquid-relic-dark-c8055a1d931d.webp",
-      "light": "/previews/liquid-relic-light-00ba5a7739d8.webp"
+    "liquid-artifact-hero": {
+      "dark": "/previews/liquid-artifact-hero-dark-c935db0de25f.webp",
+      "light": "/previews/liquid-artifact-hero-light-f67121f88a63.webp"
     },
     "crate": {
       "dark": "/previews/crate-dark-c80d265eabca.webp",
@@ -204,12 +204,32 @@
       "light": "/previews/pleat-light-a98f5b5b24a8.webp"
     },
     "gilded-signal": {
-      "dark": "/previews/gilded-signal-dark-0985e625e538.webp",
-      "light": "/previews/gilded-signal-light-a227fdfa769d.webp"
+      "dark": "/previews/gilded-signal-dark-56d4d702ffb7.webp",
+      "light": "/previews/gilded-signal-light-56d4d702ffb7.webp"
     },
     "silk-aperture": {
       "dark": "/previews/silk-aperture-dark-2d971d4eef2e.webp",
       "light": "/previews/silk-aperture-light-2d971d4eef2e.webp"
+    },
+    "elevation-matrix": {
+      "dark": "/previews/elevation-matrix-dark-0be723860fd9.webp",
+      "light": "/previews/elevation-matrix-light-56269542b656.webp"
+    },
+    "vapor-ring": {
+      "dark": "/previews/vapor-ring-dark-a3b3e908a2a2.webp",
+      "light": "/previews/vapor-ring-light-a3b3e908a2a2.webp"
+    },
+    "sonic-aperture": {
+      "dark": "/previews/sonic-aperture-dark-93581b59fb2c.webp",
+      "light": "/previews/sonic-aperture-light-93581b59fb2c.webp"
+    },
+    "prism-core": {
+      "dark": "/previews/prism-core-dark-526f10d3699a.webp",
+      "light": "/previews/prism-core-light-526f10d3699a.webp"
+    },
+    "aperture-loader": {
+      "dark": "/previews/aperture-loader-dark-134177a809f6.webp",
+      "light": "/previews/aperture-loader-light-134177a809f6.webp"
     }
   }
 }

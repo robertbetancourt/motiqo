@@ -94,7 +94,7 @@ CI runs these checks, dependency auditing and secret scanning. Passing checks do
 
 Motiqo is still evolving. APIs and visuals may change before a stable release. Bug reports, thoughtful ideas and small fixes are welcome. If something moves you, a star helps others find the project.
 
-[Contributing](CONTRIBUTING.md) · [Architecture](docs/architecture.md) · [Roadmap](PENDIENTES.md) · [Security policy](SECURITY.md) · [Deployment checklist](docs/security.md)
+[Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Code and media notices](THIRD_PARTY_NOTICES.md)
 
 ## License and resources
 

@@ -1,4 +1,4 @@
-/** Original, asset-free Motiqo studies. Custom photographs can replace any study. */
+/** Local Motiqo image collections, with procedural studies for custom slides. */
 export type GallerySlide = {
   image?: string;
   title?: string;
@@ -8,56 +8,25 @@ export type GallerySlide = {
   seed?: number;
 };
 export const tidalSlides: GallerySlide[] = [
-  {
-    image: "/media/gallery/image-01.webp",
-    alt: "Motiqo image study 1",
-  },
-  {
-    image: "/media/gallery/image-02.webp",
-    alt: "Motiqo image study 2",
-  },
-  {
-    image: "/media/gallery/image-03.webp",
-    alt: "Motiqo image study 3",
-  },
-  {
-    image: "/media/gallery/image-04.webp",
-    alt: "Motiqo image study 4",
-  },
-  {
-    image: "/media/gallery/image-05.webp",
-    alt: "Motiqo image study 5",
-  },
-  {
-    image: "/media/gallery/image-06.webp",
-    alt: "Motiqo image study 6",
-  },
+  {image:'/media/gallery/image-01.webp',alt:"A red-lit portrait with silver hair"},
+  {image:'/media/gallery/image-02.webp',alt:"A face framed by soft pink blossoms"},
+  {image:'/media/gallery/image-03.webp',alt:"A stag in a painterly forest"},
+  {image:'/media/gallery/image-04.webp',alt:"A portrait wrapped in flowing blue and orange fabric"},
+  {image:'/media/gallery/image-05.webp',alt:"Sunlight entering a cavern above still water"},
+  {image:'/media/gallery/image-06.webp',alt:"A cliffside temple beside a waterfall"},
 ];
+/** A separate selection from assets/images, optimized for the iris gallery. */
 export const irisSlides: GallerySlide[] = [
-  {
-    image: "/media/gallery/image-04.webp",
-    alt: "Motiqo image study 4",
-  },
-  {
-    image: "/media/gallery/image-05.webp",
-    alt: "Motiqo image study 5",
-  },
-  {
-    image: "/media/gallery/image-06.webp",
-    alt: "Motiqo image study 6",
-  },
-  {
-    image: "/media/gallery/image-01.webp",
-    alt: "Motiqo image study 1",
-  },
-  {
-    image: "/media/gallery/image-02.webp",
-    alt: "Motiqo image study 2",
-  },
-  {
-    image: "/media/gallery/image-03.webp",
-    alt: "Motiqo image study 3",
-  },
+  {image:'/media/gallery/image-07.webp',alt:"A black cat beneath a swirling starry sky"},
+  {image:'/media/gallery/image-08.webp',alt:"A floating mechanical castle above the clouds"},
+  {image:'/media/gallery/image-09.webp',alt:"An open meadow beneath luminous clouds"},
+  {image:'/media/gallery/image-10.webp',alt:"Two swans on a pink lake"},
+  {image:'/media/gallery/image-11.webp',alt:"A sculptural arrangement of vivid flowers"},
+  {image:'/media/gallery/image-12.webp',alt:"White blossoms in warm evening light"},
+  {image:'/media/gallery/image-13.webp',alt:"A space station above a planet"},
+  {image:'/media/gallery/image-14.webp',alt:"A small bird among warm autumn branches"},
+  {image:'/media/gallery/image-15.webp',alt:"A luminous portrait with butterfly-like markings"},
+  {image:'/media/gallery/image-16.webp',alt:"A sailboat on a star-filled sea"},
 ];
 export function galleryWrap(index: number, count: number) {
   return count > 0 ? ((index % count) + count) % count : 0;

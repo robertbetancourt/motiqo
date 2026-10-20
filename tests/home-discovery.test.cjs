@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 function load(file,mocks={}){const filename=path.resolve(__dirname,'..',file),m=new Module(filename,module);m.filename=filename;m.paths=Module._nodeModulePaths(path.dirname(filename));const normal=m.require.bind(m);m.require=id=>mocks[id]??normal(id);m._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText,filename);return m.exports;}
 const controls=load('lib/element-controls.ts'),catalog=load('lib/catalog.ts',{'./element-controls':controls}),collections=load('lib/home-collections.ts',{'./catalog':catalog});
 test('The homepage has ten distinct curated picks and complete, disjoint discovery collections with real category counts',()=>{
- const top=collections.homeCollections[0];assert.equal(top.items[0].id,'thermal-smoke');assert.equal(top.ranked,true);assert.equal(top.items.length,10);assert.equal(new Set(top.items.map(e=>e.id)).size,10);
+ const top=collections.homeCollections[0];assert.equal(top.items[0].id,'thermal-smoke');assert.equal(top.items[9].id,'water-ripple-carousel');assert.equal(top.ranked,true);assert.equal(top.items.length,10);assert.equal(new Set(top.items.map(e=>e.id)).size,10);
  const ids=collections.homeCollections.flatMap(row=>row.items.map(e=>{assert.ok(catalog.elements.some(item=>item.id===e.id));return e.id;}));assert.equal(new Set(ids).size,ids.length);
  for(const topic of collections.homeTopics){assert.ok(topic.count>0);assert.equal(topic.count,catalog.elements.filter(e=>e.tags.includes(topic.tag)).length);}
 });
@@ -25,7 +25,9 @@ test('Discovery rails navigate, previews autoplay, saves persist and the existin
 });
 
 test('A source action from the homepage opens the Library source view with its configured element',async()=>{
- const Page=load('app/library/page.tsx',{'@/components/library':{default:()=>null},'@/lib/registry.server':{originalSources:async()=>({})}}).default;
+ const Page=load('app/library/page.tsx',{'@/components/library':{default:()=>null},'@/lib/registry.server':{originalSources:async()=>({})},'@/lib/component-groups':load('lib/component-groups.ts')}).default;
  const page=await Page({searchParams:Promise.resolve({element:'gyro',view:'code',config:'example'})});assert.equal(page.props.initialElement,'gyro');assert.equal(page.props.initialView,'code');assert.equal(page.props.initialConfiguration,'example');
  const invalid=await Page({searchParams:Promise.resolve({view:'unknown'})});assert.equal(invalid.props.initialView,'preview');
+ const group=await Page({searchParams:Promise.resolve({group:'carousels'})});assert.equal(group.props.initialGroup,'carousels');
+ const invalidGroup=await Page({searchParams:Promise.resolve({group:['buttons','cards']})});assert.equal(invalidGroup.props.initialGroup,undefined);
 });

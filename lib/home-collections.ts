@@ -4,10 +4,10 @@ import {elements,type ElementId} from './catalog';
 const select=(ids:readonly ElementId[])=>ids.map(id=>elements.find(element=>element.id===id)!);
 export const homeCollections=[
   {id:'motiqo-ten',title:'The Motiqo 10',ranked:true,items:select([
-    'thermal-smoke','sacred-lotus','opaline-orb','sleeve','atelier','companion','stratum','inkshift','radial-spectrum','optical-button',
+    'thermal-smoke','sacred-lotus','opaline-orb','sleeve','atelier','companion','stratum','inkshift','radial-spectrum','water-ripple-carousel',
   ])},
   {id:'fresh-perspectives',title:'Fresh perspectives',ranked:false,items:select([
-    'iris-turbine','bokeh-terrain','orbit-agent','type-garden','water-ripple-carousel','charge',
+    'iris-turbine','bokeh-terrain','orbit-agent','type-garden','aperture-carousel','charge',
   ])},
   {id:'made-to-react',title:'Made to react',ranked:false,items:select([
     'gyro','drawer','lantern','arbor','lenticular-button','glow-nav',
