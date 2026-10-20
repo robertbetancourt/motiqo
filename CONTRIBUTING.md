@@ -8,6 +8,10 @@ Keep components portable: include local imports and assets in registry/manifest.
 
 Contribute code you have the right to license under MIT. Identify third-party sources and licenses; visual inspiration does not establish authorship of copied code. Artwork and audio need separate permission. See LICENSE and THIRD_PARTY_NOTICES.md. Report vulnerabilities as described in SECURITY.md.
 
+## Repository contents
+
+Keep personal notes, local agent rules, research and raw captures outside Git. The docs directory is private except for docs/readme, which supplies README images. Only deliberately public Markdown documents are allowed by .gitignore. Do not force-add ignored working notes. Run npm run publication:check before publishing; CI also checks tracked paths.
+
 ## README animations
 
 The development-only authoring route `/preview-capture/<id>?theme=dark&motion=1` renders the real component in a 320 × 320 frame. Without motion=1, the existing static poster mode is preserved. Record that surface into numbered PNGs under `screenshots/readme-motion/<id>/` with a timing.json containing id, times (capture milliseconds), and duration (milliseconds). These raw recordings stay ignored by Git.

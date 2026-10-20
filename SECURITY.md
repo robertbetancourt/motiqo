@@ -12,4 +12,4 @@ Include the affected revision, reproduction steps, expected impact and a minimal
 
 CI runs redacted secret scanning, dependency auditing, tests, builds and export verification. These checks cannot prove the absence of vulnerabilities. Never add real credentials to public code, examples, issues or screenshots. Rotate an exposed credential even after deleting it from a commit.
 
-See [deployment security](docs/security.md) for the remaining Vercel and GitHub settings. See THIRD_PARTY_NOTICES.md for code and media permissions.
+See THIRD_PARTY_NOTICES.md for code and media permissions.
