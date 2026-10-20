@@ -10,7 +10,7 @@ for(const item of manifest.items){
   const entry={};
   for(const theme of ['dark','light']){
     const source=path.join(input,`${item.id}-${theme}.png`);if(!fs.existsSync(source))throw Error(`Capture the real ${item.id}/${theme} preview before generating its poster.`);
-    const metadata=await sharp(source).metadata();if(metadata.width!==320||metadata.height!==320)throw Error(`Invalid capture size: ${source}`);
+    const metadata=await sharp(source).metadata();if(!((metadata.width===320&&metadata.height===320)||(metadata.width===400&&metadata.height===300)))throw Error(`Invalid capture size: ${source}`);
     const bytes=await sharp(source).webp({quality:88,effort:6}).toBuffer(),hash=crypto.createHash('sha256').update(bytes).digest('hex').slice(0,12),name=`${item.id}-${theme}-${hash}.webp`;
     fs.writeFileSync(path.join(output,name),bytes);generated.add(name);entry[theme]=`/previews/${name}`;
   }

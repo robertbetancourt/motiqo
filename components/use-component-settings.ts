@@ -27,6 +27,30 @@ export default function useComponentSettings(id:ElementId,initial?:Settings){
           }
         }catch{}
       }
+      if(!shared&&id==='elastic-showcase'){
+        try{
+          const migrationKey=storageKey(id)+':dark-default-v2';
+          if(!window.localStorage.getItem(migrationKey)){
+            if(stored&&typeof stored==='object'&&!Array.isArray(stored)&&(stored as Settings).backgroundColor==='#fdfce6'){
+              stored={...stored,backgroundColor:defaultsFor(id).backgroundColor,textColor:defaultsFor(id).textColor};
+              window.localStorage.setItem(storageKey(id),JSON.stringify(stored));
+            }
+            window.localStorage.setItem(migrationKey,'1');
+          }
+        }catch{}
+      }
+      if(!shared&&id==='elevation-matrix'){
+        try{
+          const migrationKey=storageKey(id)+':2d-default-v2';
+          if(!window.localStorage.getItem(migrationKey)){
+            if(stored&&typeof stored==='object'&&!Array.isArray(stored)&&(stored as Settings).defaultView==='3d'){
+              stored={...stored,defaultView:'2d'};
+              window.localStorage.setItem(storageKey(id),JSON.stringify(stored));
+            }
+            window.localStorage.setItem(migrationKey,'1');
+          }
+        }catch{}
+      }
       setSettings(shared??normalizeSettings(id,stored));setReady(true);
     }
     restore();window.addEventListener('popstate',restore);

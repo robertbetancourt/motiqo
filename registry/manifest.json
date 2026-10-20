@@ -3,6 +3,297 @@
   "version": "0.1.0",
   "items": [
     {
+      "id": "meridian-veil",
+      "number": "68",
+      "title": "Meridian Veil",
+      "category": "Objects",
+      "original": true,
+      "addedAt": "2026-10-20",
+      "description": "Silken particle meridians drape and ripple around a luminous inner core.",
+      "hint": "Move pointer to tilt the sphere and swell the veil. Theme switcher or 't' cycles colorways. Space pauses.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Three.js",
+        "WebGL2",
+        "Particles",
+        "Shader",
+        "Generative"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Install three (and @types/three for TypeScript), then copy the self-contained meridian-veil.tsx file. Give its parent an explicit height. Themes include mint, silver, magenta, violet, and ice.",
+      "code": "import MeridianVeil from './meridian-veil';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><MeridianVeil theme=\"mint\" waveAmplitude={0.62} speed={1} interactive /></div>;\n}",
+      "brief": "Integrate MeridianVeil, a production-grade WebGL2 Three.js generative particle curtain sphere. A 3-layer architecture inside a central group: an atmospheric glow halo plane behind, an inner glass core sphere with Fresnel and hemispheric shading, and a particle curtain made of 60 vertical meridians x 150 points (9,000 particles) using 3D simplex noise (snoise), polar pinch elongation, asymmetric rotating wave envelope, radial displacement up to +0.65, and tangential lateral drape. Includes 5 chromatic palettes ('mint', 'silver', 'magenta', 'violet', 'ice'), spring damping pointer tilt, keyboard navigation, SVG fallback, and full lifecycle cleanup.",
+      "entry": "meridian-veil.tsx",
+      "exportName": "MeridianVeil",
+      "files": [
+        {
+          "source": "components/originals/meridian-veil.tsx",
+          "target": "components/motiqo/meridian-veil.tsx"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "theme",
+          "label": "Theme",
+          "kind": "select",
+          "defaultValue": "mint",
+          "choices": [
+            { "value": "mint", "label": "Mint" },
+            { "value": "silver", "label": "Silver" },
+            { "value": "magenta", "label": "Magenta" },
+            { "value": "violet", "label": "Violet" },
+            { "value": "ice", "label": "Ice" }
+          ]
+        },
+        {
+          "key": "meridianCount",
+          "label": "Meridians",
+          "kind": "range",
+          "defaultValue": 60,
+          "min": 24,
+          "max": 120,
+          "step": 6
+        },
+        {
+          "key": "pointsPerMeridian",
+          "label": "Density",
+          "kind": "range",
+          "defaultValue": 150,
+          "min": 60,
+          "max": 240,
+          "step": 10
+        },
+        {
+          "key": "waveAmplitude",
+          "label": "Wave",
+          "kind": "range",
+          "defaultValue": 0.62,
+          "min": 0,
+          "max": 1.2,
+          "step": 0.01
+        },
+        {
+          "key": "speed",
+          "label": "Speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.1,
+          "max": 3,
+          "step": 0.1
+        },
+        {
+          "key": "interactive",
+          "label": "Interaction",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            { "value": "enabled", "label": "Enabled" },
+            { "value": "disabled", "label": "Disabled" }
+          ]
+        },
+        {
+          "key": "showThemeSwitcher",
+          "label": "Theme dots",
+          "kind": "select",
+          "defaultValue": "show",
+          "choices": [
+            { "value": "show", "label": "Visible" },
+            { "value": "hide", "label": "Hidden" }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "mint",
+          "label": "Mint",
+          "settings": {
+            "theme": "mint",
+            "meridianCount": 60,
+            "pointsPerMeridian": 150,
+            "waveAmplitude": 0.62,
+            "speed": 1,
+            "interactive": "enabled",
+            "showThemeSwitcher": "show"
+          }
+        },
+        {
+          "id": "magenta",
+          "label": "Magenta",
+          "settings": {
+            "theme": "magenta",
+            "meridianCount": 72,
+            "pointsPerMeridian": 180,
+            "waveAmplitude": 0.85,
+            "speed": 1.2,
+            "interactive": "enabled",
+            "showThemeSwitcher": "show"
+          }
+        },
+        {
+          "id": "silver",
+          "label": "Silver",
+          "settings": {
+            "theme": "silver",
+            "meridianCount": 48,
+            "pointsPerMeridian": 120,
+            "waveAmplitude": 0.45,
+            "speed": 0.8,
+            "interactive": "enabled",
+            "showThemeSwitcher": "show"
+          }
+        }
+      ]
+    },
+    {
+      "id": "elastic-showcase",
+      "number": "67",
+      "title": "Elastic Showcase",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-20",
+      "previewSize": "cinema",
+      "description": "Editorial images yield, dissolve and come into focus.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Editorial",
+        "Carousel"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy all three TS/TSX files and the five bundled /media/elastic images. Includes scoped CSS. Requires three and @types/three. Supply your own HTTPS or local image URLs through items. Autoplay stops for reduced motion, focus, hover, hidden pages and offscreen previews.",
+      "code": "import ElasticShowcase from './elastic-showcase';\n\nexport default function Example(){return <div style={{height:620}}><ElasticShowcase /></div>;}",
+      "brief": "Integrate ElasticShowcase from the complete Motiqo source. Preserve the warm ivory editorial layout, central 48x48 WebGL plane, left overlapping title, technical roles and vertical thumbnail rail. Animate elastic mesh tension, a center-out radial/simplex-noise/luminance reveal, outward displacement, incoming 1.18-to-1 zoom and subtle frontier chromatic aberration. Synchronize uniquely identified SVG anisotropic motion blur with outgoing and incoming typography. Expose items, autoPlay, interval, transitionDuration, backgroundColor, textColor and className. Keep settings in the host panel. Preserve pointer UV parallax, debounced wheel and keyboard navigation, static image fallback, responsive layout, reduced motion, pause and complete GPU/observer/timer cleanup. Bundle all five local images and preserve their attribution notices.",
+      "entry": "elastic-showcase.tsx",
+      "exportName": "ElasticShowcase",
+      "files": [
+        {
+          "source": "components/originals/elastic-showcase.tsx",
+          "target": "components/motiqo/elastic-showcase.tsx"
+        },
+        {
+          "source": "components/originals/elastic-showcase-engine.ts",
+          "target": "components/motiqo/elastic-showcase-engine.ts"
+        },
+        {
+          "source": "components/originals/elastic-showcase-shaders.ts",
+          "target": "components/motiqo/elastic-showcase-shaders.ts"
+        },
+        {
+          "source": "public/media/elastic/image-18.webp",
+          "target": "public/media/elastic/image-18.webp"
+        },
+        {
+          "source": "public/media/elastic/image-17.webp",
+          "target": "public/media/elastic/image-17.webp"
+        },
+        {
+          "source": "public/media/elastic/image-16.webp",
+          "target": "public/media/elastic/image-16.webp"
+        },
+        {
+          "source": "public/media/elastic/image-15.webp",
+          "target": "public/media/elastic/image-15.webp"
+        },
+        {
+          "source": "public/media/elastic/image-14.webp",
+          "target": "public/media/elastic/image-14.webp"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "interval",
+          "label": "Hold time",
+          "kind": "range",
+          "defaultValue": 3800,
+          "min": 1000,
+          "max": 10000,
+          "step": 100
+        },
+        {
+          "key": "transitionDuration",
+          "label": "Transition",
+          "kind": "range",
+          "defaultValue": 1100,
+          "min": 300,
+          "max": 2400,
+          "step": 50
+        },
+        {
+          "key": "backgroundColor",
+          "label": "Background",
+          "kind": "color",
+          "defaultValue": "#05060a"
+        },
+        {
+          "key": "textColor",
+          "label": "Text",
+          "kind": "color",
+          "defaultValue": "#fdfce6"
+        }
+      ],
+      "moods": [
+        {
+          "id": "expressive",
+          "label": "After dark",
+          "settings": {
+            "autoPlay": "enabled",
+            "backgroundColor": "#05060a",
+            "textColor": "#fdfce6",
+            "interval": 3800,
+            "transitionDuration": 1100
+          }
+        },
+        {
+          "id": "calm",
+          "label": "Ivory",
+          "settings": {
+            "autoPlay": "enabled",
+            "backgroundColor": "#fdfce6",
+            "textColor": "#111111",
+            "interval": 3800,
+            "transitionDuration": 1100
+          }
+        }
+      ]
+    },
+    {
       "id": "sonic-aperture",
       "number": "64",
       "title": "Sonic Aperture",
@@ -701,7 +992,7 @@
           "key": "defaultView",
           "label": "View",
           "kind": "select",
-          "defaultValue": "3d",
+          "defaultValue": "2d",
           "choices": [
             {
               "value": "2d",

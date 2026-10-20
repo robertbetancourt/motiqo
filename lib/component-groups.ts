@@ -1,5 +1,14 @@
 import * as registry from '../registry/manifest.json';
 
+export function isElementNew(element?: { addedAt?: string } | null): boolean {
+  if (!element?.addedAt) return false;
+  const added = new Date(element.addedAt).getTime();
+  if (Number.isNaN(added)) return false;
+  const twoWeeksMs = 14 * 24 * 60 * 60 * 1000;
+  const diff = Date.now() - added;
+  return diff >= 0 && diff <= twoWeeksMs;
+}
+
 export const componentGroups = [
   { id: 'buttons', title: 'Buttons', section: 'Interface' },
   { id: 'carousels', title: 'Carousels', section: 'Interface' },
@@ -41,4 +50,8 @@ export function readComponentGroup(value: string | null | undefined): ComponentG
 const catalogItems = registry.items;
 export const componentGroupCounts = Object.fromEntries(componentGroups.map(group => [
   group.id, catalogItems.filter(item => componentGroupFor(item) === group.id).length,
+])) as Record<ComponentGroup, number>;
+
+export const newComponentsByGroup = Object.fromEntries(componentGroups.map(group => [
+  group.id, catalogItems.filter(item => componentGroupFor(item) === group.id && isElementNew(item as any)).length,
 ])) as Record<ComponentGroup, number>;

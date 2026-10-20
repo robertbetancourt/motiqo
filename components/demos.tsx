@@ -14,6 +14,7 @@ const SonicAperture=dynamic(previewLoaders['sonic-aperture'],{ssr:false});
 const PrismCore=dynamic(previewLoaders['prism-core'],{ssr:false});
 const ApertureLoader=dynamic(previewLoaders['aperture-loader'],{ssr:false});
 const SilkAperture=dynamic(previewLoaders['silk-aperture'],{ssr:false});
+const ElasticShowcase=dynamic(previewLoaders['elastic-showcase'],{ssr:false});
 const ElevationMatrix=dynamic(previewLoaders['elevation-matrix'],{ssr:false});
 const VaporRing=dynamic(previewLoaders['vapor-ring'],{ssr:false});
 const Pleat=dynamic(previewLoaders['pleat'],{ssr:false});
@@ -39,6 +40,7 @@ const Holdings=dynamic(previewLoaders['holdings'],{ssr:false});
 const Companion=dynamic(previewLoaders['companion'],{ssr:false});
 const Deck=dynamic(previewLoaders['deck'],{ssr:false});
 const Meridian=dynamic(previewLoaders['meridian'],{ssr:false});
+const MeridianVeil=dynamic(previewLoaders['meridian-veil'],{ssr:false});
 const Resonance=dynamic(previewLoaders['resonance'],{ssr:false});
 const Sleeve=dynamic(previewLoaders['sleeve'],{ssr:false});
 const Helix=dynamic(previewLoaders['helix'],{ssr:false});
@@ -71,7 +73,7 @@ const BokehTerrain=dynamic(previewLoaders['bokeh-terrain'],{ssr:false});
 const OpalineOrb=dynamic(previewLoaders['opaline-orb'],{ssr:false});
 const OrbitAgent=dynamic(previewLoaders['orbit-agent'],{ssr:false});
 
-export function Demo({ id, paused = false, expanded = false, autoDemo=false, silkLight, settings={},onSettingsChange }: { id: ElementId; paused?: boolean; expanded?: boolean; autoDemo?:boolean; silkLight?: 'dawn' | 'dusk';settings?:Settings;onSettingsChange?:(patch:Settings)=>void }) {
+export function Demo({ id, paused = false, expanded = false, autoDemo=false, hovered=false, silkLight, settings={},onSettingsChange }: { id: ElementId; paused?: boolean; expanded?: boolean; autoDemo?:boolean; hovered?: boolean; silkLight?: 'dawn' | 'dusk';settings?:Settings;onSettingsChange?:(patch:Settings)=>void }) {
   const prefersReduced = useReducedMotion();
   const [hydrated,setHydrated] = useState(false);
   useEffect(()=>setHydrated(true),[]);
@@ -79,7 +81,8 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, sil
   const still = paused || reduced;
   const motion={intensity:typeof settings.intensity==='number'?settings.intensity:1,speed:typeof settings.speed==='number'?settings.speed:1};
   return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`}>
-    {id==='elevation-matrix'&&<ElevationMatrix unitLabel={settings.unitLabel as string|undefined} view={autoDemo?'2d':settings.defaultView as '2d'|'3d'|undefined} theme={settings.defaultTheme as 'emerald'|'violet'|'amber'|'cyan'|undefined} perspective={settings.perspective as 'iso'|'front'|'wide'|undefined} compact={!expanded} paused={autoDemo||!!still}/>}
+    {id==='elastic-showcase'&&<ElasticShowcase {...settings} autoPlay={settings.autoPlay!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='elevation-matrix'&&<ElevationMatrix unitLabel={settings.unitLabel as string|undefined} view={expanded ? (settings.defaultView as '2d'|'3d'|undefined ?? '2d') : (hovered || settings.defaultView === '3d' ? '3d' : '2d')} theme={settings.defaultTheme as 'emerald'|'violet'|'amber'|'cyan'|undefined} perspective={settings.perspective as 'iso'|'front'|'wide'|undefined} compact={!expanded} paused={!!still}/>}
     {id==='sacred-lotus'&&<SacredLotus {...settings} progress={settings.playback==='controlled'?Number(settings.progress??56):undefined} interactive={settings.interactive!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='iris-turbine'&&<IrisTurbine {...settings} speed={settings.mode==='controlled'?Number(settings.speed??88):undefined} autoDemo={settings.mode!=='interactive'&&settings.mode!=='controlled'} interactive={settings.interactive!=='disabled'} showTelemetry={settings.showTelemetry==='enabled'} compact={!expanded} paused={!!still}/>}
     {id==='bokeh-terrain'&&<BokehTerrain {...settings} showStars={settings.showStars!=='disabled'} interactive={settings.interactive!=='disabled'} showTitle={settings.showTitle==='enabled'} compact={!expanded} paused={!!still}/>}
@@ -110,6 +113,7 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, sil
     {id==='sentiment'&&<Sentiment compact={!expanded} paused={!!still} asset={settings.asset as SentimentProps['asset']} range={settings.range as SentimentProps['range']} amplitude={settings.amplitude as number|undefined} speed={settings.speed as number|undefined} strokeWidth={settings.strokeWidth as number|undefined} fillOpacity={settings.fillOpacity as number|undefined} onRangeChange={onSettingsChange?range=>onSettingsChange({range}):undefined}/>}
     {id==='companion'&&<Companion {...motion} compact={!expanded} paused={!!still} eyeResponse={settings.eyeResponse as number|undefined} warmColor={settings.warmColor as string|undefined} coolColor={settings.coolColor as string|undefined}/>}
     {id==='helix'&&<Helix compact={!expanded} paused={!!still} particleCount={settings.particleCount as number|undefined} rotationSpeed={settings.rotationSpeed as number|undefined} dispersionStrength={settings.dispersionStrength as number|undefined} interactive={settings.interactive!=='disabled'} colors={[typeof settings.violet==='string'?settings.violet:'#7c3aed',typeof settings.magenta==='string'?settings.magenta:'#ec4899',typeof settings.cyan==='string'?settings.cyan:'#06b6d4']}/>}
+    {id==='meridian-veil'&&<MeridianVeil compact={!expanded} paused={!!still} theme={settings.theme as any} meridianCount={settings.meridianCount as number|undefined} pointsPerMeridian={settings.pointsPerMeridian as number|undefined} waveAmplitude={settings.waveAmplitude as number|undefined} speed={settings.speed as number|undefined} interactive={settings.interactive!=='disabled'} showThemeSwitcher={settings.showThemeSwitcher!=='hide'}/>}
     {id==='holdings'&&<Holdings compact={!expanded} paused={!!still} target={settings.target as number|undefined} scale={settings.scale as number|undefined} speed={settings.speed as number|undefined} thickness={settings.thickness as number|undefined} gap={settings.gap as number|undefined} activity={settings.activity as number|undefined}/>}
     {id==='galaxy'&&<Galaxy compact={!expanded} paused={!!still} count={settings.count as number|undefined} speed={settings.speed as number|undefined} arms={settings.arms as number|undefined} tilt={settings.tilt as number|undefined} glow={settings.glow as number|undefined} coreColor={settings.coreColor as string|undefined} edgeColor={settings.edgeColor as string|undefined}/>}
     {id==='luma'&&<Luma compact={!expanded} paused={!!still} count={settings.count as number|undefined} speed={settings.speed as number|undefined} amplitude={settings.amplitude as number|undefined} glow={settings.glow as number|undefined} warmColor={settings.warmColor as string|undefined} coolColor={settings.coolColor as string|undefined}/>}

@@ -49,6 +49,10 @@ export function configurationUrl(href:string,id:ElementId,settings:Settings){
 export function usageFor(element:LibraryElement,settings?:Settings){
   if(!settings||!Object.keys(settings).length)return element.code;
   const name=element.id==='sonic-aperture'?'SonicAperture':element.id==='prism-core'?'PrismCore':element.id==='aperture-loader'?'ApertureLoader':element.id==='event-horizon'?'PrismBloom':element.id==='liquid-artifact-hero'?'LiquidArtifact':element.id==='liquid-sculpture'?'LiquidForm':element.id==='glow-nav'?'GlowNav':element.id==='gilded-signal'?'GildedCard':element.id==='silk-aperture'?'SilkAperture':element.title;
+  if(element.id==='elastic-showcase'){
+    const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(key==='autoPlay'?String(value!=='disabled'):JSON.stringify(value))+'}').join(' ');
+    return `import ElasticShowcase from './elastic-showcase';\n\nexport default function Example(){return <div style={{height:620}}><ElasticShowcase ${configured}/></div>;}`;
+  }
   if(['sonic-aperture','prism-core','aperture-loader'].includes(element.id)){
     const configured=Object.entries(settings).map(([key,value])=>key+'={'+(key==='lyrics'?JSON.stringify(String(value).split(/\n\s*\n/).map(v=>v.split('\n'))):['interactive','autoPlay'].includes(key)?String(value!=='disabled'):key==='defaultListening'?String(value==='open'):JSON.stringify(value))+'}').join(' ');
     return `import ${name} from './${element.id}';\n\nexport default function Example(){return <div style={{height:560}}><${name} ${configured}/></div>;}`;
@@ -106,6 +110,13 @@ export function usageFor(element:LibraryElement,settings?:Settings){
   if(element.id==='helix'){
     const parameters=Object.entries(settings).filter(([key])=>!['violet','magenta','cyan','interactive'].includes(key)).map(([key,value])=>`${key}={${value}}`).join(' '),colors=JSON.stringify([settings.violet??'#7c3aed',settings.magenta??'#ec4899',settings.cyan??'#06b6d4']);
     return `import Helix from './helix';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Helix ${parameters} colors={${colors}} interactive={${settings.interactive!=='disabled'}} /></div>;\n}`;
+  }
+  if(element.id==='meridian-veil'){
+    const theme=JSON.stringify(settings.theme??'mint');
+    const parameters=['meridianCount','pointsPerMeridian','waveAmplitude','speed'].filter(key=>typeof settings[key]==='number').map(key=>`${key}={${settings[key]}}`).join(' ');
+    const interactive=settings.interactive!=='disabled';
+    const showThemeSwitcher=settings.showThemeSwitcher!=='hide';
+    return `import MeridianVeil from './meridian-veil';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><MeridianVeil theme=${theme}${parameters?' '+parameters:''} interactive={${interactive}} showThemeSwitcher={${showThemeSwitcher}} /></div>;\n}`;
   }
   if(element.id==='galaxy'||element.id==='holdings'||element.id==='companion'||element.id==='sentiment'||element.id==='constellation')return `import ${name} from './${filename}';\n\nexport default function Example() {\n  return <div style={{ height: 520 }}><${name} ${props} /></div>;\n}`;
   if(element.id==='aura'){

@@ -50,7 +50,7 @@ test('Sidebar light follows the route even while prior Library metadata is being
  const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'@/lib/component-groups':load('lib/component-groups.ts'),'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./component-navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
  Object.defineProperty(e.dom.window.HTMLElement.prototype,'offsetTop',{get(){return this.parentElement?.tagName==='NAV'?[...this.parentElement.querySelectorAll('a')].indexOf(this)*56:0;},configurable:true});
  await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();const sidebar=document.querySelector('aside');route='/docs';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();
- const active=[...sidebar.querySelectorAll('[aria-current="page"]')];assert.equal(active.length,1);assert.equal(active[0].textContent,'Getting started');assert.ok(Math.abs(parseFloat(sidebar.querySelector('nav').style.getPropertyValue('--nav-y'))-168)<.1);assert.equal(document.querySelector('aside'),sidebar);
+ const active=[...sidebar.querySelectorAll('[aria-current="page"]')];assert.equal(active.length,1);assert.equal(active[0].textContent,'Docs');assert.ok(Math.abs(parseFloat(sidebar.querySelector('nav').style.getPropertyValue('--nav-y'))-280)<.1);assert.equal(document.querySelector('aside'),sidebar);
  route='/library';query='saved=1';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:false,savedOnly:false})));
  assert.equal(sidebar.querySelector('[aria-current="page"]').textContent,'Saved','entering Saved never activates Library while page metadata catches up');
  query='';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true,savedOnly:true})));
@@ -103,6 +103,6 @@ test('Components drill-down supports direct category links, Soon states, focus r
   await React.act(()=>link('Components').click());await render();assert.equal(selected().textContent,'Browse all');assert.equal(document.activeElement,back());
   await React.act(()=>link('Carousels').click());await render();assert.equal(selected().textContent,'Carousels');
   query='group=buttons';await render();assert.equal(selected().textContent,'Buttons','Back restores the active type');
-  route='/docs';query='';await render();assert.equal(back(),null);assert.equal(selected().textContent,'Getting started');
+  route='/docs';query='';await render();assert.equal(back(),null);assert.equal(selected().textContent,'Docs');
  }finally{await React.act(()=>e.root.unmount());e.restore();}
 });

@@ -193,7 +193,7 @@ const Tower = memo(function Tower({
 export function ElevationMatrix({
   data,
   unitLabel = "contributions",
-  defaultView = "3d",
+  defaultView = "2d",
   defaultTheme = "emerald",
   view: controlledView,
   theme: controlledTheme,

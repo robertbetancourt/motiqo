@@ -8,7 +8,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 // including the named artwork used outside the galleries.
 const aliases={7:['starlit-cat.webp','uriat.webp'],11:['atmosphere.webp']};
 await fs.mkdir(path.join(root,'public/media/gallery'),{recursive:true});
-for(let index=1;index<=16;index++){
+for(let index=1;index<=18;index++){
   const name=`image-${String(index).padStart(2,'0')}`;
   const source=path.join(root,'assets/images',`${name}.png`);
   const metadata=await sharp(source).metadata();
@@ -17,4 +17,4 @@ for(let index=1;index<=16;index++){
   await fs.writeFile(path.join(root,'public/media/gallery',`${name}.webp`),bytes);
   for(const alias of aliases[index]??[])await fs.writeFile(path.join(root,'public/media',alias),bytes);
 }
-console.log('Synced 16 images at 1600 × 1200 and 3 named artwork copies from assets/images.');
+console.log('Synced 18 images at 1600 × 1200 and 3 named artwork copies from assets/images.');

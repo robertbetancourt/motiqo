@@ -10,6 +10,9 @@
     "previews:build": "node scripts/build-preview-posters.mjs",
     "test:loader": "node --test tests/brand-loader.test.cjs",
     "test:interface": "node --test tests/silk-aperture.test.cjs",
+    "quality:check": "node scripts/check-component-quality.mjs",
+    "publication:check": "node scripts/check-public-files.mjs",
+    "test:component": "node scripts/check-component-quality.mjs",
     "distribution:build": "node scripts/build-distribution.mjs",
     "distribution:pack": "node scripts/build-distribution.mjs --pack",
     "prebuild": "npm run distribution:pack",
@@ -22,8 +25,7 @@
     "readme:gifs": "node scripts/build-readme-gifs.mjs",
     "assets:sync": "node scripts/sync-image-assets.mjs",
     "predistribution:build": "npm run assets:sync",
-    "predistribution:pack": "npm run assets:sync",
-    "publication:check": "node scripts/check-public-files.mjs"
+    "predistribution:pack": "npm run assets:sync"
   },
   "dependencies": {
     "@fontsource-variable/merriweather-sans": "^5.3.0",
@@ -45,6 +47,7 @@
     "@types/react-dom": "^19",
     "@types/three": "^0.172.0",
     "jsdom": "^29.1.1",
+    "sharp": "0.35.5",
     "typescript": "^7",
     "typescript-compiler-api": "npm:typescript@5.9.3"
   },

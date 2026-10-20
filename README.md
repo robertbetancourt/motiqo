@@ -9,7 +9,7 @@
 
 # Motion you can make your own.
 
-A growing collection of <!-- count:start -->52<!-- count:end --> interactive React components: tactile buttons, generative sculptures, animated typography and small interface experiences. Explore a component, tune its controls, then bring the source into your project.
+A growing collection of <!-- count:start -->59<!-- count:end --> interactive React components: tactile buttons, generative sculptures, animated typography and small interface experiences. Explore a component, tune its controls, then bring the source into your project.
 
 **Early stage · React + TypeScript · Source included · Built by [Robert Betancourt](https://github.com/robertbetancourt)**
 

@@ -86,3 +86,17 @@ test('Both native components retain useful portable fallbacks and keyboard instr
  const React=require('react'),{renderToStaticMarkup}=require('react-dom/server'),Inkshift=load('components/originals/inkshift.tsx',{'./inkshift-engine':{},'./inkshift-math':inkMath}).default,Atelier=load('components/originals/atelier.tsx',{'./atelier-engine':{atelierRender:'/room.webp',pairedSketch:()=>'/sketch.webp'}}).default;
  const ink=new JSDOM(renderToStaticMarkup(React.createElement(Inkshift))),atelier=new JSDOM(renderToStaticMarkup(React.createElement(Atelier)));try{assert.match(ink.window.document.querySelector('[role=group]').getAttribute('aria-label'),/arrow keys/);assert.equal(ink.window.document.querySelector('.inkshift-fallback>div').textContent,'Motiqo');assert.equal(atelier.window.document.querySelectorAll('img').length,2);assert.match(atelier.window.document.querySelector('[role=group]').getAttribute('aria-label'),/Escape/);assert.match(atelier.window.document.querySelector('style').textContent,/touch-action:pan-y/);}finally{ink.window.close();atelier.window.close();}
 });
+
+test('Compact Inkshift halves simulation updates and uses eight pressure passes; the full renderer keeps sixty updates and eighteen passes',async()=>{
+ const engineModule=load('components/originals/inkshift-engine.ts',{'./native-gl':native,'./inkshift-math':inkMath,'./inkshift-shaders':load('components/originals/inkshift-shaders.ts')});
+ for(const compact of [true,false]){
+  const f=fixture();let engine;
+  try{
+   const options={words:inkMath.inkshiftWords,vorticity:40,dissipation:.55,splatRadius:.12,threshold:.5,backgroundColor:'#0b0c10',foregroundColor:'#f3f2ed',autoCycle:true,paused:false};
+   engine=engineModule.createInkshiftEngine(f.canvas,compact,()=>options,()=>{});await Promise.resolve();await Promise.resolve();await Promise.resolve();
+   const start=f.draws.length;f.advance(120);const draws=f.draws.slice(start),display=draws.filter(draw=>draw.source.includes('abs(ink-text)')),pressure=draws.filter(draw=>draw.source.includes('(l+r+b+t-d)*.25'));
+   assert.equal(display.length,compact?60:120);assert.equal(pressure.length,display.length*(compact?8:18));assert.equal(f.host.dataset.ready,'true');
+   engine.dispose();f.clean();
+  }finally{engine?.dispose();f.close();}
+ }
+});

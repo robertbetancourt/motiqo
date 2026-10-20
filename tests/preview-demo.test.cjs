@@ -79,3 +79,8 @@ test('Atelier uses a continuous closed path with no rest gap or jump at a loop b
  env.root.firstElementChild.addEventListener('pointermove',e=>points.push([e.clientX,e.clientY]));env.root.firstElementChild.addEventListener('pointerleave',()=>leaves++);
  try{const stop=startPreviewDemo(env.root,'atelier');env.advance(610);assert.equal(leaves,0);assert.equal(points.length,610);for(let i=1;i<points.length;i++)assert.ok(Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1])<3,'brush follows a smooth trajectory across loops');stop();}finally{env.restore();}
 });
+
+test('Elevation hover demo visits real cells and releases its pointer loop',()=>{
+ const env=setup('<div class="em-stage"><button class="em-cell"></button><button class="em-cell"></button><button class="em-cell"></button></div>'),cells=[...env.root.querySelectorAll('.em-cell')],visited=new Set();cells.forEach((cell,index)=>cell.addEventListener('pointerover',()=>visited.add(index)));
+ try{const stop=startPreviewDemo(env.root,'elevation-matrix');env.advance(100);assert.ok(visited.size>=3);stop();assert.equal(env.jobs.size,0);assert.equal(env.listeners.size,0);}finally{env.restore();}
+});

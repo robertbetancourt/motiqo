@@ -27,7 +27,8 @@ test('Radial needles seek the recording, show progress, follow FFT rather than a
  try{
   await render({compact:true,autoDemo:true});assert.equal(engines.length,0,'gallery cards never load or autoplay audio');
   await render({});const first=engines[0];assert.equal(first.plays,1,'expanded view attempts autoplay');
-  const play=document.querySelector('button'),slider=document.querySelector('[role=slider]');assert.equal(play.disabled,false);assert.equal(play.getAttribute('aria-pressed'),'false');assert.equal(document.querySelector('[role=status]'),null,'browser policy does not become a load error');
+  const play=document.querySelector('button'),slider=document.querySelector('[role=slider]');assert.equal(play.disabled,false);assert.equal(play.getAttribute('aria-pressed'),'false');assert.equal(document.querySelector('[role=status]').textContent,'','browser policy does not become a load error');
+  assert.equal(document.querySelector('.mq-score').getAttribute('role'),'group');assert.equal(document.querySelector('.mq-score').getAttribute('aria-label'),'MOMENTUM audio player');
   blocked=false;await React.act(async()=>play.click());assert.equal(play.getAttribute('aria-pressed'),'true','manual play recovers from blocked autoplay');
   await React.act(async()=>first.media.dispatchEvent(new dom.window.Event('loadedmetadata')));
   await React.act(async()=>first.media.dispatchEvent(new dom.window.Event('timeupdate')));
@@ -47,6 +48,11 @@ test('Radial needles seek the recording, show progress, follow FFT rather than a
   await render({track:'temporal'});assert.equal(first.disposed,true);assert.equal(engines[1].source,'/media/music/Temporal.mp3');assert.equal(engines[1].plays,1);assert.equal(slider.getAttribute('aria-valuenow'),'0');
   await render({track:'temporal',paused:true});assert.equal(play.disabled,false);await React.act(async()=>play.click());assert.equal(play.getAttribute('aria-pressed'),'true','render pause does not disable explicit playback');
   await React.act(async()=>play.click());assert.equal(play.getAttribute('aria-pressed'),'false');
-  let resolve;pending=new Promise(r=>resolve=r);await React.act(async()=>play.click());await render({track:'momentum',paused:true});await React.act(async()=>{resolve();await Promise.resolve();});assert.equal(play.getAttribute('aria-pressed'),'false','a stale play completion cannot restart a replaced song');
+  let resolve;pending=new Promise(r=>resolve=r);await React.act(async()=>play.click());
+  assert.equal(play.getAttribute('aria-busy'),'true');assert.equal(play.getAttribute('aria-label'),'Cancel loading TEMPORAL');assert.match(document.querySelector('.mq-score-top').textContent,/LOADING/);assert.match(document.querySelector('[role=status]').textContent,/Loading TEMPORAL/);
+  await React.act(async()=>play.click());assert.equal(play.getAttribute('aria-busy'),'false');assert.equal(play.getAttribute('aria-label'),'Play TEMPORAL');
+  await React.act(async()=>{resolve();await Promise.resolve();});assert.equal(play.getAttribute('aria-pressed'),'false','cancelled loading cannot start playback later');
+  pending=new Promise(r=>resolve=r);await React.act(async()=>play.click());await render({track:'momentum',paused:true});await React.act(async()=>{resolve();await Promise.resolve();});assert.equal(play.getAttribute('aria-pressed'),'false','a stale play completion cannot restart a replaced song');assert.equal(play.getAttribute('aria-busy'),'false');
+  pending=null;await React.act(async()=>play.click());assert.equal(play.getAttribute('aria-busy'),'false');assert.equal(play.getAttribute('aria-pressed'),'true');assert.equal(document.querySelector('[role=status]').textContent,'');
  }finally{await React.act(async()=>root.unmount());assert.ok(engines.every(e=>e.disposed));dom.window.close();for(const[k,v]of saved)v?Object.defineProperty(globalThis,k,v):delete globalThis[k];}
 });
