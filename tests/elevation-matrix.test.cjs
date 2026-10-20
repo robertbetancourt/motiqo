@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const Module = require("node:module");
-const ts = require("typescript");
+const ts = require("typescript-compiler-api");
 function load(file, mocks = {}) {
   const filename = path.resolve(__dirname, "..", file),
     m = new Module(filename, module);
@@ -111,10 +111,10 @@ test("source panel and component bundle include the CSS and data helper alongsid
   const sources = await registry.originalSources(["elevation-matrix"]);
   assert.deepEqual(
     sources["elevation-matrix"].map((file) => file.name),
-    ["elevation-matrix.tsx", "elevation-data.ts", "elevation-matrix.css"],
+    ["elevation-matrix.tsx", "elevation-data.ts", "elevation-matrix.css", "elevation-matrix.css.d.ts"],
   );
   const bundle = await registry.componentBundle("elevation-matrix");
-  assert.equal(bundle.files.length, 3);
+  assert.equal(bundle.files.length, 4);
   for (const file of bundle.files)
     assert.equal(
       file.content,

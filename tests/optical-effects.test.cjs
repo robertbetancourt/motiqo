@@ -1,4 +1,4 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript-compiler-api');
 const file=path.resolve(__dirname,'../components/originals/effect-runtime.ts'),m=new Module(file,module);m.filename=file;m.paths=Module._nodeModulePaths(path.dirname(file));m._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,file);
 test('visual clocks suspend on pause, visibility and reduced motion, and release all subscriptions',()=>{
  const frames=new Map(),events=new Map(),media=new Set(),saved=new Map();let next=0,now=1000,ro,io;const document={hidden:false,addEventListener:(name,fn)=>events.set(name,fn),removeEventListener:(name)=>events.delete(name)},query={matches:false,addEventListener:(_,fn)=>media.add(fn),removeEventListener:(_,fn)=>media.delete(fn)};

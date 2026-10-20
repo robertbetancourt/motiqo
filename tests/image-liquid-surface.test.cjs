@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const fs=require('node:fs');const path=require('node:path');const Module=require('node:module');const ts=require('typescript');const {JSDOM}=require('jsdom');
+const fs=require('node:fs');const path=require('node:path');const Module=require('node:module');const ts=require('typescript-compiler-api');const {JSDOM}=require('jsdom');
 function load(relative,overrides={}){const filename=path.resolve(__dirname,relative),entry=new Module(filename,module);entry.filename=filename;entry.paths=Module._nodeModulePaths(path.dirname(filename));const normal=entry.require.bind(entry);entry.require=name=>overrides[name]||normal(name);entry._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText,filename);return entry.exports;}
 const shaders=load('../components/ui/liquid-particle-shaders.ts'),wake=load('../components/ui/liquid-material-wake.ts');const {LiquidEngine}=load('../components/ui/liquid-particle-engine.ts',{'./liquid-particle-shaders':shaders,'./liquid-material-wake':wake});
 const opts={interactive:true,strength:1,radius:220,density:.15,dotSize:1,spread:1,turbulence:1,returnSpeed:1,streaks:true,restStyle:'image',ambient:false,ambientIntensity:0,speed:1,intro:false,reducedMotion:false,bg:[.04,.06,.06],imgBg:null,liquid:1};

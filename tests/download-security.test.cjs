@@ -1,4 +1,4 @@
-const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');const Module=require('node:module');const ts=require('typescript');
+const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');const Module=require('node:module');const ts=require('typescript-compiler-api');
 function load(relative,overrides={}){const filename=path.resolve(__dirname,'..',relative),entry=new Module(filename,module);entry.filename=filename;entry.paths=Module._nodeModulePaths(path.dirname(filename));const normal=entry.require.bind(entry);entry.require=name=>overrides[name]||normal(name);entry._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,filename);return entry.exports;}
 test('download endpoint rejects ambiguous inputs before work and recovers its concurrency slots',async()=>{
  let calls=0;const release=[];
