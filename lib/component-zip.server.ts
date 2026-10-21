@@ -45,11 +45,12 @@ export async function componentArchive(id:string,raw:string|null){
   const dependencies=Object.entries(bundle.packageDependencies).map(([name,version])=>`${name}@${version}`).join(' ');
   const devDependencies=Object.entries(bundle.devDependencies).map(([name,version])=>`${name}@${version}`).join(' ');
   const readme=`# ${bundle.title}\n\nReact component from Motiqo, registry ${bundle.version}.\n\nCopy components/ into your React source tree and public/ into the public asset directory. Keep companion files together. Import the entry from Example.tsx; its example includes your chosen settings. Provide a parent with an explicit height for canvas components. Styles are scoped; Tailwind is optional.\n\n${dependencies?`Runtime dependencies: npm install ${dependencies}\n`:''}${devDependencies?`Type dependencies: npm install --save-dev ${devDependencies}\n`:''}\nReact is supplied by your application. This archive does not replace your package.json.\n\nRespect reduced motion and provide meaningful text/data alternatives for charts. Values shown by Motiqo demos are illustrative.\n\nSource: ${bundle.source}\n${bundle.sourceUrl}\nPreserve existing source credits. Code: MIT; retain LICENSE and THIRD_PARTY_NOTICES.md. Artwork and audio have separate permissions.\n`;
+  const audioNotice=bundle.files.some(file=>/\.(mp3|wav)$/i.test(file.source))?'\nAudio restriction: bundled Suno free-plan recordings are not licensed for commercial reuse. Their distribution as reusable library assets remains unresolved. Replace them with audio you have permission to use before shipping.\n':'';
   return zipFiles([
     ...notices,
     ...bundle.files.map(file=>({name:file.target,bytes:Buffer.from(file.content,file.encoding as BufferEncoding)})),
     {name:'Example.tsx',bytes:Buffer.from(example)},
-    {name:'README.md',bytes:Buffer.from(readme)},
+    {name:'README.md',bytes:Buffer.from(readme+audioNotice)},
     {name:'motiqo.json',bytes:Buffer.from(JSON.stringify({schemaVersion:1,id,version:bundle.version,settings,dependencies:bundle.packageDependencies,devDependencies:bundle.devDependencies},null,2))},
   ]);
 }

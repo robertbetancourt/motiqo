@@ -71,8 +71,9 @@
       ]
     },
     "thermal-smoke": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "radial-spectrum": {
       "tests": [
@@ -89,36 +90,44 @@
       ]
     },
     "lenticular-button": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "photon-button": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "optical-button": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "spectral-button": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "caustic-button": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "prism-button": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "quantum-core": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "clustered": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "stratum": {
       "tests": [
@@ -285,8 +294,9 @@
       ]
     },
     "gilded-signal": {
-      "tests": [],
-      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+      "tests": [
+        "tests/catalog-behavior.test.cjs"
+      ]
     },
     "silk-aperture": {
       "tests": [
@@ -310,6 +320,12 @@
     ],
     "lib/preview-demo.ts": [
       "tests/preview-demo.test.cjs"
+    ],
+    "components/agent-setup.tsx": [
+      "tests/agent-setup.test.cjs"
+    ],
+    "components/site-sidebar.tsx": [
+      "tests/new-collection.test.cjs"
     ]
   }
 }

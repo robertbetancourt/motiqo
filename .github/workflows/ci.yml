@@ -23,4 +23,5 @@ jobs:
       - run: npm run publication:check
       - run: npm test
       - run: npm run build
+      - run: npm run verify:production
       - run: npm run verify:exports

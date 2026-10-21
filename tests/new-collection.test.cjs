@@ -50,7 +50,7 @@ test('Sidebar light follows the route even while prior Library metadata is being
  const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'@/lib/component-groups':load('lib/component-groups.ts'),'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./component-navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
  Object.defineProperty(e.dom.window.HTMLElement.prototype,'offsetTop',{get(){return this.parentElement?.tagName==='NAV'?[...this.parentElement.querySelectorAll('a')].indexOf(this)*56:0;},configurable:true});
  await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();const sidebar=document.querySelector('aside');route='/docs';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true})));e.advance();
- const active=[...sidebar.querySelectorAll('[aria-current="page"]')];assert.equal(active.length,1);assert.equal(active[0].textContent,'Docs');assert.ok(Math.abs(parseFloat(sidebar.querySelector('nav').style.getPropertyValue('--nav-y'))-280)<.1);assert.equal(document.querySelector('aside'),sidebar);
+ const active=[...sidebar.querySelectorAll('[aria-current="page"]')];assert.equal(active.length,1);assert.equal(active[0].textContent,'Docs');assert.equal(sidebar.querySelector('a[href="/skill"]').textContent,'Skill');assert.equal(sidebar.querySelector('a[href="/mcp"]').textContent,'MCP');assert.ok(Math.abs(parseFloat(sidebar.querySelector('nav').style.getPropertyValue('--nav-y'))-280)<.1);assert.equal(document.querySelector('aside'),sidebar);
  route='/library';query='saved=1';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:false,savedOnly:false})));
  assert.equal(sidebar.querySelector('[aria-current="page"]').textContent,'Saved','entering Saved never activates Library while page metadata catches up');
  query='';await React.act(()=>e.root.render(React.createElement(Sidebar,{collection:true,savedOnly:true})));
@@ -104,5 +104,18 @@ test('Components drill-down supports direct category links, Soon states, focus r
   await React.act(()=>link('Carousels').click());await render();assert.equal(selected().textContent,'Carousels');
   query='group=buttons';await render();assert.equal(selected().textContent,'Buttons','Back restores the active type');
   route='/docs';query='';await render();assert.equal(back(),null);assert.equal(selected().textContent,'Docs');
+ }finally{await React.act(()=>e.root.unmount());e.restore();}
+});
+
+test('A delayed source route cannot undo the Components menu while navigation is pending',async()=>{
+ const e=environment();let route='/',waiting=true,release;const pending=new Promise(resolve=>{release=resolve;});
+ try{
+  const Empty=()=>null,Link=React.forwardRef(({href,children,onNavigate,prefetch,...props},ref)=>React.createElement('a',{...props,ref,href,onClick:event=>{event.preventDefault();onNavigate?.({preventDefault(){}});}},children));
+  const Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'@/lib/component-groups':load('lib/component-groups.ts'),'next/navigation':{usePathname:()=>route,useSearchParams:()=>{if(waiting)throw pending;return new URLSearchParams();}},'./navigation-icon':{default:Empty},'./component-navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
+  const render=()=>React.act(()=>e.root.render(React.createElement(Sidebar))),menu=()=>document.querySelector('nav'),selected=()=>menu().querySelector('[aria-current=page]');
+  await render();const persistentMenu=menu();await React.act(()=>[...document.querySelectorAll('nav a')].find(a=>a.textContent==='Components').click());assert.equal(selected().textContent,'Browse all');
+  await React.act(async()=>{waiting=false;release();await pending;});assert.equal(menu().dataset.view,'components');assert.equal(selected().textContent,'Browse all','the late Home report must not flash the main menu');
+  route='/library';await render();assert.equal(menu(),persistentMenu);assert.equal(selected().textContent,'Browse all');assert.equal(document.activeElement.getAttribute('aria-label'),'Back to main navigation');
+  await React.act(()=>document.querySelector('[aria-label="Back to main navigation"]').click());assert.equal(menu().dataset.view,'main');assert.equal(document.activeElement.textContent,'Components');
  }finally{await React.act(()=>e.root.unmount());e.restore();}
 });

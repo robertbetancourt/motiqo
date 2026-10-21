@@ -3,11 +3,16 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 export function safeTarget(root,relative){
- if(typeof relative!=='string'||!relative||path.isAbsolute(relative)||relative.includes('\\')||relative.split('/').some(p=>!p||p==='.'||p==='..'||p==='.git'||p==='node_modules'))throw Error(`Unsafe target: ${relative}`);
+ if(typeof relative!=='string'||!relative||path.isAbsolute(relative)||/[\\:\x00-\x1f]/.test(relative)||relative.split('/').some(p=>!p||p==='.'||p==='..'||/[. ]$/.test(p)||['.git','node_modules'].includes(p.toLowerCase())))throw Error(`Unsafe target: ${relative}`);
  const destination=path.resolve(root,relative),boundary=path.resolve(root)+path.sep;
  if(!destination.startsWith(boundary))throw Error(`Target leaves the project: ${relative}`);
  let current=root;
- for(const segment of relative.split('/')){current=path.join(current,segment);if(fs.existsSync(current)&&fs.lstatSync(current).isSymbolicLink())throw Error(`Refusing symbolic link: ${relative}`);}
+ for(const segment of relative.split('/')){
+  current=path.join(current,segment);let stat;
+  // existsSync follows links and returns false for dangling links. Inspect the link itself.
+  try{stat=fs.lstatSync(current);}catch(error){if(error.code!=='ENOENT')throw error;}
+  if(stat?.isSymbolicLink())throw Error(`Refusing symbolic link: ${relative}`);
+ }
  return destination;
 }
 export function planInstall(registry,ids,root,{directory='components/motiqo',overwrite=false}={}){
