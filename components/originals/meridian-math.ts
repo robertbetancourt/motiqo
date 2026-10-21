@@ -1,6 +1,10 @@
 export type RoutePoint=readonly [number,number];
 export const primaryRoute:RoutePoint[]=[[4,94],[4,24],[-6,-12],[-6,-54]];
-export const alternativeRoute:RoutePoint[]=[[-6,-54],[-48,-54],[-48,24],[4,24]];
+// Continue from the incoming tip; never reconnect to an already lit segment.
+export const alternativeRoute:RoutePoint[]=[[-6,-54],[-48,-54],[-48,94]];
+export const meridianRoadWidth=6;
+export const meridianCrossStreets=[-54,-26,24,62] as const;
+export const meridianSideStreets=[-74,-48,47,81] as const;
 export const routeClamp=(n:number,a=0,b=1)=>Math.max(a,Math.min(b,Number.isFinite(n)?n:a));
 export function routeAt(points:readonly RoutePoint[],progress:number):[number,number]{
  const lengths=points.slice(1).map((p,i)=>Math.hypot(p[0]-points[i][0],p[1]-points[i][1])),total=lengths.reduce((a,b)=>a+b,0);let d=routeClamp(progress)*total;
@@ -13,9 +17,9 @@ export const avenueX=(z:number)=>z>=24?4:z<=-12?-6:-6+(z+12)/36*10;
 export function cityPlan(){
  let seed=0x43495459;const random=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return(seed>>>0)/4294967296;};
  const blocks:CityBlock[]=[],volumes:CityVolume[]=[];
- for(const [z0,z1] of [[-104,-62],[-46,-30],[-22,16],[32,58],[66,98]]){
-  const left=Math.min(avenueX(z0),avenueX(z1))-11,right=Math.max(avenueX(z0),avenueX(z1))+11;
-  for(const [x0,x1] of [[-110,-78],[-70,-55],[-41,left],[right,43],[51,77],[85,111]]){
+ for(const [z0,z1] of [[-104,-57],[-51,-29],[-23,21],[27,59],[65,98]]){
+  const left=Math.min(avenueX(z0),avenueX(z1))-meridianRoadWidth/2,right=Math.max(avenueX(z0),avenueX(z1))+meridianRoadWidth/2;
+  for(const [x0,x1] of [[-110,-77],[-71,-51],[-45,left],[right,44],[50,78],[84,111]]){
    const block=blocks.length,w=x1-x0,d=z1-z0,x=(x0+x1)/2,z=(z0+z1)/2;blocks.push({x,z,w,d});
    if(block===2||block===26)continue;
    const columns=w>25?2:1,rows=d>29?2:1;
@@ -63,8 +67,8 @@ const shots=[
  {at:0,position:[185,190,215],look:[0,0,0],fov:38},
  {at:.14,position:[100,100,155],look:[3,3,58],fov:43},
  {at:.4,position:[52,62,16],look:[-5,5,-42],fov:49},
- {at:.65,position:[-115,76,-5],look:[-43,3,-38],fov:45},
- {at:.82,position:[-100,125,135],look:[-15,1,22],fov:41},
+ {at:.65,position:[-115,76,135],look:[-48,3,70],fov:45},
+ {at:.82,position:[-100,125,170],look:[-30,1,44],fov:41},
  {at:1,position:[185,190,215],look:[0,0,0],fov:38},
 ];
 export function meridianShot(progress:number){

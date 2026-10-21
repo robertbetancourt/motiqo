@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {avenueX,cityPlan} from './meridian-math';
+import {avenueX,cityPlan,meridianRoadWidth,meridianCrossStreets,meridianSideStreets} from './meridian-math';
 
 export function buildMeridianCity(scene:THREE.Scene,geometry:<T extends THREE.BufferGeometry>(g:T)=>T,material:<T extends THREE.Material>(m:T)=>T){
  const {blocks,volumes}=cityPlan(),shape=new THREE.Shape();
@@ -27,6 +27,18 @@ export function buildMeridianCity(scene:THREE.Scene,geometry:<T extends THREE.Bu
  const sidewalk=material(new THREE.MeshStandardMaterial({color:'#171a22',roughness:.55,metalness:.35}));
  const curbs=new THREE.InstancedMesh(box,sidewalk,blocks.length);
  blocks.forEach((b,i)=>{matrix.compose(new THREE.Vector3(b.x,.28,b.z),rotation,new THREE.Vector3(b.w,.56,b.d));curbs.setMatrixAt(i,matrix);});scene.add(curbs);
+ // Fill the wedges beside the bent avenue with sidewalk, keeping its asphalt
+ // exactly two lanes wide instead of opening into an oversized diagonal plaza.
+ blocks.forEach((b,index)=>{
+  const column=index%6;if(column!==2&&column!==3)return;
+  const z0=b.z-b.d/2,z1=b.z+b.d/2,edge=b.x+(column===2?b.w/2:-b.w/2);
+  const levels=[z0,...[-12,24].filter(z=>z>z0&&z<z1),z1];
+  if(levels.every(z=>Math.abs(avenueX(z)+(column===2?-1:1)*meridianRoadWidth/2-edge)<.001))return;
+  const strip=new THREE.Shape();strip.moveTo(edge,-z0);
+  for(const z of levels)strip.lineTo(avenueX(z)+(column===2?-1:1)*meridianRoadWidth/2,-z);
+  strip.lineTo(edge,-z1);strip.closePath();
+  scene.add(new THREE.Mesh(geometry(new THREE.ExtrudeGeometry(strip,{depth:.56,steps:1,bevelEnabled:false}).rotateX(-Math.PI/2)),sidewalk));
+ });
  // Pocket gardens and a rhythm of street trees soften the hard city grid.
  const green=material(new THREE.MeshStandardMaterial({color:'#233830',roughness:.94,metalness:0}));
  for(const index of [2,26]){const block=blocks[index],garden=new THREE.Mesh(box,green);garden.position.set(block.x,.65,block.z);garden.scale.set(block.w-3,.16,block.d-3);scene.add(garden);}
@@ -34,8 +46,15 @@ export function buildMeridianCity(scene:THREE.Scene,geometry:<T extends THREE.Bu
  const crowns=new THREE.InstancedMesh(geometry(new THREE.IcosahedronGeometry(1,1)),green,trees.length);
  trees.forEach(([x,z],i)=>{matrix.compose(new THREE.Vector3(x,2.3,z),rotation,new THREE.Vector3(1.25,1.8+(i%3)*.18,1.25));crowns.setMatrixAt(i,matrix);});scene.add(crowns);
  const markings:number[]=[];
- for(let z=-99;z<97;z+=7){const x=avenueX(z);for(const side of [-1,1])markings.push(x+side*4,.04,z,x+side*4,.04,z+2.8);}
- for(const z of [-55,24,62])for(let x=-107;x<109;x+=5)markings.push(x,.045,z-1,x+2,.045,z-1);
+ // A single dashed divider: one lane per direction. Leave intersections clear.
+ for(const x of [null,...meridianSideStreets])for(let z=-101;z<96;z+=5){
+  if(meridianCrossStreets.some(cross=>z+2>cross-meridianRoadWidth/2&&z<cross+meridianRoadWidth/2))continue;
+  markings.push(x??avenueX(z),.04,z,x??avenueX(z+2),.04,z+2);
+ }
+ for(const z of meridianCrossStreets)for(let x=-107;x<108;x+=5){
+  if([avenueX(z),...meridianSideStreets].some(cross=>x+2>cross-meridianRoadWidth/2&&x<cross+meridianRoadWidth/2))continue;
+  markings.push(x,.045,z,x+2,.045,z);
+ }
  const road=geometry(new THREE.BufferGeometry());road.setAttribute('position',new THREE.Float32BufferAttribute(markings,3));scene.add(new THREE.LineSegments(road,material(new THREE.LineBasicMaterial({color:'#7d8794',transparent:true,opacity:.23}))));
  return()=>{buildings.dispose();curbs.dispose();crowns.dispose();};
 }

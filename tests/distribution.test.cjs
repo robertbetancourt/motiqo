@@ -36,3 +36,24 @@ test('A write failure rolls back new files and restores replaced files without t
  fs.mkdirSync(path.join(folder,'line-solid.ts'));
  assert.throws(()=>applyInstall(plan,f.project));assert.equal(fs.readFileSync(path.join(folder,'gyro.tsx'),'utf8'),'my component');assert.ok(!fs.existsSync(path.join(folder,'line-scene.tsx')));assert.equal(fs.readFileSync(path.join(folder,'notes.txt'),'utf8'),'keep me');assert.ok(fs.statSync(path.join(folder,'line-solid.ts')).isDirectory());assert.ok(!fs.readdirSync(folder).some(name=>name.endsWith('.tmp')));
  }finally{f.dispose();}});
+
+for(const lock of ['pnpm-lock.yaml','yarn.lock','bun.lock'])test(`CLI respects ${lock} and refuses npm dependency installation before writing`,()=>{const f=fixture();try{
+ fs.writeFileSync(path.join(f.project,lock),'');const result=run(f.project,['add','companion','--install']);assert.notEqual(result.status,0);assert.match(result.stderr,/existing package manager/);assert.equal(fs.existsSync(path.join(f.project,'components')),false);
+ const dry=run(f.project,['add','companion','--dry-run','--json']);assert.equal(dry.status,0,dry.stderr);assert.ok(JSON.parse(dry.stdout).dependencies.includes('three@^0.172.0'));assert.equal(fs.existsSync(path.join(f.project,'components')),false);
+}finally{f.dispose();}});
+
+test('skill install refuses changed instructions without overwrite and dry-run has no writes',()=>{const f=fixture();try{
+ const folder=path.join(f.project,'.agents/skills/motiqo'),file=path.join(folder,'SKILL.md');fs.mkdirSync(folder,{recursive:true});fs.writeFileSync(file,'My private skill');
+ assert.notEqual(run(f.project,['skill']).status,0);assert.equal(fs.readFileSync(file,'utf8'),'My private skill');assert.equal(run(f.project,['skill','--dry-run','--overwrite']).status,0);assert.equal(fs.readFileSync(file,'utf8'),'My private skill');
+}finally{f.dispose();}});
+
+test('installer rejects protected directory names with mixed case',()=>{const f=fixture();try{
+ for(const folder of ['.GIT','Node_Modules','src/.Git','.git.','node_modules ','src:stream']){const result=run(f.project,['add','gyro','--dir',folder]);assert.notEqual(result.status,0,folder);assert.match(result.stderr,/Unsafe target/);assert.equal(fs.existsSync(path.join(f.project,folder)),false);}
+}finally{f.dispose();}});
+
+test('skill path rejects a dangling junction before creating directories',async()=>{const f=fixture();try{
+ const outside=path.join(f.temp,'outside');fs.mkdirSync(outside);fs.symlinkSync(outside,path.join(f.project,'.agents'),'junction');fs.rmdirSync(outside);
+ const {safeTarget}=await import(pathToFileURL(path.join(root,'packages/cli/lib/installer.mjs')));
+ assert.throws(()=>safeTarget(f.project,'.agents/skills/motiqo/SKILL.md'),/Refusing symbolic link/);
+ const result=run(f.project,['skill']);assert.notEqual(result.status,0);assert.match(result.stderr,/Refusing symbolic link/);assert.equal(fs.existsSync(outside),false);
+}finally{f.dispose();}});

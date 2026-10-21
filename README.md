@@ -100,4 +100,4 @@ Motiqo is still evolving. APIs and visuals may change before a stable release. B
 
 Original Motiqo code and documentation are **MIT licensed**, copyright 2026 Robert Betancourt. Keep the license notice when reusing the code.
 
-Images generated with Midjourney, music created with Suno, and brand assets have separate permissions and are **excluded from the code MIT grant**. Dependencies and fonts retain their own licenses. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing resources.
+Robert permits reuse and modification of his Midjourney gallery images, including commercially and without attribution, within the rights he holds. Suno free-plan recordings and brand assets remain excluded from MIT; the recordings are not licensed for commercial reuse and their distribution as library resources remains unresolved. Dependencies and fonts retain their own licenses. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing resources.

@@ -18,6 +18,9 @@
     "prebuild": "npm run distribution:pack",
     "test": "node --test tests/*.test.cjs",
     "verify:exports": "node scripts/verify-exports.mjs",
+    "verify:consumer": "node scripts/verify-consumer.mjs",
+    "verify:http": "node scripts/verify-http.mjs",
+    "verify:production": "node scripts/verify-production.mjs",
     "pretest": "npm run distribution:build",
     "preverify:exports": "npm run distribution:pack",
     "predev": "npm run distribution:pack",
@@ -42,6 +45,8 @@
     "three": "^0.172.0"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "^2.3.1",
+    "@modelcontextprotocol/server": "^2.3.1",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -49,7 +54,8 @@
     "jsdom": "^29.1.1",
     "sharp": "0.35.5",
     "typescript": "^7",
-    "typescript-compiler-api": "npm:typescript@5.9.3"
+    "typescript-compiler-api": "npm:typescript@5.9.3",
+    "zod": "^4.6.7"
   },
   "license": "MIT"
 }

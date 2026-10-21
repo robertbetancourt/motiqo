@@ -48,11 +48,26 @@
           "kind": "select",
           "defaultValue": "mint",
           "choices": [
-            { "value": "mint", "label": "Mint" },
-            { "value": "silver", "label": "Silver" },
-            { "value": "magenta", "label": "Magenta" },
-            { "value": "violet", "label": "Violet" },
-            { "value": "ice", "label": "Ice" }
+            {
+              "value": "mint",
+              "label": "Mint"
+            },
+            {
+              "value": "silver",
+              "label": "Silver"
+            },
+            {
+              "value": "magenta",
+              "label": "Magenta"
+            },
+            {
+              "value": "violet",
+              "label": "Violet"
+            },
+            {
+              "value": "ice",
+              "label": "Ice"
+            }
           ]
         },
         {
@@ -97,8 +112,14 @@
           "kind": "select",
           "defaultValue": "enabled",
           "choices": [
-            { "value": "enabled", "label": "Enabled" },
-            { "value": "disabled", "label": "Disabled" }
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
           ]
         },
         {
@@ -107,8 +128,14 @@
           "kind": "select",
           "defaultValue": "show",
           "choices": [
-            { "value": "show", "label": "Visible" },
-            { "value": "hide", "label": "Hidden" }
+            {
+              "value": "show",
+              "label": "Visible"
+            },
+            {
+              "value": "hide",
+              "label": "Hidden"
+            }
           ]
         }
       ],
@@ -5321,7 +5348,7 @@
       ],
       "installNote": "Install three and copy meridian.tsx, meridian-scene.ts, meridian-city.ts and meridian-math.ts. Three.js includes the postprocessing passes. Give the parent a defined height. Increment replay to restart the sequence.",
       "code": "import Meridian from './meridian';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Meridian animationSpeed={1} replay={0} /></div>;\n}",
-      "brief": "Integrate Meridian, a Motiqo cinematic neon routing city in a fine-bordered rounded container. Build 30 varied raised sidewalk islands around a wide avenue with a diagonal dogleg and intersecting streets, with compound stepped buildings, recessed terraces, L-shaped wings, bevels and rooftop equipment. Use architectural #0d0f14, roughness .35 and metalness .65. Preserve the cyan/magenta route shader, HDR tip, UnrealBloomPass strength 1.05 radius .65 threshold .85, and eight dynamic route PointLights. Trace the main route then a cyan/electric-blue/violet/magenta right-angle detour along clear streets. One normalized timeline drives both route progress and smooth camera tracking. Start with an approximately 1.8-second high/far/rotated exponential-out camera descent into a close three-quarter view. Autoplay loops by default. Wheel over the canvas scrubs forwards/backwards immediately; after 2.5 seconds idle, autoplay gently resumes from the same progress. Expose autoPlay, scrollSensitivity, cinematicIntro, primaryRouteColor, incidentColor, detourGradient as a four-colour tuple, animationSpeed, numeric replay, compact and paused. Include replay by click or Space, reduced motion, offscreen/hidden suspension, context restoration and complete GPU cleanup. No remote map data or assets.",
+      "brief": "Integrate Meridian, a Motiqo cinematic neon routing city in a fine-bordered rounded container. Build 30 varied raised sidewalk islands around narrow two-way streets with exactly one lane per direction and a single dashed center divider. Keep asphalt consistently six world units wide, including the diagonal avenue dogleg, with sidewalks filling the unused wedges, with compound stepped buildings, recessed terraces, L-shaped wings, bevels and rooftop equipment. Use architectural #0d0f14, roughness .35 and metalness .65. Preserve the cyan/magenta route shader, HDR tip, UnrealBloomPass strength 1.05 radius .65 threshold .85, and eight dynamic route PointLights. Trace one continuous non-branching path: the main route hands its only bright leading tip to the cyan/electric-blue/violet/magenta detour, which continues west then south along a parallel street to its own endpoint. Never reconnect the detour to an already illuminated segment. One normalized timeline drives both route progress and smooth camera tracking. Start with an approximately 1.8-second high/far/rotated exponential-out camera descent into a close three-quarter view. Autoplay loops by default. Wheel over the canvas scrubs forwards/backwards immediately; after 2.5 seconds idle, autoplay gently resumes from the same progress. Expose autoPlay, scrollSensitivity, cinematicIntro, primaryRouteColor, incidentColor, detourGradient as a four-colour tuple, animationSpeed, numeric replay, compact and paused. Include replay by click or Space, reduced motion, offscreen/hidden suspension, context restoration and complete GPU cleanup. No remote map data or assets.",
       "entry": "meridian.tsx",
       "exportName": "Meridian",
       "files": [

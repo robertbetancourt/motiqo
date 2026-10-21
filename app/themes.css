@@ -1,6 +1,13 @@
 /* Theme tokens and the host adapters for the collection's illustrated canvases. */
 :root { --orb-face:#141414; --orb-ink:#b8b8b8; --orb-shadow:#ffffff03; }
 .sidebar-heading { flex-direction:column; align-items:flex-start; gap:22px; margin-bottom:28px; }
+.sidebar-heading .sidebar-brand{align-self:center}
+.sidebar-tools{position:relative;flex-shrink:0}
+.sidebar-personality{min-height:0;overflow:hidden}
+.sidebar-tools .color-picker{position:static}
+.sidebar-tools .color-panel{left:0;right:auto;width:min(260px,calc(100vw - 36px))}
+.color-panel-title>span{font-size:12px;color:var(--text)}
+.color-panel .color-swatches{margin-top:12px}
 .sidebar-heading .github-link { display:flex; width:100%; min-height:44px; padding:10px 13px; gap:10px; border-radius:999px; background:#ffffff03; border-color:#ffffff13; }
 .sidebar-heading .github-link>span { display:inline-flex; }
 .sidebar-heading .github-stars { display:flex; align-items:center; gap:6px; margin-left:auto; padding-left:12px; border-left:1px solid var(--line); }
@@ -110,6 +117,13 @@ html[data-theme=light] .pulse-card svg>g path { stroke:#746d5f70; }
 html[data-theme=light] .pulse-card svg>g circle { fill:#746d5f; }
 
 /* Component drill-down keeps the site's existing surfaces and controls. */
+.sidebar-heading{transition:margin-bottom 200ms var(--motion-ease)}
+.site-sidebar nav[data-view=components]{animation:sidebar-drill-in 220ms var(--motion-ease) both}
+.site-sidebar nav[data-view=main]{animation:sidebar-drill-out 200ms var(--motion-ease) both}
+.sidebar-back{animation:sidebar-drill-in 220ms var(--motion-ease) both}
+@keyframes sidebar-drill-in{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes sidebar-drill-out{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.site-sidebar nav[data-view],.sidebar-back{animation:none}.sidebar-heading{transition:none}}
 .site-sidebar.has-component-menu .sidebar-heading{margin-bottom:16px}
 .sidebar-back{display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 13px;margin-bottom:8px;text-align:left;font-size:13px;color:var(--muted);border-radius:10px;flex-shrink:0}
 .sidebar-back:hover{color:var(--text);background:var(--raised)}

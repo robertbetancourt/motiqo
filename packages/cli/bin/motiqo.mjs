@@ -12,6 +12,7 @@ const help=`Motiqo — complete React components
   motiqo add <id...> [--cwd <project>] [--dir src/components/motiqo]
          [--dry-run] [--overwrite] [--install] [--json]
   motiqo skill [--cwd <project>] [--dry-run] [--overwrite]
+  motiqo mcp
 
 Files and assets are bundled; no registry connection is needed.
 Existing different files are never replaced without --overwrite.
@@ -25,6 +26,11 @@ try{
  if(command==='help'||options.help){console.log(help);process.exit(0);}
  const registry=JSON.parse(fs.readFileSync(path.join(base,'registry.json'),'utf8'));
  if(registry.schemaVersion!==1)throw Error('Unsupported registry schema.');
+ if(command==='mcp'){
+  if(ids.length||Object.keys(options).length)throw Error('motiqo mcp takes no options; it serves the bundled catalog over stdio.');
+  const {startCatalogServer}=await import('../lib/mcp.mjs');
+  startCatalogServer(registry,JSON.parse(fs.readFileSync(path.join(base,'package.json'),'utf8')).version);
+ }else{
  if(command==='list'){const items=registry.items.map(({id,title,category,packageDependencies})=>({id,title,category,dependencies:packageDependencies}));console.log(options.json?JSON.stringify(items,null,2):items.map(i=>`${i.id.padEnd(20)} ${i.title}`).join('\n'));process.exit(0);}
  const root=fs.realpathSync(path.resolve(options.cwd??process.cwd()));
  if(command==='skill'){
@@ -57,5 +63,6 @@ try{
   const args=['install','--ignore-scripts',...(dev?['--save-dev']:[]),...list],run=spawnSync(npmCli?process.execPath:'npm',npmCli?[npmCli,...args]:args,{cwd:root,stdio:options.json?['inherit','pipe','inherit']:'inherit',shell:false});
   if(options.json&&run.stdout?.length)process.stderr.write(run.stdout);
   if(run.error||run.status!==0)throw Error('Component files were installed; dependency installation failed. Retry with your package manager.');
+ }
  }
 }catch(error){console.error(`Motiqo: ${error.message}`);process.exitCode=1;}

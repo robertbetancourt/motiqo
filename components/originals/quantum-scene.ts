@@ -6,6 +6,17 @@ import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { effectRuntime } from "./effect-runtime";
+
+export function createQuantumCompositePass(texture: THREE.Texture) {
+  const pass = new ShaderPass({
+    uniforms: { tDiffuse: { value: null }, bloomTexture: { value: null } },
+    vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader: `uniform sampler2D tDiffuse,bloomTexture;varying vec2 vUv;void main(){gl_FragColor=texture2D(tDiffuse,vUv)+texture2D(bloomTexture,vUv);}`,
+  });
+  // ShaderPass clones uniform templates; render-target textures must retain their identity.
+  pass.uniforms.bloomTexture.value = texture;
+  return pass;
+}
 export type QuantumOptions = {
   coreColor: string;
   accentColor: string;
@@ -87,7 +98,7 @@ export function createQuantumScene(
       object.scale.x *= 0.45;
     }
   });
-  const environment = pmrem.fromScene(room, 0.06);
+  const environment = pmrem.fromScene(room, 0.04);
   room.dispose();
   pmrem.dispose();
   scene.environment = environment.texture;
@@ -281,14 +292,7 @@ export function createQuantumScene(
     }),
   );
   final.addPass(new RenderPass(scene, camera));
-  const mix = new ShaderPass({
-    uniforms: {
-      tDiffuse: { value: null },
-      bloomTexture: { value: bloom.renderTarget2.texture },
-    },
-    vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-    fragmentShader: `uniform sampler2D tDiffuse,bloomTexture;varying vec2 vUv;void main(){gl_FragColor=texture2D(tDiffuse,vUv)+texture2D(bloomTexture,vUv);}`,
-  });
+  const mix = createQuantumCompositePass(bloom.renderTarget2.texture);
   final.addPass(mix);
   const output = new OutputPass();
   final.addPass(output);

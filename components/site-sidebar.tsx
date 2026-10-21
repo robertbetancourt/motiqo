@@ -35,7 +35,15 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
     const back=useRef<HTMLButtonElement>(null),componentsLink=useRef<HTMLAnchorElement>(null),focusMenu=useRef(false),keepMenuOpen=useRef(false);
     const [route,setRoute]=useState<string|null>(()=>pathname==='/library'?null:pathname),[destination,setDestination]=useState<string|null>(null);
     const active=destination??route;
-    const reportRoute=useCallback((next:string)=>{setRoute(next);setDestination(null);setComponentsOpen(next.startsWith('/library')&&next!=='/library?saved=1');},[]);
+    const pendingRoute=useRef<{from:string|null;to:string}|null>(null);
+    const reportRoute=useCallback((next:string)=>{
+        // A suspended location reader can still report the route we are leaving.
+        if(pendingRoute.current?.from===next&&pendingRoute.current.to!==next)return;
+        pendingRoute.current=null;
+        setRoute(next);setDestination(null);
+        setComponentsOpen(next.startsWith('/library')&&next!=='/library?saved=1');
+    },[]);
+    function selectDestination(href:string){pendingRoute.current={from:route,to:href};setDestination(href);}
     const updateLight = useRef<()=>void>(()=>{});
     useLayoutEffect(() => {
         const root=nav.current!;
@@ -64,11 +72,11 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
         { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount }
     ];
     const resourceItems = [
-        { name: 'MCP', href: '/docs#mcp', icon: 'mcp' as const, active: active === '/docs#mcp' },
-        { name: 'Skill', href: '/docs#skill', icon: 'skill' as const, active: active === '/docs#skill' },
+        { name: 'MCP', href: '/mcp', icon: 'mcp' as const, active: active === '/mcp' },
+        { name: 'Skill', href: '/skill', icon: 'skill' as const, active: active === '/skill' },
         { name: 'Docs', href: '/docs', icon: 'docs' as const, active: active === '/docs' }
     ];
-    function browse(href:string,action?:()=>void){setOpen(false);setDestination(href);action?.();}
+    function browse(href:string,action?:()=>void){setOpen(false);selectDestination(href);action?.();}
     return <>
     <Suspense fallback={null}><SidebarLocation onChange={reportRoute}/></Suspense>
     <div className="sidebar-mobile-bar"><Link href="/" aria-label="Motiqo home"><Brand variant="logo"/></Link><button ref={toggle} className="icon-button" aria-label={open ? 'Close navigation' : 'Open navigation'} aria-controls="site-sidebar" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <ComponentNavigationIcon name="close" size={20}/> : <ComponentNavigationIcon name="menu" size={20}/>}</button></div>
@@ -76,7 +84,7 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
     <aside id="site-sidebar" className={`site-sidebar ${open ? 'is-open' : ''} ${componentsOpen?'has-component-menu':''}`} aria-label="Motiqo navigation">
       <div className="sidebar-heading"><Link className="sidebar-brand" href="/" aria-label="Motiqo home"><Brand variant="logo"/></Link><GitHubControl/></div>
       {componentsOpen && <button ref={back} type="button" className="sidebar-back" onClick={()=>{focusMenu.current=true;setComponentsOpen(false);}} aria-label="Back to main navigation"><ComponentNavigationIcon name="back" size={16}/><span>Components</span></button>}
-      <nav ref={nav} aria-label={componentsOpen?'Component navigation':'Main navigation'}>
+      <nav ref={nav} data-view={componentsOpen?'components':'main'} aria-label={componentsOpen?'Component navigation':'Main navigation'}>
         <div className="sidebar-light" aria-hidden="true" />
         {componentsOpen?<>
         <Link href="/library" prefetch={false} className={`sidebar-link ${active==='/library'?'is-active':''}`} aria-current={active==='/library'?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse('/library',library&&onCollection?()=>onCollection():undefined);}}><NavigationIcon name="library"/><span>Browse all</span></Link>
@@ -89,11 +97,11 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
         <span className="sidebar-section-title">Explore</span>
         {exploreItems.map(item => <Link ref={item.name==='Components'?componentsLink:undefined} key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={event => {
           if(item.name==='Components'){focusMenu.current=true;keepMenuOpen.current=open;setComponentsOpen(true);}else setOpen(false);
-          setDestination(item.href);if(item.action){event.preventDefault();item.action();}
+          selectDestination(item.href);if(item.action){event.preventDefault();item.action();}
         }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{item.name==='Components'&&<ComponentNavigationIcon name="forward" className="sidebar-chevron" size={14}/>}{!!item.count && <small>{item.count}</small>}</Link>)}
         <span className="sidebar-section-title">Resource</span>
         {resourceItems.map(item => <Link key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={() => {
-          setOpen(false);setDestination(item.href);
+          setOpen(false);selectDestination(item.href);
         }}><NavigationIcon name={item.icon}/><span>{item.name}</span></Link>)}
       </>}</nav>
       {!componentsOpen&&<div className="sidebar-personality"><SidebarArt /></div>}

@@ -20,6 +20,18 @@ For each new or changed component, check keyboard/focus, accessible names and st
 
 Keep personal notes, research and raw captures local. `docs/` is private except for the README images in `docs/readme/`. Only deliberately public Markdown files are allowed by `.gitignore`; do not force-add ignored notes.
 
+## Consumer and MCP checks
+
+After `npm run distribution:pack`, run `npm run verify:consumer -- vite <new-directory>` and `npm run verify:consumer -- next <new-directory>` to exercise the real downloadable package in clean projects. These commands install dependencies from npm, retain their test projects and refuse to overwrite an existing directory. Vite checks dependency declarations strictly. The Next fixture uses its normal `skipLibCheck` configuration; passing its build does not certify strict compatibility of Next's own dependency declarations. The current strict Next checks expose upstream declaration incompatibilities, recorded separately from component export checks.
+
+With a local production server running, `npm run verify:http -- http://127.0.0.1:3040` checks every component ZIP, allowed paths, CRCs, invalid requests and baseline response headers. This is not a load test or security certification. MCP protocol tests run in `npm test`; a successful stdio exchange does not establish compatibility with every editor host. The server only reads bundled catalog files and has no installation, network or shell tool.
+
+## Releasing and rolling back
+
+Before publishing a changed CLI archive, increment its version and update the download links and examples that reference it. Do not replace an already released version with different bytes. Keep the previous release archive, its SHA-256 checksum and the corresponding Git tag. Record user-visible changes and migrations in the release description. Run the full CI gates, independent exports and clean-consumer checks before publishing. This repository has no stable release support promise yet.
+
+For rollback, redeploy the previously verified Git revision in Vercel and restore the previous versioned CLI download. Preserve consumer edits: installation detects conflicts and requires an explicit review before replacement. Never use a force-push as the normal deployment rollback mechanism.
+
 ## README animations
 
 The development-only authoring route `/preview-capture/<id>?theme=dark&motion=1` renders the real component in a 320 × 320 frame. Without motion=1, the existing static poster mode is preserved. Record that surface into numbered PNGs under `screenshots/readme-motion/<id>/` with a timing.json containing id, times (capture milliseconds), and duration (milliseconds). These raw recordings stay ignored by Git.

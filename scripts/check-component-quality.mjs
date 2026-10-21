@@ -8,9 +8,8 @@ const manifest=JSON.parse(fs.readFileSync(path.join(root,'registry/manifest.json
 const index=JSON.parse(fs.readFileSync(path.join(root,'tests/component-tests.json'),'utf8'));
 const ids=new Set(manifest.items.map(item=>item.id));
 const errors=[],gaps=[];
-// Only the ten gaps recorded on 2026-10-20 may remain during migration.
-// New catalog entries must register behavior tests rather than another waiver.
-const baselineGaps=new Set(['thermal-smoke','lenticular-button','photon-button','optical-button','spectral-button','caustic-button','prism-button','quantum-core','clustered','gilded-signal']);
+// Every catalog entry requires behavior tests; no legacy waivers remain.
+const baselineGaps=new Set();
 if(index.schemaVersion!==1)errors.push('Unsupported component test index version.');
 for(const id of Object.keys(index.components))if(!ids.has(id))errors.push(`Obsolete component record: ${id}`);
 for(const id of ids){
