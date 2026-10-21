@@ -4,8 +4,8 @@ import SiteFrame from '@/components/site-frame';
 import styles from './docs.module.css';
 
 export default function DocsPage(){return <SiteFrame><div className={styles.page}>
-<header id="overview" className={styles.header}><h1>Getting started</h1></header>
-<nav className={styles.nav} aria-label="Getting started chapters">{['Installation','Usage','Skill','Prompts','Motion'].map(section=><a key={section} href={`#${section.toLowerCase()}`}>{section}</a>)}</nav>
+<header id="overview" className={styles.header}><h1>Documentation</h1></header>
+<nav className={styles.nav} aria-label="Documentation chapters">{['Installation','Usage','Skill','MCP','Prompts','Motion'].map(section=><a key={section} href={`#${section.toLowerCase()}`}>{section}</a>)}</nav>
 <article className={styles.content}>
 <section id="installation" className={styles.chapter}><h2>01 — Bring it into your project.</h2><div>
 <p>Open an element and choose Download component. The ZIP includes its implementation, companion files, artwork, dependency list and an example with your selected settings. Copy components into your source tree and public assets into your public directory.</p>
@@ -26,8 +26,10 @@ export default function Example() {
 }`}</code></pre>
 <p>Give canvas components a parent with a defined height. Styles are scoped and included; Tailwind and the Motiqo website stylesheet are optional. Keep companion files together and preserve artwork paths.</p></div></section>
 <section id="skill" className={styles.chapter}><h2>03 — Work with your agent.</h2><div><pre className={styles.snippet}><code>npx motiqo skill</code></pre>
-<p>This installs the Motiqo skill at <code>.agents/skills/motiqo/SKILL.md</code> in your project. It guides compatible coding agents through discovery, dry-run installation, configuration and validation. It does not configure an MCP server.</p></div></section>
-<section id="prompts" className={styles.chapter}><h2>04 — Or start with a prompt.</h2><div><p>Copy prompt includes behavior, dependencies, selected properties and an import example. Choose an assistant with the adjacent arrow and supply the downloaded files so it can integrate the real implementation.</p><p>Preserve source attribution when an element uses an adapted engine. New artwork changes its visual identity; engine authorship remains credited.</p></div></section>
+<p>This installs the Motiqo skill at <code>.agents/skills/motiqo/SKILL.md</code> in your project. It guides compatible coding agents through discovery, dry-run installation, configuration and validation.</p></div></section>
+<section id="mcp" className={styles.chapter}><h2>04 — Model Context Protocol (MCP).</h2><div><pre className={styles.snippet}><code>npx motiqo mcp</code></pre>
+<p>Connect Motiqo to your AI coding environment (Cursor, Windsurf, Claude Desktop, Antigravity) via Model Context Protocol to explore effects, query component metadata, and generate tailored animations.</p></div></section>
+<section id="prompts" className={styles.chapter}><h2>05 — Or start with a prompt.</h2><div><p>Copy prompt includes behavior, dependencies, selected properties and an import example. Choose an assistant with the adjacent arrow and supply the downloaded files so it can integrate the real implementation.</p><p>Preserve source attribution when an element uses an adapted engine. New artwork changes its visual identity; engine authorship remains credited.</p></div></section>
 <section id="motion" className={styles.chapter}><h2>Motion with room for everyone.</h2><div><p>Components respect reduced motion and suspend animation when offscreen. The <code>paused</code> prop freezes motion. Reduced motion keeps keyboard inspection available for data components.</p><p>Aura exposes its score and risk semantically. Holdings announces selected positions. Pulse and Sentiment include data tables and keyboard inspection with meaningful, limited announcements. Sample values are illustrative. Provide your own labels and data when integrating a real product.</p><p>Test keyboard controls, contrast, touch and your actual layout before shipping. Automated checks cover behavior, exports and the installer; testing with assistive technology remains part of product validation.</p></div></section>
 </article><footer className={styles.footer}><div><span>READY WHEN YOU ARE</span><h2>Find your first detail.</h2></div><Link href="/library">Browse components<ArrowUpRight size={17}/></Link></footer>
 </div></SiteFrame>;}

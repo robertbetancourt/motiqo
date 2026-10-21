@@ -3,13 +3,14 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ComponentNavigationIcon from './component-navigation-icon';
-import { componentGroups, componentGroupCounts, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
+import { componentGroups, componentGroupCounts, newComponentsByGroup, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import NavigationIcon from './navigation-icon';
 import SidebarArt from './sidebar-art';
 import Brand from './brand';
 import ColorPicker from './color-picker';
 import GitHubControl from './github-control';
 import ThemeControl from './theme-control';
+
 export type SidebarProps = {
     collection?: boolean;
     savedOnly?: boolean;
@@ -17,6 +18,7 @@ export type SidebarProps = {
     onCollection?: (group?: ComponentGroup) => void;
     onSaved?: () => void;
 };
+
 /** Query state belongs to the URL; page-published actions can arrive later. */
 function SidebarLocation({onChange}:{onChange:(route:string)=>void}){
     const pathname=usePathname(),params=useSearchParams();
@@ -25,6 +27,7 @@ function SidebarLocation({onChange}:{onChange:(route:string)=>void}){
     useLayoutEffect(()=>onChange(route),[route,onChange]);
     return null;
 }
+
 export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: SidebarProps) {
     const pathname = usePathname(), [open, setOpen] = useState(false), toggle = useRef<HTMLButtonElement>(null);
     const nav = useRef<HTMLElement>(null);
@@ -55,8 +58,16 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
         toggle.current?.focus({ preventScroll: true });
     } }; document.addEventListener('keydown', escape); return () => document.removeEventListener('keydown', escape); }, []);
     const library = pathname === '/library';
-    const items = [{ name: 'Home', href: '/', icon: 'home' as const, active: active === '/' }, { name: 'Components', href: '/library', icon: 'library' as const, active: !!active?.startsWith('/library')&&active!=='/library?saved=1', action: library ? onCollection : undefined },
-        { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount }, { name: 'Getting started', href: '/docs', icon: 'docs' as const, active: active === '/docs' }];
+    const exploreItems = [
+        { name: 'Home', href: '/', icon: 'home' as const, active: active === '/' },
+        { name: 'Components', href: '/library', icon: 'library' as const, active: !!active?.startsWith('/library')&&active!=='/library?saved=1', action: library ? onCollection : undefined },
+        { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount }
+    ];
+    const resourceItems = [
+        { name: 'MCP', href: '/docs#mcp', icon: 'mcp' as const, active: active === '/docs#mcp' },
+        { name: 'Skill', href: '/docs#skill', icon: 'skill' as const, active: active === '/docs#skill' },
+        { name: 'Docs', href: '/docs', icon: 'docs' as const, active: active === '/docs' }
+    ];
     function browse(href:string,action?:()=>void){setOpen(false);setDestination(href);action?.();}
     return <>
     <Suspense fallback={null}><SidebarLocation onChange={reportRoute}/></Suspense>
@@ -64,20 +75,29 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
     {open && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setOpen(false)}/>}
     <aside id="site-sidebar" className={`site-sidebar ${open ? 'is-open' : ''} ${componentsOpen?'has-component-menu':''}`} aria-label="Motiqo navigation">
       <div className="sidebar-heading"><Link className="sidebar-brand" href="/" aria-label="Motiqo home"><Brand variant="logo"/></Link><GitHubControl/></div>
-      {componentsOpen?<button ref={back} type="button" className="sidebar-back" onClick={()=>{focusMenu.current=true;setComponentsOpen(false);}} aria-label="Back to main navigation"><ComponentNavigationIcon name="back" size={16}/><span>Components</span></button>:<span className="sidebar-eyebrow">Menu</span>}
-      <nav ref={nav} aria-label={componentsOpen?'Component navigation':'Main navigation'}><div className="sidebar-light" aria-hidden="true">{Array.from({ length: 8 }, (_, i) => <i key={i} style={{ '--i': i } as React.CSSProperties}/>)}</div>{componentsOpen?<>
+      {componentsOpen && <button ref={back} type="button" className="sidebar-back" onClick={()=>{focusMenu.current=true;setComponentsOpen(false);}} aria-label="Back to main navigation"><ComponentNavigationIcon name="back" size={16}/><span>Components</span></button>}
+      <nav ref={nav} aria-label={componentsOpen?'Component navigation':'Main navigation'}>
+        <div className="sidebar-light" aria-hidden="true" />
+        {componentsOpen?<>
         <Link href="/library" prefetch={false} className={`sidebar-link ${active==='/library'?'is-active':''}`} aria-current={active==='/library'?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse('/library',library&&onCollection?()=>onCollection():undefined);}}><NavigationIcon name="library"/><span>Browse all</span></Link>
         {['Interface','Visuals'].map(section=><div className="sidebar-group" key={section}><span className="sidebar-group-title">{section}</span>{componentGroups.filter(group=>group.section===section).map(group=>{
-          const available=componentGroupCounts[group.id]>0,href=`/library?group=${group.id}`,selected=active===href;
-          const content=<><ComponentNavigationIcon name={group.id}/><span>{group.title}</span>{!available&&<small className="sidebar-soon">Soon</small>}</>;
+          const available=componentGroupCounts[group.id]>0,count=componentGroupCounts[group.id],newCount=newComponentsByGroup[group.id],href=`/library?group=${group.id}`,selected=active===href;
+          const content=<><ComponentNavigationIcon name={group.id}/><span>{group.title}</span>{!available&&<small className="sidebar-soon">Soon</small>}{available&&<span className="sidebar-badge" data-new={newCount>0?'New':undefined} data-has-new={newCount>0?'true':undefined} data-count={count}/>}</>;
           return available?<Link key={group.id} href={href} prefetch={false} className={`sidebar-link ${selected?'is-active':''}`} aria-current={selected?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse(href,library&&onCollection?()=>onCollection(group.id):undefined);}}>{content}</Link>:<button key={group.id} type="button" className="sidebar-link" disabled>{content}</button>;
         })}</div>)}
-      </>:items.map(item => <Link ref={item.name==='Components'?componentsLink:undefined} key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={event => {
-        if(item.name==='Components'){focusMenu.current=true;keepMenuOpen.current=open;setComponentsOpen(true);}else setOpen(false);
-        setDestination(item.href);if(item.action){event.preventDefault();item.action();}
-      }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{item.name==='Components'&&<ComponentNavigationIcon name="forward" className="sidebar-chevron" size={14}/>}{!!item.count && <small>{item.count}</small>}</Link>)}</nav>
+      </>:<>
+        <span className="sidebar-section-title">Explore</span>
+        {exploreItems.map(item => <Link ref={item.name==='Components'?componentsLink:undefined} key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={event => {
+          if(item.name==='Components'){focusMenu.current=true;keepMenuOpen.current=open;setComponentsOpen(true);}else setOpen(false);
+          setDestination(item.href);if(item.action){event.preventDefault();item.action();}
+        }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{item.name==='Components'&&<ComponentNavigationIcon name="forward" className="sidebar-chevron" size={14}/>}{!!item.count && <small>{item.count}</small>}</Link>)}
+        <span className="sidebar-section-title">Resource</span>
+        {resourceItems.map(item => <Link key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={() => {
+          setOpen(false);setDestination(item.href);
+        }}><NavigationIcon name={item.icon}/><span>{item.name}</span></Link>)}
+      </>}</nav>
       {!componentsOpen&&<div className="sidebar-personality"><SidebarArt /></div>}
-      <div className="sidebar-tools"><ColorPicker /><ThemeControl/></div>
+      <div className="sidebar-tools"><ThemeControl/><ColorPicker /></div>
     </aside>
   </>;
 }

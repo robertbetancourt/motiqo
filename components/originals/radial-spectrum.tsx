@@ -55,6 +55,7 @@ export default function RadialSpectrum({
     playingRef = useRef(false),
     draw = useRef<() => void>(() => {}),
     [playing, setPlaying] = useState(false),
+    [loading, setLoading] = useState(false),
     [position, setPosition] = useState(0),
     [duration, setDuration] = useState(0),
     [error, setError] = useState("");
@@ -65,6 +66,7 @@ export default function RadialSpectrum({
     wantsPlayback.current = false;
     playingRef.current = false;
     setPlaying(false);
+    setLoading(false);
     void engine.current?.pause().catch(() => {});
     draw.current();
   };
@@ -207,6 +209,7 @@ export default function RadialSpectrum({
   async function start(automatic = false) {
     const ticket = ++request.current;
     wantsPlayback.current = true;
+    setLoading(true);
     setError("");
     let current = engine.current;
     try {
@@ -240,10 +243,12 @@ export default function RadialSpectrum({
       if (automatic && (cause as { name?: string })?.name === "NotAllowedError")
         return;
       setError("The track could not be played. Press Play to try again.");
+    } finally {
+      if (ticket === request.current) setLoading(false);
     }
   }
   function toggle() {
-    if (playingRef.current) {
+    if (playingRef.current || wantsPlayback.current) {
       stop();
       return;
     }
@@ -260,6 +265,8 @@ export default function RadialSpectrum({
   return (
     <div
       ref={host}
+      role="group"
+      aria-label={`${title} audio player`}
       className={`mq-score ${compact ? "mq-score-compact" : ""} ${className}`}
     >
       <style>{styles}</style>
@@ -315,9 +322,8 @@ export default function RadialSpectrum({
       />
       <div className="mq-score-center">
         <span className="mq-score-top">
-          {playing ? "PLAYING" : "LISTEN"}
-          <br />
-          {subtitleTop}
+          {loading ? "LOADING" : playing ? "PLAYING" : "LISTEN"}
+          {subtitleTop && <><br />{subtitleTop}</>}
         </span>
         <strong>{title}</strong>
         <span className="mq-score-bottom">{subtitleBottom}</span>
@@ -325,17 +331,16 @@ export default function RadialSpectrum({
           className="mq-score-play"
           type="button"
           onClick={toggle}
-          aria-label={`${playing ? "Pause" : "Play"} ${title}`}
+          aria-label={`${loading ? "Cancel loading" : playing ? "Pause" : "Play"} ${title}`}
           aria-pressed={playing}
+          aria-busy={loading}
         >
-          <span aria-hidden="true">{playing ? "Ⅱ" : "▷"}</span>
+          <span aria-hidden="true">{loading ? "×" : playing ? "Ⅱ" : "▷"}</span>
         </button>
       </div>
-      {error && (
-        <p className="mq-score-error" role="status">
-          {error}
-        </p>
-      )}
+      <p className={error ? "mq-score-error" : "mq-score-announcement"} role="status" aria-atomic="true">
+        {loading ? `Loading ${title}. Press Cancel loading to stop waiting.` : error}
+      </p>
     </div>
   );
 }
@@ -344,9 +349,10 @@ const styles = `
 .mq-score>canvas{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
 .mq-score>canvas:focus-visible{outline:1px solid #ffffff80;outline-offset:-4px}
 .mq-score .mq-score-center{position:absolute;inset:0;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;width:62%;height:fit-content;max-height:64%;padding:12px 0;gap:clamp(14px,5cqmin,30px);color:inherit;font-family:inherit;pointer-events:none;text-align:center}
-.mq-score-center strong{max-width:100%;font-weight:400;font-size:clamp(12px,3.2cqmin,22px);letter-spacing:.29em;line-height:1.8;overflow-wrap:anywhere;transition:color .5s;text-shadow:0 0 calc(var(--score-energy,0)*18px) #ffffff65}
-.mq-score-top,.mq-score-bottom{font-size:clamp(7px,1.6cqmin,10px);letter-spacing:.3em;line-height:2.1;color:#77777c}
+.mq-score-center strong{max-width:100%;font-weight:400;font-size:clamp(16px,3.2cqmin,22px);letter-spacing:.29em;line-height:1.8;overflow-wrap:anywhere;transition:color .5s;text-shadow:0 0 calc(var(--score-energy,0)*18px) #ffffff65}
+.mq-score-top,.mq-score-bottom{font-size:clamp(12px,2cqmin,14px);letter-spacing:.18em;line-height:1.6;color:#929292}
 .mq-score .mq-score-play{position:absolute;top:100%;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:transparent;box-shadow:none;transform:none;font-family:inherit;font-size:18px;color:#ccc;cursor:pointer;pointer-events:auto}
 .mq-score .mq-score-play:hover{background:#ffffff10;color:#fff}.mq-score .mq-score-play:focus-visible{outline:1px solid #ffffff80;outline-offset:3px}
-.mq-score-error{position:absolute;bottom:15px;left:10%;width:80%;font-size:10px;text-align:center;color:#b19898}@media(prefers-reduced-motion:reduce){.mq-score *{transition:none!important}}
+.mq-score-announcement{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.mq-score-error{position:absolute;bottom:12px;left:5%;width:90%;margin:0;font-size:12px;line-height:1.5;text-align:center;color:#b19898}@media(prefers-reduced-motion:reduce){.mq-score *{transition:none!important}}
 `;

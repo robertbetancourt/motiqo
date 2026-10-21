@@ -37,7 +37,7 @@ export function createInkshiftEngine(canvas:HTMLCanvasElement,compact:boolean,re
   gpu.draw(passes.inkVorticity,velocity.write,{uVelocity:velocity.read,uCurl:curl,uTexel:vTexel,uDt:dt,uStrength:nativeClamp(o.vorticity,0,80)});swap(velocity);
   gpu.draw(passes.inkDivergence,divergence,{uVelocity:velocity.read,uTexel:vTexel});
   gpu.draw(passes.inkClear,pressure.write,{uSource:pressure.read,uScale:.8});swap(pressure);
-  for(let i=0;i<18;i++){gpu.draw(passes.inkPressure,pressure.write,{uPressure:pressure.read,uDivergence:divergence,uTexel:vTexel});swap(pressure);}
+  for(let i=0;i<(compact?8:18);i++){gpu.draw(passes.inkPressure,pressure.write,{uPressure:pressure.read,uDivergence:divergence,uTexel:vTexel});swap(pressure);}
   gpu.draw(passes.inkGradient,velocity.write,{uPressure:pressure.read,uVelocity:velocity.read,uTexel:vTexel});swap(velocity);
   gpu.draw(passes.inkAdvect,velocity.write,{uVelocity:velocity.read,uSource:velocity.read,uVelocityTexel:vTexel,uSourceTexel:vTexel,uDt:dt,uDecay:.45});swap(velocity);
   gpu.draw(passes.inkAdvect,dye.write,{uVelocity:velocity.read,uSource:dye.read,uVelocityTexel:vTexel,uSourceTexel:dTexel,uDt:dt,uDecay:nativeClamp(o.dissipation,.08,2)});swap(dye);
@@ -59,7 +59,7 @@ export function createInkshiftEngine(canvas:HTMLCanvasElement,compact:boolean,re
   if(time-transition<1.5&&!media.matches)paintWord(from,false);paintWord(state.index,true);gpu.upload(textTexture,textCanvas);textDirty=false;
  }
  function draw(){if(!gpu||!width||!height||lost)return;text();gpu.draw(passes.inkDisplay,null,{uDye:dye.read,uText:{texture:textTexture},uThreshold:nativeClamp(read().threshold,.1,.9),uTime:time,uBackground:nativeColor(read().backgroundColor,'#0b0c10'),uForeground:nativeColor(read().foregroundColor,'#f3f2ed'),uResolution:[width,height]});if(fontReady)host.dataset.ready='true';host.dataset.word=String(state.index);host.dataset.fluidTime=time.toFixed(3);}
- function tick(now:number){frame=0;if(disposed||lost||!visible||document.hidden||!gpu)return;const elapsed=now-last;if(elapsed<1000/60-.5){frame=requestAnimationFrame(tick);return;}last=now;const dt=Math.min(.033,elapsed/1000);
+ function tick(now:number){frame=0;if(disposed||lost||!visible||document.hidden||!gpu)return;const elapsed=now-last;if(elapsed<1000/(compact?30:60)-.5){frame=requestAnimationFrame(tick);return;}last=now;const dt=Math.min(compact?1/30:.033,elapsed/1000);
   if(!read().paused&&!media.matches){
    time+=dt;const previous=state.index,velocitySign=state.velocity<0?-1:1;
    if(kineticAdvance(state,dt,time,words.length,read().autoCycle)){const next=state.index;state.index=previous;change(next,time-state.lastInput<2.5,velocitySign);}

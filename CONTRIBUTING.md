@@ -12,9 +12,13 @@ Contribute code you have the right to license under MIT. Identify third-party so
 
 The `typescript` dependency provides the `tsc` CLI for project and export checks. Tests and the export example adapter use `typescript-compiler-api`, an explicit npm alias of TypeScript 5.9.3, because TypeScript 7 does not yet expose the JavaScript compiler API. Keep these responsibilities separate; do not bypass peer resolution or skip type checking to make dependency updates pass.
 
-## Repository contents
+## Component checks
 
-Keep personal notes, local agent rules, research and raw captures outside Git. The docs directory is private except for docs/readme, which supplies README images. Only deliberately public Markdown documents are allowed by .gitignore. Do not force-add ignored working notes. Run npm run publication:check before publishing; CI also checks tracked paths.
+Register behavior tests in `tests/component-tests.json`; use `npm run test:component -- <id>` while working, or `-- --files <helper-path>` for shared helpers. Existing gaps are tracked explicitly and do not count as coverage. The complete CI suite remains required before publishing.
+
+For each new or changed component, check keyboard/focus, accessible names and states, loading/errors, contrast, responsive layout, reduced motion, and resource cleanup as applicable. Verify canvas/WebGL fallbacks and independent exports. Distinguish simulated tests from real browser checks; document any pending zoom, screen-reader or device-performance checks. New components require behavior tests, not another baseline waiver.
+
+Keep personal notes, research and raw captures local. `docs/` is private except for the README images in `docs/readme/`. Only deliberately public Markdown files are allowed by `.gitignore`; do not force-add ignored notes.
 
 ## README animations
 

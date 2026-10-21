@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 1,
+  "components": {
+    "meridian-veil": {
+      "tests": [
+        "tests/meridian-veil.test.cjs"
+      ]
+    },
+    "sonic-aperture": {
+      "tests": [
+        "tests/aperture-components.test.cjs"
+      ]
+    },
+    "prism-core": {
+      "tests": [
+        "tests/aperture-components.test.cjs"
+      ]
+    },
+    "aperture-loader": {
+      "tests": [
+        "tests/aperture-components.test.cjs"
+      ]
+    },
+    "vapor-ring": {
+      "tests": [
+        "tests/vapor-ring.test.cjs"
+      ]
+    },
+    "elevation-matrix": {
+      "tests": [
+        "tests/elevation-matrix.test.cjs",
+        "tests/static-elevation-preview.test.cjs",
+        "tests/preview-budget.test.cjs"
+      ]
+    },
+    "sacred-lotus": {
+      "tests": [
+        "tests/generative-studies.test.cjs"
+      ]
+    },
+    "iris-turbine": {
+      "tests": [
+        "tests/generative-studies.test.cjs"
+      ]
+    },
+    "bokeh-terrain": {
+      "tests": [
+        "tests/generative-studies.test.cjs"
+      ]
+    },
+    "opaline-orb": {
+      "tests": [
+        "tests/generative-studies.test.cjs"
+      ]
+    },
+    "orbit-agent": {
+      "tests": [
+        "tests/generative-studies.test.cjs"
+      ]
+    },
+    "water-ripple-carousel": {
+      "tests": [
+        "tests/component-refinements.test.cjs",
+        "tests/gallery-garden-audio.test.cjs"
+      ]
+    },
+    "aperture-carousel": {
+      "tests": [
+        "tests/component-refinements.test.cjs",
+        "tests/gallery-garden-audio.test.cjs"
+      ]
+    },
+    "thermal-smoke": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "radial-spectrum": {
+      "tests": [
+        "tests/component-refinements.test.cjs",
+        "tests/gallery-garden-audio.test.cjs",
+        "tests/radial-spectrum.test.cjs"
+      ]
+    },
+    "type-garden": {
+      "tests": [
+        "tests/component-refinements.test.cjs",
+        "tests/gallery-garden-audio.test.cjs",
+        "tests/type-garden-demo.test.cjs"
+      ]
+    },
+    "lenticular-button": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "photon-button": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "optical-button": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "spectral-button": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "caustic-button": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "prism-button": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "quantum-core": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "clustered": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "stratum": {
+      "tests": [
+        "tests/stratum.test.cjs"
+      ]
+    },
+    "inkshift": {
+      "tests": [
+        "tests/native-effects.test.cjs"
+      ]
+    },
+    "atelier": {
+      "tests": [
+        "tests/native-effects.test.cjs"
+      ]
+    },
+    "charge": {
+      "tests": [
+        "tests/charge.test.cjs"
+      ]
+    },
+    "resonance": {
+      "tests": [
+        "tests/resonance.test.cjs"
+      ]
+    },
+    "sleeve": {
+      "tests": [
+        "tests/sleeve.test.cjs"
+      ]
+    },
+    "meridian": {
+      "tests": [
+        "tests/meridian.test.cjs"
+      ]
+    },
+    "deck": {
+      "tests": [
+        "tests/deck.test.cjs"
+      ]
+    },
+    "sentiment": {
+      "tests": [
+        "tests/sentiment.test.cjs"
+      ]
+    },
+    "companion": {
+      "tests": [
+        "tests/companion.test.cjs"
+      ]
+    },
+    "helix": {
+      "tests": [
+        "tests/helix.test.cjs"
+      ]
+    },
+    "holdings": {
+      "tests": [
+        "tests/holdings.test.cjs"
+      ]
+    },
+    "galaxy": {
+      "tests": [
+        "tests/galaxy.test.cjs"
+      ]
+    },
+    "luma": {
+      "tests": [
+        "tests/luma.test.cjs"
+      ]
+    },
+    "constellation": {
+      "tests": [
+        "tests/constellation.test.cjs"
+      ]
+    },
+    "aura": {
+      "tests": [
+        "tests/aura.test.cjs",
+        "tests/spheres.test.cjs"
+      ]
+    },
+    "nexus": {
+      "tests": [
+        "tests/aura.test.cjs",
+        "tests/spheres.test.cjs"
+      ]
+    },
+    "orbit": {
+      "tests": [
+        "tests/aura.test.cjs",
+        "tests/spheres.test.cjs"
+      ]
+    },
+    "halo": {
+      "tests": [
+        "tests/halo.test.cjs"
+      ]
+    },
+    "district": {
+      "tests": [
+        "tests/new-collection.test.cjs"
+      ]
+    },
+    "pulse": {
+      "tests": [
+        "tests/new-collection.test.cjs"
+      ]
+    },
+    "event-horizon": {
+      "tests": [
+        "tests/liquid-artifact-hero.test.cjs",
+        "tests/prism-bloom.test.cjs"
+      ]
+    },
+    "liquid-artifact-hero": {
+      "tests": [
+        "tests/liquid-artifact-hero.test.cjs"
+      ]
+    },
+    "crate": {
+      "tests": [
+        "tests/crate-scene.test.cjs"
+      ]
+    },
+    "liquid-sculpture": {
+      "tests": [
+        "tests/liquid-and-nav.test.cjs"
+      ]
+    },
+    "glow-nav": {
+      "tests": [
+        "tests/liquid-and-nav.test.cjs"
+      ]
+    },
+    "lantern": {
+      "tests": [
+        "tests/kinetic-sculptures.test.cjs"
+      ]
+    },
+    "gyro": {
+      "tests": [
+        "tests/kinetic-sculptures.test.cjs"
+      ]
+    },
+    "arbor": {
+      "tests": [
+        "tests/line-sculptures.test.cjs"
+      ]
+    },
+    "drawer": {
+      "tests": [
+        "tests/line-sculptures.test.cjs"
+      ]
+    },
+    "tempo": {
+      "tests": [
+        "tests/line-sculptures.test.cjs"
+      ]
+    },
+    "pleat": {
+      "tests": [
+        "tests/pleat.test.cjs"
+      ]
+    },
+    "gilded-signal": {
+      "tests": [],
+      "gap": "Baseline 2026-10-20: no component-specific behavior suite identified. Shared and distribution tests do not replace it."
+    },
+    "silk-aperture": {
+      "tests": [
+        "tests/silk-aperture.test.cjs"
+      ]
+    },
+    "elastic-showcase": {
+      "tests": [
+        "tests/elastic-showcase.test.cjs"
+      ]
+    }
+  },
+  "site": {
+    "components/card-preview.tsx": [
+      "tests/preview-budget.test.cjs",
+      "tests/navigation-transition.test.cjs",
+      "tests/static-elevation-preview.test.cjs"
+    ],
+    "lib/preview-budget.ts": [
+      "tests/preview-budget.test.cjs"
+    ],
+    "lib/preview-demo.ts": [
+      "tests/preview-demo.test.cjs"
+    ]
+  }
+}

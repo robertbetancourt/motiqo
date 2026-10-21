@@ -11,10 +11,20 @@ export type LibraryElement = {
   id: ElementId; number: string; title: string; category: Exclude<Category, 'All elements'>;
   description: string; hint: string; source: string; sourceUrl: string;
   tags: string[]; dependencies: string[]; code: string; brief: string; original?: boolean;
-  previewSize?: 'cinema'; installNote?: string;
+  previewSize?: 'cinema'; installNote?: string; addedAt?: string;
 };
 export const categories: Category[] = ['All elements', 'Linework', 'Motion', 'Objects', 'Navigation'];
 export const elements = registry.items as unknown as LibraryElement[];
+
+export function isElementNew(element?: { addedAt?: string } | null): boolean {
+  if (!element?.addedAt) return false;
+  const added = new Date(element.addedAt).getTime();
+  if (Number.isNaN(added)) return false;
+  const twoWeeksMs = 14 * 24 * 60 * 60 * 1000;
+  const diff = Date.now() - added;
+  return diff >= 0 && diff <= twoWeeksMs;
+}
+
 const adapters: Record<AITool, string> = {
   Universal: 'Implement the element described below in the existing project. Follow its conventions, explain any required adaptation, and verify the result.',
   Claude: 'Inspect the existing project and explain the integration approach briefly before implementing it. Follow its conventions and verify the final result.',

@@ -3,6 +3,7 @@ import type {ElementId} from '@/lib/catalog';
 // Only card previews opt in. Reuse each scene's input handling without changing exports.
 const pointerTargets:Partial<Record<ElementId,string>>={
   'sonic-aperture':'.sonic-aperture',
+  'elevation-matrix':'.em-cell',
   'prism-core':'.prism-core',
   'aperture-loader':'.aperture-loader',
   'stratum':'.stratum',
@@ -39,7 +40,7 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
   if(!selector)return;
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   let frame=0,last=0,time=0,entered=false,target:HTMLElement|null=null,step=-1;
-  const reactInput=id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav';
+  const reactInput=id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav'||id==='elevation-matrix';
   function pointer(type:string,bubbles=false,x=.5,y=.5){
     if(!target)return;
     const box=target.getBoundingClientRect();
@@ -51,8 +52,8 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
     frame=0;if(!running())return;
     if(now-last<1000/60-.5){frame=requestAnimationFrame(tick);return;}
     const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;
-    if(id==='holdings'||id==='glow-nav'){
-      const targets=root.querySelectorAll<HTMLElement>(selector!),next=Math.floor(time/(id==='holdings'?4.8:2.4))%(targets.length+1);
+    if(id==='holdings'||id==='glow-nav'||id==='elevation-matrix'){
+      const targets=root.querySelectorAll<HTMLElement>(selector!),next=Math.floor(time/(id==='holdings'?4.8:id==='elevation-matrix'?1.2:2.4))%(targets.length+1);
       if(next!==step){leave();step=next;target=targets[next]??null;
         if(target){pointer('pointerover',true);pointer('pointerenter');entered=true;
           if(id==='glow-nav')target.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));

@@ -35,7 +35,7 @@ test('Every catalog element has complete, content-addressed dark and light WebP 
  for(const item of manifest.items)for(const theme of ['dark','light']){
   const url=posters.items[item.id][theme];assert.match(url,new RegExp(`^/previews/${item.id}-${theme}-[a-f0-9]{12}\\.webp$`));
   const bytes=fs.readFileSync(path.resolve(__dirname,'../public'+url)),hash=crypto.createHash('sha256').update(bytes).digest('hex').slice(0,12);assert.ok(url.endsWith(`-${hash}.webp`));
-  const metadata=await sharp(bytes).metadata();assert.equal(metadata.width,320);assert.equal(metadata.height,320);assert.equal(metadata.format,'webp');const stats=await sharp(bytes).stats();assert.ok(stats.channels.some(channel=>channel.max>channel.min),`${item.id}/${theme} must contain a rendered composition`);
+  const metadata=await sharp(bytes).metadata();assert.ok((metadata.width===320&&metadata.height===320)||(metadata.width===400&&metadata.height===300),'supported square or full-card poster dimensions');assert.equal(metadata.format,'webp');const stats=await sharp(bytes).stats();assert.ok(stats.channels.some(channel=>channel.max>channel.min),`${item.id}/${theme} must contain a rendered composition`);
  }
 });
 

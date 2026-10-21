@@ -38,3 +38,16 @@ research/
 !/packages/cli/THIRD_PARTY_NOTICES.md
 !/skills/motiqo/SKILL.md
 !**/*LICENSE*.md
+
+# Local capture and one-off authoring helpers
+/scripts/capture-cdp.mjs
+/scripts/generate-elastic-poster.mjs
+/scripts/generate-elevation-poster.mjs
+/scripts/generate-meridian-veil-poster.mjs
+
+# Unused local showcase draft artwork
+/public/media/elastic/architecture.webp
+/public/media/elastic/earth.webp
+/public/media/elastic/fashion.webp
+/public/media/elastic/landscape.webp
+/public/media/elastic/sculpture.webp
