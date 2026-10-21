@@ -39,7 +39,7 @@ test('Pulse draws progressively, interpolates inspection, pauses, reduces motion
  }finally{if(mounted)await React.act(()=>e.root.unmount());e.restore();}});
 test('Shared shell preserves the sidebar node and tool state across page replacement',async()=>{const e=environment();let mounted=true,mounts=0,unmounts=0;try{
  const Sidebar=()=>{const[value,set]=React.useState(0);React.useEffect(()=>{mounts++;return()=>unmounts++;},[]);return React.createElement('aside',null,React.createElement('button',{onClick:()=>set(value+1)},value));};
- const shell=load('components/site-shell.tsx',{'./site-sidebar':{default:Sidebar}}),Frame=load('components/site-frame.tsx',{'./site-shell':shell,'./site-footer':{default:()=>null}}).default;
+ const shell=load('components/site-shell.tsx',{'./site-sidebar':{default:Sidebar},'./orbit-companion':{default:()=>null}}),Frame=load('components/site-frame.tsx',{'./site-shell':shell,'./site-footer':{default:()=>null}}).default;
  const render=name=>React.createElement(shell.default,null,React.createElement(Frame,{key:name},React.createElement('h1',null,name)));
  await React.act(()=>e.root.render(render('Home')));const sidebar=document.querySelector('aside');await React.act(()=>sidebar.querySelector('button').click());await React.act(()=>e.root.render(render('Library')));
  assert.equal(document.querySelector('aside'),sidebar);assert.equal(sidebar.textContent,'1');assert.equal(document.querySelector('h1').textContent,'Library');assert.equal(mounts,1);assert.equal(unmounts,0);
@@ -85,10 +85,10 @@ test('Component groups cover the catalog once and reserve empty interface types 
  assert.equal(Object.values(componentGroupCounts).reduce((sum,count)=>sum+count,0),items.length);
  for(const item of items)assert.equal(componentGroups.filter(group=>group.id===componentGroupFor(item)).length,1);
  for(const id of ['buttons','carousels','navigation','loaders','typography','data','objects','linework','backgrounds'])assert.ok(componentGroupCounts[id]>0);
- assert.deepEqual(componentGroups.filter(group=>componentGroupCounts[group.id]===0).map(group=>group.id),['cards','forms','dialogs']);
+ assert.deepEqual(componentGroups.filter(group=>componentGroupCounts[group.id]===0).map(group=>group.id),['forms','dialogs']);
  assert.equal(componentGroupFor(items.find(item=>item.id==='elevation-matrix')),'data');
  assert.equal(componentGroupFor(items.find(item=>item.id==='water-ripple-carousel')),'carousels');
- assert.equal(readComponentGroup('buttons'),'buttons');assert.equal(readComponentGroup('unknown'),undefined);
+ assert.equal(componentGroupFor(items.find(item=>item.id==='gilded-signal')),'cards');for(const id of ['sonic-aperture','orbit-agent','companion','luma'])assert.equal(componentGroupFor(items.find(item=>item.id===id)),'assistants');assert.equal(readComponentGroup('buttons'),'buttons');assert.equal(readComponentGroup('unknown'),undefined);
 });
 
 test('Components drill-down supports direct category links, Soon states, focus return and browser history',async()=>{
@@ -98,7 +98,7 @@ test('Components drill-down supports direct category links, Soon states, focus r
   const groups=load('lib/component-groups.ts'),Sidebar=load('components/site-sidebar.tsx',{'next/link':{default:Link},'@/lib/component-groups':groups,'next/navigation':{usePathname:()=>route,useSearchParams:()=>new URLSearchParams(query)},'./navigation-icon':{default:Empty},'./component-navigation-icon':{default:Empty},'./sidebar-art':{default:Empty},'./brand':{default:Empty},'./color-picker':{default:Empty},'./github-control':{default:Empty},'./theme-control':{default:Empty}}).default;
   const render=()=>React.act(()=>e.root.render(React.createElement(Sidebar,{onCollection:group=>{query=group?`group=${group}`:'';}}))),selected=()=>document.querySelector('nav [aria-current=page]'),link=name=>[...document.querySelectorAll('nav a')].find(node=>node.textContent===name),back=()=>document.querySelector('[aria-label="Back to main navigation"]');
   await render();assert.equal(selected().textContent,'Buttons');assert.equal(selected().getAttribute('href'),'/library?group=buttons');
-  assert.deepEqual([...document.querySelectorAll('nav button:disabled')].map(node=>node.textContent),['CardsSoon','FormsSoon','DialogsSoon']);
+  assert.deepEqual([...document.querySelectorAll('nav button:disabled')].map(node=>node.textContent),['FormsSoon','DialogsSoon']);
   await React.act(()=>back().click());assert.equal(selected().textContent,'Components');assert.equal(document.activeElement,link('Components'));
   await React.act(()=>link('Components').click());await render();assert.equal(selected().textContent,'Browse all');assert.equal(document.activeElement,back());
   await React.act(()=>link('Carousels').click());await render();assert.equal(selected().textContent,'Carousels');

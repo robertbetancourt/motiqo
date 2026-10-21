@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ComponentNavigationIcon from './component-navigation-icon';
-import { componentGroups, componentGroupCounts, newComponentsByGroup, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
+import { componentGroups, componentSections, componentGroupCounts, newComponentsByGroup, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import NavigationIcon from './navigation-icon';
 import SidebarArt from './sidebar-art';
 import Brand from './brand';
@@ -88,7 +88,7 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
         <div className="sidebar-light" aria-hidden="true" />
         {componentsOpen?<>
         <Link href="/library" prefetch={false} className={`sidebar-link ${active==='/library'?'is-active':''}`} aria-current={active==='/library'?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse('/library',library&&onCollection?()=>onCollection():undefined);}}><NavigationIcon name="library"/><span>Browse all</span></Link>
-        {['Interface','Visuals'].map(section=><div className="sidebar-group" key={section}><span className="sidebar-group-title">{section}</span>{componentGroups.filter(group=>group.section===section).map(group=>{
+        {componentSections.map(section=><div className="sidebar-group" key={section}><span className="sidebar-group-title">{section}</span>{componentGroups.filter(group=>group.section===section).map(group=>{
           const available=componentGroupCounts[group.id]>0,count=componentGroupCounts[group.id],newCount=newComponentsByGroup[group.id],href=`/library?group=${group.id}`,selected=active===href;
           const content=<><ComponentNavigationIcon name={group.id}/><span>{group.title}</span>{!available&&<small className="sidebar-soon">Soon</small>}{available&&<span className="sidebar-badge" data-new={newCount>0?'New':undefined} data-has-new={newCount>0?'true':undefined} data-count={count}/>}</>;
           return available?<Link key={group.id} href={href} prefetch={false} className={`sidebar-link ${selected?'is-active':''}`} aria-current={selected?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse(href,library&&onCollection?()=>onCollection(group.id):undefined);}}>{content}</Link>:<button key={group.id} type="button" className="sidebar-link" disabled>{content}</button>;

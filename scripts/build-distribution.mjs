@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
+import {writePreviewRevisions} from './preview-revisions.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),manifest=JSON.parse(fs.readFileSync(path.join(root,'registry/manifest.json'),'utf8'));
 const ids=new Set();
@@ -39,4 +40,5 @@ if(process.argv.includes('--pack')){
  const npm=process.env.npm_execpath??path.join(path.dirname(process.execPath),'node_modules/npm/bin/npm-cli.js');
  const result=spawnSync(process.execPath,[npm,'pack','--ignore-scripts','--pack-destination',destination],{cwd:cli,stdio:'inherit',env:{...process.env,npm_config_cache:path.join(root,'screenshots/.npm-cache')}});if(result.status!==0)throw Error('CLI packaging failed. Run this script through npm run distribution:pack.');
 }
+writePreviewRevisions();
 console.log(`Validated and bundled ${items.length} Motiqo components.`);

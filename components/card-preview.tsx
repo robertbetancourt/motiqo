@@ -8,6 +8,7 @@ import {startPreviewDemo} from '@/lib/preview-demo';
 import {schedulePreview,retainPreview,releasePreview} from '@/lib/preview-scheduler';
 import {registerPreviewCandidate} from '@/lib/preview-budget';
 import * as posters from '@/registry/previews.json';
+import * as revisions from '../registry/preview-sources.json';
 import {Demo} from './demos';
 
 class PreviewBoundary extends Component<{children:ReactNode;onFailure:()=>void},{failed:boolean}>{
@@ -24,7 +25,8 @@ export default memo(function CardPreview({id,paused,priority=false,settings}:{id
   const host=useRef<HTMLDivElement>(null),[mounted,setMounted]=useState(false),[visible,setVisible]=useState(false),[ready,setReady]=useState(false),[granted,setGranted]=useState(false);
   const [cardHovered,setCardHovered]=useState(false);
   const painted=useRef(false),stopped=useRef(paused),wake=useRef<()=>void>(()=>{});stopped.current=paused;
-  const artwork=(posters.items as Partial<Record<ElementId,{dark:string;light:string}>>)[id];
+  const captured=(posters.items as Partial<Record<ElementId,{dark:string;light:string;sourceHash?:string}>>)[id];
+  const artwork=captured?.sourceHash===revisions[id]?captured:undefined;
   useEffect(()=>{
     const root=host.current!,key=Symbol(id);
     let gone=false,active=false,near=false,live=false,loaded=false,loading=false,allowed=false,hovered=false,cancelLoad:(()=>void)|undefined,cancelMount:(()=>void)|undefined;

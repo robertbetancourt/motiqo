@@ -71,9 +71,9 @@ test('Category changes release outgoing previews immediately, including rapid sw
  const Library=load('components/library.tsx',{'motion/react':{AnimatePresence,motion:{div:Animated,article:Animated},useReducedMotion:()=>false},'@/lib/catalog':catalog,'@/lib/component-groups':load('lib/component-groups.ts'),'@/lib/element-controls':controls,'@/lib/tag-filter':load('lib/tag-filter.ts'),'./card-preview':{default:Preview},'./card-context-menu':{default:()=>null},'./element-workspace':{default:()=>null},'./site-frame':{default:Frame},'./outline-field':{default:({children})=>children}}).default;
  const root=require('react-dom/client').createRoot(document.getElementById('mount')),choose=group=>React.act(()=>document.querySelector(`[data-group="${group}"]`).click());
  try{
-  await React.act(()=>root.render(React.createElement(Library,{originalSource:{},initialGroup:'backgrounds'})));assert.ok(active.has('sonic-aperture'));assert.ok(active.has('stratum'));
-  await choose('typography');assert.deepEqual([...active].sort(),['inkshift','type-garden']);assert.equal(document.querySelectorAll('.element-card').length,2);assert.ok(releases.includes('sonic-aperture'));
-  await choose('data');assert.deepEqual([...active].sort(),['aura','elevation-matrix','holdings','pulse','sentiment']);assert.ok(releases.includes('inkshift'));assert.equal(new URL(window.location.href).searchParams.get('group'),'data');
+  await React.act(()=>root.render(React.createElement(Library,{originalSource:{},initialGroup:'backgrounds'})));assert.ok(active.has('bokeh-terrain'));assert.ok(active.has('stratum'));
+  await choose('typography');assert.deepEqual([...active].sort(),['inkshift','type-garden']);assert.equal(document.querySelectorAll('.element-card').length,2);assert.ok(releases.includes('bokeh-terrain'));
+  await choose('data');assert.deepEqual([...active].sort(),['aura','elevation-matrix','holdings','iris-turbine','pulse','radial-spectrum','sentiment']);assert.ok(releases.includes('inkshift'));assert.equal(new URL(window.location.href).searchParams.get('group'),'data');
   await choose('backgrounds');await choose('typography');assert.deepEqual([...active].sort(),['inkshift','type-garden']);
  }finally{await React.act(()=>root.unmount());assert.equal(active.size,0);dom.window.close();for(const[key,value]of old){if(value)Object.defineProperty(globalThis,key,value);else delete globalThis[key];}}
 });

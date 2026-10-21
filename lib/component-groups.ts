@@ -11,18 +11,20 @@ export function isElementNew(element?: { addedAt?: string } | null): boolean {
 
 export const componentGroups = [
   { id: 'buttons', title: 'Buttons', section: 'Interface' },
-  { id: 'carousels', title: 'Carousels', section: 'Interface' },
   { id: 'navigation', title: 'Navigation', section: 'Interface' },
-  { id: 'loaders', title: 'Loaders', section: 'Interface' },
   { id: 'cards', title: 'Cards', section: 'Interface' },
+  { id: 'carousels', title: 'Carousels', section: 'Interface' },
+  { id: 'loaders', title: 'Loaders', section: 'Interface' },
   { id: 'forms', title: 'Forms', section: 'Interface' },
   { id: 'dialogs', title: 'Dialogs', section: 'Interface' },
+  { id: 'typography', title: 'Typography', section: 'Content' },
+  { id: 'data', title: 'Data visualization', section: 'Content' },
+  { id: 'assistants', title: 'AI & assistants', section: 'Content' },
   { id: 'backgrounds', title: 'Motion & effects', section: 'Visuals' },
-  { id: 'typography', title: 'Typography', section: 'Visuals' },
-  { id: 'data', title: 'Data visualization', section: 'Visuals' },
-  { id: 'objects', title: 'Objects', section: 'Visuals' },
-  { id: 'linework', title: 'Linework', section: 'Visuals' },
+  { id: 'objects', title: '3D objects', section: 'Visuals' },
+  { id: 'linework', title: 'Illustrations', section: 'Visuals' },
 ] as const;
+export const componentSections=[...new Set(componentGroups.map(group=>group.section))];
 
 export type ComponentGroup = typeof componentGroups[number]['id'];
 type Component = { id: string; category: string; tags: readonly string[] };
@@ -36,6 +38,7 @@ export function componentGroupFor(item: Component): ComponentGroup {
   if (item.tags.includes('Card')) return 'cards';
   if (item.tags.includes('Form')) return 'forms';
   if (item.tags.includes('Dialog')) return 'dialogs';
+  if (item.tags.includes('Assistant')) return 'assistants';
   if (item.tags.includes('Typography')) return 'typography';
   if (item.tags.includes('Chart') || item.tags.includes('Data') || item.tags.includes('Score')) return 'data';
   if (item.category === 'Linework') return 'linework';

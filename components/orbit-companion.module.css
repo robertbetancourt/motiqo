@@ -1,0 +1,8 @@
+.companion{position:fixed;z-index:38;left:0;top:0;width:152px;height:152px;transform:translate3d(calc(var(--orbit-x,calc(100vw - 92px)) - 76px),calc(var(--orbit-y,calc(100vh - 100px)) - 76px),0);transition:opacity 400ms;pointer-events:none;contain:layout style;isolation:isolate}
+.scene{width:100%;height:100%;transform:rotate(var(--orbit-lean,0deg)) scale(var(--orbit-stretch,1),var(--orbit-squash,1));animation:orbit-float 4s ease-in-out infinite}.scene :global(.mq-orbit-agent){min-height:0;pointer-events:none}
+@keyframes orbit-float{0%,100%{translate:0 -4px}50%{translate:0 4px}}
+.greet{position:absolute;left:50%;top:50%;width:64px;height:64px;transform:translate(-50%,-50%);border:0;border-radius:50%;background:transparent;pointer-events:none;cursor:pointer}
+.greet:focus-visible{outline:2px solid var(--accent);outline-offset:6px}
+.companion[data-awake=false]{opacity:.72}.companion[data-awake=false] .scene{animation-play-state:paused}
+@media(pointer:coarse),(max-width:680px){.companion{width:108px;height:108px;transform:translate3d(calc(var(--orbit-x,calc(100vw - 70px)) - 54px),calc(var(--orbit-y,calc(100vh - 90px)) - 54px),0)}.greet{width:48px;height:48px}}
+@media(prefers-reduced-motion:reduce){.scene{transform:none;transition:none;animation:none}.companion{transition:none;transform:translate3d(calc(100vw - 168px),calc(100vh - 176px),0)}}

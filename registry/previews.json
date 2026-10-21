@@ -1,243 +1,302 @@
 {
-  "schemaVersion": 1,
-  "width": 320,
-  "height": 320,
+  "schemaVersion": 2,
+  "width": 400,
+  "height": 300,
   "items": {
     "meridian-veil": {
-      "dark": "/previews/meridian-veil-dark-2f68f2fc4744.webp",
-      "light": "/previews/meridian-veil-light-2f68f2fc4744.webp"
+      "sourceHash": "2123c84cc754ec4d732f",
+      "dark": "/previews/meridian-veil-dark-990d32f4454e.webp",
+      "light": "/previews/meridian-veil-light-990d32f4454e.webp"
     },
     "elastic-showcase": {
-      "dark": "/previews/elastic-showcase-dark-0dbf19409f6b.webp",
-      "light": "/previews/elastic-showcase-light-0dbf19409f6b.webp"
+      "sourceHash": "daebbd88ae3b27ae42db",
+      "dark": "/previews/elastic-showcase-dark-a6b20123a287.webp",
+      "light": "/previews/elastic-showcase-light-a6b20123a287.webp"
     },
     "sonic-aperture": {
-      "dark": "/previews/sonic-aperture-dark-335ff8da5801.webp",
-      "light": "/previews/sonic-aperture-light-335ff8da5801.webp"
+      "sourceHash": "2f003e51f37c776a2bb8",
+      "dark": "/previews/sonic-aperture-dark-450d5427c3fd.webp",
+      "light": "/previews/sonic-aperture-light-450d5427c3fd.webp"
     },
     "prism-core": {
-      "dark": "/previews/prism-core-dark-b7b0c2557328.webp",
-      "light": "/previews/prism-core-light-b7b0c2557328.webp"
+      "sourceHash": "cb182a39511855694648",
+      "dark": "/previews/prism-core-dark-c3df6e6bcc74.webp",
+      "light": "/previews/prism-core-light-c3df6e6bcc74.webp"
     },
     "aperture-loader": {
-      "dark": "/previews/aperture-loader-dark-c73b4ee25a3e.webp",
-      "light": "/previews/aperture-loader-light-c73b4ee25a3e.webp"
+      "sourceHash": "ef2115acf1bd3e230cb9",
+      "dark": "/previews/aperture-loader-dark-b0bea63d8fba.webp",
+      "light": "/previews/aperture-loader-light-b0bea63d8fba.webp"
     },
     "vapor-ring": {
-      "dark": "/previews/vapor-ring-dark-4f1d5d672cbf.webp",
-      "light": "/previews/vapor-ring-light-ebe91a8030f8.webp"
+      "sourceHash": "23b6808eeb8e790f2b31",
+      "dark": "/previews/vapor-ring-dark-3e7b1a1ddab5.webp",
+      "light": "/previews/vapor-ring-light-3e7b1a1ddab5.webp"
     },
     "elevation-matrix": {
-      "dark": "/previews/elevation-matrix-dark-eb1fafb0ce4d.webp",
-      "light": "/previews/elevation-matrix-light-b63efb611dfd.webp"
+      "sourceHash": "40cabdb966d98f16b85e",
+      "dark": "/previews/elevation-matrix-dark-91c25356eb67.webp",
+      "light": "/previews/elevation-matrix-light-b78809c41874.webp"
     },
     "sacred-lotus": {
+      "sourceHash": "582a98d72284d4c06eba",
       "dark": "/previews/sacred-lotus-dark-7998408e8766.webp",
       "light": "/previews/sacred-lotus-light-7998408e8766.webp"
     },
     "iris-turbine": {
+      "sourceHash": "6ee232db45241072e225",
       "dark": "/previews/iris-turbine-dark-79e45e2886f5.webp",
       "light": "/previews/iris-turbine-light-79e45e2886f5.webp"
     },
     "bokeh-terrain": {
-      "dark": "/previews/bokeh-terrain-dark-505df25e6aea.webp",
-      "light": "/previews/bokeh-terrain-light-505df25e6aea.webp"
+      "sourceHash": "986e86f746172e47a3b1",
+      "dark": "/previews/bokeh-terrain-dark-bc5dbd396bcf.webp",
+      "light": "/previews/bokeh-terrain-light-bc5dbd396bcf.webp"
     },
     "opaline-orb": {
-      "dark": "/previews/opaline-orb-dark-53e0add7726e.webp",
-      "light": "/previews/opaline-orb-light-b79f4e9eaeac.webp"
+      "sourceHash": "0c3dcd69a2c4fd783dcc",
+      "dark": "/previews/opaline-orb-dark-f741fafe8e16.webp",
+      "light": "/previews/opaline-orb-light-5a029d71809b.webp"
     },
     "orbit-agent": {
-      "dark": "/previews/orbit-agent-dark-2ba3531d6509.webp",
-      "light": "/previews/orbit-agent-light-2ba3531d6509.webp"
+      "sourceHash": "a1e096ff63b6129444fc",
+      "dark": "/previews/orbit-agent-dark-d5e3a39f614b.webp",
+      "light": "/previews/orbit-agent-light-d5e3a39f614b.webp"
     },
     "water-ripple-carousel": {
-      "dark": "/previews/water-ripple-carousel-dark-ec5d818a6606.webp",
-      "light": "/previews/water-ripple-carousel-light-ec5d818a6606.webp"
+      "sourceHash": "a74fa0ffd04c46a23970",
+      "dark": "/previews/water-ripple-carousel-dark-d68dbccc14ad.webp",
+      "light": "/previews/water-ripple-carousel-light-d68dbccc14ad.webp"
     },
     "aperture-carousel": {
-      "dark": "/previews/aperture-carousel-dark-944c1f6ba6f3.webp",
-      "light": "/previews/aperture-carousel-light-944c1f6ba6f3.webp"
+      "sourceHash": "28f0d06ecf89a89c6cdc",
+      "dark": "/previews/aperture-carousel-dark-d7f1d3f4e096.webp",
+      "light": "/previews/aperture-carousel-light-d7f1d3f4e096.webp"
     },
     "thermal-smoke": {
-      "dark": "/previews/thermal-smoke-dark-a5e56d4cad00.webp",
-      "light": "/previews/thermal-smoke-light-933ea0bfaefa.webp"
+      "sourceHash": "2bdfaf5e8475154e28a5",
+      "dark": "/previews/thermal-smoke-dark-6610480a1201.webp",
+      "light": "/previews/thermal-smoke-light-6610480a1201.webp"
     },
     "radial-spectrum": {
-      "dark": "/previews/radial-spectrum-dark-0abf53192730.webp",
-      "light": "/previews/radial-spectrum-light-0abf53192730.webp"
+      "sourceHash": "0d5b3f59a2a6943bf0a3",
+      "dark": "/previews/radial-spectrum-dark-537b8e4c4da3.webp",
+      "light": "/previews/radial-spectrum-light-537b8e4c4da3.webp"
     },
     "type-garden": {
-      "dark": "/previews/type-garden-dark-8451a9cbc5d5.webp",
-      "light": "/previews/type-garden-light-8451a9cbc5d5.webp"
+      "sourceHash": "d8c65b1d7ccda93927ee",
+      "dark": "/previews/type-garden-dark-655c76ccdcf6.webp",
+      "light": "/previews/type-garden-light-655c76ccdcf6.webp"
     },
     "lenticular-button": {
-      "dark": "/previews/lenticular-button-dark-3504d47aa13e.webp",
-      "light": "/previews/lenticular-button-light-5c89027e6678.webp"
+      "sourceHash": "74ed7e731d8cd43ec1a8",
+      "dark": "/previews/lenticular-button-dark-125ae46579f7.webp",
+      "light": "/previews/lenticular-button-light-125ae46579f7.webp"
     },
     "photon-button": {
-      "dark": "/previews/photon-button-dark-ec4dcc026150.webp",
-      "light": "/previews/photon-button-light-ec4dcc026150.webp"
+      "sourceHash": "1e3c1f48654b2b56167d",
+      "dark": "/previews/photon-button-dark-6214895135d2.webp",
+      "light": "/previews/photon-button-light-6214895135d2.webp"
     },
     "optical-button": {
-      "dark": "/previews/optical-button-dark-ef3a4f2f9e1c.webp",
-      "light": "/previews/optical-button-light-ef3a4f2f9e1c.webp"
+      "sourceHash": "288ee4be980caa21f249",
+      "dark": "/previews/optical-button-dark-339a066bdb0f.webp",
+      "light": "/previews/optical-button-light-339a066bdb0f.webp"
     },
     "spectral-button": {
-      "dark": "/previews/spectral-button-dark-d424a1b7fd05.webp",
-      "light": "/previews/spectral-button-light-d424a1b7fd05.webp"
+      "sourceHash": "b79b1ab31aa0b438598e",
+      "dark": "/previews/spectral-button-dark-ca967ad000e1.webp",
+      "light": "/previews/spectral-button-light-ca967ad000e1.webp"
     },
     "caustic-button": {
-      "dark": "/previews/caustic-button-dark-d285aef448e9.webp",
-      "light": "/previews/caustic-button-light-d285aef448e9.webp"
+      "sourceHash": "dfcf66e99aa0a1627510",
+      "dark": "/previews/caustic-button-dark-1ed64af8901f.webp",
+      "light": "/previews/caustic-button-light-1ed64af8901f.webp"
     },
     "prism-button": {
-      "dark": "/previews/prism-button-dark-59d79c1fa942.webp",
-      "light": "/previews/prism-button-light-59d79c1fa942.webp"
+      "sourceHash": "e1e27aef921a7e05c12e",
+      "dark": "/previews/prism-button-dark-f77b0e59948d.webp",
+      "light": "/previews/prism-button-light-f77b0e59948d.webp"
     },
     "quantum-core": {
-      "dark": "/previews/quantum-core-dark-fddf8132b5a9.webp",
-      "light": "/previews/quantum-core-light-fddf8132b5a9.webp"
+      "sourceHash": "f06fa66ff34ecb38a188",
+      "dark": "/previews/quantum-core-dark-8275e2c2737b.webp",
+      "light": "/previews/quantum-core-light-8275e2c2737b.webp"
     },
     "clustered": {
-      "dark": "/previews/clustered-dark-d1e9396e567f.webp",
-      "light": "/previews/clustered-light-d1e9396e567f.webp"
+      "sourceHash": "485dcd45348c00f25034",
+      "dark": "/previews/clustered-dark-b1ef23c7b0dd.webp",
+      "light": "/previews/clustered-light-b1ef23c7b0dd.webp"
     },
     "stratum": {
-      "dark": "/previews/stratum-dark-2f144f0f3c11.webp",
-      "light": "/previews/stratum-light-2f144f0f3c11.webp"
+      "sourceHash": "923d0c0d75feb8124456",
+      "dark": "/previews/stratum-dark-9abb5b1ce564.webp",
+      "light": "/previews/stratum-light-9abb5b1ce564.webp"
     },
     "inkshift": {
-      "dark": "/previews/inkshift-dark-0d05ca229684.webp",
-      "light": "/previews/inkshift-light-0d05ca229684.webp"
+      "sourceHash": "6c9e193b5b4df204a3cf",
+      "dark": "/previews/inkshift-dark-5ad96ca05376.webp",
+      "light": "/previews/inkshift-light-5ad96ca05376.webp"
     },
     "atelier": {
-      "dark": "/previews/atelier-dark-3c179d01dbd9.webp",
-      "light": "/previews/atelier-light-3c179d01dbd9.webp"
+      "sourceHash": "a2fd0720827ddb5fb286",
+      "dark": "/previews/atelier-dark-19952eac1cc7.webp",
+      "light": "/previews/atelier-light-19952eac1cc7.webp"
     },
     "charge": {
-      "dark": "/previews/charge-dark-d148af24d005.webp",
-      "light": "/previews/charge-light-935d0149bb60.webp"
+      "sourceHash": "59fd7d5a1211a9567cb7",
+      "dark": "/previews/charge-dark-021e72f12f68.webp",
+      "light": "/previews/charge-light-94639da6e532.webp"
     },
     "resonance": {
-      "dark": "/previews/resonance-dark-74761e1d3a99.webp",
-      "light": "/previews/resonance-light-74761e1d3a99.webp"
+      "sourceHash": "e70b91b18fc3f30871f4",
+      "dark": "/previews/resonance-dark-205b743a5f1f.webp",
+      "light": "/previews/resonance-light-205b743a5f1f.webp"
     },
     "sleeve": {
-      "dark": "/previews/sleeve-dark-f9516c5b4ef3.webp",
-      "light": "/previews/sleeve-light-abb1f8867b9a.webp"
+      "sourceHash": "cf831deca63ae213e282",
+      "dark": "/previews/sleeve-dark-3781d8d654db.webp",
+      "light": "/previews/sleeve-light-0e5620ad2157.webp"
     },
     "meridian": {
-      "dark": "/previews/meridian-dark-af28f1830c48.webp",
-      "light": "/previews/meridian-light-6c25caf393bd.webp"
+      "sourceHash": "bffa614e078c5d9ace16",
+      "dark": "/previews/meridian-dark-f2da483554f0.webp",
+      "light": "/previews/meridian-light-6e8044590464.webp"
     },
     "deck": {
-      "dark": "/previews/deck-dark-ab006b43d2f8.webp",
-      "light": "/previews/deck-light-ab006b43d2f8.webp"
+      "sourceHash": "446ca009f602152dfad0",
+      "dark": "/previews/deck-dark-5f31e3e57e0a.webp",
+      "light": "/previews/deck-light-5f31e3e57e0a.webp"
     },
     "sentiment": {
-      "dark": "/previews/sentiment-dark-171ee2415219.webp",
-      "light": "/previews/sentiment-light-fe39bf09f5a9.webp"
+      "sourceHash": "7d6c360996eaa894b321",
+      "dark": "/previews/sentiment-dark-9b076dec5f58.webp",
+      "light": "/previews/sentiment-light-0b1fd5d63361.webp"
     },
     "companion": {
-      "dark": "/previews/companion-dark-0bdda8db9054.webp",
-      "light": "/previews/companion-light-0bdda8db9054.webp"
+      "sourceHash": "74f35dc918777507e5dc",
+      "dark": "/previews/companion-dark-0f0a4b59feb1.webp",
+      "light": "/previews/companion-light-0f0a4b59feb1.webp"
     },
     "helix": {
-      "dark": "/previews/helix-dark-95c217e7e8ef.webp",
-      "light": "/previews/helix-light-95c217e7e8ef.webp"
+      "sourceHash": "5e761b2c17b673d51b97",
+      "dark": "/previews/helix-dark-2b8aedc0b8d8.webp",
+      "light": "/previews/helix-light-2b8aedc0b8d8.webp"
     },
     "holdings": {
-      "dark": "/previews/holdings-dark-f4553de74fee.webp",
-      "light": "/previews/holdings-light-71daddb2a1d0.webp"
+      "sourceHash": "b64d94da7eac2efcd790",
+      "dark": "/previews/holdings-dark-c9c06ab9c9ab.webp",
+      "light": "/previews/holdings-light-15236bea8eaf.webp"
     },
     "galaxy": {
-      "dark": "/previews/galaxy-dark-e8f555b6166a.webp",
-      "light": "/previews/galaxy-light-e8f555b6166a.webp"
+      "sourceHash": "d16a694b0712fb3446ab",
+      "dark": "/previews/galaxy-dark-bc3cdd57a912.webp",
+      "light": "/previews/galaxy-light-bc3cdd57a912.webp"
     },
     "luma": {
-      "dark": "/previews/luma-dark-9b4d9e259bc8.webp",
-      "light": "/previews/luma-light-aa39f206859d.webp"
+      "sourceHash": "c33fd0bcf808f965b503",
+      "dark": "/previews/luma-dark-278f38c87cdf.webp",
+      "light": "/previews/luma-light-3fb100e4d8d3.webp"
     },
     "constellation": {
-      "dark": "/previews/constellation-dark-4a9f52b31ca7.webp",
-      "light": "/previews/constellation-light-4a9f52b31ca7.webp"
+      "sourceHash": "b8498747b188f268a2e9",
+      "dark": "/previews/constellation-dark-24edcec08afd.webp",
+      "light": "/previews/constellation-light-24edcec08afd.webp"
     },
     "aura": {
-      "dark": "/previews/aura-dark-8fbe50105d7f.webp",
-      "light": "/previews/aura-light-343409cfe76a.webp"
+      "sourceHash": "541e4a449f29dfdc7bee",
+      "dark": "/previews/aura-dark-f0651cde9548.webp",
+      "light": "/previews/aura-light-e030d9bf1ffb.webp"
     },
     "nexus": {
-      "dark": "/previews/nexus-dark-48d3ca2bfa2a.webp",
-      "light": "/previews/nexus-light-3a2342cb18d0.webp"
+      "sourceHash": "2766c23a3a8f1a420490",
+      "dark": "/previews/nexus-dark-f476b0a04e88.webp",
+      "light": "/previews/nexus-light-7deba6f8a2d7.webp"
     },
     "orbit": {
-      "dark": "/previews/orbit-dark-be1baf9f7961.webp",
-      "light": "/previews/orbit-light-cad413688ee0.webp"
+      "sourceHash": "84bc529846d2bb4cd0e4",
+      "dark": "/previews/orbit-dark-c31cd5dcd4bb.webp",
+      "light": "/previews/orbit-light-0a3ffdf95507.webp"
     },
     "halo": {
-      "dark": "/previews/halo-dark-20bc758ed0ab.webp",
-      "light": "/previews/halo-light-a6b7d42c21a6.webp"
+      "sourceHash": "ad060a52f8ee988c8ba2",
+      "dark": "/previews/halo-dark-014195ef3e8b.webp",
+      "light": "/previews/halo-light-d1d3794869b6.webp"
     },
     "district": {
-      "dark": "/previews/district-dark-9ffa05fe737c.webp",
-      "light": "/previews/district-light-937fc22be73b.webp"
+      "sourceHash": "3a8d9ed239ea680e1b93",
+      "dark": "/previews/district-dark-3545ba26be6a.webp",
+      "light": "/previews/district-light-e3edb9353947.webp"
     },
     "pulse": {
-      "dark": "/previews/pulse-dark-00f14f86bdc6.webp",
-      "light": "/previews/pulse-light-94165c4e342b.webp"
+      "sourceHash": "61d0a286b86f193bd443",
+      "dark": "/previews/pulse-dark-c8587948c007.webp",
+      "light": "/previews/pulse-light-63134743891d.webp"
     },
     "event-horizon": {
-      "dark": "/previews/event-horizon-dark-6c69bd675778.webp",
-      "light": "/previews/event-horizon-light-085372eca304.webp"
+      "sourceHash": "64de992c6711a666145c",
+      "dark": "/previews/event-horizon-dark-3b6d0e577041.webp",
+      "light": "/previews/event-horizon-light-f26711e7af96.webp"
     },
     "liquid-artifact-hero": {
-      "dark": "/previews/liquid-artifact-hero-dark-c935db0de25f.webp",
-      "light": "/previews/liquid-artifact-hero-light-f67121f88a63.webp"
+      "sourceHash": "d306ce52823407460037",
+      "dark": "/previews/liquid-artifact-hero-dark-eb01ddc2e140.webp",
+      "light": "/previews/liquid-artifact-hero-light-059ec4b6d7ab.webp"
     },
     "crate": {
-      "dark": "/previews/crate-dark-c80d265eabca.webp",
-      "light": "/previews/crate-light-f780267e878b.webp"
+      "sourceHash": "78c1ea4afdf5b96a69e7",
+      "dark": "/previews/crate-dark-bf767e494653.webp",
+      "light": "/previews/crate-light-35b13cc419c9.webp"
     },
     "liquid-sculpture": {
-      "dark": "/previews/liquid-sculpture-dark-01f9f65fef6e.webp",
-      "light": "/previews/liquid-sculpture-light-c6982287d958.webp"
+      "sourceHash": "6b4032c259c014440e2e",
+      "dark": "/previews/liquid-sculpture-dark-f3e8e7b146dc.webp",
+      "light": "/previews/liquid-sculpture-light-66501ccf7fc9.webp"
     },
     "glow-nav": {
-      "dark": "/previews/glow-nav-dark-4a0d4df33b38.webp",
-      "light": "/previews/glow-nav-light-4cf9100f95a4.webp"
+      "sourceHash": "2bed303ae3ae5075e5a4",
+      "dark": "/previews/glow-nav-dark-c9c31be006fa.webp",
+      "light": "/previews/glow-nav-light-ac7457e791fe.webp"
     },
     "lantern": {
-      "dark": "/previews/lantern-dark-8c817b4a3dc6.webp",
-      "light": "/previews/lantern-light-7f2a4ad36f3b.webp"
+      "sourceHash": "61ea02fa504fb1c89dd7",
+      "dark": "/previews/lantern-dark-0af0b1c275a3.webp",
+      "light": "/previews/lantern-light-5cd23ce9a14b.webp"
     },
     "gyro": {
-      "dark": "/previews/gyro-dark-bf35ce81d709.webp",
-      "light": "/previews/gyro-light-c6ee2b6b5c91.webp"
+      "sourceHash": "86a934e653ce1a1b3f82",
+      "dark": "/previews/gyro-dark-856cc6b218fd.webp",
+      "light": "/previews/gyro-light-e10767994511.webp"
     },
     "arbor": {
-      "dark": "/previews/arbor-dark-21a371fce2cd.webp",
-      "light": "/previews/arbor-light-596f19a76709.webp"
+      "sourceHash": "a8252a40eec340d519ec",
+      "dark": "/previews/arbor-dark-cf0c3d6354ca.webp",
+      "light": "/previews/arbor-light-6ede993f5250.webp"
     },
     "drawer": {
-      "dark": "/previews/drawer-dark-899b886a4eac.webp",
-      "light": "/previews/drawer-light-3947df49e020.webp"
+      "sourceHash": "b9cdf202817540ef8f0c",
+      "dark": "/previews/drawer-dark-605569456938.webp",
+      "light": "/previews/drawer-light-e8424d94a163.webp"
     },
     "tempo": {
-      "dark": "/previews/tempo-dark-86baa42063bb.webp",
-      "light": "/previews/tempo-light-a3b868b33413.webp"
+      "sourceHash": "a45964613d7dc33a0d8d",
+      "dark": "/previews/tempo-dark-1455dc0af982.webp",
+      "light": "/previews/tempo-light-25a7bb5aa937.webp"
     },
     "pleat": {
-      "dark": "/previews/pleat-dark-69f596299516.webp",
-      "light": "/previews/pleat-light-a98f5b5b24a8.webp"
+      "sourceHash": "1129152ec6f8c87990a0",
+      "dark": "/previews/pleat-dark-024c828e6754.webp",
+      "light": "/previews/pleat-light-04fc146cfab7.webp"
     },
     "gilded-signal": {
-      "dark": "/previews/gilded-signal-dark-56d4d702ffb7.webp",
-      "light": "/previews/gilded-signal-light-56d4d702ffb7.webp"
+      "sourceHash": "632e53053b91c74c14ca",
+      "dark": "/previews/gilded-signal-dark-501716fe3e24.webp",
+      "light": "/previews/gilded-signal-light-501716fe3e24.webp"
     },
     "silk-aperture": {
-      "dark": "/previews/silk-aperture-dark-2d971d4eef2e.webp",
-      "light": "/previews/silk-aperture-light-2d971d4eef2e.webp"
+      "sourceHash": "1c5aa8155dce9a7b6d07",
+      "dark": "/previews/silk-aperture-dark-10659ff53857.webp",
+      "light": "/previews/silk-aperture-light-10659ff53857.webp"
     }
   }
 }

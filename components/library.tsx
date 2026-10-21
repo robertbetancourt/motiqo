@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
-import { ArrowRight, Bookmark, Check, Command, Pause, Play, Search, SlidersHorizontal } from 'lucide-react';
+import { ArrowRight, Bookmark, Check, Command, Search, SlidersHorizontal } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { aiTools, elements, makePrompt, isElementNew, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
 import { componentGroups, componentGroupFor, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
@@ -24,7 +24,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
   const [initialTab,setInitialTab] = useState<'preview' | 'code' | 'prompt'>(initialView);
   const [tool,setTool] = useState<AITool>('Universal');
   const [toast,setToast] = useState('');
-  const [paused,setPaused] = useState(false);
+  const paused = false;
   const [contextMenu,setContextMenu]=useState<CardMenuPosition|null>(null);
   const [cardSettings,setCardSettings]=useState<Record<string,Settings>>({});
   const [workspaceSettings,setWorkspaceSettings]=useState<Settings>();
@@ -136,7 +136,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
       }}>
         <h1 className="sr-only">{savedOnly?'Saved':groupTitle??'Library'}</h1>
         <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
-          <div className="filter-row collection-toolbar"><span className="collection-label">{groupTitle}</span><div className="search-tools"><button className="motion-control" aria-pressed={paused} disabled={!!reduced} onClick={()=>setPaused(!paused)}>{still?<Play size={13}/>:<Pause size={13}/>} {reduced?'Reduced motion':paused?'Resume motion':'Pause motion'}</button><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>
+          <div className="filter-row collection-toolbar"><span className="collection-label">{groupTitle}</span><div className="search-tools"><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>
           {tag&&<div className="active-tag-filter" role="status"><span>Tagged</span><button type="button" aria-label={`Clear ${tag} filter`} onClick={()=>chooseTag(tag)}>{tag}<span aria-hidden="true">×</span></button><span>{filtered.length} {filtered.length===1?'element':'elements'}</span></div>}
           <div className="element-grid">
             {(!savedOnly||storageReady)&&filtered.map((element,index)=><article key={element.id} data-element={element.id} className={`element-card card-${element.id}`} style={{'--entry-delay':`${Math.min(index,7)*45+120}ms`} as CSSProperties} onContextMenu={event=>{if(event.shiftKey)return;event.preventDefault();const trigger=event.currentTarget.querySelector<HTMLElement>('.card-preview-open')!;const box=trigger.getBoundingClientRect();menuTrigger.current=trigger;setContextMenu({element,x:event.clientX||box.left+20,y:event.clientY||box.top+20,trigger});}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea')&&!window.getSelection()?.toString()&&e.detail<2)open(element);}}>

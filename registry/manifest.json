@@ -326,14 +326,15 @@
       "title": "Sonic Aperture",
       "category": "Motion",
       "original": true,
-      "description": "A liquid sphere opens into a blue particle veil.",
+      "description": "An assistant sphere opens into a particle aperture and reveals its greeting.",
       "hint": "Explore the component with pointer, touch or keyboard.",
       "source": "Motiqo",
       "sourceUrl": "/docs#installation",
       "tags": [
         "WebGL",
         "Interactive",
-        "Shader"
+        "Shader",
+        "Assistant"
       ],
       "dependencies": [
         "React",
@@ -341,7 +342,7 @@
       ],
       "installNote": "Copy all included implementation files together and install three and @types/three. The microphone uses Motiqo OpticalButton and toggles the visual aperture.",
       "code": "import SonicAperture from './sonic-aperture';\n\nexport default function Example(){ return <div style={{height:560}}><SonicAperture/></div>; }",
-      "brief": "Create SonicAperture on a pure black canvas, containing only a centered organic blue particle sphere, the central short Human Nature excerpt when expanded, and an OpticalButton microphone toggle at the bottom. A 224x224 Points grid (160x160 in compact previews) uses original simplex noise and spring morphing into a folded annular veil. Fine, individually resolved luminous points form the translucent sphere; fine crisp blue/cyan points form the open ring. Reveal the supplied customisable stanzas character by character after the aperture opens. The microphone icon toggles the visual state; it does not record or request microphone access. Preserve clean closing, pointer tilt, touch and keyboard button access, reduced motion, visibility suspension, context restoration, fallback and disposal. No phone frame, pedestal, external decoration or audio permission.",
+      "brief": "Create SonicAperture on a pure black canvas, containing only a centered organic blue particle sphere, the central assistant greeting when expanded, and an OpticalButton microphone toggle at the bottom. A 224x224 Points grid (160x160 in compact previews) uses original simplex noise and spring morphing into a folded annular veil. Fine, individually resolved luminous points form the translucent sphere; fine crisp blue/cyan points form the open ring. Reveal the supplied customisable assistant messages character by character after the aperture opens. The microphone icon toggles the visual state; it does not record or request microphone access. Preserve clean closing, pointer tilt, touch and keyboard button access, reduced motion, visibility suspension, context restoration, fallback and disposal. No phone frame, pedestal, external decoration or audio permission.",
       "entry": "sonic-aperture.tsx",
       "exportName": "SonicAperture",
       "files": [
@@ -394,10 +395,10 @@
           ]
         },
         {
-          "key": "lyrics",
-          "label": "Lyrics",
+          "key": "messages",
+          "label": "Assistant message",
           "kind": "text",
-          "defaultValue": "Why, why?\nTell 'em that\nit's human nature",
+          "defaultValue": "How can I\nhelp you today,\nMark?",
           "multiline": true,
           "maxLength": 1500
         },
@@ -420,9 +421,9 @@
           "label": "Sphere",
           "settings": {
             "defaultListening": "closed",
-            "lyrics": "Why, why?\nTell 'em that\nit's human nature",
             "primaryColor": "#1d4ed8",
-            "accentColor": "#38bdf8"
+            "accentColor": "#38bdf8",
+            "messages": "How can I\nhelp you today,\nMark?"
           }
         },
         {
@@ -430,9 +431,9 @@
           "label": "Aperture",
           "settings": {
             "defaultListening": "open",
-            "lyrics": "Why, why?\nTell 'em that\nit's human nature",
             "primaryColor": "#1d4ed8",
-            "accentColor": "#38bdf8"
+            "accentColor": "#38bdf8",
+            "messages": "How can I\nhelp you today,\nMark?"
           }
         },
         {
@@ -440,9 +441,9 @@
           "label": "Ice",
           "settings": {
             "defaultListening": "closed",
-            "lyrics": "Why, why?\nTell 'em that\nit's human nature",
             "primaryColor": "#2563eb",
-            "accentColor": "#e0f2fe"
+            "accentColor": "#e0f2fe",
+            "messages": "How can I\nhelp you today,\nMark?"
           }
         }
       ]
@@ -1283,7 +1284,8 @@
       "tags": [
         "Canvas",
         "Kinetic",
-        "Interactive"
+        "Interactive",
+        "Data"
       ],
       "dependencies": [
         "React"
@@ -1864,7 +1866,8 @@
       "tags": [
         "Canvas",
         "Character",
-        "Interactive"
+        "Interactive",
+        "Assistant"
       ],
       "dependencies": [
         "React"
@@ -2478,7 +2481,8 @@
       "tags": [
         "Canvas",
         "Web Audio",
-        "FFT"
+        "FFT",
+        "Data"
       ],
       "dependencies": [
         "React"
@@ -5333,7 +5337,7 @@
       "title": "Meridian",
       "category": "Motion",
       "original": true,
-      "description": "A better way through.",
+      "description": "A neon journey through the city after dark.",
       "hint": "Scroll to follow the route in either direction. Autoplay resumes after 2.5 seconds. Click or Space to replay.",
       "source": "Motiqo",
       "sourceUrl": "/docs#installation",
@@ -5348,7 +5352,7 @@
       ],
       "installNote": "Install three and copy meridian.tsx, meridian-scene.ts, meridian-city.ts and meridian-math.ts. Three.js includes the postprocessing passes. Give the parent a defined height. Increment replay to restart the sequence.",
       "code": "import Meridian from './meridian';\n\nexport default function Example() {\n  return <div style={{ height: 560 }}><Meridian animationSpeed={1} replay={0} /></div>;\n}",
-      "brief": "Integrate Meridian, a Motiqo cinematic neon routing city in a fine-bordered rounded container. Build 30 varied raised sidewalk islands around narrow two-way streets with exactly one lane per direction and a single dashed center divider. Keep asphalt consistently six world units wide, including the diagonal avenue dogleg, with sidewalks filling the unused wedges, with compound stepped buildings, recessed terraces, L-shaped wings, bevels and rooftop equipment. Use architectural #0d0f14, roughness .35 and metalness .65. Preserve the cyan/magenta route shader, HDR tip, UnrealBloomPass strength 1.05 radius .65 threshold .85, and eight dynamic route PointLights. Trace one continuous non-branching path: the main route hands its only bright leading tip to the cyan/electric-blue/violet/magenta detour, which continues west then south along a parallel street to its own endpoint. Never reconnect the detour to an already illuminated segment. One normalized timeline drives both route progress and smooth camera tracking. Start with an approximately 1.8-second high/far/rotated exponential-out camera descent into a close three-quarter view. Autoplay loops by default. Wheel over the canvas scrubs forwards/backwards immediately; after 2.5 seconds idle, autoplay gently resumes from the same progress. Expose autoPlay, scrollSensitivity, cinematicIntro, primaryRouteColor, incidentColor, detourGradient as a four-colour tuple, animationSpeed, numeric replay, compact and paused. Include replay by click or Space, reduced motion, offscreen/hidden suspension, context restoration and complete GPU cleanup. No remote map data or assets.",
+      "brief": "Integrate Meridian, a Motiqo cinematic neon routing city in a fine-bordered rounded container. Build 30 varied raised sidewalk islands around narrow two-way streets with exactly one lane per direction and a single dashed center divider. Keep asphalt consistently six world units wide, including the diagonal avenue dogleg, with sidewalks filling the unused wedges, with seven distinct architectural families inspired by a Las Vegas resort skyline: stepped terraces, slab hotels, twin towers and skybridges, cylindrical towers with neon rings, pyramids, domed casinos and observation spires. Use four instanced shape batches with a single charcoal/navy facade hue, per-instance brightness, muted neutral windows, dim steel-gray roof trims and vector marquees; no colored buildings or remote assets. Restore dark #1c2230 architecture with roughness .48 and metalness .42; reserve saturated cyan and magenta for the moving route and its reflected light. Preserve the cyan/magenta route shader, HDR tip, UnrealBloomPass strength .6 radius .5 threshold 1, and eight dynamic route PointLights. Trace a 610-unit continuous non-branching tour with fifteen street segments through both sides of the city. The main route hands its only bright leading tip to the cyan/electric-blue/violet/magenta continuation. Allocate reveal time by path length to maintain equal travel speed across the handoff, with a 42-second default loop. Never reconnect the detour to an already illuminated segment. One normalized timeline drives both route progress and camera tracking. During the tour, follow the current leading tip with an elevated trailing camera. Smooth unwrapped heading angles across a broad arc-length window with quintic turn easing; damp actual camera position, focus and FOV using delta-time exponential interpolation, including after wheel seeking. Avoid fast angular changes and camera snaps. Preserve deterministic forward/reverse scrubbing, an establishing entrance and a closing withdrawal; do not rely on preset shots that lose the tip. Start with a gentle high/far establishing entrance into the elevated tracking view. Autoplay loops by default. Wheel over the canvas scrubs forwards/backwards immediately; after 2.5 seconds idle, autoplay gently resumes from the same progress. Expose autoPlay, scrollSensitivity, cinematicIntro, primaryRouteColor, incidentColor, detourGradient as a four-colour tuple, animationSpeed, numeric replay, compact and paused. Include replay by click or Space, reduced motion, offscreen/hidden suspension, context restoration and complete GPU cleanup. No remote map data or assets. Pace rendering against a corrected 60 Hz deadline so high-refresh displays do not accidentally render at 48 FPS. Reuse route arc-length metrics, point buffers and palette colors, and cap the framebuffer to 720000 pixels. Respect reduced motion and freeze paused views. Treat 60 FPS as a rendering target, not a guarantee for every device.",
       "entry": "meridian.tsx",
       "exportName": "Meridian",
       "files": [
@@ -5793,7 +5797,8 @@
       "tags": [
         "Three.js",
         "Agent",
-        "Glass"
+        "Glass",
+        "Assistant"
       ],
       "dependencies": [
         "React",
@@ -6264,7 +6269,8 @@
       "tags": [
         "WebGL2",
         "Particles",
-        "Wave"
+        "Wave",
+        "Assistant"
       ],
       "dependencies": [
         "React"
@@ -8061,7 +8067,8 @@
       "tags": [
         "WebGL",
         "Holographic",
-        "Interactive"
+        "Interactive",
+        "Card"
       ],
       "dependencies": [
         "React",
