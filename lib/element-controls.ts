@@ -11,7 +11,8 @@ export const moodsFor=(id:ElementId):{id:string;label:string;settings:Settings}[
 export function normalizeSettings(id:ElementId,input:unknown):Settings {
   const result=defaultsFor(id);
   if(!input||typeof input!=='object'||Array.isArray(input))return result;
-  const values=input as Record<string,unknown>;
+  const values={...input} as Record<string,unknown>;
+  if(id==='sonic-aperture'&&!Object.hasOwn(values,'messages')&&typeof values.lyrics==='string')values.messages=values.lyrics;
   for(const control of controlsFor(id)){
     if(!Object.hasOwn(values,control.key))continue;
     const value=id==='gilded-signal'&&control.key==='backgroundSrc'&&values[control.key]==='/media/tiger.webp'?'/media/starlit-cat.webp':values[control.key];
@@ -25,8 +26,7 @@ export function normalizeSettings(id:ElementId,input:unknown):Settings {
   if(id==='stratum'&&result.background==='#7e92d4'&&result.pillars==='#a6baf7'&&result.light==='#eff5ff'){const defaults=defaultsFor(id);result.background=defaults.background;result.pillars=defaults.pillars;result.light=defaults.light;}
   // Refresh the former reference copy in saved/shared defaults, preserving custom copy.
   if(id==='inkshift'&&['ui**xNin**ja\npr**odu**ct\nd**esi**gn\nsy**stem**s\nen**gineer**ing','mo**ti**qo\nsmall **details**\nin **motion**'].includes(String(result.words)))result.words=defaultsFor(id).words;
-  if(id==='sonic-aperture'&&result.lyrics==="My broken\npieces, you\npick them up\n\nDon't leave\nme hanging\nHanging come\ngive me some")result.lyrics=defaultsFor(id).lyrics;
-  if(id==='sonic-aperture'&&result.lyrics==='Come be\nthe man\nI need')result.lyrics=defaultsFor(id).lyrics;
+  if(id==='sonic-aperture'&&["My broken\npieces, you\npick them up\n\nDon't leave\nme hanging\nHanging come\ngive me some",'Come be\nthe man\nI need',"Why, why?\nTell 'em that\nit's human nature"].includes(String(result.messages)))result.messages=defaultsFor(id).messages;
   if(id==='atelier'&&result.title==='Designing the feeling of a room.')result.title=defaultsFor(id).title;
   if(id==='sacred-lotus'&&result.statusText==='Generating...')result.statusText='Loading...';
   if(id==='elevation-matrix'&&result.unitLabel==='contribuciones')result.unitLabel='contributions';
@@ -54,7 +54,7 @@ export function usageFor(element:LibraryElement,settings?:Settings){
     return `import ElasticShowcase from './elastic-showcase';\n\nexport default function Example(){return <div style={{height:620}}><ElasticShowcase ${configured}/></div>;}`;
   }
   if(['sonic-aperture','prism-core','aperture-loader'].includes(element.id)){
-    const configured=Object.entries(settings).map(([key,value])=>key+'={'+(key==='lyrics'?JSON.stringify(String(value).split(/\n\s*\n/).map(v=>v.split('\n'))):['interactive','autoPlay'].includes(key)?String(value!=='disabled'):key==='defaultListening'?String(value==='open'):JSON.stringify(value))+'}').join(' ');
+    const configured=Object.entries(settings).map(([key,value])=>key+'={'+(key==='messages'?JSON.stringify(String(value).split(/\n\s*\n/).map(v=>v.split('\n'))):['interactive','autoPlay'].includes(key)?String(value!=='disabled'):key==='defaultListening'?String(value==='open'):JSON.stringify(value))+'}').join(' ');
     return `import ${name} from './${element.id}';\n\nexport default function Example(){return <div style={{height:560}}><${name} ${configured}/></div>;}`;
   }
   if(element.id==='liquid-artifact-hero'){

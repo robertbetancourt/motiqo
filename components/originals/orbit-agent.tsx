@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type RefObject } from "react";
 import { useKineticCanvas } from "./kinetic-canvas";
 import {
   kineticClamp,
@@ -17,6 +17,10 @@ export type OrbitAgentProps = {
   interactive?: boolean;
   paused?: boolean;
   compact?: boolean;
+  transparent?: boolean;
+  showStars?: boolean;
+  gazeTarget?: RefObject<{x:number;y:number}>;
+  impulseTarget?: RefObject<number>;
   className?: string;
 };
 export default function OrbitAgent({
@@ -28,9 +32,14 @@ export default function OrbitAgent({
   interactive = true,
   paused = false,
   compact = false,
+  transparent = false,
+  showStars = true,
+  gazeTarget,
+  impulseTarget,
   className = "",
 }: OrbitAgentProps) {
   const mood = agentMood;
+  const lastImpulse=useRef(impulseTarget?.current??0);
   const state = useRef({
       time: 2,
       faceTime: 0,
@@ -60,6 +69,11 @@ export default function OrbitAgent({
   const { host, canvas, invalidate } = useKineticCanvas(
     ({ g, w, h, dt, still }) => {
       const s = state.current;
+      if(impulseTarget&&lastImpulse.current!==impulseTarget.current){
+        lastImpulse.current=impulseTarget.current;
+        if(!still){s.age=0;s.ringV+=3.8;s.jumpV-=3.8;s.squashV+=4.5;}
+      }
+      if(gazeTarget){s.tx=kineticClamp(gazeTarget.current.x,-1,1);s.ty=kineticClamp(gazeTarget.current.y,-1,1);}
       if (!still) {
         s.time += dt * kineticClamp(orbitSpeed, 0.1, 3);
         s.age += dt;
@@ -90,9 +104,11 @@ export default function OrbitAgent({
             : still
               ? 0
               : Math.sin(Math.PI * kineticClamp(s.age / 0.9, 0, 1)) ** 2;
-      g.fillStyle = "#0b0d14";
-      g.fillRect(0, 0, w, h);
-      for (let i = 0; i < stars.length; i++) {
+      if (!transparent) {
+        g.fillStyle = "#0b0d14";
+        g.fillRect(0, 0, w, h);
+      }
+      for (let i = 0; showStars && i < stars.length; i++) {
         const star = stars[i],
           x = star.x * w,
           y = star.y * h,
@@ -361,6 +377,7 @@ export default function OrbitAgent({
     <div
       ref={host}
       className={`mq-orbit-agent ${className}`}
+      style={transparent ? { background: 'transparent' } : undefined}
       role={interactive ? "button" : "img"}
       tabIndex={interactive && !compact ? 0 : -1}
       aria-label={`AI agent, ${mood}. ${interactive ? "Activate to greet." : ""}`}

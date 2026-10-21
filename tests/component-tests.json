@@ -313,7 +313,8 @@
     "components/card-preview.tsx": [
       "tests/preview-budget.test.cjs",
       "tests/navigation-transition.test.cjs",
-      "tests/static-elevation-preview.test.cjs"
+      "tests/static-elevation-preview.test.cjs",
+      "tests/preview-artwork.test.cjs"
     ],
     "lib/preview-budget.ts": [
       "tests/preview-budget.test.cjs"
@@ -324,7 +325,35 @@
     "components/agent-setup.tsx": [
       "tests/agent-setup.test.cjs"
     ],
+    "components/liquid-selection.tsx": [
+      "tests/setup-motion.test.cjs"
+    ],
+    "lib/liquid-selection-motion.ts": [
+      "tests/setup-motion.test.cjs"
+    ],
+    "lib/orbit-motion.ts": [
+      "tests/setup-motion.test.cjs"
+    ],
     "components/site-sidebar.tsx": [
+      "tests/new-collection.test.cjs"
+    ],
+    "components/orbit-companion.tsx": [
+      "tests/orbit-companion.test.cjs"
+    ],
+    "lib/orbit-events.ts": [
+      "tests/orbit-companion.test.cjs",
+      "tests/agent-setup.test.cjs"
+    ],
+    "scripts/preview-revisions.mjs": [
+      "tests/preview-artwork.test.cjs"
+    ],
+    "scripts/build-preview-posters.mjs": [
+      "tests/preview-artwork.test.cjs"
+    ],
+    "lib/component-groups.ts": [
+      "tests/new-collection.test.cjs"
+    ],
+    "components/component-navigation-icon.tsx": [
       "tests/new-collection.test.cjs"
     ]
   }

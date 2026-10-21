@@ -5,9 +5,9 @@ import { createKineticLoop, kineticNoise } from './kinetic-loop';
 
 export type PrismCoreProps = {size?:number;ior?:number;prismOffset?:number;rotationSpeed?:number;colorCycleSpeed?:number;wireframeOpacity?:number;interactive?:boolean;autoPlay?:boolean;compact?:boolean;paused?:boolean;className?:string};
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,Number.isFinite(v)?v:a));
-export const coreVertex=`varying vec3 vLocal,vNormal;varying vec2 vUv;void main(){vLocal=position;vNormal=normal;vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
+export const coreVertex=`varying vec3 vLocal,vNormal,vWorldNormal,vWorldPoint;varying vec2 vUv;void main(){vLocal=position;vNormal=normal;vUv=uv;vWorldNormal=normalize(mat3(modelMatrix)*normal);vWorldPoint=(modelMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
 export const coreFragment=`
-precision highp float;uniform vec3 uCamera;uniform float uTime,uIor,uOffset,uCycle,uBack;varying vec3 vLocal,vNormal;varying vec2 vUv;
+precision highp float;uniform vec3 uCamera;uniform float uTime,uIor,uOffset,uCycle,uBack;varying vec3 vLocal,vNormal,vWorldNormal,vWorldPoint;varying vec2 vUv;
 ${kineticNoise}
 float intersectSphere(vec3 ro,vec3 rd,float r){float b=dot(ro,rd),c=dot(ro,ro)-r*r,h=b*b-c;if(h<0.)return -1.;float near=-b-sqrt(h),far=-b+sqrt(h);return near>.001?near:far>.001?far:-1.;}
 vec3 spectral(float t){
@@ -25,28 +25,43 @@ vec4 planet(vec3 ro,vec3 rd,float phase){
  float rim=pow(1.-abs(dot(n,-rd)),3.);
  return vec4(pigment*(.55+.45*smoothstep(-.4,.5,terrain))*light+spectral(phase+.15)*rim*.35,1.);
 }
+// Analytic studio softboxes stay fixed in world space as the glass rotates.
+vec3 studio(vec3 ray){
+ float key=pow(max(dot(ray,normalize(vec3(-.65,.65,1.))),0.),55.);
+ float windowLight=pow(max(dot(ray,normalize(vec3(.85,.25,.6))),0.),90.);
+ float ceiling=pow(max(dot(ray,normalize(vec3(.1,1.,-.25))),0.),14.);
+ float floorLight=pow(max(dot(ray,normalize(vec3(-.3,-.9,.5))),0.),28.);
+ float panel=exp(-pow((ray.x+.55)/.23,4.))*smoothstep(-.95,-.65,ray.y)*(1.-smoothstep(.5,.85,ray.y));
+ float ribbon=exp(-pow((ray.y+.48)/.14,4.))*(1.-smoothstep(.25,.65,abs(ray.x)));
+ return vec3(.018,.024,.035)+vec3(.8,.9,1.)*(key*2.8+panel*1.5)+vec3(1.,.91,.78)*(windowLight*1.9+ribbon*.8)+vec3(.6,.72,1.)*ceiling*.25+vec3(.14,.18,.24)*floorLight;
+}
 void main(){
- vec3 face=normalize(vNormal)*(uBack>.5?-1.:1.);vec3 incident=normalize(vLocal-uCamera);
- vec3 rd=refract(incident,face,1./uIor);vec3 ro=vLocal-face*uOffset;
- if(uBack>.5){ro=-vLocal*.65+face*.16;rd=normalize(-incident+face*.3);}
- float angle=dot(vNormal,vec3(.68,-.52,.91));
- float phase=uTime*.22*uCycle+angle*.85+.35;
- vec3 tint=spectral(phase);
  float edge=min(min(vUv.x,1.-vUv.x),min(vUv.y,1.-vUv.y));
- float glint=1.-smoothstep(.001,.006,edge);
- float fresnel=.04+.96*pow(1.-abs(dot(face,-incident)),5.);
+ float bevel=1.-smoothstep(.0,.045,edge);
+ vec3 face=normalize(mix(vNormal,normalize(vLocal),bevel*.38))*(uBack>.5?-1.:1.);
+ vec3 incident=normalize(vLocal-uCamera),rd=refract(incident,face,1./uIor);
+ vec3 ro=vLocal+rd*max(.003,uOffset*.08);
+ float phase=uTime*.22*uCycle+.35;
+ vec3 tint=spectral(phase);
+ float glint=1.-smoothstep(.001,.012,edge);
+ float f0=pow((uIor-1.)/(uIor+1.),2.);
+ float fresnel=f0+(1.-f0)*pow(1.-abs(dot(face,-incident)),5.);
  // Each wavelength follows a different refracted ray, producing real edge separation.
  vec4 center=planet(ro,rd,phase);
  vec4 red=planet(ro,refract(incident,face,1./max(1.001,uIor-.018)),phase);
  vec4 blue=planet(ro,refract(incident,face,1./(uIor+.024)),phase);
- if(uBack>.5){red=center;blue=center;}
- vec3 color=vec3(red.r,center.g,blue.b)*1.25;
+ vec3 color=vec3(red.r,center.g,blue.b);
  float coverage=max(center.a,max(red.a,blue.a));
- vec3 reflection=reflect(incident,face);
- float strip=pow(max(0.,1.-abs(dot(reflection,normalize(vec3(.6,1.,.2))))),42.);
- color+=vec3(.65,.82,1.)*(fresnel*.16+strip*.12)+mix(tint,vec3(1.),.75)*glint*.36;
- float alpha=mix(.055+fresnel*.2+glint*.25,uBack>.5?.38:.98,coverage);
- gl_FragColor=vec4(color,alpha);
+ vec3 worldIncident=normalize(vWorldPoint-cameraPosition);
+ vec3 reflected=studio(reflect(worldIncident,normalize(vWorldNormal)));
+ // Clear faces, wavelength separation through the core, and a thicker beveled rim.
+ vec3 absorption=exp(-vec3(.075,.035,.018)*(1.+uOffset*3.));
+ color=color*absorption*(1.-fresnel)*1.08+reflected*(fresnel+bevel*.14);
+ color+=mix(vec3(.58,.72,.88),tint,.12)*glint*.22;
+ float alpha=clamp(.06+fresnel*.34+glint*.26+length(reflected)*.2+coverage*.86,.025,.98);
+ if(uBack>.5){color=reflected*.15+vec3(.28,.4,.53)*glint*.13;alpha=.025+glint*.12+fresnel*.08;}
+ // The transmission/reflection sum is premultiplied energy; Three blends straight alpha.
+ gl_FragColor=vec4(color/max(alpha,.025),alpha);
  #include <colorspace_fragment>
 }`;
 
@@ -71,7 +86,7 @@ export default function PrismCore({size=2.35,ior=1.52,prismOffset=.10,rotationSp
       group.rotation.set(.55+dragY+(reduced?0:angleY+Math.sin(spin*1.05)*.09),spin+dragX+(reduced?0:angleX),.42+Math.sin(spin*.5)*.06);
       group.scale.setScalar(clamp(o.size,.8,3.2)/2.35);group.updateMatrixWorld(true);camera.updateMatrixWorld();inverse.copy(group.matrixWorld).invert();uniforms.uCamera.value.copy(camera.position).applyMatrix4(inverse);
       uniforms.uTime.value=time;uniforms.uIor.value=clamp(o.ior+angleX*.04,1.01,2.2);uniforms.uOffset.value=clamp(o.prismOffset,0,.7);uniforms.uCycle.value=clamp(o.colorCycleSpeed,0,3);
-      lineMaterial.opacity=clamp(o.wireframeOpacity,0,1)*.6;outerMaterial.opacity=lineMaterial.opacity*.18;
+      lineMaterial.opacity=clamp(o.wireframeOpacity,0,1)*.24;outerMaterial.opacity=lineMaterial.opacity*.12;
       renderer.render(scene,camera);if(broken)throw Error('Shader unavailable');root.dataset.gl='on';
     }
     const loop=createKineticLoop(root,draw,resize,()=>options.current.paused||lost);sync.current=loop.sync;
