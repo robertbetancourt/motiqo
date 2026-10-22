@@ -40,7 +40,7 @@ export default function Home(){
     restore();window.addEventListener('storage',restore);return()=>{window.removeEventListener('storage',restore);if(toastTimer.current)clearTimeout(toastTimer.current);};
   },[]);
   function notify(message:string){setToast(message);if(toastTimer.current)clearTimeout(toastTimer.current);toastTimer.current=setTimeout(()=>setToast(''),3000);}
-  function toggleSave(id:string){const next=saved.includes(id)?saved.filter(value=>value!==id):[...saved,id];setSaved(next);try{localStorage.setItem('motiqo-saved',JSON.stringify(next));}catch{}}
+  function toggleSave(id:string){const next=saved.includes(id)?saved.filter(value=>value!==id):[...saved,id];setSaved(next);try{localStorage.setItem('motiqo-saved',JSON.stringify(next));window.dispatchEvent(new Event('motiqo-saved-change'));}catch{}}
   function href(element:LibraryElement,view?:string){return `/library?element=${element.id}${settings[element.id]?`&config=${encodeURIComponent(encodeSettings(element.id,settings[element.id]))}`:''}${view?`&view=${view}`:''}`;}
   async function copy(value:string){try{await navigator.clipboard.writeText(value);notify('Copied. Make something good.');}catch{notify('Clipboard unavailable. Open the component to select the text.');}}
   function card(element:LibraryElement,priority:boolean){return <article className={styles.card} data-element={element.id} onContextMenu={event=>{if(event.shiftKey)return;event.preventDefault();const link=event.currentTarget.querySelector<HTMLAnchorElement>('a')!,box=link.getBoundingClientRect();trigger.current=link;setContext({element,x:event.clientX||box.left+20,y:event.clientY||box.top+20,trigger:link});}}>
@@ -48,7 +48,7 @@ export default function Home(){
     <button className={`${styles.save} ${saved.includes(element.id)?styles.saved:''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={14} fill={saved.includes(element.id)?'currentColor':'none'}/></button>
   </article>;}
   const topicIcons=[Box,Type,MousePointer2,Layers];
-  return <SiteFrame paused={still}>
+  return <SiteFrame paused={still} savedCount={saved.length}>
     <div className={styles.page}>
       <header className={styles.header}><div><h1>Discover<span aria-hidden="true">.</span></h1><p>Good things happen when you look a little closer.</p></div><div className={styles.headerActions}><Link href="/library" className={styles.browse}>Browse all<span>{elements.length}</span><ArrowUpRight size={15}/></Link></div></header>
       {homeCollections.map(collection=><DiscoveryRail key={collection.id} collection={collection} still={still}>{card}</DiscoveryRail>)}

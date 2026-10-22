@@ -140,7 +140,8 @@ html[data-theme=light] .pulse-card svg>g circle { fill:#746d5f; }
 html[data-theme=light] .sidebar-link small.sidebar-soon{background:color-mix(in srgb,var(--text) 8%,transparent)}
 .sidebar-badge{display:inline-flex;align-items:center;gap:6px;margin-left:auto}
 .sidebar-badge[data-new]::before{content:attr(data-new);padding:3px 8px;border:none;border-radius:9999px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);font:600 9px/1.2 var(--sans);letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap}
-.sidebar-badge[data-count]::after{content:attr(data-count);font:500 11px/1.2 var(--sans);color:var(--muted)}
+.sidebar-badge[data-count]::after{content:attr(data-count)}
+.sidebar-count,.sidebar-badge[data-count]::after{font:500 12px/1.2 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
 .sidebar-badge[data-has-new="true"]::after{color:var(--accent);font-weight:600}
 .card-badge-new{position:absolute;top:10px;left:10px;z-index:3;padding:3px 8px;border:none;border-radius:9999px;background:color-mix(in srgb,var(--accent) 22%,rgba(0,0,0,0.72));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--accent);font:600 9px/1.2 var(--sans);letter-spacing:0.04em;text-transform:uppercase;pointer-events:none}
 html[data-theme=light] .card-badge-new{background:color-mix(in srgb,var(--accent) 15%,rgba(255,255,255,0.88))}

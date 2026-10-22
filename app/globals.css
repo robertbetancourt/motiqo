@@ -642,6 +642,8 @@ body:has(.site-shell.motion-paused) .ambient-stage > img { animation-play-state:
 
 /* Shared workspace segments and document surfaces. */
 .detail-tabs .segment-thumb { position:absolute; top:4px; bottom:4px; left:4px; width:calc((100% - 8px)/3); border-radius:11px; border:1px solid #f3f3f31a; background:linear-gradient(160deg,#efefef1b,#efefef0b); box-shadow:0 2px 6px #0003,inset 0 1px 0 #fff1; transform:translateX(calc(var(--segment-index)*100%)); transition:transform 420ms cubic-bezier(.22,.84,.2,1); z-index:-1; }
+.detail-tabs[data-tabs="2"] { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+.detail-tabs[data-tabs="2"] .segment-thumb { width:calc((100% - 8px)/2) !important; }
 .detail-workspace { flex:1; min-height:0; min-width:0; display:flex; border-radius:16px; }
 .document-surface { width:100%; height:100%; min-height:0; min-width:0; display:flex; flex-direction:column; border:1px solid #bfbfbf22; border-radius:16px; background:#0d0d0df0; overflow:hidden; box-shadow:inset 0 1px 0 #fff03; }
 .document-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-shrink:0; padding:10px 18px; min-height:64px; border-bottom:1px solid #b6b6b614; background:#e4e4e403; }
@@ -841,7 +843,7 @@ body:has(.site-shell.motion-paused) .ambient-stage > img { animation-play-state:
 .sidebar-link:hover svg { opacity:1; }
 .sidebar-link.is-active, .sidebar-link[aria-current="page"] { background:rgba(255,255,255,0.08); color:#fff; font-weight:500; }
 .sidebar-link.is-active svg, .sidebar-link[aria-current="page"] svg { opacity:1; }
-.sidebar-link small { margin-left:auto; font:9px var(--mono); color:#aeaeae; }
+.sidebar-link small { margin-left:auto; }
 .sidebar-section-title { display:block; padding:16px 12px 6px; font-size:11px; font-weight:500; color:var(--muted); letter-spacing:-0.01em; user-select:none; }
 .sidebar-section-title:first-child { padding-top:4px; }
 .sidebar-tools { margin-top:auto; display:flex; flex-direction:row; align-items:center; gap:8px; padding:16px 4px 0; border-top:1px solid #ffffff0c; }

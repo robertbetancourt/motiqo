@@ -355,6 +355,43 @@
     ],
     "components/component-navigation-icon.tsx": [
       "tests/new-collection.test.cjs"
+    ],
+    "components/hero-prompts.tsx": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/atelier-hero.tsx": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/diorama-hero.tsx": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/arcadia-hero.tsx": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/solace-hero.tsx": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/hero-clock.ts": [
+      "tests/heroes.test.cjs"
+    ],
+    "lib/heroes.ts": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/hero-capture.tsx": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/hero-stage.tsx": [
+      "tests/heroes.test.cjs"
+    ],
+    "components/heroes/atelier-scene.js": [
+      "tests/heroes.test.cjs"
+    ],
+    "lib/hero-catalog.ts": [
+      "tests/heroes.test.cjs",
+      "tests/new-collection.test.cjs"
+    ],
+    "components/navigation-icon.tsx": [
+      "tests/new-collection.test.cjs"
     ]
   }
 }
