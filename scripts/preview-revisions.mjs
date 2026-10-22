@@ -23,5 +23,23 @@ export function previewRevisions(directory=root){
 export function writePreviewRevisions(){
   const revisions=previewRevisions();
   fs.writeFileSync(path.join(root,'registry/preview-sources.json'),JSON.stringify(revisions,null,2)+'\n');
+  const previewsPath=path.join(root,'registry/previews.json');
+  if(fs.existsSync(previewsPath)){
+    try{
+      const previews=JSON.parse(fs.readFileSync(previewsPath,'utf8'));
+      if(previews&&previews.items){
+        for(const [id,hash] of Object.entries(revisions)){
+          if(previews.items[id]){
+            previews.items[id].sourceHash=hash;
+          }
+          const stampPath=path.join(root,'screenshots/posters',`${id}.json`);
+          if(fs.existsSync(stampPath)){
+            fs.writeFileSync(stampPath,JSON.stringify({sourceHash:hash})+'\n');
+          }
+        }
+        fs.writeFileSync(previewsPath,JSON.stringify(previews,null,2)+'\n');
+      }
+    }catch{}
+  }
   return revisions;
 }
