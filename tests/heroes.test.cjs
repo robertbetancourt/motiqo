@@ -24,14 +24,14 @@ test('Hero capture waits for the actual scene and two paint frames before exposi
  }finally{if(previous)Object.defineProperty(globalThis,'MutationObserver',previous);else delete globalThis.MutationObserver;}
 }));
 test('Hero collection copies original prompts, filters, deep-links and switches review tabs',()=>environment(async e=>{
- const catalog=load('lib/heroes.ts');assert.deepEqual(catalog.heroes.map(item=>item.id),['pavilion','diorama','arcadia','solace']);assert.equal(catalog.findHero('unknown'),undefined);assert.deepEqual(catalog.filterHeroes('three.js').map(item=>item.id),['pavilion']);assert.equal(catalog.filterHeroes('','Physics')[0].id,'arcadia');assert.equal(catalog.filterHeroes('missing').length,0);
+ const catalog=load('lib/heroes.ts');assert.deepEqual(catalog.heroes.map(item=>item.id),['pavilion','diorama','arcadia','solace','aster']);assert.equal(catalog.findHero('unknown'),undefined);assert.deepEqual(catalog.filterHeroes('three.js').map(item=>item.id),['pavilion']);assert.equal(catalog.filterHeroes('','Physics')[0].id,'arcadia');assert.equal(catalog.filterHeroes('missing').length,0);
  let copied='';Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>{copied=text;}}});
  const Hero=load('components/hero-prompts.tsx',{'@/lib/heroes':catalog,'./site-frame':{default:({children})=>React.createElement('main',null,children)},'./heroes/hero-stage':{default:({id})=>React.createElement('div',{'data-stage':id})},'motion/react':{useReducedMotion:()=>true},'next/navigation':{useSearchParams:()=>new URLSearchParams(window.location.search)},'./outline-field':{default:({children})=>children},'./choice-select':{default:()=>null,workflowOptions:[]}}).default;
- await React.act(()=>e.root.render(React.createElement(Hero)));assert.equal(document.querySelectorAll('article').length,4);
+ await React.act(()=>e.root.render(React.createElement(Hero)));assert.equal(document.querySelectorAll('article').length,5);
  await React.act(async()=>{document.querySelector('[aria-label="Copy Pavilion prompt"]').click();await Promise.resolve();});assert.equal(copied,catalog.heroes[0].prompt);assert.match(copied,/Spaces shaped/);assert.equal(document.querySelector('[role=tooltip]').textContent,'Copied');assert.equal(document.querySelector('[aria-label="Copy Pavilion prompt"] span').textContent,'Copy prompt','feedback does not resize the button');
  await React.act(()=>document.querySelector('[aria-label="Filter by Physics"]').click());assert.equal(document.querySelectorAll('article').length,1);assert.match(document.querySelector('article').textContent,/Arcadia/);await React.act(()=>document.querySelector('[aria-label="Clear Physics filter"]').click());
  await React.act(()=>document.querySelector('[aria-label="Preview Pavilion"]').click());assert.match(window.location.search,/hero=pavilion/);assert.equal(document.querySelector('[data-stage]').dataset.stage,'pavilion');await React.act(()=>document.querySelector('#hero-prompt-tab').click());assert.equal(document.querySelector('pre').textContent,catalog.heroes[0].prompt);assert.match(window.location.search,/view=prompt/);assert.equal(document.querySelector('#hero-prompt-tab').getAttribute('aria-selected'),'true');
- await React.act(()=>{window.history.replaceState({},'','/hero');window.dispatchEvent(new e.dom.window.PopStateEvent('popstate'));});assert.equal(document.querySelectorAll('article').length,4);assert.equal(document.activeElement.textContent,'Pavilion');
+ await React.act(()=>{window.history.replaceState({},'','/hero');window.dispatchEvent(new e.dom.window.PopStateEvent('popstate'));});assert.equal(document.querySelectorAll('article').length,5);assert.equal(document.activeElement.textContent,'Pavilion');
 }));
 test('Atelier inspects and rotates the reused pavilion and destroys its scene',()=>environment(async e=>{
  let inspected=false,rotated=0,destroyed=0,surfaces=0;const api={setInspection(value){inspected=value;},setPaused(){},inspectNext(){surfaces++;},reset(){},rotate(value){rotated+=value;},destroy(){destroyed++;}};
@@ -39,9 +39,13 @@ test('Atelier inspects and rotates the reused pavilion and destroys its scene',(
  await React.act(async()=>{e.root.render(React.createElement(Atelier));await Promise.resolve();});await React.act(()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Explore the house').click());assert.equal(inspected,true);assert.ok([...document.querySelectorAll('button')].some(b=>b.textContent==='Exit inspection'));
  await React.act(()=>document.querySelector('[aria-label="Inspect next surface"]').click());assert.equal(surfaces,1);await React.act(()=>document.querySelector('[aria-label="Rotate model right"]').click());assert.ok(rotated>0);await React.act(()=>e.root.unmount());assert.equal(destroyed,1);
 }));
-test('Diorama actions update activation metrics and metric filters',()=>environment(async e=>{
+test('Diorama dashboard filters update reservations and chart, and stays open reservation details',()=>environment(async e=>{
  const clock=sceneClock(),Diorama=load('components/heroes/diorama-hero.tsx',{'./hero-clock':clock.api}).default;
- await React.act(async()=>{e.root.render(React.createElement(Diorama));await Promise.resolve();});assert.match(document.body.textContent,/8,420/);assert.equal(document.querySelectorAll('canvas').length,0);assert.equal(document.querySelector('img').getAttribute('src'),'/heroes/diorama-foreground.png');await React.act(()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Group your audience').click());assert.match(document.body.textContent,/9,284/);const impact=[...document.querySelectorAll('button')].find(b=>b.textContent==='Impact');await React.act(()=>impact.click());assert.equal(impact.getAttribute('aria-pressed'),'true');assert.equal(document.querySelector('[role=img]').getAttribute('aria-label'),'Impact progress over the last 30 days');await React.act(()=>e.root.unmount());assert.equal(clock.disposed,1);
+ await React.act(()=>e.root.render(React.createElement(Diorama)));assert.match(document.body.textContent,/Reservations128/);assert.equal(document.querySelectorAll('canvas').length,0);assert.equal(document.querySelectorAll('img').length,1,'only the foreground landscape remains');
+ await React.act(()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Highlands').click());assert.match(document.body.textContent,/Reservations96/);
+ await React.act(()=>[...document.querySelectorAll('button')].find(b=>b.textContent==='Month').click());assert.match(document.body.textContent,/Reservations384/);assert.match(document.querySelector('[role=img]').getAttribute('aria-label'),/Highlands bookings over the last 30 days/);
+ await React.act(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Pine House')).click());assert.match(document.querySelector('h2').textContent,/Reservations/);assert.match(document.querySelector('[role=status]').textContent,/Pine House reservation selected/);
+ await React.act(()=>e.root.unmount());assert.equal(clock.disposed,1);
 }));
 test('Arcadia responds to keyboard orbit controls and supports empty image input',()=>environment(async e=>{
  const clock=sceneClock(),Arcadia=load('components/heroes/arcadia-hero.tsx',{'./hero-clock':clock.api}).default;
@@ -71,3 +75,12 @@ test('Hero prompts use original identities and agree with their public downloads
  for(const hero of items){assert.equal(fs.readFileSync(path.resolve(__dirname,'../public/heroes/'+hero.id+'-prompt.txt'),'utf8'),hero.prompt);assert.doesNotMatch(hero.prompt,/BRRAL|Fulcrum|Yasir|Intelligence Canvas|Create Stunning AI Generated|Photos Instantly/);}
  assert.ok(items[1].tags.includes('TypeScript'));assert.match(items[1].prompt,/diorama-foreground.png/);
 });
+
+test('Aster reuses one Liquid Artifact across observation changes and forwards paused state',()=>environment(async e=>{
+ let mounts=0,disposed=0;const Artifact=props=>{React.useEffect(()=>{mounts++;return()=>disposed++;},[]);return React.createElement('div',{'data-artifact-shape':props.defaultShape,'data-paused':String(props.paused),'data-theme':props.defaultTheme});};
+ const Aster=load('components/heroes/aster-hero.tsx',{'../ui/liquid-artifact':{default:Artifact}}).default;
+ await React.act(()=>e.root.render(React.createElement(Aster)));const shape=()=>document.querySelector('[data-artifact-shape]');assert.equal(shape().dataset.artifactShape,'2');assert.equal(shape().dataset.theme,'dark');
+ await React.act(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Begin observation')).click());assert.equal(shape().dataset.artifactShape,'0');assert.match(document.querySelector('[aria-live=polite]').textContent,/Fold/);
+ await React.act(()=>document.querySelector('button[aria-label=Signal]').click());assert.equal(shape().dataset.artifactShape,'1');assert.equal(document.querySelector('button[aria-label=Signal]').getAttribute('aria-pressed'),'true');
+ await React.act(()=>e.root.render(React.createElement(Aster,{paused:true})));assert.equal(shape().dataset.paused,'true');assert.equal(mounts,1);await React.act(()=>e.root.unmount());assert.equal(disposed,1);
+}));

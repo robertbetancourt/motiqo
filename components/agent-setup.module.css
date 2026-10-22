@@ -57,3 +57,6 @@
 @media(prefers-reduced-motion:reduce){.tabs button{transition:none}.copyTooltip{animation:none}}
 
 @media(prefers-reduced-motion:reduce){.codeHeader button{transition:none}.codeHeader button:active{transform:none}}
+
+.codeBlock [data-syntax=string]{color:#a8c88b}.codeBlock [data-syntax=command]{color:#d8bc80}.codeBlock [data-syntax=flag],.codeBlock [data-syntax=section]{color:#85bed6}.codeBlock [data-syntax=key]{color:#ca9bd9}
+:global(html[data-theme=light]) .codeBlock [data-syntax=string]{color:#426d2b}:global(html[data-theme=light]) .codeBlock [data-syntax=command]{color:#82551b}:global(html[data-theme=light]) .codeBlock [data-syntax=flag],:global(html[data-theme=light]) .codeBlock [data-syntax=section]{color:#21647d}:global(html[data-theme=light]) .codeBlock [data-syntax=key]{color:#86509a}

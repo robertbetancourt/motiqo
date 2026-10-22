@@ -5,7 +5,7 @@ import styles from './heroes.module.css';
 
 export const arcadiaImages=Array.from({length:16},(_,i)=>`/media/gallery/image-${String(i+1).padStart(2,'0')}.webp`);
 export type ArcadiaHeroProps={images?:string[];autoPlay?:boolean;rotationSpeed?:number;radius?:number;titleLine1?:string;titleLine2?:string;subtitle?:string;ctaText?:string;onCtaClick?:()=>void;paused?:boolean;dark?:boolean;className?:string};
-export default function ArcadiaHero({images=arcadiaImages,autoPlay=true,rotationSpeed=1,radius,titleLine1='Make room for',titleLine2='your next idea.',subtitle='Turn a passing thought into a visual worth keeping.',ctaText='Explore your vision',onCtaClick,paused=false,dark=false,className=''}:ArcadiaHeroProps){
+export default function ArcadiaHero({images=arcadiaImages,autoPlay=true,rotationSpeed=1,radius,titleLine1='Make room for',titleLine2='your next idea.',subtitle='Turn a passing thought into a visual worth keeping.',ctaText='Explore your vision',onCtaClick,paused=false,dark=true,className=''}:ArcadiaHeroProps){
  const root=useRef<HTMLElement>(null),cards=useRef<(HTMLButtonElement|null)[]>([]),clock=useRef<ReturnType<typeof heroClock>|null>(null),options=useRef({autoPlay,rotationSpeed,paused,radius}),state=useRef({angle:0,velocity:0,hover:-1,focused:false,still:false,offsets:Array(16).fill(0) as number[],width:1280,height:900,drag:false,lastX:0,distance:0}),[selected,setSelected]=useState(-1);
  options.current={autoPlay,rotationSpeed,paused,radius};const collection=images.length?Array.from({length:16},(_,i)=>images[i%images.length]):[];
  useEffect(()=>{

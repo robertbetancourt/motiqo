@@ -15,3 +15,7 @@ Motion & Interaction: Idle auto-rotation at .15 rad/s, damped inertia, and clamp
 Gracefully handle empty image lists and updated props. Use a clock that pauses when offscreen or when tab is hidden, ResizeObserver, and complete cleanup on unmount. Respect prefers-reduced-motion by disabling autoplay and momentum while retaining manual step controls. Do not claim target FPS without profiling. Verify bidirectional wrap across boundaries and complete 360-degree cycles.
 
 Props: images, autoPlay=true, rotationSpeed=1, optional radius, titleLine1='Make room for', titleLine2='your next idea.', subtitle, ctaText='Explore your vision', onCtaClick, paused=false, dark=false, and className. Deliver the fully functional interactive Hero.
+
+Default appearance: dark=true. Use a deep charcoal canvas, soft ivory title, muted cool-gray body copy, pale CTA and subtle light dividers. Ensure arrow controls, selected-card outline and focus states remain visible on the dark canvas. Preserve the orbit and fade behavior.
+
+Use an almost-black #050506 background rather than blue charcoal, with #0c0c0e card bases.

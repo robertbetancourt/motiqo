@@ -23,6 +23,9 @@ export function normalizeSettings(id:ElementId,input:unknown):Settings {
     else if(control.kind==='color'&&typeof value==='string'&&/^#[\da-f]{6}$/i.test(value))result[control.key]=value.toLowerCase();
     else if(control.kind==='text'&&typeof value==='string')result[control.key]=value.replace(/\u0000/g,'').slice(0,Math.min(1024,control.maxLength??200));
   }
+  if(id==='halftone-wordmark'&&result.word==='MOTIQO')result.word=defaultsFor(id).word;
+  if(id==='topo-contour'&&result.lineWidth===1.15)result.lineWidth=.55;
+  if(id==='signal-grid'&&result.accent==='#8ed8c5')result.accent=defaultsFor(id).accent;
   if(id==='stratum'&&result.background==='#7e92d4'&&result.pillars==='#a6baf7'&&result.light==='#eff5ff'){const defaults=defaultsFor(id);result.background=defaults.background;result.pillars=defaults.pillars;result.light=defaults.light;}
   // Refresh the former reference copy in saved/shared defaults, preserving custom copy.
   if(id==='inkshift'&&['ui**xNin**ja\npr**odu**ct\nd**esi**gn\nsy**stem**s\nen**gineer**ing','mo**ti**qo\nsmall **details**\nin **motion**'].includes(String(result.words)))result.words=defaultsFor(id).words;
@@ -49,6 +52,10 @@ export function configurationUrl(href:string,id:ElementId,settings:Settings){
 export function usageFor(element:LibraryElement,settings?:Settings){
   if(!settings||!Object.keys(settings).length)return element.code;
   const name=element.id==='sonic-aperture'?'SonicAperture':element.id==='prism-core'?'PrismCore':element.id==='aperture-loader'?'ApertureLoader':element.id==='event-horizon'?'PrismBloom':element.id==='liquid-artifact-hero'?'LiquidArtifact':element.id==='liquid-sculpture'?'LiquidForm':element.id==='glow-nav'?'GlowNav':element.id==='gilded-signal'?'GildedCard':element.id==='silk-aperture'?'SilkAperture':element.title;
+  if(element.id==='paper-flow'||element.id==='hyperbolic-ribbon'){
+    const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(['loop','autoPlay'].includes(key)?String(value!=='disabled'):JSON.stringify(value))+'}').join(' ');
+    return `import ${name} from './${element.id}';\n\nexport default function Example(){return <div style={{height:560}}><${name} ${configured}/></div>;}`;
+  }
   if(element.id==='elastic-showcase'){
     const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(key==='autoPlay'?String(value!=='disabled'):JSON.stringify(value))+'}').join(' ');
     return `import ElasticShowcase from './elastic-showcase';\n\nexport default function Example(){return <div style={{height:620}}><ElasticShowcase ${configured}/></div>;}`;

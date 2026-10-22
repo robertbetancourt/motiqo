@@ -11,7 +11,7 @@ const descriptions: Record<AITool, string> = {
 };
 export const workflowOptions: ChoiceOption[] = aiTools.map(value => ({
   value, label: value, description: descriptions[value],
-  symbol: value === 'Claude' ? '✳' : value === 'ChatGPT' ? '◎' : value === 'Codex' ? '›_' : '↗',
+  symbol: value === 'Universal' ? <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z"/></svg> : <img className={`workflow-logo ${value==='Claude'?'workflow-claude':''}`} src={`/brands/${value==='Claude'?'claude':value==='Cursor'?'cursor':'openai'}.svg`} width="16" height="16" alt=""/>,
 }));
 
 /** A single selection menu for source files and every prompt workflow. */

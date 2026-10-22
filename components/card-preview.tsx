@@ -21,7 +21,7 @@ class PreviewBoundary extends Component<{children:ReactNode;onFailure:()=>void},
 /** Posters render with the page. Only visible, loaded scenes may enter the GPU. */
 export default memo(function CardPreview({id,paused,priority=false,settings}:{id:ElementId;paused:boolean;priority?:boolean;settings?:Settings}){
   // Construct the larger matrix only while the visitor is exploring its card.
-  const hoverOnly=id==='elevation-matrix';
+  const hoverOnly=['elevation-matrix','halftone-wordmark','signal-grid'].includes(id);
   const host=useRef<HTMLDivElement>(null),[mounted,setMounted]=useState(false),[visible,setVisible]=useState(false),[ready,setReady]=useState(false),[granted,setGranted]=useState(false);
   const [cardHovered,setCardHovered]=useState(false);
   const painted=useRef(false),stopped=useRef(paused),wake=useRef<()=>void>(()=>{});stopped.current=paused;
@@ -82,8 +82,8 @@ export default memo(function CardPreview({id,paused,priority=false,settings}:{id
     if(mounted)return observePreviewReady(host.current!,()=>{painted.current=true;setReady(true);},()=>{painted.current=false;setReady(false);setMounted(false);});
   },[mounted]);
   useEffect(()=>{
-    if(mounted&&ready&&visible&&granted&&!paused)return startPreviewDemo(host.current!,id);
-  },[id,mounted,ready,visible,granted,paused]);
+    if(mounted&&ready&&visible&&granted&&!paused&&(!hoverOnly||cardHovered))return startPreviewDemo(host.current!,id);
+  },[id,mounted,ready,visible,granted,paused,hoverOnly,cardHovered]);
   return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-preview-mode={hoverOnly?'hover-3d':undefined} data-live={mounted&&ready&&visible&&granted&&!paused||undefined} data-preview-state={mounted?(visible&&granted?'live':'cached'):'poster'}>
     {artwork&&<><img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
     <img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></>}

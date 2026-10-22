@@ -1,4 +1,4 @@
-.page{max-width:1160px;margin:auto;padding:22px 0 45px}
+.page{width:100%;max-width:1080px;margin:auto;padding:22px 0 45px}
 .header{padding:12px 0 24px}
 .header h1{font-size:clamp(30px,3vw,38px);font-weight:500;line-height:1.2;letter-spacing:-.045em;margin:0}
 .nav{display:flex;align-items:center;gap:28px;flex-wrap:wrap;border-bottom:1px solid var(--line-soft);font-size:13px}
@@ -11,7 +11,7 @@
 .chapter p:last-child{margin-bottom:0}
 .chapter a{color:var(--text);text-decoration:underline;text-underline-offset:4px}
 .chapter p code{font:12px var(--mono);color:var(--text);padding:2px 5px;background:var(--raised);border-radius:4px}
-.snippet{margin:22px 0;padding:24px;border:none;border-radius:12px;background:#0d0e12;color:#abb2bf;font:12px/1.9 var(--mono);max-width:100%;overflow:auto;scroll-margin-top:28px}
+.snippet{margin:22px 0;padding:24px;border:none;border-radius:12px;background:#0d0e12;color:#abb2bf;font:12px/1.9 var(--mono);max-width:100%;overflow:visible;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;min-width:0;box-sizing:border-box;scroll-margin-top:28px}
 :global(html[data-theme=light]) .snippet{background:#f3f1ec;color:#383a42}
 .synKeyword{color:#e06c75;font-weight:500}
 .synFn{color:#61afef}
@@ -41,3 +41,7 @@
 .page a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 @media(max-width:1000px){.chapter{gap:24px}}
 @media(max-width:680px){.page{padding-top:8px}.header{padding:12px 0 20px}.nav{gap:0 22px}.chapter{grid-template-columns:1fr;gap:18px;padding:28px 0;scroll-margin-top:84px}.chapter h2{max-width:none;font-size:23px}.snippet{padding:16px;font-size:11px;scroll-margin-top:84px}.footer{align-items:flex-start;flex-direction:column;gap:8px}}
+
+.page{min-width:0;box-sizing:border-box}.content,.chapter{min-width:0;max-width:100%;box-sizing:border-box}.snippet code{white-space:inherit;overflow-wrap:inherit}
+
+.snippet{width:100%;max-width:100%;tab-size:2}.snippet code{display:block;white-space:pre-wrap;overflow-wrap:anywhere}

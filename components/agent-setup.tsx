@@ -15,6 +15,14 @@ const clients = [
 const install = 'npm install --save-dev ./motiqo-cli-0.1.0.tgz';
 const defaultPath = '/path/to/project/node_modules/@motiqo/cli/bin/motiqo.mjs';
 
+function HighlightedCode({text,label}:{text:string;label:string}){
+  if(label==='First prompt')return <>{text}</>;
+  return <>{text.split(/("(?:\\.|[^"\\])*"|'[^']*'|--[\w-]+|\[[^\]\n]+\]|\b(?:npm|npx|node|install|motiqo|skill|command|args|type|mcpServers)\b)/g).map((token,index)=>{
+    const kind=/^["']/.test(token)?'string':token.startsWith('--')?'flag':token.startsWith('[')?'section':/^(command|args|type|mcpServers)$/.test(token)?'key':/^(npm|npx|node|install|motiqo|skill)$/.test(token)?'command':undefined;
+    return kind?<span key={index} data-syntax={kind}>{token}</span>:token;
+  })}</>;
+}
+
 function CodeBlock({text, label,onCopied}:{text:string;label:string;onCopied:()=>void}) {
   const [status,setStatus]=useState('');
   const request=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|null>(null),id=useId();
@@ -31,7 +39,7 @@ function CodeBlock({text, label,onCopied}:{text:string;label:string;onCopied:()=
   }
   return <div className={styles.codeBlock}>
     <div className={styles.codeHeader}><span>{label}</span><div className={styles.copyWrap}><button type="button" onClick={copy} aria-label={`Copy ${label}`} aria-describedby={status?id:undefined} onKeyDown={event=>{if(event.key==='Escape')setStatus('');}}>Copy</button>{status&&<span id={id} role="tooltip" className={styles.copyTooltip}>{status}</span>}</div></div>
-    <pre tabIndex={0} aria-label={label}><code>{text}</code></pre>
+    <pre tabIndex={0} aria-label={label}><code><HighlightedCode text={text} label={label}/></code></pre>
     <span className={styles.announcement} role="status">{status}</span>
   </div>;
 }
@@ -86,6 +94,5 @@ export default function AgentSetup({kind}:{kind:'skill'|'mcp'}) {
       <div className={styles.step}><span className={styles.stepNumber} aria-hidden="true">03</span><div><h2>{mcp?'Try it out':`Start in ${client.name}`}</h2><p>{mcp?'Ask your agent to inspect the catalog.':'Give your agent the skill path explicitly, so it can follow the workflow.'}</p><CodeBlock onCopied={celebrate} key={`${kind}-${client.id}-prompt`} text={mcp?'Find Motiqo components with motion effects. Show me their props and source before choosing one.':skillPrompt} label="First prompt"/>{mcp&&<p className={styles.note}>Tools: <code>list_components</code>, <code>get_component</code>, <code>get_component_source</code>. Installation uses the CLI after a dry-run.</p>}</div></div>
     </section>
     </div>
-    <footer className={styles.footer}><Link href={mcp?'/skill':'/mcp'}>{mcp?'Set up the skill':'Connect MCP'} ↗</Link><Link href="/docs">Read the docs ↗</Link></footer>
   </div>;
 }

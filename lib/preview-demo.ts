@@ -2,6 +2,8 @@ import type {ElementId} from '@/lib/catalog';
 
 // Only card previews opt in. Reuse each scene's input handling without changing exports.
 const pointerTargets:Partial<Record<ElementId,string>>={
+  'halftone-wordmark':'.hw-field canvas',
+  'signal-grid':'.sg-plot',
   'sonic-aperture':'.sonic-aperture',
   'elevation-matrix':'.em-cell',
   'prism-core':'.prism-core',
@@ -40,7 +42,7 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
   if(!selector)return;
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   let frame=0,last=0,time=0,entered=false,target:HTMLElement|null=null,step=-1;
-  const reactInput=id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav'||id==='elevation-matrix';
+  const reactInput=id==='signal-grid'||id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav'||id==='elevation-matrix';
   function pointer(type:string,bubbles=false,x=.5,y=.5){
     if(!target)return;
     const box=target.getBoundingClientRect();
