@@ -88,7 +88,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
   }
   function toggleSave(id:string){
     const next=saved.includes(id)?saved.filter(s=>s!==id):[...saved,id];setSaved(next);
-    try{localStorage.setItem('motiqo-saved',JSON.stringify(next));}catch{}
+    try{localStorage.setItem('motiqo-saved',JSON.stringify(next));window.dispatchEvent(new Event('motiqo-saved-change'));}catch{}
   }
   function open(element:LibraryElement,tab:'preview'|'code'|'prompt'='preview'){
     // Outgoing cards can still receive the second click during their exit animation.

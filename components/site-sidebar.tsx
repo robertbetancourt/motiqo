@@ -5,6 +5,7 @@ import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } f
 import ComponentNavigationIcon from './component-navigation-icon';
 import { componentGroups, componentSections, componentGroupCounts, newComponentsByGroup, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import NavigationIcon from './navigation-icon';
+import { heroIds } from '@/lib/hero-catalog';
 import SidebarArt from './sidebar-art';
 import Brand from './brand';
 import ColorPicker from './color-picker';
@@ -32,6 +33,22 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
     const pathname = usePathname(), [open, setOpen] = useState(false), toggle = useRef<HTMLButtonElement>(null);
     const nav = useRef<HTMLElement>(null);
     const [componentsOpen,setComponentsOpen]=useState(false);
+    const [localSavedCount, setLocalSavedCount] = useState<number>(0);
+    useEffect(() => {
+        function syncSaved() {
+            try {
+                const stored = JSON.parse(localStorage.getItem('motiqo-saved') || localStorage.getItem('prism4-saved') || '[]');
+                if (Array.isArray(stored)) setLocalSavedCount(stored.length);
+            } catch {}
+        }
+        syncSaved();
+        window.addEventListener('storage', syncSaved);
+        window.addEventListener('motiqo-saved-change', syncSaved);
+        return () => {
+            window.removeEventListener('storage', syncSaved);
+            window.removeEventListener('motiqo-saved-change', syncSaved);
+        };
+    }, []);
     const back=useRef<HTMLButtonElement>(null),componentsLink=useRef<HTMLAnchorElement>(null),focusMenu=useRef(false),keepMenuOpen=useRef(false);
     const [route,setRoute]=useState<string|null>(()=>pathname==='/library'?null:pathname),[destination,setDestination]=useState<string|null>(null);
     const active=destination??route;
@@ -69,7 +86,8 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
     const exploreItems = [
         { name: 'Home', href: '/', icon: 'home' as const, active: active === '/' },
         { name: 'Components', href: '/library', icon: 'library' as const, active: !!active?.startsWith('/library')&&active!=='/library?saved=1', action: library ? onCollection : undefined },
-        { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount }
+        { name: 'Hero', href: '/hero', icon: 'hero' as const, active: active === '/hero', count: heroIds.length },
+        { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount > 0 ? savedCount : localSavedCount }
     ];
     const resourceItems = [
         { name: 'MCP', href: '/mcp', icon: 'mcp' as const, active: active === '/mcp' },
@@ -98,7 +116,7 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
         {exploreItems.map(item => <Link ref={item.name==='Components'?componentsLink:undefined} key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={event => {
           if(item.name==='Components'){focusMenu.current=true;keepMenuOpen.current=open;setComponentsOpen(true);}else setOpen(false);
           selectDestination(item.href);if(item.action){event.preventDefault();item.action();}
-        }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{item.name==='Components'&&<ComponentNavigationIcon name="forward" className="sidebar-chevron" size={14}/>}{!!item.count && <small>{item.count}</small>}</Link>)}
+        }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{item.name==='Components'&&<ComponentNavigationIcon name="forward" className="sidebar-chevron" size={14}/>}{!!item.count && <small className="sidebar-count">{item.count}</small>}</Link>)}
         <span className="sidebar-section-title">Resource</span>
         {resourceItems.map(item => <Link key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={() => {
           setOpen(false);selectDestination(item.href);

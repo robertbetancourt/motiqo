@@ -14,5 +14,5 @@ export default async function Page({params,searchParams}:{params:Promise<{id:str
   if(process.env.NODE_ENV!=='development')notFound();
   const {id}=await params,{theme,motion,frame}=await searchParams;
   if(!elementIds.includes(id as ElementId))notFound();
-  return <PreviewCapture key={`${id}-${theme}-${motion}-${frame}`} id={id as ElementId} theme={theme==='light'?'light':'dark'} motion={motion==='1'} card={frame==='card'}/>;
+  return <PreviewCapture key={`${id}-${theme}-${motion}-${frame}`} id={id as ElementId} theme={theme==='light'?'light':'dark'} motion={motion==='1'} card={frame==='card'} portrait={frame==='portrait'}/>;
 }
