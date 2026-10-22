@@ -1,0 +1,15 @@
+Create a complete React Hero named AtelierHero for a demo architectural studio, FORMA ATELIER. Respect the project's framework and styling conventions. Reference material should guide composition and behavior only. Do not copy company names, logos, headlines, or copy from source captures. Use the demo identities and original content specified here; no registered trademarks or ® symbols. Maintain Motiqo component names.
+
+Composition: Full-width section with a minimum height of 760px, luminous sky, horizon photography of a contemporary pavilion, and restrained vegetation at the corners. Do not include external capture frames. Maintain a very subtle CAD grid, four precision registration marks, and a graduated ruler at the bottom.
+
+Navigation: Centered dark pill at top with the typographic wordmark FORMA ATELIER, without copying third-party logos. Accessible menu with “Inspect the architecture” and “Reset the view”. Original two-line headline: “Spaces shaped” / “around your life.”. Description: “A study in light, material and the quiet details of home. Step inside and explore every surface.”. CTA: “Explore the house”, which toggles inspection mode and changes to “Exit inspection”. Use Urbanist or project sans, editorial tracking, and no superfluous decorative copy.
+
+Maquette: Center a light card with smooth corners and a real Three.js architectural maquette. In Motiqo reuse the pavilion and materials from the forma-atelier experiment; do not alter that experiment. Preserve its pavilion, terrace, reflecting pool, and greenery. When exporting to other projects, bundle the necessary geometries, textures, and dependencies alongside the component. Use an orthographic camera, soft shadows, natural lighting, and an architectural model finish. The card must not clip the model.
+
+Interaction: Smooth idle rotation, drag interaction with OrbitControls, and keyboard controls to rotate in both directions. Inspection mode uses raycasting to highlight roofs, glazing, and other materials with a concise surface label. Add “Next surface” to step through materials without mouse input. The menu allows resetting the view. Keep controls independent from decorative elements.
+
+Assets: /heroes/atelier-backdrop.webp for original backdrop photography and /heroes/atelier-house.webp as a practical fallback for the model. Bundle these assets with the component or replace them with licensed equivalents without depending on private team files.
+
+Ensure responsive scaling down to 320px with zero horizontal overflow. Respect prefers-reduced-motion, pause when scrolled offscreen or when tab is hidden, cap devicePixelRatio at 2, and clean up observers, RAF, event listeners, controls, geometries, materials, and renderer on unmount. Test keyboard navigation, unmounting, and WebGL context loss; do not claim FPS numbers without measurement.
+
+Props: brandName='FORMA ATELIER', titleLine1='Spaces shaped', titleLine2='around your life.', subtitle, ctaText='Explore the house', autoRotateMaquette=true, paused=false, and className. Deliver the complete functional section, not a static screenshot.

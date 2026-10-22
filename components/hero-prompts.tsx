@@ -109,6 +109,54 @@ function LivePreview({ hero }: { hero: HeroEntry }) {
   );
 }
 
+function HeroFitWrapper({ id, paused }: { id: HeroId; paused: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const BASE_HEIGHT = 780;
+
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const h = el.clientHeight;
+      if (h <= 0) return;
+      setScale(Math.min(1, h / BASE_HEIGHT));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <div
+        style={{
+          width: scale < 1 ? `${(1 / scale) * 100}%` : '100%',
+          height: scale < 1 ? BASE_HEIGHT : '100%',
+          minHeight: BASE_HEIGHT,
+          transform: scale < 1 ? `scale(${scale})` : undefined,
+          transformOrigin: 'center center',
+          flexShrink: 0,
+        }}
+      >
+        <HeroStage id={id} paused={paused} />
+      </div>
+    </div>
+  );
+}
+
 export default function HeroPrompts({
   initialHero,
   initialView = 'preview',
@@ -140,17 +188,46 @@ export default function HeroPrompts({
   const scroll = useRef(0);
   const last = useRef<HeroId | null>(null);
 
+  const onCardPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--bezel-x', `${((e.clientX - r.left) / r.width) * 100}%`);
+    e.currentTarget.style.setProperty('--bezel-y', `${((e.clientY - r.top) / r.height) * 100}%`);
+    e.currentTarget.style.setProperty('--bezel-strength', '1');
+  };
+  const onCardPointerLeave = (e: React.PointerEvent<HTMLElement>) => {
+    e.currentTarget.style.setProperty('--bezel-strength', '0');
+  };
+
   useEffect(() => {
+    const syncSaved = () => {
+      try {
+        const stored: unknown = JSON.parse(localStorage.getItem('motiqo-saved') || '[]');
+        if (Array.isArray(stored)) setSaved(stored.filter((id): id is string => typeof id === 'string'));
+      } catch {}
+    };
+    syncSaved();
     try {
-      const stored: unknown = JSON.parse(localStorage.getItem('motiqo-saved') || '[]');
-      if (Array.isArray(stored)) setSaved(stored.filter((id): id is string => typeof id === 'string'));
       const preferred = localStorage.getItem('motiqo-prompt-tool');
       if (preferred) setTool(preferred as AITool);
     } catch {}
+    window.addEventListener('motiqo-saved-change', syncSaved);
+    window.addEventListener('storage', syncSaved);
+    return () => {
+      window.removeEventListener('motiqo-saved-change', syncSaved);
+      window.removeEventListener('storage', syncSaved);
+    };
   }, []);
 
   function toggleSave(id: string) {
-    const next = saved.includes(id) ? saved.filter(v => v !== id) : [...saved, id];
+    const currentStored = (() => {
+      try {
+        const s: unknown = JSON.parse(localStorage.getItem('motiqo-saved') || '[]');
+        return Array.isArray(s) ? s.filter((x): x is string => typeof x === 'string') : [];
+      } catch {
+        return [];
+      }
+    })();
+    const next = currentStored.includes(id) ? currentStored.filter(v => v !== id) : [...currentStored, id];
     setSaved(next);
     try {
       localStorage.setItem('motiqo-saved', JSON.stringify(next));
@@ -274,9 +351,7 @@ export default function HeroPrompts({
               <div className="workbench-stage" data-viewport={viewport}>
                 <div id="detail-panel" className="detail-workspace" role="tabpanel" aria-labelledby={`hero-${view}-tab`} tabIndex={0}>
                   <div className="workbench-preview" hidden={view !== 'preview'}>
-                    <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
-                      <HeroStage id={selected.id} paused={still} />
-                    </div>
+                    <HeroFitWrapper id={selected.id} paused={still} />
                   </div>
                   {view === 'prompt' && (
                     <div key="prompt" className="document-surface panel-enter prompt-surface">
@@ -457,7 +532,12 @@ export default function HeroPrompts({
         </section>
       ) : (
         <div className={styles.page}>
-          <h1 className="sr-only">Hero</h1>
+          <header className="collection-header">
+            <div>
+              <h1>Heroes<span aria-hidden="true">.</span></h1>
+              <p>Full-viewport centerpiece sections with live physics and depth.</p>
+            </div>
+          </header>
           <section id="hero-collection" className="collection" aria-label="Hero collection">
             <div className="filter-row collection-toolbar">
               <span className="collection-label">Hero</span>
@@ -498,8 +578,10 @@ export default function HeroPrompts({
                   key={hero.id}
                   data-hero={hero.id}
                   className="element-card"
+                  onPointerMove={onCardPointerMove}
                   onPointerEnter={() => setPreview(hero.id)}
                   onPointerLeave={e => {
+                    onCardPointerLeave(e);
                     if (!e.currentTarget.contains(document.activeElement)) setPreview(null);
                   }}
                   onFocus={() => setPreview(hero.id)}
@@ -513,6 +595,7 @@ export default function HeroPrompts({
                     }
                   }}
                 >
+                  <span className="motiqo-bezel-light" aria-hidden="true" />
                   <div className={`card-stage ${styles.stage}`}>
                     <img className={styles.poster} src={hero.poster} alt="" width={1280} height={900} loading="eager" />
                     {preview === hero.id && !reduced && <LivePreview hero={hero} />}

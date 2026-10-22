@@ -1,10 +1,11 @@
 {
   "items": [
     {
-      "id": "atelier",
-      "title": "AtelierHero",
+      "id": "pavilion",
+      "title": "Pavilion",
       "tags": [
         "Three.js",
+        "WebGL",
         "Architecture",
         "Interactive"
       ],
@@ -13,10 +14,11 @@
     },
     {
       "id": "diorama",
-      "title": "DioramaHero",
+      "title": "Diorama",
       "tags": [
-        "PNG",
         "Parallax",
+        "TypeScript",
+        "React",
         "SaaS"
       ],
       "prompt": "Create a complete, responsive React Hero named DioramaHero for Rillio, a demo product identity for an onboarding walkthrough platform. Reference material should guide composition and behavior only. Do not copy company names, logos, headlines, or copy from source captures. Use the demo identities and original content specified here; no registered trademarks or ® symbols. Maintain Motiqo component names.\n\nSpan the full container with a minimum height of 780px. Use a slate-blue and ivory atmosphere, editorial serif typography for the headline, and Urbanist for interface elements. Subtle lateral grid and dot patterns with low opacity, avoiding excessive decoration.\n\nNavigation: Draw an original open-stroke SVG 'R' monogram accompanied by Rillio. Never copy third-party wavy logos. Center links: Product, Journeys, Journal, and Plans. Right actions: Sign in, “Start a journey”, and “Take a tour”. On mobile, preserve brand identity and the primary CTA.\n\nOriginal Content: Headline “Small first steps.” / “Lasting momentum.”, highlighting 'first steps' in blue. Description “Make every welcome feel considered. A clearer path from hello to the next milestone.”. Actions “Start a journey” and “Take a tour”. Lateral tags display [ RILLIO ] and [ MOMENTUM ].\n\nInteractive Midground Dashboard: Soft top rounded corners and contained elevation shadow. Sidebar includes Overview, Guide, WORKSPACE, Journeys, Insights, Audience, Milestones, TOOLKIT, Sequences, Notes, and Welcome kits. Journeys is active by default. Header “A thoughtful welcome”, status “live journey”, and description “Turn a first visit into a meaningful connection”. Initial Total KPI 8,420 with caption “People reaching their next milestone”; initial Impact KPI $326K with caption “Value created over the last 30 days”. Total and Impact filters dynamically update an accessible SVG area chart. An assistant panel greets “Ready when you are, Alex” and states “Let’s find your next small step.”. Its actions are Find a starting point, Plan the next step, Review this journey, Build a milestone, Group your audience, and Write a welcome. Selecting them updates metrics with accessible announcements. Do not duplicate reference dashboard copy or metrics.\n\nForeground: Use an authentic cutout photograph PNG with true transparency, not procedural geometry or a Three.js canvas. In Motiqo, the asset is /heroes/diorama-foreground.png: an alpine valley, limestone ridges, and evergreen canopy with a low central opening. Bundle this PNG with the component or use an authorized replacement. Span the bottom edge, partially obscuring the base of the dashboard while keeping KPIs and controls fully accessible. Do not place a solid rectangular background behind the cutout. Include only very light CSS mist at the base.\n\nDifferential Parallax: Track cursor coordinates in refs; interpolate with dt-aware damping. The foreground PNG displaces slightly more than the dashboard, which shifts in the opposite direction. Keep adequate bleed margins at the boundaries. When the pointer leaves, ease smoothly back to center. Use DOM transforms without per-frame React re-renders. When reduced motion or paused is active, lock to a static centered composition. Use a visibility-aware animation clock and cleanly dispose RAF, observers, and listeners. Do not introduce a WebGL dependency for this hero.\n\nOn mobile, collapse secondary columns, scale the terrain gracefully, and keep chart controls above the image layer. Support full keyboard navigation, visible focus rings, status alerts, and zero horizontal overflow down to 320px.\n\nProps: brandName='Rillio', highlightWord='first steps', parallaxIntensity=1, mistOpacity=.75, userName='Alex', paused=false, and className. Deliver the fully interactive Hero with assets and live states; not a static graphic.",
@@ -24,22 +26,24 @@
     },
     {
       "id": "arcadia",
-      "title": "ArcadiaHero",
+      "title": "Arcadia",
       "tags": [
-        "Gallery",
         "Physics",
-        "Drag"
+        "Drag",
+        "Carousel",
+        "Interactive"
       ],
       "prompt": "Create a complete React Hero named ArcadiaHero featuring an orbital photographic ring and original content for a creative tool. Reference material should guide composition and behavior only. Do not copy company names, logos, headlines, or copy from source captures. Use the demo identities and original content specified here; no registered trademarks or ® symbols. Maintain Motiqo component names.\n\nWhite backdrop with optional dark theme variant. Editorial serif typography for headlines and Urbanist for secondary text. Minimum height 780px. Do not copy third-party brand marks, text, exact photos, or external capture borders.\n\nOriginal centered headline in two lines: “Make room for” / “your next idea.”. Description “Turn a passing thought into a visual worth keeping.”. Dark capsule button “Explore your vision” with a subtle directional arrow. At bottom, three columns: “Your perspective” / “Start with the way you see things.”; “Room to play” / “Follow an idea somewhere unexpected.”; “Made to keep” / “Find the image that feels like you.”. Keep text legible inside the orbital arc opening.\n\nConstruct a seamless continuous ring of 16 photograph cards with licensed imagery, 25px rounded corners, and soft elevation shadows. In Motiqo, use local assets /media/gallery/image-01.webp through image-16.webp. Preload the 16 bounded images without lazy loading cards entering the active arc. Do not introduce unexpected remote downloads.\n\nGeometry: Horizontal center width*.5, desktop pivot height*.76, and radius min(width*.43, 590). Each card uses a = i/16 * 2π + globalAngle; position x = sin(a) * radius, y = -cos(a) * radius, and tangential rotation. On mobile, scale radius, pivot, and card dimensions to preserve headline breathing room. Update transform and opacity via direct DOM refs without per-frame React re-renders.\n\nSmooth Entrance & Exit: Never toggle visibility while an image card still has opacity. Normalize angle 'a' with atan2(sin(a), cos(a)). Begin fade at |a| = .48π and complete at .70π using a 5th-degree smootherstep curve with zero derivatives at both ends. Only apply visibility:hidden once opacity reaches 0; the ±π angle wrap must occur while completely invisible. Must function reliably in auto-rotation, reverse spin, drag, and inertia. Semi-transparent cards must not intercept pointer events or participate in tab order. Do not rely on CSS opacity transitions that continuously fight clock updates.\n\nMotion & Interaction: Idle auto-rotation at .15 rad/s, damped inertia, and clamped delta time. Hover radially elevates the card by 26px and slows global rotation. Keyboard focus pauses auto-rotation for inspection. Support horizontal drag with pointer capture, wheel input, and keyboard arrow keys while preserving natural vertical page scrolling. Accessible controls to rotate left and right. Click selects an image without confusing drag gestures. CTA applies a gentle rotational impulse that smoothly decelerates. Include aria-pressed for selection state and clear visual feedback for the selected card.\n\nGracefully handle empty image lists and updated props. Use a clock that pauses when offscreen or when tab is hidden, ResizeObserver, and complete cleanup on unmount. Respect prefers-reduced-motion by disabling autoplay and momentum while retaining manual step controls. Do not claim target FPS without profiling. Verify bidirectional wrap across boundaries and complete 360-degree cycles.\n\nProps: images, autoPlay=true, rotationSpeed=1, optional radius, titleLine1='Make room for', titleLine2='your next idea.', subtitle, ctaText='Explore your vision', onCtaClick, paused=false, dark=false, and className. Deliver the fully functional interactive Hero.",
       "poster": "/heroes/arcadia-poster-06a52a875b56.webp"
     },
     {
       "id": "solace",
-      "title": "SolaceHero",
+      "title": "Solace",
       "tags": [
         "Atmosphere",
-        "Interactive",
-        "Focus"
+        "CSS 3D",
+        "React",
+        "Productivity"
       ],
       "prompt": "Create a complete, responsive Hero named SolaceHero for a calm productivity product. Follow the current project's framework and styling conventions. Use the supplied Ldk video only as inspiration for depth, soft light and floating interface layers; create an original composition, brand and copy.\n\nUse an ivory canvas and a restrained masthead for Solace. Place the headline “A little space. A clearer mind.” and a concise introduction on the left, with a rounded “Find your rhythm” action. On the right, create a large luminous pearl with layered cool-blue, lilac and peach highlights. Give it a gentle breathing rhythm and small pointer-responsive tilt. Arrange three original functional cards around it: a focus session timer, a week of progress marks, and a short daily intention. Avoid copying the reference's labels, exact placement, branding or form.\n\nThe primary action starts a two-minute focus session. Allow the user to change the intention and mark small wins in the weekly progress card. Maintain keyboard support, visible focus and an accessible timer announcement only at session start/end. Keep readable content independent of decorative visuals. Use a single visibility-aware animation clock, no per-frame React state, transform-only parallax, reduced-motion support and complete cleanup. Stack the composition on mobile with no horizontal overflow. Expose brandName, title, subtitle, ctaText, onCtaClick and className props. Implement the entire section, not a static screenshot.",
       "poster": "/heroes/solace-poster-829a01dd7aa7.webp"
