@@ -532,11 +532,8 @@ export default function HeroPrompts({
         </section>
       ) : (
         <div className={styles.page}>
-          <header className="collection-header">
-            <div>
-              <h1>Heroes<span aria-hidden="true">.</span></h1>
-              <p>Full-viewport centerpiece sections with live physics and depth.</p>
-            </div>
+          <header className="page-header">
+            <h1>Heroes<span aria-hidden="true">.</span></h1>
           </header>
           <section id="hero-collection" className="collection" aria-label="Hero collection">
             <div className="filter-row collection-toolbar">
