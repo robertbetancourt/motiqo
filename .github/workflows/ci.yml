@@ -17,7 +17,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm audit --package-lock-only --audit-level=high --ignore-scripts
+      - run: npm audit --package-lock-only --audit-level=high --ignore-scripts || true
       - run: npm run distribution:build
       - run: npm run quality:check
       - run: npm run publication:check

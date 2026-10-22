@@ -75,52 +75,46 @@ async function run() {
       mobile: false,
     });
 
-    // 1. Navigate to /library first and set localStorage with saved items
+    // 1. Capture /library
     await client.send('Page.navigate', { url: 'http://127.0.0.1:3014/library' });
-    await new Promise(r => setTimeout(r, 2000));
-    await client.send('Runtime.evaluate', {
-      expression: `localStorage.setItem('motiqo-saved', JSON.stringify(['vapor-ring', 'elastic-showcase', 'atelier'])); window.dispatchEvent(new Event('motiqo-saved-change'));`,
-    });
+    await new Promise(r => setTimeout(r, 3500));
 
-    // 2. Navigate to /hero
-    await client.send('Page.navigate', { url: 'http://127.0.0.1:3014/hero' });
-    await new Promise(r => setTimeout(r, 3000));
+    const libShot = await client.send('Page.captureScreenshot', { format: 'png' });
+    const libBuf = Buffer.from(libShot.data, 'base64');
+    const libOutPath = path.join(artifactDir, 'verify-library-previews.png');
+    fs.writeFileSync(libOutPath, libBuf);
+    console.log(`Saved screenshot to ${libOutPath}`);
 
-    // Capture screenshot of /hero
-    const heroShot = await client.send('Page.captureScreenshot', { format: 'png' });
-    const heroBuf = Buffer.from(heroShot.data, 'base64');
-    const heroOutPath = path.join(artifactDir, 'verify-sidebar-saved-hero.png');
-    fs.writeFileSync(heroOutPath, heroBuf);
-    console.log(`Saved screenshot to ${heroOutPath}`);
-
-    // Check saved count element in DOM
-    const savedCountCheck = await client.send('Runtime.evaluate', {
+    // Check poster images in DOM
+    const posterCheck = await client.send('Runtime.evaluate', {
       expression: `(() => {
-        const links = Array.from(document.querySelectorAll('.sidebar-link'));
-        const savedLink = links.find(el => el.textContent.includes('Saved'));
-        const countBadge = savedLink ? savedLink.querySelector('.sidebar-count') : null;
-        const textElements = Array.from(document.querySelectorAll('.sidebar-art text'));
-        const orbFrontRings = document.querySelectorAll('.sidebar-art [data-orbit-front]');
-        return {
-          savedText: savedLink ? savedLink.textContent : null,
-          savedCount: countBadge ? countBadge.textContent : null,
-          hasInGoodMotionText: textElements.some(t => t.textContent.includes('IN GOOD MOTION')),
-          frontRingCount: orbFrontRings.length
-        };
+        const previews = Array.from(document.querySelectorAll('.card-preview'));
+        const info = previews.slice(0, 12).map(p => {
+          const id = p.getAttribute('data-preview-id');
+          const darkImg = p.querySelector('img.card-poster-dark');
+          const lightImg = p.querySelector('img.card-poster-light');
+          const isLive = p.hasAttribute('data-live');
+          return {
+            id,
+            hasDarkPoster: !!darkImg,
+            darkSrc: darkImg ? darkImg.getAttribute('src') : null,
+            isLive
+          };
+        });
+        return info;
       })()`,
       returnByValue: true
     });
-    console.log('DOM Check Result:', JSON.stringify(savedCountCheck.result.value, null, 2));
+    console.log('Library Posters check (first 12):', JSON.stringify(posterCheck.result.value, null, 2));
 
-    // Also capture focused crop of the sidebar
-    const sidebarShot = await client.send('Page.captureScreenshot', {
-      format: 'png',
-      clip: { x: 0, y: 0, width: 300, height: 900, scale: 1.5 }
-    });
-    const sidebarBuf = Buffer.from(sidebarShot.data, 'base64');
-    const sidebarOutPath = path.join(artifactDir, 'verify-sidebar-art.png');
-    fs.writeFileSync(sidebarOutPath, sidebarBuf);
-    console.log(`Saved screenshot to ${sidebarOutPath}`);
+    // 2. Capture Home
+    await client.send('Page.navigate', { url: 'http://127.0.0.1:3014/' });
+    await new Promise(r => setTimeout(r, 3000));
+    const homeShot = await client.send('Page.captureScreenshot', { format: 'png' });
+    const homeBuf = Buffer.from(homeShot.data, 'base64');
+    const homeOutPath = path.join(artifactDir, 'verify-home-previews.png');
+    fs.writeFileSync(homeOutPath, homeBuf);
+    console.log(`Saved screenshot to ${homeOutPath}`);
 
     ws.close();
   } finally {
