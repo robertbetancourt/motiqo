@@ -35,7 +35,7 @@ test('Orbit follows with inertia, converges, banks in both directions and bounce
  const angle=orbit.angleToward(Math.PI-.02,-Math.PI+.02,.5);assert.ok(Math.abs(angle-Math.PI)<.001,'heading takes the short path across ±π');
 });
 
-test('Liquid selector keeps its current shape through rapid changes, snaps on resize/reduced motion and cancels work on unmount',async()=>{
+test('Shared selector supports two or three options, follows rapid changes and resize without animation loops',async()=>{
  const dom=new JSDOM('<div id="mount"></div>',{pretendToBeVisual:true}),saved=new Map(),frames=new Map(),listeners=new Set();let serial=0,now=0;
  const media={matches:false,addEventListener:(_,fn)=>listeners.add(fn),removeEventListener:(_,fn)=>listeners.delete(fn)};dom.window.matchMedia=()=>media;
  for(const [key,value] of Object.entries({window:dom.window,document:dom.window.document,IS_REACT_ACT_ENVIRONMENT:true,requestAnimationFrame:fn=>{frames.set(++serial,fn);return serial;},cancelAnimationFrame:id=>frames.delete(id)})){saved.set(key,Object.getOwnPropertyDescriptor(globalThis,key));Object.defineProperty(globalThis,key,{value,configurable:true,writable:true});}
@@ -43,12 +43,10 @@ test('Liquid selector keeps its current shape through rapid changes, snaps on re
  const render=(selected,width=114)=>React.act(()=>root.render(React.createElement(Component,{selected,width}))),advance=async(ms)=>{await React.act(()=>{now+=ms;const jobs=[...frames.values()];frames.clear();jobs.forEach(fn=>fn(now));});};
  let mounted=true;
  try{
-  await render(0);const svg=document.querySelector('svg'),head=svg.lastElementChild;const original=head.getAttribute('d');assert.equal(frames.size,0);
-  await render(2);await advance(0);await advance(240);const halfway=head.getAttribute('d');assert.notEqual(halfway,original);
-  await render(1);assert.equal(head.getAttribute('d'),halfway);assert.equal(frames.size,1,'only the newest transition runs');await advance(0);assert.equal(head.getAttribute('d'),halfway);
-  await advance(1000);assert.equal(head.getAttribute('d'),liquid.liquidBodyPath(liquid.restingLiquid(171,114).head));assert.equal(frames.size,0);
-  await render(0);await advance(0);await advance(100);media.matches=true;await React.act(()=>listeners.forEach(fn=>fn()));assert.equal(frames.size,0);assert.equal(svg.dataset.liquidPhase,'1');assert.equal(head.getAttribute('d'),original);
-  await render(2,90);assert.equal(head.getAttribute('d'),liquid.liquidBodyPath(liquid.restingLiquid(225,90).head));
-  media.matches=false;await render(0,90);assert.equal(frames.size,1);await React.act(()=>root.unmount());mounted=false;assert.equal(frames.size,0);assert.equal(listeners.size,0);
+  await render(0);const indicator=document.querySelector('.segment-selection');assert.equal(indicator.getAttribute('aria-hidden'),'true');assert.equal(document.querySelector('svg'),null);
+  await render(2);assert.equal(indicator.style.transform,'translate3d(228px,0,0)');
+  await render(1,137);assert.equal(indicator.style.width,'137px');assert.equal(indicator.style.transform,'translate3d(137px,0,0)','Saved uses its actual two-option geometry');
+  await render(0,90);assert.equal(indicator.style.transform,'translate3d(0px,0,0)');assert.equal(frames.size,0);assert.equal(listeners.size,0);
+  await React.act(()=>root.unmount());mounted=false;assert.equal(frames.size,0);
  }finally{if(mounted)await React.act(()=>root.unmount());dom.window.close();for(const [key,value] of saved){if(value)Object.defineProperty(globalThis,key,value);else delete globalThis[key];}}
 });

@@ -307,6 +307,31 @@
       "tests": [
         "tests/elastic-showcase.test.cjs"
       ]
+    },
+    "halftone-wordmark": {
+      "tests": [
+        "tests/halftone-signal.test.cjs"
+      ]
+    },
+    "signal-grid": {
+      "tests": [
+        "tests/halftone-signal.test.cjs"
+      ]
+    },
+    "paper-flow": {
+      "tests": [
+        "tests/flow-topo.test.cjs"
+      ]
+    },
+    "hyperbolic-ribbon": {
+      "tests": [
+        "tests/flow-topo.test.cjs"
+      ]
+    },
+    "topo-contour": {
+      "tests": [
+        "tests/flow-topo.test.cjs"
+      ]
     }
   },
   "site": {
@@ -392,6 +417,9 @@
     ],
     "components/navigation-icon.tsx": [
       "tests/new-collection.test.cjs"
+    ],
+    "components/heroes/aster-hero.tsx": [
+      "tests/heroes.test.cjs"
     ]
   }
 }

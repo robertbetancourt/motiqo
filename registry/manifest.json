@@ -3,6 +3,744 @@
   "version": "0.1.0",
   "items": [
     {
+      "id": "paper-flow",
+      "title": "PaperFlow",
+      "number": "73",
+      "category": "Motion",
+      "original": true,
+      "description": "Images folded by momentum.",
+      "hint": "Drag or scroll. Use arrows to browse.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Carousel",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy the implementation and all companion files. Local artwork included.",
+      "code": "import PaperFlow from './paper-flow';\n\nexport default function Example(){return <div style={{height:560}}><PaperFlow/></div>;}",
+      "brief": "Integrate PaperFlow as a real 3D gallery of crumpled paper. Use irregular triangulated sheets with a seeded crumpled rest pose, precomputed edge-length constraint relaxation and flat facet shading. Morph on the GPU between the flat focused sheet and persistent crumpled side sheets; preserve printed artwork UVs. Never replace the triangulated paper with broad hinge folds, sine-wave sheets or CSS transforms. Use the selected configuration in the usage example as the exact source of truth. Preserve touch, keyboard, reduced motion, offscreen suspension and disposal. Use the included assets/images artwork.",
+      "entry": "paper-flow.tsx",
+      "exportName": "PaperFlow",
+      "files": [
+        {
+          "source": "components/originals/paper-flow.tsx",
+          "target": "components/motiqo/paper-flow.tsx"
+        },
+        {
+          "source": "components/originals/flow-gallery.tsx",
+          "target": "components/motiqo/flow-gallery.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-08.webp",
+          "target": "public/media/gallery/image-08.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        },
+        {
+          "source": "public/media/gallery/image-13.webp",
+          "target": "public/media/gallery/image-13.webp"
+        },
+        {
+          "source": "public/media/gallery/image-14.webp",
+          "target": "public/media/gallery/image-14.webp"
+        },
+        {
+          "source": "public/media/gallery/image-15.webp",
+          "target": "public/media/gallery/image-15.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-17.webp",
+          "target": "public/media/gallery/image-17.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        },
+        {
+          "source": "components/originals/paper-mesh.ts",
+          "target": "components/motiqo/paper-mesh.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "mode",
+          "label": "Input",
+          "kind": "select",
+          "defaultValue": "both",
+          "choices": [
+            {
+              "value": "scroll",
+              "label": "Scroll"
+            },
+            {
+              "value": "drag",
+              "label": "Drag"
+            },
+            {
+              "value": "both",
+              "label": "Both"
+            }
+          ]
+        },
+        {
+          "key": "direction",
+          "label": "Direction",
+          "kind": "select",
+          "defaultValue": "horizontal",
+          "choices": [
+            {
+              "value": "horizontal",
+              "label": "Horizontal"
+            },
+            {
+              "value": "vertical",
+              "label": "Vertical"
+            }
+          ]
+        },
+        {
+          "key": "speed",
+          "label": "Speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.1,
+          "max": 4,
+          "step": 0.1
+        },
+        {
+          "key": "deformation",
+          "label": "Deformation",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.1
+        },
+        {
+          "key": "perspective",
+          "label": "Perspective",
+          "kind": "range",
+          "defaultValue": 40,
+          "min": 20,
+          "max": 75,
+          "step": 1
+        },
+        {
+          "key": "inertia",
+          "label": "Inertia",
+          "kind": "range",
+          "defaultValue": 0.78,
+          "min": 0.02,
+          "max": 0.95,
+          "step": 0.01
+        },
+        {
+          "key": "loop",
+          "label": "Infinite loop",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "backgroundColor",
+          "label": "background color",
+          "kind": "color",
+          "defaultValue": "#dededc"
+        }
+      ],
+      "moods": [
+        {
+          "id": "default",
+          "label": "Original",
+          "settings": {
+            "mode": "both",
+            "direction": "horizontal",
+            "speed": 1,
+            "deformation": 1,
+            "perspective": 40,
+            "inertia": 0.78,
+            "loop": "enabled",
+            "backgroundColor": "#dededc"
+          }
+        },
+        {
+          "id": "subtle",
+          "label": "Subtle",
+          "settings": {
+            "mode": "both",
+            "direction": "horizontal",
+            "speed": 1,
+            "deformation": 0.5,
+            "perspective": 40,
+            "inertia": 0.88,
+            "loop": "enabled",
+            "backgroundColor": "#dededc"
+          }
+        }
+      ],
+      "addedAt": "2026-10-22"
+    },
+    {
+      "id": "hyperbolic-ribbon",
+      "title": "HyperbolicRibbon",
+      "number": "72",
+      "category": "Motion",
+      "original": true,
+      "description": "A continuous gallery through a hyperbolic neck.",
+      "hint": "Drag or scroll. Use arrows to browse.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Carousel",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy the implementation and all companion files. Local artwork included.",
+      "code": "import HyperbolicRibbon from './hyperbolic-ribbon';\n\nexport default function Example(){return <div style={{height:560}}><HyperbolicRibbon/></div>;}",
+      "brief": "Integrate HyperbolicRibbon, a diagonal gallery mapped continuously with sinh/cosh. Preserve stepped spring movement, drag, wheel and hover neck interaction. Use the selected configuration, never fixed values that contradict it.",
+      "entry": "hyperbolic-ribbon.tsx",
+      "exportName": "HyperbolicRibbon",
+      "files": [
+        {
+          "source": "components/originals/hyperbolic-ribbon.tsx",
+          "target": "components/motiqo/hyperbolic-ribbon.tsx"
+        },
+        {
+          "source": "components/originals/flow-gallery.tsx",
+          "target": "components/motiqo/flow-gallery.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-08.webp",
+          "target": "public/media/gallery/image-08.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        },
+        {
+          "source": "public/media/gallery/image-13.webp",
+          "target": "public/media/gallery/image-13.webp"
+        },
+        {
+          "source": "public/media/gallery/image-14.webp",
+          "target": "public/media/gallery/image-14.webp"
+        },
+        {
+          "source": "public/media/gallery/image-15.webp",
+          "target": "public/media/gallery/image-15.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-17.webp",
+          "target": "public/media/gallery/image-17.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        },
+        {
+          "source": "components/originals/paper-mesh.ts",
+          "target": "components/motiqo/paper-mesh.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "Enabled"
+            },
+            {
+              "value": "disabled",
+              "label": "Disabled"
+            }
+          ]
+        },
+        {
+          "key": "stepInterval",
+          "label": "Step interval",
+          "kind": "range",
+          "defaultValue": 2100,
+          "min": 800,
+          "max": 8000,
+          "step": 100
+        },
+        {
+          "key": "pinchScale",
+          "label": "Pinch",
+          "kind": "range",
+          "defaultValue": 0.82,
+          "min": 0.3,
+          "max": 1.2,
+          "step": 0.01
+        },
+        {
+          "key": "angleDeg",
+          "label": "Angle",
+          "kind": "range",
+          "defaultValue": 36,
+          "min": -75,
+          "max": 75,
+          "step": 1
+        },
+        {
+          "key": "gap",
+          "label": "Gap",
+          "kind": "range",
+          "defaultValue": 0.06,
+          "min": 0.01,
+          "max": 0.3,
+          "step": 0.01
+        },
+        {
+          "key": "backgroundColor",
+          "label": "background color",
+          "kind": "color",
+          "defaultValue": "#f6f6f4"
+        }
+      ],
+      "moods": [
+        {
+          "id": "default",
+          "label": "Original",
+          "settings": {
+            "autoPlay": "enabled",
+            "stepInterval": 2100,
+            "pinchScale": 0.82,
+            "angleDeg": 36,
+            "gap": 0.06,
+            "backgroundColor": "#f6f6f4"
+          }
+        },
+        {
+          "id": "subtle",
+          "label": "Subtle",
+          "settings": {
+            "autoPlay": "enabled",
+            "stepInterval": 3200,
+            "pinchScale": 0.6,
+            "angleDeg": 36,
+            "gap": 0.06,
+            "backgroundColor": "#f6f6f4"
+          }
+        }
+      ],
+      "addedAt": "2026-10-22"
+    },
+    {
+      "id": "topo-contour",
+      "title": "TopoContour",
+      "number": "71",
+      "category": "Motion",
+      "original": true,
+      "description": "A living field of topographic contours.",
+      "hint": "Move to raise terrain. Click for a ripple.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "WebGL",
+        "Background",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the implementation and all companion files. Local artwork included.",
+      "code": "import TopoContour from './topo-contour';\n\nexport default function Example(){return <div style={{height:560}}><TopoContour/></div>;}",
+      "brief": "Integrate TopoContour with a three-octave domain-warped simplex height field, derivative-antialiased minor and major contour lines, pointer elevation and damped click waves. Use the selected parameters.",
+      "entry": "topo-contour.tsx",
+      "exportName": "TopoContour",
+      "files": [
+        {
+          "source": "components/originals/topo-contour.tsx",
+          "target": "components/motiqo/topo-contour.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/kinetic-noise.ts",
+          "target": "components/motiqo/kinetic-noise.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "contourDensity",
+          "label": "Contour density",
+          "kind": "range",
+          "defaultValue": 24,
+          "min": 4,
+          "max": 60,
+          "step": 1
+        },
+        {
+          "key": "lineWidth",
+          "label": "Line width",
+          "kind": "range",
+          "defaultValue": 0.55,
+          "min": 0.4,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "kind": "range",
+          "defaultValue": 1.65,
+          "min": 0.5,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "warpStrength",
+          "label": "Warp",
+          "kind": "range",
+          "defaultValue": 0.65,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "speed",
+          "label": "Speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.1
+        },
+        {
+          "key": "interactionRadius",
+          "label": "Pointer radius",
+          "kind": "range",
+          "defaultValue": 0.28,
+          "min": 0.08,
+          "max": 0.7,
+          "step": 0.01
+        },
+        {
+          "key": "backgroundColor",
+          "label": "background color",
+          "kind": "color",
+          "defaultValue": "#05060a"
+        },
+        {
+          "key": "minorColor",
+          "label": "minor color",
+          "kind": "color",
+          "defaultValue": "#52525b"
+        },
+        {
+          "key": "majorColor",
+          "label": "major color",
+          "kind": "color",
+          "defaultValue": "#e4e4e7"
+        },
+        {
+          "key": "accentColor",
+          "label": "accent color",
+          "kind": "color",
+          "defaultValue": "#ededed"
+        }
+      ],
+      "moods": [
+        {
+          "id": "default",
+          "label": "Original",
+          "settings": {
+            "contourDensity": 24,
+            "lineWidth": 0.55,
+            "scale": 1.65,
+            "warpStrength": 0.65,
+            "speed": 1,
+            "interactionRadius": 0.28,
+            "backgroundColor": "#05060a",
+            "minorColor": "#52525b",
+            "majorColor": "#e4e4e7",
+            "accentColor": "#ededed"
+          }
+        },
+        {
+          "id": "subtle",
+          "label": "Subtle",
+          "settings": {
+            "contourDensity": 24,
+            "lineWidth": 0.8,
+            "scale": 1.65,
+            "warpStrength": 0.65,
+            "speed": 0.4,
+            "interactionRadius": 0.28,
+            "backgroundColor": "#05060a",
+            "minorColor": "#52525b",
+            "majorColor": "#e4e4e7",
+            "accentColor": "#ededed"
+          }
+        }
+      ],
+      "addedAt": "2026-10-22"
+    },
+    {
+      "id": "signal-grid",
+      "title": "SignalGrid",
+      "number": "70",
+      "category": "Motion",
+      "original": true,
+      "description": "Pixel telemetry with a staggered reveal and precise inspection.",
+      "hint": "Inspect signals. Click to pin. Space replays.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "SVG",
+        "Chart",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy signal-grid.tsx. Styling included. No external assets.",
+      "code": "import SignalGrid from './signal-grid';\n\nexport default function Example(){return <div style={{height:480}}><SignalGrid/></div>;}",
+      "brief": "Integrate SignalGrid, an orbital telemetry chart with staggered pixel reveals, pointer and keyboard inspection, pinned values, replay and reduced motion.",
+      "entry": "signal-grid.tsx",
+      "exportName": "SignalGrid",
+      "files": [
+        {
+          "source": "components/originals/signal-grid.tsx",
+          "target": "components/motiqo/signal-grid.tsx"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "accent",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#eeeeef"
+        }
+      ],
+      "moods": [
+        {
+          "id": "default",
+          "label": "Original",
+          "settings": {
+            "accent": "#eeeeef"
+          }
+        },
+        {
+          "id": "cool",
+          "label": "Cool",
+          "settings": {
+            "accent": "#b7b7bf"
+          }
+        }
+      ],
+      "addedAt": "2026-10-22"
+    },
+    {
+      "id": "halftone-wordmark",
+      "title": "HalftoneWordmark",
+      "number": "69",
+      "category": "Motion",
+      "original": true,
+      "description": "A typographic field that parts around your pointer.",
+      "hint": "Move to scatter. Click to send a wave.",
+      "source": "21st.dev · Kedhareswer",
+      "sourceUrl": "https://21st.dev/@kedhareswer/components/halftone-wordmark-footer",
+      "tags": [
+        "Canvas",
+        "Typography",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy halftone-wordmark.tsx. Styling included. No external assets.",
+      "code": "import HalftoneWordmark from './halftone-wordmark';\n\nexport default function Example(){return <div style={{height:480}}><HalftoneWordmark/></div>;}",
+      "brief": "Integrate this original implementation of an interactive halftone wordmark, inspired by Kedhareswer’s Halftone Wordmark Footer. Preserve pointer repulsion, spring recovery, click waves, keyboard wave control, reduced motion and visibility suspension.",
+      "entry": "halftone-wordmark.tsx",
+      "exportName": "HalftoneWordmark",
+      "files": [
+        {
+          "source": "components/originals/halftone-wordmark.tsx",
+          "target": "components/motiqo/halftone-wordmark.tsx"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "word",
+          "label": "Wordmark",
+          "kind": "text",
+          "defaultValue": "HalftoneWordmark",
+          "maxLength": 24
+        },
+        {
+          "key": "accent",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#ee926c"
+        }
+      ],
+      "moods": [
+        {
+          "id": "default",
+          "label": "Original",
+          "settings": {
+            "word": "HalftoneWordmark",
+            "accent": "#ee926c"
+          }
+        },
+        {
+          "id": "cool",
+          "label": "Cool",
+          "settings": {
+            "word": "HalftoneWordmark",
+            "accent": "#8cb9e8"
+          }
+        }
+      ],
+      "addedAt": "2026-10-22"
+    },
+    {
       "id": "meridian-veil",
       "number": "68",
       "title": "Meridian Veil",

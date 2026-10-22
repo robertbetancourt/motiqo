@@ -11,12 +11,13 @@ export function isElementNew(element?: { addedAt?: string } | null): boolean {
 
 export const componentGroups = [
   { id: 'buttons', title: 'Buttons', section: 'Interface' },
-  { id: 'navigation', title: 'Navigation', section: 'Interface' },
   { id: 'cards', title: 'Cards', section: 'Interface' },
   { id: 'carousels', title: 'Carousels', section: 'Interface' },
   { id: 'loaders', title: 'Loaders', section: 'Interface' },
   { id: 'forms', title: 'Forms', section: 'Interface' },
   { id: 'dialogs', title: 'Dialogs', section: 'Interface' },
+  { id: 'navigation', title: 'Navbar', section: 'Navigation' },
+  { id: 'sidebars', title: 'Sidebar', section: 'Navigation' },
   { id: 'typography', title: 'Typography', section: 'Content' },
   { id: 'data', title: 'Data visualization', section: 'Content' },
   { id: 'assistants', title: 'AI & assistants', section: 'Content' },
@@ -33,6 +34,7 @@ type Component = { id: string; category: string; tags: readonly string[] };
 export function componentGroupFor(item: Component): ComponentGroup {
   if (item.id.endsWith('-button') || item.tags.includes('Button')) return 'buttons';
   if (item.tags.includes('Carousel')) return 'carousels';
+  if (item.tags.includes('Sidebar')) return 'sidebars';
   if (item.category === 'Navigation') return 'navigation';
   if (item.tags.includes('Loader')) return 'loaders';
   if (item.tags.includes('Card')) return 'cards';

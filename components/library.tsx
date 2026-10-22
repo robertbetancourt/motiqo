@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { aiTools, elements, makePrompt, isElementNew, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
 import { componentGroups, componentGroupFor, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import { heroes, type HeroEntry } from '@/lib/heroes';
+import LiquidSelection from './liquid-selection';
 import CardPreview from './card-preview';
 import ElementWorkspace from './element-workspace';
 import SiteFrame from './site-frame';
@@ -34,6 +35,18 @@ export default function Library({ originalSource, initialElement, initialConfigu
   const menuTrigger=useRef<HTMLElement|null>(null);
   const dismissMenu=useCallback((restore=false)=>{if(restore)menuTrigger.current?.focus({preventScroll:true});setContextMenu(null);},[]);
   const search = useRef<HTMLInputElement>(null);
+  const tabRoot = useRef<HTMLDivElement>(null);
+  const [segmentWidth, setSegmentWidth] = useState(136);
+  useEffect(() => {
+    const root = tabRoot.current;
+    if (!root) return;
+    const measure = () => { if (root.clientWidth) setSegmentWidth((root.clientWidth - 8) / 2); };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, [savedOnly]);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const collectionScroll = useRef(0);
   const restoreCollection = useRef(false);
@@ -184,47 +197,50 @@ export default function Library({ originalSource, initialElement, initialConfigu
       </motion.div> : <motion.div key="collection" className="collection-view" initial={false} exit={{opacity:0,y:-8}} transition={timing} ref={node=>{
         if(node&&restoreCollection.current){restoreCollection.current=false;window.scrollTo({top:collectionScroll.current,behavior:'instant'});node.querySelector<HTMLElement>(`[data-element="${lastElement.current}"] .card-title`)?.focus({preventScroll:true});}
       }}>
-        <header className="collection-header">
-          <div>
-            <h1>{savedOnly ? 'Saved' : (groupTitle ?? 'Components')}<span aria-hidden="true">.</span></h1>
-            <p>{savedOnly ? 'Keep the good ones close. Your bookmarked components and heroes.' : 'Interactive building blocks crafted for motion and character.'}</p>
-          </div>
+        <header className="page-header">
+          <h1>{savedOnly ? 'Saved' : (groupTitle ?? 'Components')}<span aria-hidden="true">.</span></h1>
         </header>
 
         {savedOnly && (
-          <div className="saved-segments-row" role="tablist" aria-label="Saved types">
-            {savedTabs.map(tab => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={savedSection === tab.id}
-                className={`saved-segment-button ${savedSection === tab.id ? 'active' : ''}`}
-                onClick={() => setSavedSection(tab.id)}
-              >
-                <span>{tab.label}</span>
-                <span className="saved-segment-count">{tab.count}</span>
-              </button>
-            ))}
+          <div ref={tabRoot} className="saved-tabs" role="tablist" aria-label="Saved categories">
+            <LiquidSelection selected={savedSection === 'components' ? 0 : 1} width={segmentWidth}/>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={savedSection === 'components'}
+              className="saved-tab"
+              onClick={() => setSavedSection('components')}
+            >
+              Components <span className="saved-tab-count">{saved.length}</span>
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={savedSection === 'hero'}
+              className="saved-tab"
+              onClick={() => setSavedSection('hero')}
+            >
+              Hero <span className="saved-tab-count">{savedHeroItems.length}</span>
+            </button>
           </div>
         )}
 
         <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
-          {(!savedOnly || savedSection === 'components') && (
-            <div className="filter-row collection-toolbar">
-              <span className="collection-label">{savedOnly ? 'Saved components' : (groupTitle ?? 'Components')}</span>
-              <div className="search-tools">
-                <OutlineField className="search-frame" paused={still}>
-                  <label className="search">
-                    <Search size={15}/>
-                    <span className="sr-only">Search elements</span>
-                    <input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/>
-                    <kbd><Command size={10}/> K</kbd>
-                  </label>
-                </OutlineField>
-              </div>
+          <div className="filter-row collection-toolbar">
+            <span className="collection-label">
+              {savedOnly ? (savedSection === 'components' ? 'Saved components' : 'Saved heroes') : (groupTitle ?? 'Components')}
+            </span>
+            <div className="search-tools">
+              <OutlineField className="search-frame" paused={still}>
+                <label className="search">
+                  <Search size={15}/>
+                  <span className="sr-only">Search elements</span>
+                  <input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/>
+                  <kbd><Command size={10}/> K</kbd>
+                </label>
+              </OutlineField>
             </div>
-          )}
+          </div>
 
           {tag&&!savedOnly&&<div className="active-tag-filter" role="status"><span>Tagged</span><button type="button" aria-label={`Clear ${tag} filter`} onClick={()=>chooseTag(tag)}>{tag}<span aria-hidden="true">×</span></button><span>{filtered.length} {filtered.length===1?'element':'elements'}</span></div>}
 
@@ -233,7 +249,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
               <div className="element-grid">
                 {(!savedOnly||storageReady)&&filtered.map((element,index)=><article key={element.id} data-element={element.id} className={`element-card card-${element.id}`} style={{'--entry-delay':`${Math.min(index,7)*45+120}ms`} as CSSProperties} onPointerMove={onCardPointerMove} onPointerLeave={onCardPointerLeave} onContextMenu={event=>{if(event.shiftKey)return;event.preventDefault();const trigger=event.currentTarget.querySelector<HTMLElement>('.card-preview-open')!;const box=trigger.getBoundingClientRect();menuTrigger.current=trigger;setContextMenu({element,x:event.clientX||box.left+20,y:event.clientY||box.top+20,trigger});}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea')&&!window.getSelection()?.toString()&&e.detail<2)open(element);}}>
                   <span className="motiqo-bezel-light" aria-hidden="true" />
-                  <div className="card-stage">{isElementNew(element)&&<span className="card-badge-new">New</span>}<CardPreview id={element.id} paused={still} priority={index<4} settings={cardSettings[element.id]}/><span className="stage-hint">{element.hint}</span><a href={elementHref(element)} className="card-preview-open" aria-label={`Preview and edit ${element.title}`} onClick={event=>follow(event,element)}/><button className={`save-button preview-save ${saved.includes(element.id)?'is-saved':''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={16} fill={saved.includes(element.id)?'currentColor':'none'}/></button></div>
+                  <div className="card-stage">{isElementNew(element)&&<span className="card-badge-new">New</span>}<CardPreview id={element.id} paused={still} priority={index<4} settings={cardSettings[element.id]}/><a href={elementHref(element)} className="card-preview-open" aria-label={`Preview and edit ${element.title}`} onClick={event=>follow(event,element)}/><button className={`save-button preview-save ${saved.includes(element.id)?'is-saved':''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={16} fill={saved.includes(element.id)?'currentColor':'none'}/></button></div>
                   <div className="card-info"><div className="card-title-row"><a className="card-title" href={elementHref(element)} onClick={event=>follow(event,element)}><h2>{element.title}</h2></a><span className="category-label">{element.category}</span></div><div className="tags">{element.tags.map(t=><button type="button" key={t} className="tag-filter-button" aria-label={`Filter by ${t}`} aria-pressed={normalizeTag(tag)===normalizeTag(t)} onClick={()=>chooseTag(t)}>{t}</button>)}</div></div>
                 </article>)}
               </div>
@@ -242,9 +258,11 @@ export default function Library({ originalSource, initialElement, initialConfigu
             </>
           ) : (
             <>
-              {savedHeroItems.length > 0 ? (
+              {savedHeroItems.filter(h => !query.trim() || h.title.toLowerCase().includes(query.toLowerCase()) || h.tags.some(t => t.toLowerCase().includes(query.toLowerCase()))).length > 0 ? (
                 <div className="element-grid">
-                  {savedHeroItems.map((hero, index) => (
+                  {savedHeroItems
+                    .filter(h => !query.trim() || h.title.toLowerCase().includes(query.toLowerCase()) || h.tags.some(t => t.toLowerCase().includes(query.toLowerCase())))
+                    .map((hero, index) => (
                     <article
                       key={hero.id}
                       data-hero={hero.id}
@@ -260,7 +278,6 @@ export default function Library({ originalSource, initialElement, initialConfigu
                           alt=""
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
-                        <span className="stage-hint">Interactive hero</span>
                         <a
                           href={`/hero?hero=${hero.id}`}
                           className="card-preview-open"
@@ -297,8 +314,8 @@ export default function Library({ originalSource, initialElement, initialConfigu
               ) : (
                 <motion.div className="empty-results" initial={{opacity:0}} animate={{opacity:1}} transition={timing}>
                   <SlidersHorizontal size={24}/>
-                  <h2>Keep the good ones close.</h2>
-                  <p>Bookmark a hero section and it will be waiting here.</p>
+                  <h2>{savedHeroItems.length === 0 ? 'Keep the good ones close.' : 'Nothing here. Yet.'}</h2>
+                  <p>{savedHeroItems.length === 0 ? 'Bookmark a hero section and it will be waiting here.' : 'Try another search or explore all heroes.'}</p>
                   <a href="/hero" className="secondary-button">Explore all heroes <ArrowRight size={15}/></a>
                 </motion.div>
               )}
