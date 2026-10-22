@@ -3,6 +3,7 @@ import * as registry from './registry/manifest.json';
 const exportFiles=[...new Set(registry.items.flatMap(item=>item.files.map(file=>`./${file.source}`))),'./LICENSE','./THIRD_PARTY_NOTICES.md'];
 const config: NextConfig = {poweredByHeader:false,devIndicators:false,
  outputFileTracingIncludes:{'/library':exportFiles,'/api/components/*':exportFiles},
+ async redirects(){return [{source:'/saved',destination:'/library?saved=1',permanent:true}];},
  async headers(){return [
   {source:'/:path*',headers:[
    {key:'X-Content-Type-Options',value:'nosniff'},

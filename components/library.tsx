@@ -5,6 +5,7 @@ import { ArrowRight, Bookmark, Check, Command, Search, SlidersHorizontal } from 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { aiTools, elements, makePrompt, isElementNew, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
 import { componentGroups, componentGroupFor, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
+import { heroes, type HeroEntry } from '@/lib/heroes';
 import CardPreview from './card-preview';
 import ElementWorkspace from './element-workspace';
 import SiteFrame from './site-frame';
@@ -17,8 +18,10 @@ export default function Library({ originalSource, initialElement, initialConfigu
   const [group,setGroup] = useState(initialGroup);
   const [query,setQuery] = useState('');
   const [tag,setTag] = useState(initialTag);
+  const [allSaved, setAllSaved] = useState<string[]>([]);
   const [saved,setSaved] = useState<string[]>([]);
   const [savedOnly,setSavedOnly] = useState(initialSaved);
+  const [savedSection, setSavedSection] = useState<'components' | 'hero'>('components');
   const [selected,setSelected] = useState<LibraryElement | null>(() => elements.find(element => element.id === initialElement) || null);
   const [storageReady,setStorageReady] = useState(false);
   const [initialTab,setInitialTab] = useState<'preview' | 'code' | 'prompt'>(initialView);
@@ -42,6 +45,26 @@ export default function Library({ originalSource, initialElement, initialConfigu
   const still = paused || !!reduced;
   const timing = {duration:still ? 0 : .32,ease:[.22,1,.36,1] as [number,number,number,number]};
 
+  const onCardPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--bezel-x', `${((e.clientX - r.left) / r.width) * 100}%`);
+    e.currentTarget.style.setProperty('--bezel-y', `${((e.clientY - r.top) / r.height) * 100}%`);
+    e.currentTarget.style.setProperty('--bezel-strength', '1');
+  };
+  const onCardPointerLeave = (e: React.PointerEvent<HTMLElement>) => {
+    e.currentTarget.style.setProperty('--bezel-strength', '0');
+  };
+
+  const readAllSaved = useCallback((): string[] => {
+    try {
+      const raw: unknown = JSON.parse(localStorage.getItem('motiqo-saved') || localStorage.getItem('prism4-saved') || '[]');
+      if (!Array.isArray(raw)) return [];
+      return raw.map(id => id === 'watt' ? 'holdings' : id).filter((id): id is string => typeof id === 'string');
+    } catch {
+      return [];
+    }
+  }, []);
+
   // Next retains client state for same-page links; reconcile the server URL
   // when the brand or another route brings the visitor back here.
   useEffect(() => {
@@ -51,13 +74,19 @@ export default function Library({ originalSource, initialElement, initialConfigu
   },[initialElement,initialSaved,initialTag,initialGroup,initialView]);
 
   useEffect(() => {
+    const syncSaved = () => {
+      const list = readAllSaved();
+      setAllSaved(list);
+      setSaved(list.filter(id => elements.some(element => element.id === id)));
+    };
+    syncSaved();
     try {
-      const stored:unknown = JSON.parse(localStorage.getItem('motiqo-saved') || localStorage.getItem('prism4-saved') || '[]');
-      if(Array.isArray(stored)) setSaved([...new Set(stored.map(id=>id==='watt'?'holdings':id).filter((id):id is string => typeof id==='string' && elements.some(element=>element.id===id)))]);
-      const preferred=localStorage.getItem('motiqo-prompt-tool');
-      if(aiTools.includes(preferred as AITool)) setTool(preferred as AITool);
+      const preferred = localStorage.getItem('motiqo-prompt-tool');
+      if (aiTools.includes(preferred as AITool)) setTool(preferred as AITool);
     } catch {}
     setStorageReady(true);
+    window.addEventListener('motiqo-saved-change', syncSaved);
+    window.addEventListener('storage', syncSaved);
     const sync = () => {
       const params=new URL(window.location.href).searchParams;
       const rawId=params.get('element'),id=rawId==='watt'?'holdings':rawId;
@@ -71,8 +100,14 @@ export default function Library({ originalSource, initialElement, initialConfigu
       if((e.metaKey || e.ctrlKey) && e.key==='k'){e.preventDefault();search.current?.focus();}
     };
     window.addEventListener('keydown',shortcut);
-    return ()=>{window.removeEventListener('popstate',sync);window.removeEventListener('keydown',shortcut);if(toastTimer.current)clearTimeout(toastTimer.current);};
-  },[]);
+    return ()=>{
+      window.removeEventListener('popstate',sync);
+      window.removeEventListener('keydown',shortcut);
+      window.removeEventListener('motiqo-saved-change', syncSaved);
+      window.removeEventListener('storage', syncSaved);
+      if(toastTimer.current)clearTimeout(toastTimer.current);
+    };
+  },[readAllSaved]);
 
   function notify(message:string){
     setToast(message);if(toastTimer.current)clearTimeout(toastTimer.current);
@@ -87,7 +122,16 @@ export default function Library({ originalSource, initialElement, initialConfigu
     try{localStorage.setItem('motiqo-prompt-tool',value);}catch{}
   }
   function toggleSave(id:string){
-    const next=saved.includes(id)?saved.filter(s=>s!==id):[...saved,id];setSaved(next);
+    const current = readAllSaved();
+    const next = current.includes(id) ? current.filter(s => s !== id) : [...current, id];
+    setAllSaved(next);
+    setSaved(next.filter(s => elements.some(element => element.id === s)));
+    try{localStorage.setItem('motiqo-saved',JSON.stringify(next));window.dispatchEvent(new Event('motiqo-saved-change'));}catch{}
+  }
+  function toggleSaveHero(heroId: string) {
+    const current = readAllSaved();
+    const next = current.includes(heroId) ? current.filter(s => s !== heroId) : [...current, heroId];
+    setAllSaved(next);
     try{localStorage.setItem('motiqo-saved',JSON.stringify(next));window.dispatchEvent(new Event('motiqo-saved-change'));}catch{}
   }
   function open(element:LibraryElement,tab:'preview'|'code'|'prompt'='preview'){
@@ -125,27 +169,141 @@ export default function Library({ originalSource, initialElement, initialConfigu
   function elementHref(element:LibraryElement){return `/library?element=${element.id}${group?`&group=${group}`:''}${savedOnly?'&saved=1':''}${tag?`&tag=${encodeURIComponent(tag)}`:''}${cardSettings[element.id]?`&config=${encodeURIComponent(encodeSettings(element.id,cardSettings[element.id]))}`:''}`;}
   function follow(event:MouseEvent<HTMLAnchorElement>,element:LibraryElement){if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();if(event.detail<2)open(element);}
 
+  const savedHeroItems = heroes.filter(h => allSaved.includes(h.id));
+  const savedTabs = [
+    { id: 'components' as const, label: 'Components', count: saved.length },
+    { id: 'hero' as const, label: 'Hero', count: savedHeroItems.length },
+  ];
+
   return <>
     <a href={selected?'#detail-title':'#collection'} className="skip-link">{selected?'Skip to component':'Skip to collection'}</a>
-    <SiteFrame collection workspace={!!selected} paused={still} savedOnly={savedOnly} savedCount={saved.length} onCollection={group=>collection(false,group)} onSaved={showSaved}>
+    <SiteFrame collection workspace={!!selected} paused={still} savedOnly={savedOnly} savedCount={allSaved.length} onCollection={group=>collection(false,group)} onSaved={showSaved}>
       <AnimatePresence mode="wait" initial={false}>
       {selected ? <motion.div key="workspace" initial={still?false:{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}} transition={{...timing,duration:still?0:.38}}>
         <ElementWorkspace key={`${selected.id}-${initialTab}`} element={selected} initialSettings={workspaceSettings??decodeSettings(selected.id,initialConfiguration??null)??undefined} onBack={close} onPrevious={()=>navigate(-1)} onNext={()=>navigate(1)} index={elements.findIndex(element=>element.id===selected.id)} total={elements.length} saved={saved.includes(selected.id)} onSave={()=>toggleSave(selected.id)} paused={paused} copy={copy} initialTab={initialTab} initialTool={tool} onToolChange={chooseTool} originalSource={originalSource} onTag={chooseTag}/>
       </motion.div> : <motion.div key="collection" className="collection-view" initial={false} exit={{opacity:0,y:-8}} transition={timing} ref={node=>{
         if(node&&restoreCollection.current){restoreCollection.current=false;window.scrollTo({top:collectionScroll.current,behavior:'instant'});node.querySelector<HTMLElement>(`[data-element="${lastElement.current}"] .card-title`)?.focus({preventScroll:true});}
       }}>
-        <h1 className="sr-only">{savedOnly?'Saved':groupTitle??'Library'}</h1>
-        <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
-          <div className="filter-row collection-toolbar"><span className="collection-label">{groupTitle}</span><div className="search-tools"><OutlineField className="search-frame" paused={still}><label className="search"><Search size={15}/><span className="sr-only">Search elements</span><input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/><kbd><Command size={10}/> K</kbd></label></OutlineField></div></div>
-          {tag&&<div className="active-tag-filter" role="status"><span>Tagged</span><button type="button" aria-label={`Clear ${tag} filter`} onClick={()=>chooseTag(tag)}>{tag}<span aria-hidden="true">×</span></button><span>{filtered.length} {filtered.length===1?'element':'elements'}</span></div>}
-          <div className="element-grid">
-            {(!savedOnly||storageReady)&&filtered.map((element,index)=><article key={element.id} data-element={element.id} className={`element-card card-${element.id}`} style={{'--entry-delay':`${Math.min(index,7)*45+120}ms`} as CSSProperties} onContextMenu={event=>{if(event.shiftKey)return;event.preventDefault();const trigger=event.currentTarget.querySelector<HTMLElement>('.card-preview-open')!;const box=trigger.getBoundingClientRect();menuTrigger.current=trigger;setContextMenu({element,x:event.clientX||box.left+20,y:event.clientY||box.top+20,trigger});}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea')&&!window.getSelection()?.toString()&&e.detail<2)open(element);}}>
-              <div className="card-stage">{isElementNew(element)&&<span className="card-badge-new">New</span>}<CardPreview id={element.id} paused={still} priority={index<4} settings={cardSettings[element.id]}/><span className="stage-hint">{element.hint}</span><a href={elementHref(element)} className="card-preview-open" aria-label={`Preview and edit ${element.title}`} onClick={event=>follow(event,element)}/><button className={`save-button preview-save ${saved.includes(element.id)?'is-saved':''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={16} fill={saved.includes(element.id)?'currentColor':'none'}/></button></div>
-              <div className="card-info"><div className="card-title-row"><a className="card-title" href={elementHref(element)} onClick={event=>follow(event,element)}><h2>{element.title}</h2></a><span className="category-label">{element.category}</span></div><div className="tags">{element.tags.map(t=><button type="button" key={t} className="tag-filter-button" aria-label={`Filter by ${t}`} aria-pressed={normalizeTag(tag)===normalizeTag(t)} onClick={()=>chooseTag(t)}>{t}</button>)}</div></div>
-            </article>)}
+        <header className="collection-header">
+          <div>
+            <h1>{savedOnly ? 'Saved' : (groupTitle ?? 'Components')}<span aria-hidden="true">.</span></h1>
+            <p>{savedOnly ? 'Keep the good ones close. Your bookmarked components and heroes.' : 'Interactive building blocks crafted for motion and character.'}</p>
           </div>
-          {savedOnly&&!storageReady&&<div className="collection-restoring" aria-label="Loading saved elements" aria-busy="true"/>}
-          {(!savedOnly||storageReady)&&filtered.length===0&&<motion.div className="empty-results" initial={{opacity:0}} animate={{opacity:1}} transition={timing}><SlidersHorizontal size={24}/><h2>{savedOnly&&saved.length===0?'Keep the good ones close.':'Nothing here. Yet.'}</h2><p>{savedOnly&&saved.length===0?'Bookmark an element and it will be waiting here.':'Try another search or explore the whole collection.'}</p><button className="secondary-button" onClick={()=>collection()}>Explore all elements <ArrowRight size={15}/></button></motion.div>}
+        </header>
+
+        {savedOnly && (
+          <div className="saved-segments-row" role="tablist" aria-label="Saved types">
+            {savedTabs.map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={savedSection === tab.id}
+                className={`saved-segment-button ${savedSection === tab.id ? 'active' : ''}`}
+                onClick={() => setSavedSection(tab.id)}
+              >
+                <span>{tab.label}</span>
+                <span className="saved-segment-count">{tab.count}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
+          {(!savedOnly || savedSection === 'components') && (
+            <div className="filter-row collection-toolbar">
+              <span className="collection-label">{savedOnly ? 'Saved components' : (groupTitle ?? 'Components')}</span>
+              <div className="search-tools">
+                <OutlineField className="search-frame" paused={still}>
+                  <label className="search">
+                    <Search size={15}/>
+                    <span className="sr-only">Search elements</span>
+                    <input ref={search} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find something"/>
+                    <kbd><Command size={10}/> K</kbd>
+                  </label>
+                </OutlineField>
+              </div>
+            </div>
+          )}
+
+          {tag&&!savedOnly&&<div className="active-tag-filter" role="status"><span>Tagged</span><button type="button" aria-label={`Clear ${tag} filter`} onClick={()=>chooseTag(tag)}>{tag}<span aria-hidden="true">×</span></button><span>{filtered.length} {filtered.length===1?'element':'elements'}</span></div>}
+
+          {(!savedOnly || savedSection === 'components') ? (
+            <>
+              <div className="element-grid">
+                {(!savedOnly||storageReady)&&filtered.map((element,index)=><article key={element.id} data-element={element.id} className={`element-card card-${element.id}`} style={{'--entry-delay':`${Math.min(index,7)*45+120}ms`} as CSSProperties} onPointerMove={onCardPointerMove} onPointerLeave={onCardPointerLeave} onContextMenu={event=>{if(event.shiftKey)return;event.preventDefault();const trigger=event.currentTarget.querySelector<HTMLElement>('.card-preview-open')!;const box=trigger.getBoundingClientRect();menuTrigger.current=trigger;setContextMenu({element,x:event.clientX||box.left+20,y:event.clientY||box.top+20,trigger});}} onClick={e=>{const target=e.target as HTMLElement;if(!target.closest('button,a,input,select,textarea')&&!window.getSelection()?.toString()&&e.detail<2)open(element);}}>
+                  <span className="motiqo-bezel-light" aria-hidden="true" />
+                  <div className="card-stage">{isElementNew(element)&&<span className="card-badge-new">New</span>}<CardPreview id={element.id} paused={still} priority={index<4} settings={cardSettings[element.id]}/><span className="stage-hint">{element.hint}</span><a href={elementHref(element)} className="card-preview-open" aria-label={`Preview and edit ${element.title}`} onClick={event=>follow(event,element)}/><button className={`save-button preview-save ${saved.includes(element.id)?'is-saved':''}`} aria-label={`${saved.includes(element.id)?'Unsave':'Save'} ${element.title}`} aria-pressed={saved.includes(element.id)} onClick={()=>toggleSave(element.id)}><Bookmark size={16} fill={saved.includes(element.id)?'currentColor':'none'}/></button></div>
+                  <div className="card-info"><div className="card-title-row"><a className="card-title" href={elementHref(element)} onClick={event=>follow(event,element)}><h2>{element.title}</h2></a><span className="category-label">{element.category}</span></div><div className="tags">{element.tags.map(t=><button type="button" key={t} className="tag-filter-button" aria-label={`Filter by ${t}`} aria-pressed={normalizeTag(tag)===normalizeTag(t)} onClick={()=>chooseTag(t)}>{t}</button>)}</div></div>
+                </article>)}
+              </div>
+              {savedOnly&&!storageReady&&<div className="collection-restoring" aria-label="Loading saved elements" aria-busy="true"/>}
+              {(!savedOnly||storageReady)&&filtered.length===0&&<motion.div className="empty-results" initial={{opacity:0}} animate={{opacity:1}} transition={timing}><SlidersHorizontal size={24}/><h2>{savedOnly&&saved.length===0?'Keep the good ones close.':'Nothing here. Yet.'}</h2><p>{savedOnly&&saved.length===0?'Bookmark an element and it will be waiting here.':'Try another search or explore the whole collection.'}</p><button className="secondary-button" onClick={()=>collection()}>Explore all elements <ArrowRight size={15}/></button></motion.div>}
+            </>
+          ) : (
+            <>
+              {savedHeroItems.length > 0 ? (
+                <div className="element-grid">
+                  {savedHeroItems.map((hero, index) => (
+                    <article
+                      key={hero.id}
+                      data-hero={hero.id}
+                      className={`element-card card-${hero.id}`}
+                      style={{ '--entry-delay': `${Math.min(index, 7) * 45 + 120}ms` } as CSSProperties}
+                      onPointerMove={onCardPointerMove}
+                      onPointerLeave={onCardPointerLeave}
+                    >
+                      <span className="motiqo-bezel-light" aria-hidden="true" />
+                      <div className="card-stage" style={{ position: 'relative', overflow: 'hidden' }}>
+                        <img
+                          src={hero.poster}
+                          alt=""
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                        <span className="stage-hint">Interactive hero</span>
+                        <a
+                          href={`/hero?hero=${hero.id}`}
+                          className="card-preview-open"
+                          aria-label={`Preview and inspect ${hero.title}`}
+                        />
+                        <button
+                          className="save-button preview-save is-saved"
+                          aria-label={`Unsave ${hero.title}`}
+                          aria-pressed={true}
+                          onClick={e => {
+                            e.stopPropagation();
+                            toggleSaveHero(hero.id);
+                          }}
+                        >
+                          <Bookmark size={16} fill="currentColor" />
+                        </button>
+                      </div>
+                      <div className="card-info">
+                        <div className="card-title-row">
+                          <a className="card-title" href={`/hero?hero=${hero.id}`}>
+                            <h2>{hero.title}</h2>
+                          </a>
+                          <span className="category-label">Hero</span>
+                        </div>
+                        <div className="tags">
+                          {hero.tags.map(t => (
+                            <span key={t}>{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <motion.div className="empty-results" initial={{opacity:0}} animate={{opacity:1}} transition={timing}>
+                  <SlidersHorizontal size={24}/>
+                  <h2>Keep the good ones close.</h2>
+                  <p>Bookmark a hero section and it will be waiting here.</p>
+                  <a href="/hero" className="secondary-button">Explore all heroes <ArrowRight size={15}/></a>
+                </motion.div>
+              )}
+            </>
+          )}
         </section>
       </motion.div>}
       </AnimatePresence>
