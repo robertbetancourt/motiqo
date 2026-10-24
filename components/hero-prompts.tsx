@@ -109,52 +109,29 @@ function LivePreview({ hero }: { hero: HeroEntry }) {
   );
 }
 
-function HeroFitWrapper({ id, paused }: { id: HeroId; paused: boolean }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-  const BASE_HEIGHT = 780;
+export function heroFrameFit(width: number, height: number, viewport: Viewport) {
+  const frame = viewport === 'mobile' ? {width: 390, height: 844} : viewport === 'tablet' ? {width: 820, height: 900} : {width: 1280, height: 900};
+  const scale = Math.min(1, width / frame.width, height / frame.height);
+  // Preserve the scene aspect ratio when the workbench is narrower or taller.
+  return {...frame,scale};
+}
 
+function HeroFitWrapper({id, paused, viewport}: {id: HeroId; paused: boolean; viewport: Viewport}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState(() => heroFrameFit(1280, 900, viewport));
   useLayoutEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const node = containerRef.current!;
     const update = () => {
-      const h = el.clientHeight;
-      if (h <= 0) return;
-      setScale(Math.min(1, h / BASE_HEIGHT));
+      if (node.clientWidth > 0 && node.clientHeight > 0) setFit(heroFrameFit(node.clientWidth, node.clientHeight, viewport));
     };
     update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <div
-        style={{
-          width: scale < 1 ? `${(1 / scale) * 100}%` : '100%',
-          height: scale < 1 ? BASE_HEIGHT : '100%',
-          minHeight: BASE_HEIGHT,
-          transform: scale < 1 ? `scale(${scale})` : undefined,
-          transformOrigin: 'center center',
-          flexShrink: 0,
-        }}
-      >
-        <HeroStage id={id} paused={paused} />
-      </div>
-    </div>
-  );
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [viewport]);
+  return <div ref={containerRef} data-testid="hero-fit" style={{width:'100%',height:'100%',position:'relative',overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center'}}>
+    <div data-testid="hero-fit-frame" style={{width:fit.width,height:fit.height,flexShrink:0,transform:`scale(${fit.scale})`,transformOrigin:'center'}}><HeroStage id={id} paused={paused}/></div>
+  </div>;
 }
 
 export default function HeroPrompts({
@@ -318,14 +295,16 @@ export default function HeroPrompts({
     const url = new URL(window.location.href);
     if (next === 'prompt') url.searchParams.set('view', 'prompt');
     else url.searchParams.delete('view');
-    window.history.replaceState(window.history.state, '', url);
+    window.history.replaceState({motiqoHero:!!window.history.state?.motiqoHero}, '', url);
   }
 
   function navigate(offset: number) {
     if (!selected) return;
     const currentIndex = heroes.findIndex(h => h.id === selected.id);
     const nextHero = heroes[(currentIndex + offset + heroes.length) % heroes.length];
-    open(nextHero, view);
+    last.current=nextHero.id;setSelected(nextHero);setPreview(null);
+    const url=new URL(window.location.href);url.searchParams.set('hero',nextHero.id);
+    window.history.replaceState({motiqoHero:!!window.history.state?.motiqoHero},'',url);
   }
 
   function follow(e: MouseEvent<HTMLAnchorElement>, hero: HeroEntry) {
@@ -348,10 +327,10 @@ export default function HeroPrompts({
           </div>
           <div className="workbench-layout">
             <div className="workbench-canvas">
-              <div className="workbench-stage" data-viewport={viewport}>
+              <div className="workbench-stage hero-workbench-stage" data-viewport={viewport}>
                 <div id="detail-panel" className="detail-workspace" role="tabpanel" aria-labelledby={`hero-${view}-tab`} tabIndex={0}>
                   <div className="workbench-preview" hidden={view !== 'preview'}>
-                    <HeroFitWrapper id={selected.id} paused={still} />
+                    <HeroFitWrapper id={selected.id} paused={still} viewport={viewport} />
                   </div>
                   {view === 'prompt' && (
                     <div key="prompt" className="document-surface panel-enter prompt-surface">

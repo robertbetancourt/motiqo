@@ -56,6 +56,22 @@ export function usageFor(element:LibraryElement,settings?:Settings){
     const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(['loop','autoPlay'].includes(key)?String(value!=='disabled'):JSON.stringify(value))+'}').join(' ');
     return `import ${name} from './${element.id}';\n\nexport default function Example(){return <div style={{height:560}}><${name} ${configured}/></div>;}`;
   }
+  if(element.id==='lumen-button'){const values=normalizeSettings(element.id,settings);return `import LumenButton from './lumen-button';\n\nexport default function Example(){return <LumenButton label={${JSON.stringify(values.label)}} status={${JSON.stringify(values.status)}} disabled={${values.disabled==='enabled'}}/>;}`;}
+  if(element.id==='ink-headline'){const values=normalizeSettings(element.id,settings);const configured=Object.entries(values).filter(([key])=>key!=='progress'||values.trigger==='manual').map(([key,value])=>key+'={'+JSON.stringify(value)+'}').join(' ');return `import InkHeadline from './ink-headline';\n\nexport default function Example(){return <InkHeadline ${configured}/>;}`;}
+  if(['signal-grid','prism-tier-pricing','cosmos-split-auth','obsidian-gate','titanium-card'].includes(element.id)){
+    const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(['defaultAnnual','autoAnimate','autoCycleSlides','foil'].includes(key)?String(value!=='disabled'):key==='defaultSamples'?String(Number(value)):JSON.stringify(value))+'}').join(' ');
+    return `import ${element.title} from './${element.id}';\n\nexport default function Example(){return <div style={{minHeight:680}}><${element.title} ${configured}/></div>;}`;
+  }
+  if(element.id==='vortex-camera'){
+
+    const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(['autoFlight','showHUD'].includes(key)?String(value!=='disabled'):JSON.stringify(value))+'}').join(' ');
+    return `import VortexCamera from './vortex-camera';\n\nexport default function Example(){return <div style={{height:620}}><VortexCamera ${configured}/></div>;}`;
+  }
+  if(element.id==='voyage'){
+
+    const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(key==='autoPlay'?String(value!=='disabled'):JSON.stringify(value))+'}').join(' ');
+    return `import Voyage from './voyage';\n\nexport default function Example(){return <div style={{height:620}}><Voyage ${configured}/></div>;}`;
+  }
   if(element.id==='elastic-showcase'){
     const configured=Object.entries(normalizeSettings(element.id,settings)).map(([key,value])=>key+'={'+(key==='autoPlay'?String(value!=='disabled'):JSON.stringify(value))+'}').join(' ');
     return `import ElasticShowcase from './elastic-showcase';\n\nexport default function Example(){return <div style={{height:620}}><ElasticShowcase ${configured}/></div>;}`;

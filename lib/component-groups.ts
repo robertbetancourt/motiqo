@@ -1,3 +1,6 @@
+export function isPricing(item:{id:string;tags:readonly string[]}){return item.id.endsWith('-pricing')||item.tags.includes('Pricing');}
+export function isLogin(item:{id:string}){return item.id==='cosmos-split-auth';}
+export function isSection(item:{id:string;tags:readonly string[]}){return isPricing(item)||isLogin(item);}
 import * as registry from '../registry/manifest.json';
 
 export function isElementNew(element?: { addedAt?: string } | null): boolean {
@@ -52,7 +55,9 @@ export function readComponentGroup(value: string | null | undefined): ComponentG
   return componentGroups.find(group => group.id === value)?.id;
 }
 
-const catalogItems = registry.items;
+export const pricingCount=registry.items.filter(isPricing).length;
+export const loginCount=registry.items.filter(isLogin).length;
+const catalogItems = registry.items.filter(item=>!isSection(item));
 export const componentGroupCounts = Object.fromEntries(componentGroups.map(group => [
   group.id, catalogItems.filter(item => componentGroupFor(item) === group.id).length,
 ])) as Record<ComponentGroup, number>;

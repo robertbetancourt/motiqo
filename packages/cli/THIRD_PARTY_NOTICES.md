@@ -32,3 +32,8 @@ Earlier revisions of liquid-particle-engine.ts and liquid-particle-shaders.ts ad
 ## Integration logos
 
 The Claude, OpenAI, Cursor and Model Context Protocol SVG logos in `public/brands/` are sourced from Simple Icons (CC0-1.0); source details are in `public/brands/README.md`. These marks identify third-party tools and remain trademarks of their respective owners. They are not bundled in component exports.
+
+## New Hero collection artwork
+
+The Noema and Kyro android portraits, Aevora floating observatory and transparent cloud layer, and five Sprig product photographs in `public/heroes/new/` were generated specifically for these demos with OpenAI ImageGen. They were not extracted from the reference websites, images or video. The `study-*.webp` files are resized derivatives of Robert Betancourt’s images in `assets/images/`; the image permission above applies. Generated demo artwork is supplied under the same permission to the extent the project author holds the applicable rights. Satoshi remains subject to its bundled Fontshare license in `public/fonts/satoshi/README.md`; Chakra Petch retains the SIL OFL in `public/fonts/chakra-petch/OFL.txt`. These Hero sections do not use externally hosted reference media or fonts at runtime.
+

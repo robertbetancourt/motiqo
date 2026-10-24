@@ -593,33 +593,8 @@ vec3 col=texture2D(uTexture,uv).rgb;vec3 n=normalize(cross(dFdx(vPos),dFdy(vPos)
           )}
         </div>
       )}
-      <div className="flow-controls">
-        <span role="status">
-          {String(index + 1).padStart(2, "0")} /{" "}
-          {String(items.length).padStart(2, "0")}
-        </span>
-        <div>
-          <button
-            aria-label="Previous image"
-            onClick={() => {
-              if (failed)
-                setIndex((v) => (v + items.length - 1) % items.length);
-              else advance.current(-1);
-            }}
-          >
-            ←
-          </button>
-          <button
-            aria-label="Next image"
-            onClick={() => {
-              if (failed) setIndex((v) => (v + 1) % items.length);
-              else advance.current(1);
-            }}
-          >
-            →
-          </button>
-        </div>
-      </div>
+
     </div>
   );
 }
+

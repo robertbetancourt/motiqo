@@ -28,6 +28,12 @@ export default memo(function CardPreview({id,paused,priority=false,settings}:{id
   const captured=(posters.items as Partial<Record<ElementId,{dark:string;light:string;sourceHash?:string}>>)[id];
   const artwork=captured?.sourceHash===revisions[id]?captured:undefined;
   useEffect(()=>{
+    const root=host.current!;
+    const measure=()=>{if(root.clientWidth&&root.clientHeight)root.style.setProperty('--preview-fit',String(Math.min(root.clientWidth/400,root.clientHeight/300)));};
+    measure();if(typeof ResizeObserver==='undefined'){window.addEventListener('resize',measure);return()=>window.removeEventListener('resize',measure);}
+    const observer=new ResizeObserver(measure);observer.observe(root);return()=>observer.disconnect();
+  },[]);
+  useEffect(()=>{
     const root=host.current!,key=Symbol(id);
     let gone=false,active=false,near=false,live=false,loaded=false,loading=false,allowed=false,hovered=false,cancelLoad:(()=>void)|undefined,cancelMount:(()=>void)|undefined;
     const distance=()=>{const r=root.getBoundingClientRect();return r.bottom>0&&r.top<window.innerHeight?Math.max(0,r.top):100000+Math.abs(r.top);};
@@ -87,6 +93,6 @@ export default memo(function CardPreview({id,paused,priority=false,settings}:{id
   return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-preview-mode={hoverOnly?'hover-3d':undefined} data-live={mounted&&ready&&visible&&granted&&!paused||undefined} data-preview-state={mounted?(visible&&granted?'live':'cached'):'poster'}>
     {artwork&&<><img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
     <img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></>}
-    {mounted&&<div className="card-live"><PreviewBoundary onFailure={()=>{painted.current=false;setReady(false);setMounted(false);}}><Demo id={id} paused={paused||!visible||!granted} autoDemo hovered={cardHovered} settings={settings}/></PreviewBoundary></div>}
+    {mounted&&<div className="card-live" style={{width:400,height:300,left:'50%',top:'50%',right:'auto',bottom:'auto',transform:'translate(-50%,-50%) scale(var(--preview-fit,1))',transformOrigin:'center'}}><PreviewBoundary onFailure={()=>{painted.current=false;setReady(false);setMounted(false);}}><Demo id={id} paused={paused||!visible||!granted} autoDemo hovered={cardHovered} settings={settings}/></PreviewBoundary></div>}
   </div>;
 });

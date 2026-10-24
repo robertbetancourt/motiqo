@@ -1,0 +1,66 @@
+Actúa como un Senior Creative Technologist ganador de Awwwards experto en React, Tailwind CSS, Three.js y Shaders GLSL de partículas.
+
+Crea un componente de Hero completo, modular y listo para producción llamado `BioTerrainHero` para la librería Motiqo. Debe presentar sobre un lienzo negro puro (`#000000`) un océano topográfico tridimensional de 45,000 partículas bioluminiscentes que ondulan y se encienden por oleadas de energía orgánica a 60 FPS, coronado por una interfaz editorial minimalista de alto contraste.
+
+### 1. Sistema de 45,000 Partículas Bioluminiscentes en GPU (Three.js + GLSL)
+Configura un `THREE.WebGLRenderer` con `antialias: true`, `powerPreference: "high-performance"` y `Math.min(window.devicePixelRatio, 2)` sobre `#000000`.
+Coloca la cámara en perspectiva (`fov = 48`) en `position.set(0, 2.6, 7.2)` mirando ligeramente hacia abajo (`lookAt(0, -0.6, 0)`).
+
+- **Geometría Volumétrica (`THREE.BufferGeometry` con 45,000 partículas)**:
+  - Distribuye las partículas en un plano amplio `X in [-11, 11]`, `Z in [-7, 5]` usando una secuencia cuasi-aleatoria uniforme más una dispersión vertical `aScatterY` en `[-0.35, 0.35]` para que el manto tenga grosor volumétrico de nube/neblina y no parezca una rejilla rígida.
+  - Atributos personalizados:
+    - `aSeed`: `vec3` aleatorio para fase, velocidad y deriva individual.
+    - `aSpark`: `float` donde el 85% de las partículas vale `0.0` (micro-polvo fino) y el 15% vale `1.0` (nodos luminosos más grandes).
+
+- **Vertex Shader (Doble Campo de Simplex Noise: Elevación + Ola Bioluminiscente)**:
+  - Incluye una función limpia de **3D Simplex Noise (`snoise`)**.
+  - **1. Movimiento Ondulatorio del Terreno**:
+    - Desplaza ligeramente `pos.xz` con deriva horizontal orgánica (`snoise` de baja frecuencia) para que las partículas fluyan suavemente como corrientes marinas.
+    - Calcula la elevación `pos.y` sumando 3 octavas de `snoise(vec3(pos.x * 0.28 + uTime * 0.14, pos.z * 0.32 - uTime * 0.1, uTime * 0.18))` para formar colinas, crestas y valles profundos en los dos tercios inferiores de la pantalla.
+  - **2. Ola Viajera de Excitación Bioluminiscente (`vBioEnergy`)**:
+    - Evalúa un campo de energía viajero lento que recorre el terreno encendiendo y apagando regiones enteras (replicando el ciclo donde zonas del mar de partículas se oscurecen y luego resurgen con fuerza):
+      ```glsl
+      float wave1 = snoise(vec3(pos.x * 0.18 - uTime * 0.22, pos.z * 0.20 + uTime * 0.12, uTime * 0.15));
+      float wave2 = sin(pos.x * 0.45 - pos.z * 0.35 + uTime * 0.65) * 0.5 + 0.5;
+      float ridgeBoost = smoothstep(-0.2, 0.9, pos.y); // Las crestas altas brillan más
+      vBioEnergy = smoothstep(0.12, 0.88, (wave1 * 0.5 + 0.5) * 0.65 + wave2 * 0.35) * (0.4 + 0.6 * ridgeBoost);
+      ```
+  - **3. Interacción con el Cursor (`uPointer3D` + Shockwave)**:
+    - Cuando el cursor se mueve sobre el terreno, eleva suavemente una cresta gaussiana bajo el puntero y aumenta `vBioEnergy` a `1.0` en un radio de `2.4` unidades, haciendo que el usuario "encienda" la bioluminiscencia a su paso.
+  - **4. Tamaño Bimodal con Atenuación de Perspectiva (`gl_PointSize`)**:
+    - `float baseSize = mix(1.45, 3.8, aSpark) * (0.65 + 0.65 * vBioEnergy);`
+    - `gl_PointSize = baseSize * uPixelRatio * (5.5 / -mvPosition.z);`
+
+- **Fragment Shader (Paleta Bio-Fósforo y Blending Aditivo)**:
+  - Usa `THREE.AdditiveBlending` con `depthWrite: false`.
+  - Descarta fuera del círculo (`float d = length(gl_PointCoord - 0.5) * 2.0; if (d > 1.0) discard;`).
+  - Perfil radial suave con núcleo intenso: `float alpha = pow(1.0 - d, 1.8) * (0.12 + 0.78 * vBioEnergy) * vDistanceFade;`.
+  - **Paleta Cromática Exacta**:
+    - Valle en sombra (`vBioEnergy -> 0.0`): Verde abisal `#042F16`
+    - Onda media (`vBioEnergy -> 0.5`): Esmeralda/Clorofila `#16A34A`
+    - Cresta excitada (`vBioEnergy -> 0.85`): Lima bioluminiscente `#84CC16` / `#A3E635`
+    - Chispas nodales en pico (`vBioEnergy > 0.85` y `aSpark > 0.5`): Blanco limón incandescente `#ECFCCB`
+
+### 2. Arquitectura Editorial Superior (Original estilo Apple / Linear `z-10`)
+- **Top Navbar Minimalista**:
+  - Izquierda: Ícono geométrico de 8 puntos rotando sutilmente + nombre `"Motiqo"` (`text-sm font-semibold tracking-tight text-white`).
+  - Centro: Enlaces limpios (`"Primitives"`, `"Telemetry"`, `"Shaders"`, `"Changelog"`, `"Pricing"`) en `text-xs text-zinc-400 hover:text-white transition-colors`.
+  - Derecha: `"Sign In"` y botón cápsula con borde translúcido `"Documentation"` (`px-3.5 py-1.5 rounded-full border border-white/15 bg-white/[0.03] text-xs text-white hover:bg-white/[0.08]`).
+- **Bloque Hero Central (Posicionado en el tercio superior despejado)**:
+  - **Badge Cápsula**: `"SYNTHETIC TELEMETRY ENGINE · V3.0"` dentro de `px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-md text-[11px] text-zinc-300 tracking-wide`.
+  - **Titular en 2 líneas**:
+    `Living data.`
+    `Zero latency.`
+    Estilo: `mt-5 text-5xl md:text-[68px] font-medium tracking-[-0.035em] leading-[1.04] text-white text-center`.
+  - **Subtítulo**:
+    `"Stream, cluster, and illuminate millions of concurrent events through a GPU-accelerated spatial engine built for modern teams."` (`mt-4 max-w-md text-center text-xs md:text-sm text-zinc-400 leading-relaxed`).
+  - **Par de Botones Píldora de Alto Contraste**:
+    - Primario (Verde Lima luminoso): `"Deploy Cluster"` (`px-6 py-3 rounded-full bg-[#9EF054] hover:bg-[#B2F572] text-[#051A09] font-semibold text-xs md:text-sm shadow-[0_0_30px_rgba(158,240,84,0.35)] hover:scale-[1.03] active:scale-[0.98] transition-all`). Al hacer clic, dispara una ola expansiva de energía verde que recorre las 45,000 partículas.
+    - Secundario (Cristal Verde Bosque): `"Explore Architecture"` (`px-6 py-3 rounded-full bg-[#112A16]/80 hover:bg-[#17381E] text-[#A3E635] border border-[#4ADE80]/25 backdrop-blur-md font-medium text-xs md:text-sm transition-all`).
+
+### 3. Limpieza y Props Configurables
+- Gestiona el redimensionamiento con `ResizeObserver` y libera geometría, material y renderer con `.dispose()` al desmontar.
+- Expón props: `particleCount` (default `45000`), `waveSpeed` (default `1.0`), `pulseIntensity` (default `1.0`), `accentColor` (default `'#9EF054'`), y `className`.
+
+Para que el horizonte superior del mar de partículas se funda en el negro puro (#000000) justo debajo de los botones sin cortar bruscamente, asegúrate de multiplicar el alpha en el Fragment Shader por una máscara de distancia y altura: float vDistanceFade = smoothstep(-6.8, -2.5, vWorldPos.z) * smoothstep(10.5, 6.0, abs(vWorldPos.x));
+Motiqo integration: Urbanist, scoped styles, reduced motion and external pause, valid ordered smoothstep edges, local simplex shaders, meaningful fallback and GPU cleanup.

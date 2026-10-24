@@ -1,5 +1,6 @@
 'use client';
 
+import SectionPreviewFit from './section-preview-fit';
 import dynamic from 'next/dynamic';
 import {useEffect,useState} from 'react';
 import {previewLoaders} from '@/lib/preview-loaders';
@@ -10,11 +11,20 @@ import type {SentimentProps} from './originals/sentiment';
 import type { ElementId } from '@/lib/catalog';
 import type { Settings } from '@/lib/element-controls';
 
+const LumenButtonShowcase=dynamic(previewLoaders['lumen-button'],{ssr:false});
+const TitaniumCard=dynamic(previewLoaders['titanium-card'],{ssr:false});
+const InkHeadline=dynamic(previewLoaders['ink-headline'],{ssr:false});
 const SonicAperture=dynamic(previewLoaders['sonic-aperture'],{ssr:false});
 const PrismCore=dynamic(previewLoaders['prism-core'],{ssr:false});
 const ApertureLoader=dynamic(previewLoaders['aperture-loader'],{ssr:false});
 const SilkAperture=dynamic(previewLoaders['silk-aperture'],{ssr:false});
 const ElasticShowcase=dynamic(previewLoaders['elastic-showcase'],{ssr:false});
+const HorizonGridPricing=dynamic(previewLoaders['horizon-grid-pricing'],{ssr:false});
+const PrismTierPricing=dynamic(previewLoaders['prism-tier-pricing'],{ssr:false});
+const CosmosSplitAuth=dynamic(previewLoaders['cosmos-split-auth'],{ssr:false});
+const ObsidianGate=dynamic(previewLoaders['obsidian-gate'],{ssr:false});
+const VortexCamera=dynamic(previewLoaders['vortex-camera'],{ssr:false});
+const Voyage=dynamic(previewLoaders['voyage'],{ssr:false});
 const ElevationMatrix=dynamic(previewLoaders['elevation-matrix'],{ssr:false});
 const VaporRing=dynamic(previewLoaders['vapor-ring'],{ssr:false});
 const Pleat=dynamic(previewLoaders['pleat'],{ssr:false});
@@ -85,8 +95,17 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, hov
   const reduced = hydrated && prefersReduced;
   const still = paused || reduced;
   const motion={intensity:typeof settings.intensity==='number'?settings.intensity:1,speed:typeof settings.speed==='number'?settings.speed:1};
-  return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`}>
+  return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`} style={expanded&&['prism-tier-pricing','horizon-grid-pricing','cosmos-split-auth','obsidian-gate','ink-headline','titanium-card','lumen-button'].includes(id)?{overflowY:'auto',alignItems:'flex-start'}:undefined}>
+    {id==='lumen-button'&&<LumenButtonShowcase onStatusChange={status=>onSettingsChange?.({status})} label={String(settings.label??'Continue')} disabled={settings.disabled === "enabled"} status={settings.status as 'idle'|'success'|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='titanium-card'&&<TitaniumCard {...settings} showControls={expanded} foil={settings.foil!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='ink-headline'&&<InkHeadline {...settings} showControls={false} progress={settings.trigger==='manual'?Number(settings.progress??.5):undefined} compact={!expanded} paused={!!still}/>}
     {id==='elastic-showcase'&&<ElasticShowcase {...settings} autoPlay={settings.autoPlay!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='horizon-grid-pricing'&&<SectionPreviewFit responsive={expanded}><HorizonGridPricing {...settings} defaultTierIndex={Number(settings.defaultTierIndex??0) as 0|1|2} paused={!!still}/></SectionPreviewFit>}
+    {id==='prism-tier-pricing'&&<SectionPreviewFit height={720} responsive={expanded}><PrismTierPricing {...settings} defaultAnnual={settings.defaultAnnual!=='disabled'} paused={!!still}/></SectionPreviewFit>}
+    {id==='cosmos-split-auth'&&<SectionPreviewFit height={700} frameWidth={1040} responsive={expanded}><CosmosSplitAuth {...settings} autoCycleSlides={settings.autoCycleSlides!=='disabled'} paused={!!still}/></SectionPreviewFit>}
+    {id==='obsidian-gate'&&<ObsidianGate {...settings} compact={!expanded} paused={!!still}/>}
+    {id==='vortex-camera'&&<VortexCamera {...settings} autoFlight={settings.autoFlight!=='disabled'} showHUD={settings.showHUD!=='disabled'} compact={!expanded} paused={paused}/>}
+    {id==='voyage'&&<Voyage {...settings} autoPlay={settings.autoPlay!=='disabled'} compact={!expanded} paused={paused}/>}
     {id==='elevation-matrix'&&<ElevationMatrix unitLabel={settings.unitLabel as string|undefined} view={expanded ? (settings.defaultView as '2d'|'3d'|undefined ?? '2d') : (hovered || settings.defaultView === '3d' ? '3d' : '2d')} theme={settings.defaultTheme as 'emerald'|'violet'|'amber'|'cyan'|undefined} perspective={settings.perspective as 'iso'|'front'|'wide'|undefined} compact={!expanded} paused={!!still}/>}
     {id==='sacred-lotus'&&<SacredLotus {...settings} progress={settings.playback==='controlled'?Number(settings.progress??56):undefined} interactive={settings.interactive!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='iris-turbine'&&<IrisTurbine {...settings} speed={settings.mode==='controlled'?Number(settings.speed??88):undefined} autoDemo={settings.mode!=='interactive'&&settings.mode!=='controlled'} interactive={settings.interactive!=='disabled'} showTelemetry={settings.showTelemetry==='enabled'} compact={!expanded} paused={!!still}/>}
@@ -122,7 +141,7 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, hov
     {id==='hyperbolic-ribbon'&&<HyperbolicRibbon compact={!expanded} paused={!!still} autoPlay={settings.autoPlay!=='disabled'} stepInterval={settings.stepInterval as number|undefined} pinchScale={settings.pinchScale as number|undefined} angleDeg={settings.angleDeg as number|undefined} gap={settings.gap as number|undefined} backgroundColor={settings.backgroundColor as string|undefined}/>}
     {id==='paper-flow'&&<PaperFlow compact={!expanded} paused={!!still} mode={settings.mode as any|undefined} direction={settings.direction as any|undefined} speed={settings.speed as number|undefined} deformation={settings.deformation as number|undefined} perspective={settings.perspective as number|undefined} inertia={settings.inertia as number|undefined} loop={settings.loop!=='disabled'} backgroundColor={settings.backgroundColor as string|undefined}/>}
     {id==='halftone-wordmark'&&<HalftoneWordmark compact={!expanded} paused={!!still} word={settings.word as string|undefined} accent={settings.accent as string|undefined}/>}
-    {id==='signal-grid'&&<SignalGrid compact={!expanded} paused={!!still} accent={settings.accent as string|undefined}/>}
+    {id==='signal-grid'&&<SignalGrid {...settings} defaultSamples={settings.defaultSamples==='14'?14:28} autoAnimate={settings.autoAnimate!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='meridian-veil'&&<MeridianVeil compact={!expanded} paused={!!still} theme={settings.theme as any} meridianCount={settings.meridianCount as number|undefined} pointsPerMeridian={settings.pointsPerMeridian as number|undefined} waveAmplitude={settings.waveAmplitude as number|undefined} speed={settings.speed as number|undefined} interactive={settings.interactive!=='disabled'} showThemeSwitcher={settings.showThemeSwitcher!=='hide'}/>}
     {id==='holdings'&&<Holdings compact={!expanded} paused={!!still} target={settings.target as number|undefined} scale={settings.scale as number|undefined} speed={settings.speed as number|undefined} thickness={settings.thickness as number|undefined} gap={settings.gap as number|undefined} activity={settings.activity as number|undefined}/>}
     {id==='galaxy'&&<Galaxy compact={!expanded} paused={!!still} count={settings.count as number|undefined} speed={settings.speed as number|undefined} arms={settings.arms as number|undefined} tilt={settings.tilt as number|undefined} glow={settings.glow as number|undefined} coreColor={settings.coreColor as string|undefined} edgeColor={settings.edgeColor as string|undefined}/>}

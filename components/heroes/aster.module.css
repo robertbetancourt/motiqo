@@ -1,0 +1,303 @@
+@font-face {
+  font-family: Aster Chakra;
+  src: url("/fonts/chakra-petch/ChakraPetch-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+.hero {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  width: 100%;
+  height: 100%;
+  min-height: 780px;
+  overflow: hidden;
+  background: #08080a;
+  color: #f8fbff;
+  font:
+    400 14px/1.5 Aster Chakra,
+    Arial,
+    sans-serif;
+}
+.hero * {
+  box-sizing: border-box;
+}
+.hero h1,
+.hero h2,
+.hero p {
+  margin: 0;
+  position: static;
+  max-width: none;
+}
+.nav {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 33px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+}
+.nav > strong {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+.nav > span {
+  font-size: 12px;
+  color: #a6b1c2;
+  letter-spacing: 0.15em;
+}
+.copy {
+  position: absolute;
+  top: 15%;
+  left: 5%;
+  right: 5%;
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+}
+.copy h1 {
+  font:
+    400 clamp(42px, 5.4cqw, 74px)/1.08 Aster Chakra,
+    Arial,
+    sans-serif;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: #f8fbff;
+}
+.field {
+  position: absolute;
+  inset: 24% 0 23%;
+  z-index: 2;
+  mask-image: radial-gradient(
+    ellipse at center,
+    #000 38%,
+    #000c 70%,
+    transparent 89%
+  );
+}
+.artifact {
+  width: 100%;
+  height: 100%;
+}
+.orbit {
+  position: absolute;
+  width: 640px;
+  height: 640px;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #7f9dc718;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+.orbit::before,
+.orbit::after {
+  content: "";
+  position: absolute;
+  inset: 15%;
+  border: 1px solid #7f9dc710;
+  border-radius: 50%;
+}
+.orbit::after {
+  inset: 32%;
+}
+.orbit i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #afc7e6;
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px #afc7e609;
+}
+.orbit i:first-child {
+  left: 49%;
+  top: -4px;
+}
+.orbit i:nth-child(2) {
+  left: 4%;
+  top: 71%;
+  width: 4px;
+  height: 4px;
+  opacity: 0.5;
+}
+.orbit i:nth-child(3) {
+  right: 1%;
+  top: 40%;
+  width: 4px;
+  height: 4px;
+  opacity: 0.5;
+}
+.action {
+  position: absolute;
+  bottom: 22%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 4;
+}
+.hero button {
+  font:
+    400 13px/1.2 Aster Chakra,
+    Arial,
+    sans-serif;
+  min-height: 48px;
+  cursor: pointer;
+  border: 1px solid #526179;
+  border-radius: 999px;
+  padding: 13px 22px;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.action > button {
+  background: #fff;
+  border-color: #fff;
+  color: #101722;
+  min-height: 52px;
+  padding-inline: 28px;
+}
+.action > button:hover {
+  background: #e4edfa;
+}
+.hero button:focus-visible {
+  outline: 2px solid #9ac4ff;
+  outline-offset: 5px;
+}
+.caption {
+  position: absolute;
+  left: 5%;
+  bottom: 11.5%;
+  z-index: 4;
+}
+.caption > span {
+  font-size: 11px;
+  color: #a8b8d0;
+}
+.caption h2 {
+  font-size: 25px;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  margin-top: 5px;
+}
+.bottom {
+  position: absolute;
+  bottom: 35px;
+  left: 5%;
+  right: 5%;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 4;
+}
+.bottom > div {
+  display: flex;
+  gap: 8px;
+}
+.bottom button {
+  color: #c5d3e7;
+  background: #151d29;
+  border-color: #344156;
+  font-size: 12px;
+  min-height: 44px;
+  padding: 11px 20px;
+}
+.bottom button[aria-pressed="true"] {
+  color: #111721;
+  background: #fff;
+  border-color: #fff;
+}
+.bottom button:hover {
+  border-color: #a6bddc;
+}
+@container (max-width:600px) {
+  .nav {
+    top: 26px;
+    left: 7%;
+    right: 7%;
+  }
+  .nav > strong {
+    font-size: 24px;
+    gap: 10px;
+  }
+  .nav > span {
+    font-size: 9px;
+  }
+  .copy {
+    top: 17%;
+    left: 7%;
+    right: 7%;
+  }
+  .copy h1 {
+    font-size: 10cqw;
+    line-height: 1.1;
+    max-width: 360px;
+    margin: auto;
+    text-wrap: balance;
+  }
+  .field {
+    inset: 29% -20% 27%;
+  }
+  .orbit {
+    width: 420px;
+    height: 420px;
+    top: 44%;
+  }
+  .action {
+    bottom: 24%;
+  }
+  .action > button {
+    min-height: 48px;
+    font-size: 12px;
+    padding-inline: 25px;
+  }
+  .caption {
+    bottom: 14%;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+  .caption h2 {
+    font-size: 22px;
+  }
+  .caption > span {
+    font-size: 10px;
+  }
+  .bottom {
+    bottom: 29px;
+    left: 6%;
+    right: 6%;
+    justify-content: center;
+  }
+  .bottom > div {
+    width: 100%;
+    justify-content: center;
+    gap: 7px;
+  }
+  .bottom button {
+    font-size: 10px;
+    padding: 11px 13px;
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero button {
+    transition: none;
+  }
+}
+
+.hero{background:#000}.field{inset:4% -42% -18%;mask-image:none}.artifact{transform:scale(1.25)}.orbit{opacity:.25}.copy{top:16%;z-index:3}.action{bottom:12%}.action>button{font-weight:600}.hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(#0009,transparent 35%,transparent 70%,#0009);z-index:2}@container(max-width:600px){.field{inset:12% -100% -10%}.copy{top:18%}.action{bottom:13%}}
+
+.field{inset:12% -24% -4%}.artifact{transform:scale(1.05)}
+.stars{position:absolute;inset:0;pointer-events:none;z-index:1}.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#d5d9e2}
+.nav .menu{width:48px;height:48px;min-height:48px;border:1px solid #fff3;border-radius:50%;background:#ffffff08;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0}.menu i{width:17px;height:1px;background:white;transition:transform .3s}.menu[aria-pressed=true] i:first-child{transform:translateY(3.5px) rotate(45deg)}.menu[aria-pressed=true] i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.scrollCue{position:absolute;bottom:22px;left:50%;height:42px;width:1px;overflow:hidden;background:#ffffff20;z-index:4}.scrollCue span{display:block;width:1px;height:22px;background:#ddd;animation:aster-scroll 2s ease-in-out infinite}@keyframes aster-scroll{0%{transform:translateY(-24px)}80%,100%{transform:translateY(48px)}}
+@container(max-width:600px){.field{inset:19% -70% 2%}.artifact{transform:none}}
+@media(prefers-reduced-motion:reduce){.scrollCue span{animation:none}.menu i{transition:none}}
+
+.hero[data-paused=true] .scrollCue span{animation-play-state:paused}

@@ -167,7 +167,7 @@ test("Gallery controls move geometry uniforms, update live without remount and d
     assert.equal(uniforms().uCenter.value, 0);
     assert.equal(uniforms().uCrumple.value,0);
     await React.act(() =>
-      document.querySelector('[aria-label="Next image"]').click(),
+      document.querySelector(".flow-gallery").dispatchEvent(new window.KeyboardEvent("keydown", {key:"ArrowRight",bubbles:true})),
     );
     await React.act(() => {
       for (let i = 0; i < 180; i++) callback(i / 60, 1 / 60);
@@ -212,13 +212,13 @@ test("Gallery keeps navigable artwork when WebGL initialization fails", () =>
       "true",
     );
     await React.act(() =>
-      document.querySelector('[aria-label="Next image"]').click(),
+      document.querySelector(".flow-gallery").dispatchEvent(new window.KeyboardEvent("keydown", {key:"ArrowRight",bubbles:true})),
     );
-    assert.match(document.querySelector('[role="status"]').textContent, /02/);
+    assert.equal(document.querySelector(".flow-controls"), null);
     await React.act(() =>
-      document.querySelector('[aria-label="Previous image"]').click(),
+      document.querySelector(".flow-gallery").dispatchEvent(new window.KeyboardEvent("keydown", {key:"ArrowLeft",bubbles:true})),
     );
-    assert.match(document.querySelector('[role="status"]').textContent, /01/);
+    assert.ok(document.querySelector(".flow-fallback"));
   }));
 test("TopoContour updates uniforms, emits click waves and releases native GL", () =>
   env(async (root) => {

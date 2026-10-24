@@ -3,6 +3,473 @@
   "version": "0.1.0",
   "items": [
     {
+      "id": "voyage",
+      "number": "74",
+      "title": "Voyage",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-23",
+      "previewSize": "cinema",
+      "description": "Scroll through curved images, orbital lines and streaming dust.",
+      "hint": "Scroll to fly through the ring. Drag to look around.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Carousel",
+        "3D",
+        "Interactive",
+        "Gallery"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy both files and the eight bundled images. No additional dependencies. Native vertical scrolling advances or rewinds the POV path, with page scroll chaining at the limits; drag or horizontal arrows change the orbit. Autoplay continues between gestures. Orbital rings and deterministic particle wakes follow the same 3D world and react to travel velocity. Supports reduced motion and lifecycle suspension.",
+      "code": "import Voyage from './voyage';\n\nexport default function Example(){return <div style={{height:620}}><Voyage /></div>;}",
+      "brief": "Integrate Voyage as an uninterrupted POV camera journey through a ring of subtly curved images. No logos, captions, thumbnails, icons, navigation buttons or play/pause interface. Autoplay always runs while visible, except reduced motion or an external lifecycle pause. Keep drag and arrow-key look controls without stopping autoplay, full-stage framing, the above-rim descent into the circle and outward-facing interior perspective. Bundle all local assets and preserve lifecycle cleanup. Add a native vertical scroll surface that scrubs the POV journey forward and backward without preventing browser wheel, pinch zoom or edge scroll chaining. Keep autoplay between gestures. Three orbital guide lines and 56 deterministic particles follow the cylinder in world space; particle wakes and line brightness react to smoothed camera travel velocity. Hide decorative content from assistive technology and disable it for reduced motion. Expose accentColor for the decoration palette.",
+      "entry": "voyage.tsx",
+      "exportName": "Voyage",
+      "files": [
+        {
+          "source": "components/originals/voyage.tsx",
+          "target": "components/motiqo/voyage.tsx"
+        },
+        {
+          "source": "components/originals/voyage-motion.ts",
+          "target": "components/motiqo/voyage-motion.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        },
+        {
+          "source": "public/media/gallery/image-14.webp",
+          "target": "public/media/gallery/image-14.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "speed",
+          "label": "Tour speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.2,
+          "max": 3,
+          "step": 0.1
+        },
+        {
+          "key": "cameraIntensity",
+          "label": "Camera movement",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "zoom",
+          "label": "Framing",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.7,
+          "max": 1.35,
+          "step": 0.05
+        },
+        {
+          "key": "backgroundColor",
+          "label": "Background",
+          "kind": "color",
+          "defaultValue": "#101210"
+        }
+      ],
+      "moods": [
+        {
+          "id": "night",
+          "label": "Night flight",
+          "settings": {
+            "speed": 1,
+            "cameraIntensity": 1,
+            "zoom": 1,
+            "backgroundColor": "#101210"
+          }
+        },
+        {
+          "id": "paper",
+          "label": "Paper gallery",
+          "settings": {
+            "speed": 0.6,
+            "cameraIntensity": 0.55,
+            "zoom": 0.95,
+            "backgroundColor": "#eeeee6"
+          }
+        },
+        {
+          "id": "dynamic",
+          "label": "Free flight",
+          "settings": {
+            "speed": 1.8,
+            "cameraIntensity": 1.65,
+            "zoom": 0.95,
+            "backgroundColor": "#0d1017"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vortex-camera",
+      "number": "75",
+      "title": "VortexCamera",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-23",
+      "previewSize": "cinema",
+      "description": "A continuous camera flight through three counter-rotating photographic rings.",
+      "hint": "Scroll or drag to travel. Move your pointer to explore.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Carousel",
+        "3D",
+        "WebGL",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy all implementation files, the scoped stylesheet and the 18 bundled gallery images. Requires three and @types/three. Appearance and flight controls belong in the host panel. Uses Urbanist when available, with a system sans fallback.",
+      "code": "import VortexCamera from './vortex-camera';\n\nexport default function Example(){return <div style={{height:620}}><VortexCamera /></div>;}",
+      "brief": "An immersive three-ring photographic gallery. Keep only the four cinematic stage captions inside the scene, using Urbanist. No internal pause, reset, telemetry, frame, slider or interface chrome. Expose host controls for autoFlight, progress, sensitivity, smoothing, darkness, particleColor and showHUD. During .45 <= p <= .80 the base lookAt is exactly getCameraPosition(Math.min(1,p+.12)); only after .80 blend toward the origin. Preserve seamless entry/exit, local pointer parallax, keyboard and drag navigation, reduced motion, visibility suspension and complete GPU cleanup.",
+      "entry": "vortex-camera.tsx",
+      "exportName": "VortexCamera",
+      "files": [
+        {
+          "source": "components/originals/vortex-camera.tsx",
+          "target": "components/motiqo/vortex-camera.tsx"
+        },
+        {
+          "source": "components/originals/vortex-camera-path.ts",
+          "target": "components/motiqo/vortex-camera-path.ts"
+        },
+        {
+          "source": "components/originals/vortex-camera-scene.ts",
+          "target": "components/motiqo/vortex-camera-scene.ts"
+        },
+        {
+          "source": "components/originals/vortex-camera.css",
+          "target": "components/motiqo/vortex-camera.css"
+        },
+        {
+          "source": "components/originals/vortex-camera.css.d.ts",
+          "target": "components/motiqo/vortex-camera.css.d.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-08.webp",
+          "target": "public/media/gallery/image-08.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        },
+        {
+          "source": "public/media/gallery/image-13.webp",
+          "target": "public/media/gallery/image-13.webp"
+        },
+        {
+          "source": "public/media/gallery/image-14.webp",
+          "target": "public/media/gallery/image-14.webp"
+        },
+        {
+          "source": "public/media/gallery/image-15.webp",
+          "target": "public/media/gallery/image-15.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-17.webp",
+          "target": "public/media/gallery/image-17.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "autoFlight",
+          "label": "Auto flight",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "progress",
+          "label": "Camera progress",
+          "kind": "range",
+          "defaultValue": 0,
+          "min": 0,
+          "max": 1,
+          "step": 0.001
+        },
+        {
+          "key": "sensitivity",
+          "label": "Scroll sensitivity",
+          "kind": "range",
+          "defaultValue": 0.0009,
+          "min": 0.0001,
+          "max": 0.003,
+          "step": 0.0001
+        },
+        {
+          "key": "smoothing",
+          "label": "Camera smoothing",
+          "kind": "range",
+          "defaultValue": 0.075,
+          "min": 0.01,
+          "max": 0.2,
+          "step": 0.005
+        },
+        {
+          "key": "darkness",
+          "label": "Image darkness",
+          "kind": "range",
+          "defaultValue": 0.22,
+          "min": 0,
+          "max": 0.8,
+          "step": 0.01
+        },
+        {
+          "key": "particleColor",
+          "label": "Trails",
+          "kind": "color",
+          "defaultValue": "#38bdf8"
+        },
+        {
+          "key": "showHUD",
+          "label": "Stage captions",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "obsidian-gate",
+      "title": "ObsidianGate",
+      "number": "77",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-23",
+      "previewSize": "cinema",
+      "description": "A luminous authentication study that responds to focus, typing and validation.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Form",
+        "Authentication",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy both TS/TSX files. Scoped styles and procedural artwork included. Uses Urbanist when present, with a system sans fallback. Respect reduced motion, external pause and lifecycle cleanup.",
+      "code": "import ObsidianGate from './obsidian-gate';\n\nexport default function Example(){return <div style={{minHeight:680}}><ObsidianGate/></div>;}",
+      "brief": "Create ObsidianGate with a pointer-reactive cross field, keyboard ripples, layered glass chassis, orbital crest, labeled email/password inputs, accessible visibility toggle and a four-segment length indicator. Simulate a 1.4-second authorization sequence only after validation. Clearly label the demo; do not send or persist credentials. onSuccess connects completion, onProvider connects OAuth handlers. Do not pretend to implement real authentication. Cancel timers, RAF and observers on unmount; respect reduced motion and pause.",
+      "entry": "obsidian-gate.tsx",
+      "exportName": "ObsidianGate",
+      "files": [
+        {
+          "source": "components/originals/obsidian-gate.tsx",
+          "target": "components/motiqo/obsidian-gate.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "brandTitle",
+          "label": "Title",
+          "kind": "text",
+          "defaultValue": "Welcome back to Motiqo",
+          "maxLength": 100
+        },
+        {
+          "key": "subtitle",
+          "label": "Subtitle",
+          "kind": "text",
+          "defaultValue": "Enter your credentials to access the spatial library",
+          "maxLength": 180
+        },
+        {
+          "key": "accentColor",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#38bdf8"
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "prism-tier-pricing",
+      "title": "PrismTierPricing",
+      "number": "76",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-23",
+      "previewSize": "cinema",
+      "description": "Three subscription tiers, shared optical lighting and kinetic prices.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Card",
+        "Pricing",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy both TS/TSX files. Scoped styles and procedural artwork included. Uses Urbanist when present, with a system sans fallback. Respect reduced motion, external pause and lifecycle cleanup.",
+      "code": "import PrismTierPricing from './prism-tier-pricing';\n\nexport default function Example(){return <div style={{minHeight:680}}><PrismTierPricing/></div>;}",
+      "brief": "Create a complete three-plan pricing component with monthly/annual billing, independently animated price digits, a shared spotlight, luminous Pro canvas ribbons and team seats from 5 to 50. The Enterprise price is the per-seat rate multiplied by seats, with clear billing units. Tier selection calls onSelectTier; without a callback, announce the demo selection without pretending to complete a purchase. Keep accessible focus tooltips, reduced motion and canvas cleanup.",
+      "entry": "prism-tier-pricing.tsx",
+      "exportName": "PrismTierPricing",
+      "files": [
+        {
+          "source": "components/originals/prism-tier-pricing.tsx",
+          "target": "components/motiqo/prism-tier-pricing.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "defaultAnnual",
+          "label": "Annual billing",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "accentColor",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#38bdf8"
+        }
+      ],
+      "moods": []
+    },
+    {
       "id": "paper-flow",
       "title": "PaperFlow",
       "number": "73",
@@ -623,7 +1090,7 @@
       "number": "70",
       "category": "Motion",
       "original": true,
-      "description": "Pixel telemetry with a staggered reveal and precise inspection.",
+      "description": "A precision LED telemetry matrix with luminous cells, pinned inspection and optical depth.",
       "hint": "Inspect signals. Click to pin. Space replays.",
       "source": "Motiqo",
       "sourceUrl": "/docs#installation",
@@ -637,7 +1104,7 @@
       ],
       "installNote": "Copy signal-grid.tsx. Styling included. No external assets.",
       "code": "import SignalGrid from './signal-grid';\n\nexport default function Example(){return <div style={{height:480}}><SignalGrid/></div>;}",
-      "brief": "Integrate SignalGrid, an orbital telemetry chart with staggered pixel reveals, pointer and keyboard inspection, pinned values, replay and reduced motion.",
+      "brief": "Render SignalGrid as a premium optoelectronic instrument. Preserve all keyboard inspection, pin/unpin, sample switching and bounded custom values. Use an emerald LED palette, specular hardware surface, inactive neighbor bleed, lit peak cells, smooth replay, column guides, a glass inspector with illustrative eight-pulse sparkline, derived KPIs and runtime-measured frame frequency. Pause breathing when hidden/offscreen, externally paused or reduced motion. Respect autoAnimate and external settings.",
       "entry": "signal-grid.tsx",
       "exportName": "SignalGrid",
       "files": [
@@ -650,25 +1117,61 @@
       "devDependencies": {},
       "controls": [
         {
-          "key": "accent",
+          "key": "defaultSamples",
+          "label": "Samples",
+          "kind": "select",
+          "defaultValue": "28",
+          "choices": [
+            {
+              "value": "14",
+              "label": "14 samples"
+            },
+            {
+              "value": "28",
+              "label": "28 samples"
+            }
+          ]
+        },
+        {
+          "key": "accentColor",
           "label": "Accent",
           "kind": "color",
-          "defaultValue": "#eeeeef"
+          "defaultValue": "#34d399"
+        },
+        {
+          "key": "autoAnimate",
+          "label": "Signal breathing",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
         }
       ],
       "moods": [
         {
-          "id": "default",
-          "label": "Original",
+          "id": "emerald",
+          "label": "Emerald",
           "settings": {
-            "accent": "#eeeeef"
+            "defaultSamples": "28",
+            "accentColor": "#34d399",
+            "autoAnimate": "enabled"
           }
         },
         {
-          "id": "cool",
-          "label": "Cool",
+          "id": "ice",
+          "label": "Ice",
           "settings": {
-            "accent": "#b7b7bf"
+            "defaultSamples": "28",
+            "accentColor": "#38bdf8",
+            "autoAnimate": "enabled"
           }
         }
       ],
@@ -8950,6 +9453,580 @@
           "label": "Dusk",
           "settings": {
             "light": "dusk"
+          }
+        }
+      ]
+    },
+    {
+      "id": "horizon-grid-pricing",
+      "title": "HorizonGridPricing",
+      "number": "78",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-23",
+      "previewSize": "cinema",
+      "description": "Sapphire glass plans above a luminous perspective grid.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Pricing",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the self-contained TSX file. Scoped styles included. Urbanist with system fallback.",
+      "code": "import HorizonGridPricing from './horizon-grid-pricing';\n\nexport default function Example(){return <HorizonGridPricing/>;}",
+      "brief": "Two sapphire-glass pricing plans, a perspective grid reflecting the selected plan, three capacity levels, rolling prices, real plan selection callbacks and independent accessible feature disclosures. Plan specifications are illustrative targets. Preserve reduced motion, external pause, pointer tilt and full-size responsive proportions.",
+      "entry": "horizon-grid-pricing.tsx",
+      "exportName": "HorizonGridPricing",
+      "files": [
+        {
+          "source": "components/originals/horizon-grid-pricing.tsx",
+          "target": "components/motiqo/horizon-grid-pricing.tsx"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "defaultTierIndex",
+          "label": "Capacity tier",
+          "kind": "range",
+          "defaultValue": 0,
+          "min": 0,
+          "max": 2,
+          "step": 1
+        },
+        {
+          "key": "accentColor",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#6366f1"
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "cosmos-split-auth",
+      "title": "CosmosSplitAuth",
+      "number": "79",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-23",
+      "previewSize": "cinema",
+      "description": "An editorial sign-in card meets a luminous cosmic showcase.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Form",
+        "Interactive",
+        "Space"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy the TSX, effect-runtime.ts and included public/media/cosmos-astronaut.png. Generated artwork has no third-party photo dependency. Urbanist with system fallback.",
+      "code": "import CosmosSplitAuth from './cosmos-split-auth';\n\nexport default function Example(){return <CosmosSplitAuth/>;}",
+      "brief": "Split light/dark authentication interface with live English, Spanish and Japanese form translation, credential validation, async onSubmit, optional Google/sign-up/reset callbacks, four cosmic visual treatments and quotes, and a visibility-aware particle scene. Local generated astronaut artwork included. Pointer lighting and typing excite the particles. Missing auth callbacks announce demo mode without sending credentials. Preserve keyboard controls, reduced motion, external pause and cleanup.",
+      "entry": "cosmos-split-auth.tsx",
+      "exportName": "CosmosSplitAuth",
+      "files": [
+        {
+          "source": "components/originals/cosmos-split-auth.tsx",
+          "target": "components/motiqo/cosmos-split-auth.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/cosmos-astronaut.png",
+          "target": "public/media/cosmos-astronaut.png"
+        },
+        {
+          "source": "public/media/cosmos-astronaut.provenance.txt",
+          "target": "public/media/cosmos-astronaut.provenance.txt"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "brandName",
+          "label": "Brand",
+          "kind": "text",
+          "defaultValue": "KRONOS.",
+          "maxLength": 24
+        },
+        {
+          "key": "autoCycleSlides",
+          "label": "Cycle scenes",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "ink-headline",
+      "title": "InkHeadline",
+      "number": "80",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-24",
+      "previewSize": "cinema",
+      "description": "Capillary ink reveals selectable typography, word by word.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Typography",
+        "SVG",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "One self-contained TSX file with scoped CSS and SVG filters. Georgia serif fallback is local. Uses Urbanist for the studio controls. Motion respects visibility, external pause and reduced motion.",
+      "code": "import InkHeadline from './ink-headline';\n\nexport default function Example(){return <InkHeadline/>;}",
+      "brief": "Render live selectable DOM typography with per-word or per-character SVG fractal threshold absorption, displacement and a fading capillary pooling outline. Detach filters after drying. Include local paper/dark modes, replay, manual timeline scrubbing, configurable timing and optional standalone studio controls. Rewet dry words on pointer interaction. Keep accessible text labels and clean visibility-aware RAF/observers. Center the text and one replay button; omit the toolbar, editorial labels and description. Set the light/dark surface through props or the external inspector.",
+      "entry": "ink-headline.tsx",
+      "exportName": "InkHeadline",
+      "files": [
+        {
+          "source": "components/originals/ink-headline.tsx",
+          "target": "components/motiqo/ink-headline.tsx"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "defaultText",
+          "label": "Text",
+          "kind": "text",
+          "defaultValue": "Written in ink, word by word.",
+          "maxLength": 240,
+          "multiline": true
+        },
+        {
+          "key": "by",
+          "label": "Split by",
+          "kind": "select",
+          "defaultValue": "word",
+          "choices": [
+            {
+              "value": "word",
+              "label": "word"
+            },
+            {
+              "value": "char",
+              "label": "char"
+            }
+          ]
+        },
+        {
+          "key": "ease",
+          "label": "Ease",
+          "kind": "select",
+          "defaultValue": "easeOut",
+          "choices": [
+            {
+              "value": "linear",
+              "label": "linear"
+            },
+            {
+              "value": "easeOut",
+              "label": "easeOut"
+            },
+            {
+              "value": "spring",
+              "label": "spring"
+            }
+          ]
+        },
+        {
+          "key": "bleed",
+          "label": "Bleed",
+          "kind": "range",
+          "defaultValue": 0.6,
+          "min": 0,
+          "max": 1.5,
+          "step": 0.01
+        },
+        {
+          "key": "feather",
+          "label": "Feather",
+          "kind": "range",
+          "defaultValue": 0.12,
+          "min": 0.01,
+          "max": 0.5,
+          "step": 0.01
+        },
+        {
+          "key": "stagger",
+          "label": "Stagger (ms)",
+          "kind": "range",
+          "defaultValue": 240,
+          "min": 0,
+          "max": 600,
+          "step": 10
+        },
+        {
+          "key": "duration",
+          "label": "Duration (ms)",
+          "kind": "range",
+          "defaultValue": 1800,
+          "min": 400,
+          "max": 4000,
+          "step": 50
+        },
+        {
+          "key": "noiseScale",
+          "label": "Noise scale",
+          "kind": "range",
+          "defaultValue": 2.2,
+          "min": 0.5,
+          "max": 5,
+          "step": 0.1
+        },
+        {
+          "key": "trigger",
+          "label": "Trigger",
+          "kind": "select",
+          "defaultValue": "inView",
+          "choices": [
+            {
+              "value": "inView",
+              "label": "inView"
+            },
+            {
+              "value": "click",
+              "label": "click"
+            },
+            {
+              "value": "manual",
+              "label": "manual"
+            }
+          ]
+        },
+        {
+          "key": "progress",
+          "label": "Manual progress",
+          "kind": "range",
+          "defaultValue": 0.5,
+          "min": 0,
+          "max": 1,
+          "step": 0.01
+        },
+        {
+          "key": "defaultTheme",
+          "label": "Surface",
+          "kind": "select",
+          "defaultValue": "dark",
+          "choices": [
+            {
+              "value": "dark",
+              "label": "Dark"
+            },
+            {
+              "value": "light",
+              "label": "Light"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "paper",
+          "label": "Paper",
+          "settings": {
+            "defaultText": "Written in ink, word by word.",
+            "by": "word",
+            "ease": "easeOut",
+            "bleed": 0.8,
+            "feather": 0.12,
+            "stagger": 240,
+            "duration": 1800,
+            "noiseScale": 2.2,
+            "trigger": "inView",
+            "progress": 0.5,
+            "defaultTheme": "light"
+          }
+        },
+        {
+          "id": "letterpress",
+          "label": "Letterpress",
+          "settings": {
+            "defaultText": "Written in ink, word by word.",
+            "by": "char",
+            "ease": "easeOut",
+            "bleed": 0.35,
+            "feather": 0.12,
+            "stagger": 60,
+            "duration": 1800,
+            "noiseScale": 2.2,
+            "trigger": "inView",
+            "progress": 0.5,
+            "defaultTheme": "dark"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lumen-button",
+      "title": "LumenButton",
+      "number": "81",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-24",
+      "previewSize": "cinema",
+      "description": "A muted iridescent capsule with flowing light and an animated success state.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Button",
+        "WebGL",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy lumen-button.tsx and effect-runtime.ts. Scoped CSS and native GLSL ES 300 included. No Three.js or site CSS. LumenButtonShowcase is an optional demo export.",
+      "code": "import LumenButton from './lumen-button';\n\nexport default function Example(){return <LumenButton onClick={()=>console.log('Continue')}/>;}",
+      "brief": "Create a native WebGL2 SDF capsule with triple-domain-warped fBm, spectral thin-film rim light, derivative-based specular normals, pointer wake, click shockwaves, direct click-to-success animation and a success pulse. Keep a readable DOM label over a softly iridescent center, a real disabled state and keyboard click support. Use spring compression, subtle magnetism, local fallback, reduced motion and complete shader/program/observer cleanup. Export both the reusable button and its optional showcase. Keep only one button in the showcase; all settings belong in the external inspector.",
+      "entry": "lumen-button.tsx",
+      "exportName": "LumenButton",
+      "files": [
+        {
+          "source": "components/originals/lumen-button.tsx",
+          "target": "components/motiqo/lumen-button.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "label",
+          "label": "Label",
+          "kind": "text",
+          "defaultValue": "Continue",
+          "maxLength": 40
+        },
+        {
+          "key": "status",
+          "label": "State",
+          "kind": "select",
+          "defaultValue": "idle",
+          "choices": [
+            {
+              "value": "idle",
+              "label": "Idle"
+            },
+            {
+              "value": "success",
+              "label": "Success"
+            }
+          ]
+        },
+        {
+          "key": "disabled",
+          "label": "Disabled",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "disabled",
+              "label": "Off"
+            },
+            {
+              "value": "enabled",
+              "label": "On"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "ready",
+          "label": "Ready",
+          "settings": {
+            "label": "Continue",
+            "status": "success",
+            "disabled": "disabled"
+          }
+        },
+        {
+          "id": "locked",
+          "label": "Locked",
+          "settings": {
+            "label": "Continue",
+            "status": "idle",
+            "disabled": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "titanium-card",
+      "title": "TitaniumCard",
+      "number": "82",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-24",
+      "previewSize": "cinema",
+      "description": "Pearlescent titanium, holographic light and a card that turns in your hands.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Card",
+        "3D",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "One self-contained TSX file with scoped CSS and SVG metal texture. No remote images, external fonts or payment/network requests. Use the optional TitaniumCardHandle ref for flip, reveal and triggerNfcPulse.",
+      "code": "import TitaniumCard from './titanium-card';\n\nexport default function Example(){return <TitaniumCard/>;}",
+      "brief": "Build a two-sided 1.586 titanium card with four physical edge layers, inertial pointer drag, nearest-face magnetic settling, keyboard flip, reactive thin-film foil, grain and guilloche, EMV chip, reveal/hide digit animation, back security-code control and NFC visual pulse. Include pearl, obsidian and chrome finishes, optional studio controls and imperative flip/reveal/triggerNfcPulse ref. This is a visual demo, not payment processing or secure storage. Freeze idle work and respect external pause, reduced motion and lifecycle cleanup.",
+      "entry": "titanium-card.tsx",
+      "exportName": "TitaniumCard",
+      "files": [
+        {
+          "source": "components/originals/titanium-card.tsx",
+          "target": "components/motiqo/titanium-card.tsx"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "holder",
+          "label": "Card holder",
+          "kind": "text",
+          "defaultValue": "ALEX MORGAN",
+          "maxLength": 40
+        },
+        {
+          "key": "number",
+          "label": "Demo number",
+          "kind": "text",
+          "defaultValue": "4716 0381 9254 4242",
+          "maxLength": 24
+        },
+        {
+          "key": "expires",
+          "label": "Expiry",
+          "kind": "text",
+          "defaultValue": "09/29",
+          "maxLength": 7
+        },
+        {
+          "key": "cvv",
+          "label": "Demo security code",
+          "kind": "text",
+          "defaultValue": "731",
+          "maxLength": 4
+        },
+        {
+          "key": "tier",
+          "label": "Tier",
+          "kind": "text",
+          "defaultValue": "TITANIUM",
+          "maxLength": 24
+        },
+        {
+          "key": "finish",
+          "label": "Finish",
+          "kind": "select",
+          "defaultValue": "pearl",
+          "choices": [
+            {
+              "value": "pearl",
+              "label": "Pearl"
+            },
+            {
+              "value": "obsidian",
+              "label": "Obsidian"
+            },
+            {
+              "value": "chrome",
+              "label": "Chrome"
+            }
+          ]
+        },
+        {
+          "key": "maxTilt",
+          "label": "Maximum tilt",
+          "kind": "range",
+          "defaultValue": 15,
+          "min": 0,
+          "max": 25,
+          "step": 1
+        },
+        {
+          "key": "foil",
+          "label": "Holographic foil",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "night",
+          "label": "Night",
+          "settings": {
+            "holder": "ALEX MORGAN",
+            "number": "4716 0381 9254 4242",
+            "expires": "09/29",
+            "cvv": "731",
+            "tier": "TITANIUM",
+            "finish": "obsidian",
+            "maxTilt": 15,
+            "foil": "enabled"
+          }
+        },
+        {
+          "id": "mirror",
+          "label": "Mirror",
+          "settings": {
+            "holder": "ALEX MORGAN",
+            "number": "4716 0381 9254 4242",
+            "expires": "09/29",
+            "cvv": "731",
+            "tier": "TITANIUM",
+            "finish": "chrome",
+            "maxTilt": 20,
+            "foil": "enabled"
           }
         }
       ]

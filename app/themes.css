@@ -148,3 +148,23 @@ html[data-theme=light] .card-badge-new{background:color-mix(in srgb,var(--accent
 .sidebar-back:active,.sidebar-link:active{transform:none}
 .collection-toolbar .collection-label{font-size:13px;color:var(--muted)}
 @media(max-width:780px){.sidebar-group .sidebar-link{min-height:44px}.site-sidebar.has-component-menu{padding-top:18px}.site-sidebar.has-component-menu .sidebar-heading{gap:14px;margin-bottom:10px}.site-sidebar.has-component-menu .sidebar-tools{padding-top:12px}.collection-toolbar .collection-label:empty{display:none}.collection-toolbar .search-tools{flex-wrap:wrap}}
+
+.sidebar-chevron,.sidebar-back>svg{padding:0;border:0;border-radius:0;background:none;color:var(--muted);flex-shrink:0}
+.sidebar-back{gap:10px;padding-left:7px}
+
+/* Both navigation levels use one row rhythm and one full-width selection. */
+.site-sidebar nav{padding-right:0;scrollbar-gutter:auto;scrollbar-width:none;gap:2px}
+.site-sidebar nav::-webkit-scrollbar{width:0}
+.site-sidebar nav[data-view] .sidebar-link,.sidebar-back{height:34px;min-height:34px;border-radius:7px;padding:0 12px;font-size:12px;width:100%;max-width:none;flex-shrink:0}
+.site-sidebar .sidebar-back{gap:9px;margin:0 0 8px;background:none;color:var(--muted)}
+.sidebar-back:hover{color:var(--text)}
+.site-sidebar .sidebar-group{padding-top:16px}.sidebar-group-title{margin-bottom:6px}
+@media(pointer:coarse){.site-sidebar nav[data-view] .sidebar-link,.site-sidebar .sidebar-back{height:44px;min-height:44px}}
+:root .element-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:18px}
+.element-card[data-element] .card-stage{height:auto;aspect-ratio:4/3}
+.card-poster{object-fit:contain}
+
+.workbench-stage.hero-workbench-stage{height:auto;min-height:260px;aspect-ratio:1280/900;align-self:start}.hero-workbench-stage .detail-workspace{background:#050508}.workbench-stage.hero-workbench-stage[data-viewport=tablet]{aspect-ratio:820/900}.workbench-stage.hero-workbench-stage[data-viewport=mobile]{aspect-ratio:390/844;max-height:844px}
+
+/* Composed sign-in previews grow with their full composition rather than clipping it. */
+.workbench-stage.section-workbench-stage{height:auto;align-self:start}.section-workbench-stage .detail-workspace,.section-workbench-stage .workbench-preview,.section-workbench-stage .demo{height:auto;min-height:0}.section-workbench-stage .demo{align-items:center!important;overflow:visible!important}

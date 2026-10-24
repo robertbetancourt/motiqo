@@ -315,7 +315,8 @@
     },
     "signal-grid": {
       "tests": [
-        "tests/halftone-signal.test.cjs"
+        "tests/halftone-signal.test.cjs",
+        "tests/interface-prompts.test.cjs"
       ]
     },
     "paper-flow": {
@@ -331,6 +332,51 @@
     "topo-contour": {
       "tests": [
         "tests/flow-topo.test.cjs"
+      ]
+    },
+    "voyage": {
+      "tests": [
+        "tests/voyage.test.cjs"
+      ]
+    },
+    "vortex-camera": {
+      "tests": [
+        "tests/vortex-camera.test.cjs"
+      ]
+    },
+    "prism-tier-pricing": {
+      "tests": [
+        "tests/interface-prompts.test.cjs"
+      ]
+    },
+    "obsidian-gate": {
+      "tests": [
+        "tests/interface-prompts.test.cjs"
+      ]
+    },
+    "horizon-grid-pricing": {
+      "tests": [
+        "tests/spatial-sections.test.cjs"
+      ]
+    },
+    "cosmos-split-auth": {
+      "tests": [
+        "tests/spatial-sections.test.cjs"
+      ]
+    },
+    "ink-headline": {
+      "tests": [
+        "tests/material-studies.test.cjs"
+      ]
+    },
+    "lumen-button": {
+      "tests": [
+        "tests/material-studies.test.cjs"
+      ]
+    },
+    "titanium-card": {
+      "tests": [
+        "tests/material-studies.test.cjs"
       ]
     }
   },
@@ -397,7 +443,8 @@
       "tests/heroes.test.cjs"
     ],
     "components/heroes/hero-clock.ts": [
-      "tests/heroes.test.cjs"
+      "tests/heroes.test.cjs",
+      "tests/optical-heroes.test.cjs"
     ],
     "lib/heroes.ts": [
       "tests/heroes.test.cjs"
@@ -420,6 +467,59 @@
     ],
     "components/heroes/aster-hero.tsx": [
       "tests/heroes.test.cjs"
+    ],
+    "components/heroes/cinematic-heroes.tsx": [
+      "tests/hero-collection.test.cjs"
+    ],
+    "components/heroes/creative-heroes.tsx": [
+      "tests/hero-collection.test.cjs"
+    ],
+    "components/heroes/collection-runtime.tsx": [
+      "tests/hero-collection.test.cjs"
+    ],
+    "components/heroes/kinetic-nebula-hero.tsx": [
+      "tests/optical-heroes.test.cjs"
+    ],
+    "components/heroes/nebula-scene.ts": [
+      "tests/optical-heroes.test.cjs"
+    ],
+    "components/heroes/luminary-hero.tsx": [
+      "tests/optical-heroes.test.cjs"
+    ],
+    "components/heroes/luminary-scene.ts": [
+      "tests/optical-heroes.test.cjs"
+    ],
+    "components/heroes/optics-noise.ts": [
+      "tests/optical-heroes.test.cjs"
+    ],
+    "components/heroes/zenith-beam-hero.tsx": [
+      "tests/spatial-sections.test.cjs"
+    ],
+    "components/heroes/bio-terrain-hero.tsx": [
+      "tests/spatial-sections.test.cjs"
+    ],
+    "components/heroes/bio-terrain-scene.ts": [
+      "tests/spatial-sections.test.cjs"
+    ],
+    "components/section-preview-fit.tsx": [
+      "tests/spatial-sections.test.cjs"
+    ],
+    "app/pricing/page.tsx": [
+      "tests/spatial-sections.test.cjs"
+    ],
+    "components/heroes/zenith-beam-scene.ts": [
+      "tests/material-studies.test.cjs",
+      "tests/spatial-sections.test.cjs"
+    ],
+    "app/login/page.tsx": [
+      "tests/material-studies.test.cjs",
+      "tests/spatial-sections.test.cjs"
+    ],
+    "components/use-component-settings.ts": [
+      "tests/material-studies.test.cjs"
+    ],
+    "lib/catalog.ts": [
+      "tests/spatial-sections.test.cjs"
     ]
   }
 }

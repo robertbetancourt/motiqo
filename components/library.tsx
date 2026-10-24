@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { ArrowRight, Bookmark, Check, Command, Search, SlidersHorizontal } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { aiTools, elements, makePrompt, isElementNew, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
-import { componentGroups, componentGroupFor, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
+import { aiTools, elements as allElements, makePrompt, isElementNew, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
+import { isPricing, isLogin, isSection, componentGroups, componentGroupFor, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import { heroes, type HeroEntry } from '@/lib/heroes';
 import LiquidSelection from './liquid-selection';
 import CardPreview from './card-preview';
@@ -15,13 +15,15 @@ import {decodeSettings,encodeSettings,type Settings} from '@/lib/element-control
 import CardContextMenu,{type CardMenuPosition} from './card-context-menu';
 import {filterTaggedElements,normalizeTag} from '@/lib/tag-filter';
 
-export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false, initialTag = '', initialGroup, initialView = 'preview' }: { originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean; initialTag?:string; initialGroup?:ComponentGroup; initialView?:'preview'|'code'|'prompt' }) {
+export default function Library({ originalSource, initialElement, initialConfiguration, initialSaved = false, initialTag = '', initialGroup, initialView = 'preview', section }: { section?:'pricing'|'login'; originalSource: OriginalSources; initialElement?: string; initialConfiguration?:string; initialSaved?: boolean; initialTag?:string; initialGroup?:ComponentGroup; initialView?:'preview'|'code'|'prompt' }) {
+  const [savedOnly,setSavedOnly] = useState(initialSaved);
+  const elements=allElements.filter(item=>section==='pricing'?isPricing(item):section==='login'?isLogin(item):savedOnly||!isSection(item));
+  const collectionTitle=section==='pricing'?'Pricing':section==='login'?'Login':'Components';
   const [group,setGroup] = useState(initialGroup);
   const [query,setQuery] = useState('');
   const [tag,setTag] = useState(initialTag);
   const [allSaved, setAllSaved] = useState<string[]>([]);
   const [saved,setSaved] = useState<string[]>([]);
-  const [savedOnly,setSavedOnly] = useState(initialSaved);
   const [savedSection, setSavedSection] = useState<'components' | 'hero'>('components');
   const [selected,setSelected] = useState<LibraryElement | null>(() => elements.find(element => element.id === initialElement) || null);
   const [storageReady,setStorageReady] = useState(false);
@@ -90,7 +92,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
     const syncSaved = () => {
       const list = readAllSaved();
       setAllSaved(list);
-      setSaved(list.filter(id => elements.some(element => element.id === id)));
+      setSaved(list.filter(id => allElements.some(element => element.id === id)));
     };
     syncSaved();
     try {
@@ -138,7 +140,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
     const current = readAllSaved();
     const next = current.includes(id) ? current.filter(s => s !== id) : [...current, id];
     setAllSaved(next);
-    setSaved(next.filter(s => elements.some(element => element.id === s)));
+    setSaved(next.filter(s => allElements.some(element => element.id === s)));
     try{localStorage.setItem('motiqo-saved',JSON.stringify(next));window.dispatchEvent(new Event('motiqo-saved-change'));}catch{}
   }
   function toggleSaveHero(heroId: string) {
@@ -148,6 +150,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
     try{localStorage.setItem('motiqo-saved',JSON.stringify(next));window.dispatchEvent(new Event('motiqo-saved-change'));}catch{}
   }
   function open(element:LibraryElement,tab:'preview'|'code'|'prompt'='preview'){
+    if(isSection(element)&&!section){const url=new URL(elementHref(element),window.location.origin);if(tab!=='preview')url.searchParams.set('view',tab);window.location.assign(url);return;}
     // Outgoing cards can still receive the second click during their exit animation.
     if(new URL(window.location.href).searchParams.has('element'))return;
     if(!selected) collectionScroll.current=window.scrollY;
@@ -164,7 +167,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
   function navigate(offset:number){
     const next=elements[(elements.findIndex(element=>element.id===selected?.id)+offset+elements.length)%elements.length];
     lastElement.current=next.id;setSelected(next);setInitialTab('preview');setWorkspaceSettings(undefined);
-    const url=new URL(window.location.href);url.searchParams.delete('config');url.searchParams.delete('view');url.searchParams.set('element',next.id);window.history.replaceState(window.history.state,'',url);
+    const url=new URL(window.location.href);url.searchParams.delete('config');url.searchParams.delete('view');url.searchParams.set('element',next.id);window.history.replaceState({motiqoElement:!!window.history.state?.motiqoElement},'',url);
   }
   function collection(onlySaved=false,nextGroup?:ComponentGroup){
     restoreCollection.current=false;collectionScroll.current=0;
@@ -179,7 +182,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
   function showSaved(){collection(true);}
   const filtered=filterTaggedElements(elements,{query,savedOnly,saved,tag}).filter(element=>!group||componentGroupFor(element)===group);
   const groupTitle=componentGroups.find(item=>item.id===group)?.title;
-  function elementHref(element:LibraryElement){return `/library?element=${element.id}${group?`&group=${group}`:''}${savedOnly?'&saved=1':''}${tag?`&tag=${encodeURIComponent(tag)}`:''}${cardSettings[element.id]?`&config=${encodeURIComponent(encodeSettings(element.id,cardSettings[element.id]))}`:''}`;}
+  function elementHref(element:LibraryElement){return `${isPricing(element)?'/pricing':isLogin(element)?'/login':'/library'}?element=${element.id}${group?`&group=${group}`:''}${savedOnly?'&saved=1':''}${tag?`&tag=${encodeURIComponent(tag)}`:''}${cardSettings[element.id]?`&config=${encodeURIComponent(encodeSettings(element.id,cardSettings[element.id]))}`:''}`;}
   function follow(event:MouseEvent<HTMLAnchorElement>,element:LibraryElement){if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();if(event.detail<2)open(element);}
 
   const savedHeroItems = heroes.filter(h => allSaved.includes(h.id));
@@ -190,15 +193,15 @@ export default function Library({ originalSource, initialElement, initialConfigu
 
   return <>
     <a href={selected?'#detail-title':'#collection'} className="skip-link">{selected?'Skip to component':'Skip to collection'}</a>
-    <SiteFrame collection workspace={!!selected} paused={still} savedOnly={savedOnly} savedCount={allSaved.length} onCollection={group=>collection(false,group)} onSaved={showSaved}>
+    <SiteFrame collection={!section} workspace={!!selected} paused={still} savedOnly={savedOnly} savedCount={allSaved.length} onCollection={group=>collection(false,group)} onSaved={showSaved}>
       <AnimatePresence mode="wait" initial={false}>
       {selected ? <motion.div key="workspace" initial={still?false:{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}} transition={{...timing,duration:still?0:.38}}>
-        <ElementWorkspace key={`${selected.id}-${initialTab}`} element={selected} initialSettings={workspaceSettings??decodeSettings(selected.id,initialConfiguration??null)??undefined} onBack={close} onPrevious={()=>navigate(-1)} onNext={()=>navigate(1)} index={elements.findIndex(element=>element.id===selected.id)} total={elements.length} saved={saved.includes(selected.id)} onSave={()=>toggleSave(selected.id)} paused={paused} copy={copy} initialTab={initialTab} initialTool={tool} onToolChange={chooseTool} originalSource={originalSource} onTag={chooseTag}/>
+        <ElementWorkspace collectionLabel={section==='pricing'?'Pricing':section==='login'?'Login':'Library'} key={`${selected.id}-${initialTab}`} element={selected} initialSettings={workspaceSettings??decodeSettings(selected.id,initialConfiguration??null)??undefined} onBack={close} onPrevious={()=>navigate(-1)} onNext={()=>navigate(1)} index={elements.findIndex(element=>element.id===selected.id)} total={elements.length} saved={saved.includes(selected.id)} onSave={()=>toggleSave(selected.id)} paused={paused} copy={copy} initialTab={initialTab} initialTool={tool} onToolChange={chooseTool} originalSource={originalSource} onTag={chooseTag}/>
       </motion.div> : <motion.div key="collection" className="collection-view" initial={false} exit={{opacity:0,y:-8}} transition={timing} ref={node=>{
         if(node&&restoreCollection.current){restoreCollection.current=false;window.scrollTo({top:collectionScroll.current,behavior:'instant'});node.querySelector<HTMLElement>(`[data-element="${lastElement.current}"] .card-title`)?.focus({preventScroll:true});}
       }}>
         <header className="page-header">
-          <h1>{savedOnly ? 'Saved' : (groupTitle ?? 'Components')}<span aria-hidden="true">.</span></h1>
+          <h1>{savedOnly ? 'Saved' : (groupTitle ?? collectionTitle)}<span aria-hidden="true">.</span></h1>
         </header>
 
         {savedOnly && (
@@ -228,7 +231,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
         <section id="collection" className="collection" aria-label={savedOnly?'Saved element collection':'Element collection'}>
           <div className="filter-row collection-toolbar">
             <span className="collection-label">
-              {savedOnly ? (savedSection === 'components' ? 'Saved components' : 'Saved heroes') : (groupTitle ?? 'Components')}
+              {savedOnly ? (savedSection === 'components' ? 'Saved components' : 'Saved heroes') : (groupTitle ?? collectionTitle)}
             </span>
             <div className="search-tools">
               <OutlineField className="search-frame" paused={still}>
