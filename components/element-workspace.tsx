@@ -16,8 +16,8 @@ type Viewport = 'desktop' | 'tablet' | 'mobile';
 const views: View[] = ['preview', 'code', 'prompt'];
 
 /** An addressable collection section: no overlay, focus trap or body scroll lock. */
-export default function ElementWorkspace({ element, onBack, onPrevious, onNext, index, total, saved, onSave, paused, copy, originalSource, onToolChange, initialSettings, initialTab = 'preview', initialTool = 'Universal', onTag }: {
-  element: LibraryElement; onBack: () => void; onPrevious: () => void; onNext: () => void; index: number; total: number;
+export default function ElementWorkspace({ element, onBack, onPrevious, onNext, index, total, saved, onSave, paused, copy, originalSource, onToolChange, initialSettings, initialTab = 'preview', initialTool = 'Universal', onTag, collectionLabel='Library' }: {
+  element: LibraryElement; collectionLabel?:string; onBack: () => void; onPrevious: () => void; onNext: () => void; index: number; total: number;
   onTag?:(tag:string)=>void; saved: boolean; onSave: () => void; paused: boolean; initialSettings?:Settings;
   copy: (text: string) => Promise<boolean>; originalSource: OriginalSources; initialTab?: View; initialTool?: AITool; onToolChange: (tool: AITool) => void;
 }) {
@@ -58,11 +58,11 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
 
   return <section ref={root} className="element-workbench" data-paused={paused || undefined} aria-labelledby="detail-title">
     <div className="workbench-toolbar">
-      <button className="workbench-back" onClick={event=>{if(event.detail<2)onBack();}}><ArrowLeft size={16}/> Library</button>
+      <button className="workbench-back" onClick={event=>{if(event.detail<2)onBack();}}><ArrowLeft size={16}/> {collectionLabel}</button>
     </div>
     <div className="workbench-layout">
       <div className="workbench-canvas">
-        <div className="workbench-stage" data-viewport={viewport}>
+        <div className={`workbench-stage ${element.id==='cosmos-split-auth'&&tab==='preview'?'section-workbench-stage':''}`} data-viewport={viewport}>
           <div id="detail-panel" className="detail-workspace" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0}>
             <div className="workbench-preview" hidden={tab !== 'preview'}>
               <Demo id={element.id} paused={paused || tab !== 'preview'} expanded silkLight={settings.light as 'dawn'|'dusk'|undefined} settings={settings} onSettingsChange={update}/>
@@ -128,7 +128,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
             if(element.id==='sacred-lotus'&&control.key==='progress'&&settings.playback!=='controlled')return null;
             const value=settings[control.key]??control.defaultValue;
             const change=(next:string|number)=>update({[control.key]:next});
-            if(control.kind==='range')return <label key={control.key} className="parameter-range" style={{'--range-fill':`${(Number(value)-control.min!)/(control.max!-control.min!)*100}%`} as CSSProperties}><span>{control.label}</span><output>{control.step!==undefined&&Number.isInteger(control.step)?value:Number(value).toFixed(2)}</output><input aria-label={control.label} type="range" min={control.min} max={control.max} step={control.step} value={value} onChange={event=>change(Number(event.target.value))}/></label>;
+            if(control.kind==='range')return <label key={control.key} className="parameter-range" style={{'--range-fill':`${(Number(value)-control.min!)/(control.max!-control.min!)*100}%`} as CSSProperties}><span>{control.label}</span><output>{control.step!==undefined&&Number.isInteger(control.step)?value:Number(value).toFixed(Math.min(6,Math.max(2,-Math.floor(Math.log10(control.step??.01)))))}</output><input aria-label={control.label} type="range" min={control.min} max={control.max} step={control.step} value={value} onChange={event=>change(Number(event.target.value))}/></label>;
             if(control.kind==='color')return <label key={control.key} className="parameter-colour"><span>{control.label}</span><div><input aria-label={control.label} type="color" value={String(value)} onChange={event=>change(event.target.value)}/><code>{String(value).toUpperCase()}</code></div></label>;
             if(control.kind==='text')return <label key={control.key} className="parameter-text"><span>{control.label}</span>{control.multiline?<textarea aria-label={control.label} rows={4} maxLength={control.maxLength??200} value={String(value)} onChange={event=>change(event.target.value)}/>:<input aria-label={control.label} type="text" maxLength={control.maxLength??200} value={String(value)} onChange={event=>change(event.target.value)}/>}</label>;
             return <div key={control.key} className="parameter-select"><span>{control.label}</span><ChoiceSelect label={control.label} value={String(value)} options={control.choices!} onChange={change} paused={paused}/></div>;

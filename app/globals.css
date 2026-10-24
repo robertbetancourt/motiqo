@@ -836,7 +836,6 @@ body:has(.site-shell.motion-paused) .ambient-stage > img { animation-play-state:
 .sidebar-brand > svg { display:block; width:132px; max-width:100%; height:auto; }
 .site-sidebar nav { display:flex; flex-direction:column; gap:9px; }
 .sidebar-link { display:flex; align-items:center; gap:11px; height:38px; min-height:38px; padding:0 12px; border-radius:8px; color:#9a9a9a; font-size:13px; transition:color 140ms ease,background 140ms ease; }
-.sidebar-link svg { stroke-width:1.4; opacity:.8; transition:opacity 140ms ease; }
 .sidebar-link:hover { background:rgba(255,255,255,0.04); color:#f0f0f0; }
 .sidebar-link:hover svg { opacity:1; }
 .sidebar-link.is-active, .sidebar-link[aria-current="page"] { background:rgba(255,255,255,0.08); color:#fff; font-weight:500; }
@@ -970,7 +969,6 @@ html[data-theme] .home-art .image-liquid-surface {background:transparent}
 .site-sidebar nav { position:relative; gap:8px; isolation:isolate; }
 .sidebar-link { position:relative; z-index:1; height:38px; min-height:38px; padding:0 12px; font-size:13px; color:#969696; border-radius:8px; background:transparent; transition:color 140ms ease,background 140ms ease; }
 .sidebar-link.is-active, .sidebar-link[aria-current="page"] { background:rgba(255,255,255,0.08); color:#fff; font-weight:500; }
-.sidebar-link svg { opacity:.85; }
 .sidebar-link:hover svg, .sidebar-link.is-active svg { opacity:1; }
 .sidebar-light { display:none !important; }
 @keyframes sidebar-current { 0% { transform:translateX(0); opacity:0; } 14% { opacity:.55; } 75% { opacity:.25; } 100% { transform:translateX(190px); opacity:0; } }
@@ -1034,7 +1032,7 @@ html[data-theme=light] .card-poster-light{display:block}
 .card-live canvas,.card-live :is(.resonance-fallback,.constellation-fallback,.companion-fallback,.luma-fallback,.charge-fallback,.crate-fallback,.gc-fallback){transition:none!important}
 
 .demo-inkshift,.demo-atelier{padding:0}.demo-inkshift>.inkshift,.demo-atelier>.atelier{width:100%;height:100%}
-.parameter-text{display:grid;gap:8px;margin:0 0 16px;min-width:0}.parameter-text>span{font-size:11px;color:var(--muted)}.parameter-text input,.parameter-text textarea{width:100%;min-width:0;box-sizing:border-box;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;font-size:11px;line-height:1.5;outline-offset:3px}.parameter-text textarea{resize:vertical;min-height:85px}
+.parameter-text{display:grid;gap:9px;margin:0;min-width:0}.parameter-text>span{font-size:11px;color:var(--muted)}.parameter-text input,.parameter-text textarea{width:100%;min-width:0;box-sizing:border-box;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;font-size:11px;line-height:1.5;outline-offset:3px}.parameter-text textarea{resize:vertical;min-height:85px}
 
 .demo-stratum{padding:0!important}.demo-stratum>.stratum{width:100%;height:100%}
 
@@ -1225,3 +1223,6 @@ html[data-theme=light] .card-poster-light{display:block}
 .site-sidebar nav[data-view=main] .sidebar-link{height:34px;min-height:34px}.site-sidebar nav[data-view=main] .sidebar-section-title{padding:10px 12px 4px}
 
 .choice-menu.prompt-menu{width:min(242px,calc(100vw - 24px));padding:5px;border-radius:16px;gap:2px}.choice-menu.prompt-menu>button{min-height:42px;padding:8px 10px;border-radius:10px;gap:10px}.choice-menu.prompt-menu small{font-size:9px;line-height:1.4;margin-top:2px}.choice-menu.prompt-menu .tool-check{flex-basis:16px;margin-left:4px}.choice-menu .tool-symbol{display:grid;place-items:center;flex:0 0 18px}.workflow-logo{display:block;width:16px;height:16px;object-fit:contain;filter:invert(1)}.workflow-logo.workflow-claude{filter:invert(63%) sepia(23%) saturate(1318%) hue-rotate(329deg) brightness(91%) contrast(85%)}html[data-theme=light] .workflow-logo:not(.workflow-claude){filter:none}.choice-trigger{min-height:34px;padding:6px 10px}
+
+.site-sidebar nav{padding-right:14px;scrollbar-gutter:stable}.sidebar-link{min-width:0;max-width:100%;width:100%;text-align:left;justify-content:flex-start}.sidebar-link>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.sidebar-link>svg,.sidebar-link>small,.sidebar-link>.sidebar-badge{flex-shrink:0}
+

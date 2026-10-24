@@ -61,7 +61,8 @@ export default function useComponentSettings(id:ElementId,initial?:Settings){
     try{window.localStorage.setItem(storageKey(id),JSON.stringify(settings));}catch{}
     // replaceState keeps navigation local and does not add history entries.
     const url=new URL(window.location.href);
-    if(url.searchParams.get('element')===id)window.history.replaceState(window.history.state,'',configurationUrl(url.href,id,settings));
+    // Passing Next's __NA marker back would bypass its URL synchronization.
+    if(url.searchParams.get('element')===id)window.history.replaceState({motiqoElement:!!window.history.state?.motiqoElement},'',configurationUrl(url.href,id,settings));
   },[id,ready,settings]);
   const update=useCallback((patch:Settings)=>setSettings(previous=>normalizeSettings(id,{...previous,...patch})),[id]);
   const reset=useCallback(()=>setSettings(defaultsFor(id)),[id]);

@@ -1,0 +1,1220 @@
+@font-face {
+  font-family: Hero Satoshi;
+  src: url("/fonts/satoshi/satoshi-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: Hero Satoshi;
+  src: url("/fonts/satoshi/satoshi-500.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: Hero Satoshi;
+  src: url("/fonts/satoshi/satoshi-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: Hero Chakra;
+  src: url("/fonts/chakra-petch/ChakraPetch-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+.root {
+  --scene-time: 0;
+  --ink: #18271d;
+  --muted: #637062;
+  --paper: #f3f6e9;
+  --accent: #37664a;
+  --pad: clamp(22px, 4.5cqw, 60px);
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+  min-height: 780px;
+  overflow: hidden;
+  container-type: inline-size;
+  background: var(--paper);
+  color: var(--ink);
+  font:
+    400 14px/1.5 Hero Satoshi,
+    Arial,
+    sans-serif;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+.root h1,
+.root h2,
+.root p {
+  margin: 0;
+  position: static;
+  max-width: none;
+}
+.root h1 {
+  font-family: inherit;
+  font-weight: 500;
+  font-size: clamp(56px, 7cqw, 94px);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.root button {
+  font:
+    500 13px/1.2 Hero Satoshi,
+    Arial,
+    sans-serif;
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink), transparent 82%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper), transparent 14%);
+  min-height: 44px;
+  padding: 11px 19px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s;
+}
+.root button:hover {
+  background: color-mix(in srgb, var(--ink), var(--paper) 92%);
+}
+.root button:focus-visible,
+.noemaPortrait:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 5px;
+}
+.root button:active {
+  filter: brightness(0.94);
+}
+.root img {
+  display: block;
+  max-width: none;
+}
+.nav {
+  position: absolute;
+  top: 30px;
+  left: var(--pad);
+  right: var(--pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  z-index: 8;
+  height: 48px;
+}
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+}
+.wordmark svg {
+  flex-shrink: 0;
+}
+.nav nav {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink), transparent 96%);
+  border: 1px solid color-mix(in srgb, var(--ink), transparent 91%);
+}
+.nav nav button {
+  font-size: 12px;
+  background: transparent;
+  border-color: transparent;
+  min-height: 40px;
+  padding: 9px 17px;
+}
+.nav nav button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.root .primary {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  min-height: 48px;
+  padding-inline: 23px;
+}
+.root .primary:hover {
+  background: color-mix(in srgb, var(--ink), var(--paper) 14%);
+}
+.root .secondary {
+  background: color-mix(in srgb, var(--paper), transparent 15%);
+  border-color: color-mix(in srgb, var(--ink), transparent 73%);
+  min-height: 48px;
+  padding-inline: 22px;
+}
+/* Noema: full canvas proportions, pointer-lit ceramic, one functional caption. */
+.noema {
+  --paper: #000;
+  --ink: #ededeb;
+  --muted: #b1b8bb;
+  --accent: #89eaff;
+}
+.noema .wordmark {
+  font-weight: 400;
+}
+.noemaTitle {
+  position: absolute;
+  top: 137px;
+  left: 3%;
+  right: 3%;
+  z-index: 1;
+  text-align: center;
+}
+.noemaTitle h1 {
+  font-size: clamp(100px, 13.7cqw, 184px);
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+  font-weight: 400;
+  color: var(--ink);
+}
+.noemaPortrait {
+  position: absolute;
+  inset: 255px 8% 10px;
+  z-index: 2;
+  overflow: hidden;
+  clip-path: polygon(
+    42% 0,
+    58% 0,
+    65% 8%,
+    70% 21%,
+    71% 48%,
+    70% 61%,
+    80% 73%,
+    100% 83%,
+    100% 100%,
+    0 100%,
+    0 83%,
+    20% 73%,
+    30% 61%,
+    29% 48%,
+    30% 21%,
+    35% 8%
+  );
+  mask-image: linear-gradient(transparent, #000 7%, #000 72%, transparent);
+  outline-offset: -8px;
+}
+.noemaPortrait > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 10%;
+  transform: scale(1.025);
+}
+.cyberSheen,
+.cyberGrid {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.cyberSheen {
+  background: radial-gradient(
+    ellipse 26% 35% at var(--hover-x, 50%) var(--hover-y, 40%),
+    #a3efff6b,
+    #57dfff0a 66%,
+    transparent
+  );
+  mix-blend-mode: screen;
+}
+.cyberGrid {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 8px,
+    #7cdfff22 9px,
+    transparent 10px
+  );
+  mask-image: radial-gradient(
+    ellipse 23% 30% at var(--hover-x, 50%) var(--hover-y, 40%),
+    #000,
+    transparent
+  );
+  mix-blend-mode: screen;
+}
+.noemaPortrait[data-hover="true"] .cyberSheen {
+  opacity: 0.8;
+}
+.noemaPortrait[data-hover="true"] .cyberGrid {
+  opacity: 0.55;
+}
+.noemaBottom {
+  position: absolute;
+  z-index: 4;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.noemaBottom p {
+  max-width: 280px;
+  font-size: 15px;
+  color: #c1c9ca;
+}
+.noema .secondary {
+  background: #141a1c;
+  border-color: #3e4b50;
+}
+/* Kyro: one material, compact framed controls. */
+.kyro {
+  --paper: #101015;
+  --ink: #eeeef5;
+  --muted: #aca9bb;
+  --accent: #b6abff;
+  font-family:
+    Hero Chakra,
+    Arial,
+    sans-serif;
+}
+.kyro button {
+  border-radius: 4px;
+  font-family:
+    Hero Chakra,
+    Arial,
+    sans-serif;
+}
+.kyroGrid {
+  position: absolute;
+  inset: 0 8%;
+  border-inline: 1px solid #ffffff0a;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(25% - 1px),
+    #ffffff07 calc(25% - 1px) 25%
+  );
+  pointer-events: none;
+}
+.kyroLogo {
+  font-size: 26px;
+  letter-spacing: 0.07em;
+}
+.kyroPortrait {
+  position: absolute;
+  inset: 90px -8% 45px 15%;
+  pointer-events: none;
+  mask-image: linear-gradient(transparent, #000 10%, #000 80%, transparent);
+}
+.kyroPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 25%;
+  transform: translateY(calc(sin(var(--scene-time) * 0.5) * 4px)) scale(1.02);
+}
+.kyroPortrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #101015, #101015b0 15%, transparent 50%);
+}
+.kyroCopy {
+  position: absolute;
+  top: 26%;
+  left: 9%;
+  width: 62%;
+  z-index: 3;
+}
+.kyroCopy h1 {
+  font-size: clamp(72px, 9.2cqw, 124px);
+  line-height: 1;
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.kyroCopy p {
+  font-family:
+    Hero Satoshi,
+    Arial,
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 25px 0 28px;
+  color: #c3c0d1;
+}
+.kyroCopy .primary {
+  font-size: 12px;
+}
+.kyroBottom {
+  position: absolute;
+  bottom: 40px;
+  left: 9%;
+  right: 7%;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.kyroSelector {
+  display: flex;
+  gap: 10px;
+}
+.kyroSelector > button {
+  background: #17171eb8;
+  border-color: #4b475c;
+  min-width: 138px;
+  min-height: 52px;
+}
+.kyroSelector > button[aria-pressed="true"] {
+  background: #ded8f3;
+  color: #17131f;
+  border-color: #ded8f3;
+}
+.kyroBottom > span {
+  font-size: 11px;
+  color: #b4acc9;
+  letter-spacing: 0.1em;
+}
+/* Aevora: a real alpha cloud layer moves independently of the landscape. */
+.aevora {
+  --paper: #153343;
+  --ink: #fff;
+  --muted: #eef2f3;
+  --accent: #c9ebff;
+}
+.realmArt {
+  position: absolute;
+  inset: -3%;
+  pointer-events: none;
+  transform: translate3d(
+    calc(var(--parallax-x, 0px) * -0.7),
+    calc(var(--parallax-y, 0px) * -0.7),
+    0
+  );
+}
+.realmArt > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 57% 50%;
+  opacity: 0;
+  transition: opacity 0.65s;
+}
+.realmArt > img.realmVisible {
+  opacity: 1;
+}
+.realmScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #062332ba, transparent 79%),
+    linear-gradient(0deg, #071c32ad, transparent 30%);
+  z-index: 2;
+  pointer-events: none;
+}
+.realmCloudBack,
+.realmCloudFront {
+  position: absolute;
+  pointer-events: none;
+  width: 112%;
+  height: 95%;
+  object-fit: fill;
+  left: -6%;
+  bottom: -7%;
+  transform: translate3d(
+    calc(var(--parallax-x, 0px) * 1.5),
+    calc(var(--parallax-y, 0px) * 1.5),
+    0
+  );
+  z-index: 1;
+  opacity: 0.22;
+}
+.realmCloudFront {
+  width: 120%;
+  height: 110%;
+  left: -10%;
+  bottom: -13%;
+  transform: translate3d(
+    calc(var(--parallax-x, 0px) * 3),
+    calc(var(--parallax-y, 0px) * 3),
+    0
+  );
+  z-index: 3;
+  opacity: 0.42;
+}
+.realmLogo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+.realmCopy {
+  position: absolute;
+  top: 28%;
+  left: 6%;
+  width: 65%;
+  z-index: 4;
+}
+.realmCopy h1 {
+  font-size: clamp(52px, 6.8cqw, 88px);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+  font-weight: 500;
+}
+.realmCopy p {
+  font-size: 15px;
+  max-width: 310px;
+  color: #e1ecf2;
+  line-height: 1.6;
+  margin: 23px 0 29px;
+}
+.realmPages {
+  position: absolute;
+  bottom: 36px;
+  left: 6%;
+  right: 6%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  z-index: 4;
+}
+.realmPages > button {
+  padding: 6px 17px 6px 6px;
+  gap: 12px;
+  min-height: 56px;
+  border-color: #ffffff66;
+  background: #142e3ba1;
+  color: #fff;
+  backdrop-filter: blur(12px);
+  font-size: 12px;
+}
+.realmPages > button > img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.realmPages > button[aria-pressed="true"] {
+  background: #fff;
+  color: #163246;
+  border-color: #fff;
+}
+/* Florra: twelve filleted image petals, no secondary process UI. */
+.florra {
+  --paper: #fafbf7;
+  --ink: #1e2b21;
+  --muted: #5d6b5f;
+  --accent: #37664a;
+}
+.florraHeading {
+  position: absolute;
+  top: 139px;
+  left: 5%;
+  right: 5%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  z-index: 3;
+}
+.florraHeading h1 {
+  font-size: clamp(56px, 6.3cqw, 84px);
+}
+.florraHeading .secondary {
+  margin-bottom: 9px;
+}
+.florraWork {
+  position: absolute;
+  top: 330px;
+  left: 5%;
+  right: 5%;
+  height: 430px;
+  z-index: 4;
+}
+.florraWheel {
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: var(--paper);
+  padding: 4px;
+  box-shadow: 0 0 0 9px var(--paper);
+}
+.florraWheel > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(calc(var(--scene-time) * 1.3deg));
+}
+.wheelPreload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.root .wheelCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  min-height: 56px;
+  padding: 0;
+  border-radius: 50%;
+  color: #fff;
+  border: 0;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px var(--paper);
+}
+.root .wheelCenter:hover {
+  background: #274e35;
+}
+.florraOutput {
+  position: absolute;
+  left: 4%;
+  top: 96px;
+  width: 166px;
+  padding: 7px;
+  background: #fff;
+  border: 1px solid #e0e6da;
+  border-radius: 14px;
+  transform: rotate(-4deg);
+  box-shadow: 0 8px 30px #30462308;
+}
+.florraOutput > span {
+  display: block;
+  font-size: 11px;
+  margin: 1px 4px 8px;
+  color: #56634f;
+}
+.florraOutput > img {
+  width: 100%;
+  height: 193px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.florraBanner {
+  position: absolute;
+  inset: 70% 3% 35px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #dce4d1;
+}
+.florraBanner > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
+}
+.collectionLabel {
+  position: absolute;
+  bottom: 20px;
+  left: 22px;
+  background: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #263322;
+}
+/* Sprig keeps the image band and its controls in separate layout rows. */
+.sprig {
+  --paper: #f3f6e9;
+  --ink: #204d35;
+  --muted: #506449;
+  --accent: #204d35;
+}
+.sprigCopy {
+  position: absolute;
+  top: 144px;
+  left: 5%;
+  right: 5%;
+  text-align: center;
+  z-index: 3;
+}
+.sprigCopy h1 {
+  font-size: clamp(58px, 7.3cqw, 96px);
+  font-weight: 500;
+  line-height: 0.99;
+}
+.sprigCopy > .primary {
+  margin-top: 27px;
+  font-size: 14px;
+  min-height: 52px;
+}
+.sprigCarousel {
+  position: absolute;
+  inset: 46% 0 35px;
+}
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: minmax(310px, 1fr) 52px;
+  gap: 18px;
+  overflow: hidden;
+  container-type: inline-size;
+}
+.cardBand {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.cardBand:active {
+  cursor: grabbing;
+}
+.root .storyCard {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  will-change: transform;
+  isolation: isolate;
+  background: #c6d8b7;
+  transition: none !important;
+  cursor: grab;
+  min-height: 0;
+}
+.storyCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+.root .storyCard[aria-pressed="true"] {
+  outline: 3px solid var(--accent);
+  outline-offset: -5px;
+}
+.root .storyCard:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -6px;
+}
+.storyCard[aria-hidden="true"] {
+  pointer-events: none;
+}
+.carouselControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 52px;
+  padding: 0 16px;
+}
+.carouselControls > button {
+  height: 46px;
+  min-width: 46px;
+  padding: 0;
+  border: 1px solid #b0c1a7;
+  background: #e7efdc;
+}
+.carouselControls > span {
+  font-size: 12px;
+  min-width: 160px;
+  max-width: 220px;
+  text-align: center;
+  color: #365030;
+}
+/* Sway uses the existing hyperbolic WebGL ribbon, not the product carousel. */
+.sway {
+  --paper: #e7edf6;
+  --ink: #123254;
+  --muted: #536e8b;
+  --accent: #3665b4;
+}
+.sway .wordmark {
+  font-size: 31px;
+}
+.swayCopy {
+  position: absolute;
+  top: 25%;
+  left: 5%;
+  width: 37%;
+  z-index: 4;
+  pointer-events: none;
+}
+.swayCopy h1 {
+  font-size: clamp(63px, 7.8cqw, 106px);
+  line-height: 0.97;
+  font-weight: 500;
+  letter-spacing: -0.065em;
+}
+.swayCopy .primary {
+  pointer-events: auto;
+  margin-top: 32px;
+  max-width: 100%;
+  font-size: 13px;
+}
+.swayCount {
+  display: block;
+  margin-top: 23px;
+  font-size: 12px;
+  color: #536f88;
+}
+.swayRibbon {
+  position: absolute;
+  inset: 17% -12% 6% 31%;
+  z-index: 2;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 7%,
+    #000 92%,
+    transparent
+  );
+}
+.swayRibbon :global(.flow-controls) {
+  left: 10%;
+  right: 18%;
+  bottom: 14px;
+  font-family:
+    Hero Satoshi,
+    Arial,
+    sans-serif;
+  color: #224566;
+}
+.swayRibbon :global(.flow-controls button) {
+  background: #fff;
+  color: #17385e;
+  border-color: #c8d4e4;
+  border-radius: 50%;
+}
+.swayRibbon :global(.flow-fallback img) {
+  border-radius: 16px;
+}
+@container (max-width:900px) {
+  .nav nav {
+    gap: 2px;
+  }
+  .nav nav button {
+    font-size: 11px;
+    padding: 9px 12px;
+  }
+  .nav {
+    gap: 16px;
+  }
+  .noemaTitle {
+    top: 150px;
+  }
+  .noemaPortrait {
+    inset-inline: 0;
+  }
+  .noemaBottom p {
+    max-width: 240px;
+  }
+  .kyroPortrait {
+    left: 0;
+    right: -25%;
+  }
+  .kyroCopy {
+    left: 7%;
+  }
+  .kyroCopy h1 {
+    font-size: 10cqw;
+  }
+  .kyroSelector > button {
+    min-width: 115px;
+  }
+  .realmCopy {
+    width: 78%;
+  }
+  .realmCopy h1 {
+    font-size: 8.4cqw;
+  }
+  .realmPages > button {
+    padding-right: 13px;
+    font-size: 11px;
+  }
+  .florraHeading h1 {
+    font-size: 7.2cqw;
+  }
+  .florraWheel {
+    width: 380px;
+    height: 380px;
+  }
+  .florraOutput {
+    width: 130px;
+    left: 0;
+    top: 120px;
+  }
+  .florraOutput img {
+    height: 155px;
+  }
+  .swayCopy h1 {
+    font-size: 8.8cqw;
+  }
+  .swayCopy .primary {
+    font-size: 11px;
+    padding: 11px 16px;
+  }
+  .swayRibbon {
+    left: 29%;
+    right: -24%;
+  }
+}
+@container (max-width:600px) {
+  .nav {
+    top: 23px;
+    left: 6%;
+    right: 6%;
+    gap: 12px;
+  }
+  .wordmark {
+    font-size: 27px;
+    gap: 7px;
+  }
+  .wordmark svg {
+    width: 23px;
+  }
+  .nav nav {
+    display: none;
+  }
+  .nav > .primary,
+  .nav > .secondary {
+    min-height: 44px;
+    font-size: 11px;
+    padding: 10px 15px;
+  }
+  .noemaTitle {
+    top: 147px;
+    left: 4%;
+    right: 4%;
+  }
+  .noemaTitle h1 {
+    font-size: 17.5cqw;
+    line-height: 1;
+    letter-spacing: -0.065em;
+  }
+  .noemaPortrait {
+    inset: 250px -42% 100px;
+  }
+  .noemaBottom {
+    left: 7%;
+    right: 7%;
+    bottom: 30px;
+    display: block;
+  }
+  .noemaBottom p {
+    font-size: 13px;
+    max-width: 220px;
+    margin-bottom: 14px;
+  }
+  .noemaBottom .secondary {
+    font-size: 12px;
+    min-height: 44px;
+    padding: 10px 18px;
+  }
+  .kyroPortrait {
+    inset: 155px -100% 78px -50%;
+    opacity: 0.8;
+  }
+  .kyroPortrait img {
+    object-position: 65% 50%;
+  }
+  .kyroPortrait::after {
+    background: linear-gradient(90deg, #1010158a, transparent 85%);
+  }
+  .kyroLogo {
+    font-size: 23px;
+  }
+  .kyroCopy {
+    top: 23%;
+    left: 8%;
+    width: 87%;
+  }
+  .kyroCopy h1 {
+    font-size: 16cqw;
+    line-height: 1;
+  }
+  .kyroCopy p {
+    font-size: 12px;
+    max-width: 215px;
+    margin: 22px 0;
+  }
+  .kyroCopy .primary {
+    font-size: 11px;
+    padding: 12px 16px;
+    min-height: 46px;
+  }
+  .kyroBottom {
+    left: 7%;
+    right: 7%;
+    bottom: 30px;
+    display: block;
+  }
+  .kyroSelector {
+    gap: 7px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .kyroSelector > button {
+    min-width: 0;
+    padding: 10px 5px;
+    font-size: 10px;
+    min-height: 46px;
+  }
+  .kyroBottom > span {
+    display: block;
+    font-size: 8px;
+    margin-top: 14px;
+  }
+  .realmLogo {
+    font-size: 16px;
+    gap: 7px;
+    letter-spacing: 0.09em;
+  }
+  .realmLogo > svg {
+    width: 22px;
+  }
+  .realmCopy {
+    top: 26%;
+    left: 8%;
+    width: 87%;
+  }
+  .realmCopy h1 {
+    font-size: 12cqw;
+    line-height: 1.05;
+  }
+  .realmCopy p {
+    font-size: 12px;
+    max-width: 245px;
+    line-height: 1.65;
+    margin: 23px 0;
+  }
+  .realmCopy .primary {
+    min-height: 46px;
+    font-size: 12px;
+    padding: 12px 20px;
+  }
+  .realmArt > img {
+    object-position: 63% center;
+  }
+  .realmPages {
+    bottom: 25px;
+    left: 6%;
+    right: 6%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+  .realmPages > button {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    min-height: 86px;
+    gap: 7px;
+    padding: 8px 4px;
+    font-size: 9px;
+    border-radius: 16px;
+  }
+  .realmPages > button > img {
+    width: 31px;
+    height: 31px;
+  }
+  .realmCloudFront {
+    opacity: 0.28;
+  }
+  .florraHeading {
+    top: 138px;
+    left: 7%;
+    right: 7%;
+    display: block;
+  }
+  .florraHeading h1 {
+    font-size: 12.5cqw;
+    line-height: 1.06;
+  }
+  .florraHeading .secondary {
+    font-size: 12px;
+    margin-top: 23px;
+    min-height: 44px;
+    padding: 11px 18px;
+  }
+  .florraWork {
+    top: 334px;
+    left: 5%;
+    right: 5%;
+    height: 300px;
+  }
+  .florraWheel {
+    width: 280px;
+    height: 280px;
+    padding: 3px;
+    box-shadow: 0 0 0 5px var(--paper);
+  }
+  .florraOutput {
+    display: none;
+  }
+  .root .wheelCenter {
+    width: 47px;
+    height: 47px;
+    min-height: 47px;
+  }
+  .wheelCenter svg {
+    width: 20px;
+  }
+  .florraBanner {
+    inset: 71% 5% 25px;
+    border-radius: 19px;
+  }
+  .collectionLabel {
+    left: 15px;
+    bottom: 15px;
+    padding: 9px 14px;
+    font-size: 10px;
+  }
+  .sprigCopy {
+    top: 145px;
+    left: 6%;
+    right: 6%;
+  }
+  .sprigCopy h1 {
+    font-size: 13cqw;
+    line-height: 1.04;
+  }
+  .sprigCopy > .primary {
+    font-size: 12px;
+    min-height: 48px;
+    margin-top: 24px;
+    padding: 12px 21px;
+  }
+  .sprigCarousel {
+    top: 45%;
+    bottom: 34px;
+  }
+  .carousel {
+    grid-template-rows: minmax(260px, 1fr) 52px;
+    gap: 17px;
+  }
+  .root .storyCard {
+    border-radius: 16px;
+  }
+  .carouselControls {
+    gap: 10px;
+  }
+  .carouselControls > span {
+    min-width: 145px;
+    max-width: 170px;
+    font-size: 10px;
+  }
+  .carouselControls > button {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+  .sway .wordmark {
+    font-size: 29px;
+  }
+  .swayCopy {
+    top: 132px;
+    left: 7%;
+    width: 87%;
+  }
+  .swayCopy h1 {
+    font-size: 15.6cqw;
+    line-height: 0.97;
+  }
+  .swayCopy h1 br:first-child {
+    display: none;
+  }
+  .swayCopy h1 br:first-child::after {
+    content: " ";
+  }
+  .swayCopy .primary {
+    font-size: 12px;
+    margin-top: 24px;
+    min-height: 46px;
+  }
+  .swayCount {
+    font-size: 10px;
+    margin-top: 13px;
+  }
+  .swayRibbon {
+    inset: 43% -15% 5% -15%;
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 6%,
+      #000 94%,
+      transparent
+    );
+  }
+  .swayRibbon :global(.flow-controls) {
+    left: 17%;
+    right: 17%;
+    bottom: 15px;
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root * {
+    transition: none !important;
+  }
+  .realmArt,
+  .realmCloudBack,
+  .realmCloudFront,
+  .kyroPortrait img,
+  .florraWheel > svg {
+    transform: none !important;
+  }
+}
+
+.noemaPortrait{clip-path:none}.cyberSheen{background-image:url(/heroes/new/noema.webp);background-size:cover;background-position:50% 10%;filter:invert(.85) sepia(.5) saturate(3) hue-rotate(140deg);mix-blend-mode:normal;mask-image:radial-gradient(circle 115px at var(--hover-x,50%) var(--hover-y,40%),#000 35%,transparent 100%)}.cyberGrid{display:none}.swayRibbon{transform:rotate(-16deg) scale(1.12);transform-origin:center}.realmPages{display:none}.realmCopy:before{content:"";display:block;width:100px;height:1px;background:#fff9;margin-bottom:28px}.aevora:after{content:"✧";position:absolute;right:8%;bottom:12%;width:150px;height:150px;border:1px solid #fff6;border-radius:50%;display:grid;place-items:center;font-size:64px;color:#fff9;pointer-events:none}
+
+
+.swayCopy{top:15%;left:12%;width:76%;text-align:center}.swayCopy h1{font-size:clamp(40px,6.3cqw,86px);line-height:1;max-width:100%;margin:auto}.swayCopy .primary{margin-top:22px;border-radius:8px}.swayCount{display:none}.swayRibbon{inset:35% -10% -12%;width:120%;mask-image:none;transform:rotate(-8deg);transform-origin:center}
+.sway .nav nav{background:transparent;border:0;gap:18px}.sway .nav nav button{border-radius:0;background:transparent;border-bottom:2px solid transparent}.sway .nav nav button[aria-pressed=true]{border-color:currentColor;background:transparent;color:var(--ink)}
+.sprig .wordmark{font-size:38px;letter-spacing:-2px}.sprig .nav nav{margin-left:auto;margin-right:24px;border-radius:8px;background:#e1e9d2}.sprig .nav nav button{border-radius:5px}.sprig .primary{border-radius:10px;padding-inline:30px}.sprigCarousel{inset:42% 0 0}.carousel{grid-template-rows:1fr;gap:0}
+.florra .nav nav{position:absolute;left:0;top:90px;display:flex;flex-direction:column;align-items:flex-start;border:0;background:transparent;gap:6px}.florra .nav nav button{border-radius:6px;padding:8px 16px}.florra .nav nav button[aria-pressed=true]{background:#dce8dc;color:#244b35}
+.aevora:after{content:"";inset:22px;border-radius:2px;border:1px solid #fff5;width:auto;height:auto;background:none}.aevora:before{content:"";position:absolute;inset:36px 32px;border-inline:1px solid #fff3;pointer-events:none;z-index:3}.aevora .nav nav{background:#0d283338;border:1px solid #ffffff40;backdrop-filter:blur(14px)}.aevora .nav nav button{color:white}.aevora .nav nav button[aria-pressed=true]{background:#ffffff25;color:white}
+.noemaPortrait>.cyberSheen{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 10%;transform:scale(1.025);filter:grayscale(1) invert(1) contrast(1.7) sepia(1) saturate(4) hue-rotate(145deg);mix-blend-mode:screen;background:none;mask-image:radial-gradient(circle 130px at var(--hover-x,50%) var(--hover-y,40%),#000 40%,transparent 100%)}.noemaPortrait[data-hover=true]>.cyberSheen{opacity:1}.noemaPortrait:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#58dfff44 4px);mask-image:radial-gradient(circle 125px at var(--hover-x,50%) var(--hover-y,40%),#000,transparent);opacity:0;transition:opacity .3s}.noemaPortrait[data-hover=true]:after{opacity:1}
+@container (max-width:600px){.swayCopy{top:18%;left:7%;width:86%}.swayCopy h1{font-size:13cqw}.swayRibbon{inset:42% -22% -5%;width:144%}.florra .nav nav{top:70px;flex-direction:row}.sprig .nav nav{margin-right:0}.aevora .nav{flex-wrap:wrap;gap:20px}.aevora .nav nav{margin:auto}.sprigCarousel{inset:44% 0 0}}
+
+/* Library templates: navigation changes its own selection, never the artwork. */
+.noema .nav .noemaNav{position:relative;display:grid;grid-template-columns:repeat(3,100px);padding:0;border:0;background:transparent;border-radius:0;gap:0}
+.noema .noemaNav button{border:0;border-radius:0;background:transparent;color:#aaa;min-height:48px;padding:12px 6px}
+.noema .noemaNav button[aria-pressed=true]{background:transparent;color:white}
+.noemaNav:after{content:"";position:absolute;bottom:0;left:0;width:100px;height:1px;background:white;transform:translateX(calc(var(--nav-index,0)*100%));transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.noemaPortrait:after{display:none}.noemaPortrait{clip-path:none}
+.florraHeading{top:145px;left:12%;right:12%;display:block;text-align:center}.florraHeading h1{font-size:clamp(58px,6.3cqw,86px)}
+.florra .nav nav{position:static;display:flex;flex-direction:row;gap:15px;background:transparent;border:0}
+.florra .nav nav button{background:transparent;border:0;padding:12px}.florra .nav nav button[aria-pressed=true]{background:transparent;color:#192c21;box-shadow:inset 0 -1px #192c21}
+.florra .nav>.primary{margin-left:0;border-radius:999px;background:#1c3c2b;color:#fff;padding-inline:25px}
+.florraWork{top:350px;left:4%;right:4%;height:530px}.florraWheel{width:520px;height:520px;top:0}.root .wheelCenter{display:grid;place-items:center;cursor:default}.florraOutput{top:130px;left:3%;width:230px;transform:rotate(-8deg)}.florraOutput>img{height:260px}.florraOutput>span{display:none}.florraBanner{inset:63% 3% 30px;border-radius:22px}.collectionLabel{display:none}
+.sprig{--paper:#f8f6ee;--ink:#173b2b;--accent:#e25e35}.sprig .nav nav{background:transparent;gap:12px;margin:0}.sprig .nav nav button{border:0;background:transparent;border-radius:0}.sprig .nav nav button[aria-pressed=true]{color:var(--ink);background:transparent;box-shadow:inset 0 -1px currentColor}
+.sprigCopy{top:145px;left:6%;right:6%;text-align:left}.sprigCopy h1{font-size:clamp(68px,8.2cqw,112px);line-height:.98;letter-spacing:-.065em}.sprigCopy>.primary{position:absolute;right:2%;bottom:10px;margin:0;background:#e45d35;color:#fff;border:0;border-radius:999px;padding:18px 28px;font-size:15px;min-height:56px}
+.sprigCarousel{inset:45% 0 0}.carousel{display:block}.cardBand{height:100%;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}.root .storyCard{border-radius:20px}
+.sway{--paper:#090909;--ink:#f1f0e9;--accent:#d7ff46;--muted:#999;background:#090909}
+.sway .wordmark{font-size:37px;letter-spacing:-2px}.sway .nav{z-index:6}.sway .nav nav{background:transparent;gap:12px}.sway .nav nav button{color:#bbb;border:0;background:transparent;box-shadow:none}.sway .nav nav button[aria-pressed=true]{color:#d7ff46;box-shadow:inset 0 -1px #d7ff46}.sway .nav>.primary{border-radius:999px;background:#d7ff46;color:#13150c;border:0}
+.swayCopy{inset:15% 5% auto;width:auto;text-align:left;display:flex;justify-content:space-between;align-items:center;pointer-events:none}.swayCopy h1{font-weight:700;font-size:clamp(76px,11.7cqw,160px);line-height:.85;letter-spacing:-.075em;margin:0;text-transform:uppercase;max-width:85%}.swayStamp{display:grid;place-items:center;font-size:110px;width:150px;height:150px;border:1px solid #d7ff4666;color:#d7ff46;border-radius:50%;transform:rotate(-15deg)}
+.swayRibbon{inset:46% 0 2%;width:100%;transform:none;mask-image:none;overflow:visible}
+@container(max-width:600px){.noema .nav .noemaNav{grid-template-columns:repeat(3,83px)}.noemaNav:after{width:83px}.florra .nav{flex-wrap:wrap;gap:12px}.florra .nav nav{order:3;width:100%;justify-content:center;gap:8px}.florraHeading{top:195px;left:5%;right:5%}.florraHeading h1{font-size:13cqw}.florraWork{top:385px;height:360px}.florraWheel{width:88cqw;height:88cqw}.florraOutput{display:none}.florraBanner{inset:64% 3% 24px}.sprigCopy{top:165px;left:7%;right:7%;text-align:center}.sprigCopy h1{font-size:15cqw}.sprigCopy>.primary{position:static;margin-top:26px}.sprigCarousel{inset:53% 0 0}.swayCopy{top:21%;left:6%;right:6%}.swayCopy h1{font-size:18cqw;max-width:100%;line-height:.9}.swayStamp{position:absolute;right:3%;top:170px;width:70px;height:70px;font-size:50px}.swayRibbon{inset:50% 0 5%}}
+@media(prefers-reduced-motion:reduce){.noemaNav:after{transition:none}}
+
+@container(max-width:600px){.swayCopy h1{font-size:16.5cqw}.swayCopy h1 br:first-child{display:initial}.swayCopy h1 br:first-child:after{content:none}}

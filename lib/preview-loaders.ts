@@ -7,6 +7,15 @@ function once<T>(load:()=>Promise<T>){
   return()=>pending??=load().catch(error=>{pending=undefined;throw error;});
 }
 export const previewLoaders={
+  'titanium-card':()=>import('../components/originals/titanium-card'),
+  'lumen-button':():Promise<{default:typeof import('../components/originals/lumen-button').LumenButtonShowcase}>=>import('../components/originals/lumen-button').then(module=>({default:module.LumenButtonShowcase})),
+  'ink-headline':()=>import('../components/originals/ink-headline'),
+  'horizon-grid-pricing':()=>import('../components/originals/horizon-grid-pricing'),
+  'prism-tier-pricing':once(()=>import('../components/originals/prism-tier-pricing')),
+  'cosmos-split-auth':()=>import('../components/originals/cosmos-split-auth'),
+  'obsidian-gate':once(()=>import('../components/originals/obsidian-gate')),
+  'vortex-camera':once(()=>import('../components/originals/vortex-camera')),
+  'voyage':once(()=>import('../components/originals/voyage')),
   'vapor-ring':once(()=>import('../components/originals/vapor-ring')),
   'elevation-matrix':once(()=>import('../components/originals/elevation-matrix')),
   'sacred-lotus':once(()=>import('../components/originals/sacred-lotus')),

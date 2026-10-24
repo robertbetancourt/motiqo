@@ -1,0 +1,147 @@
+.vc-root {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden;
+  background: #05060a;
+  color: #f2f2f5;
+  font-family: "Urbanist Variable", Urbanist, Arial, sans-serif;
+  cursor: ns-resize;
+  touch-action: pan-x;
+  outline-offset: -4px;
+  container-type: inline-size;
+}
+.vc-root * {
+  box-sizing: border-box;
+}
+.vc-root:focus-visible {
+  outline: 2px solid #b7cad9;
+}
+.vc-canvas {
+  position: absolute;
+  inset: 0;
+}
+.vc-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.vc-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.vc-stage {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  text-align: center;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  text-shadow: 0 2px 24px #05060a;
+}
+.vc-stage-top {
+  top: 14%;
+}
+.vc-stage-center {
+  top: 40%;
+}
+.vc-stage-bottom {
+  bottom: 17%;
+}
+.vc-stage-number {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: #d3dee5;
+}
+.vc-stage h2 {
+  font-family: inherit;
+  font-size: clamp(22px, 4.8cqw, 60px);
+  font-weight: 450;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  margin: 12px 0 10px;
+}
+.vc-stage p {
+  font-family: inherit;
+  font-size: clamp(11px, 1.25cqw, 15px);
+  line-height: 1.6;
+  color: #d1d8e0;
+  margin: 0;
+}
+.vc-status {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.vc-image-error {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 16px;
+  font-size: 11px;
+  text-align: center;
+  color: #d5c8b0;
+}
+.vc-fallback {
+  position: absolute;
+  inset: 20% 8%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #05060aeb;
+  pointer-events: auto;
+}
+.vc-fallback h2 {
+  font: 500 25px inherit;
+  letter-spacing: -0.03em;
+}
+.vc-fallback p {
+  font-size: 14px;
+  color: #aeb9c5;
+  line-height: 1.7;
+}
+.vc-fallback button {
+  min-height: 44px;
+  border: 1px solid #ffffff30;
+  border-radius: 8px;
+  background: #151b24;
+  color: #eef0f5;
+  padding: 0 18px;
+  cursor: pointer;
+  font: inherit;
+}
+.vc-fallback button:focus-visible {
+  outline: 2px solid #bad5e7;
+  outline-offset: 3px;
+}
+.vc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.vc-root[data-compact] .vc-stage-number {
+  font-size: 7px;
+}
+.vc-root[data-compact] .vc-stage p {
+  font-size: 9px;
+}
+.vc-root[data-compact] .vc-stage h2 {
+  font-size: clamp(15px, 5cqw, 29px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vc-root * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

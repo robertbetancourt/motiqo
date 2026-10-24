@@ -1,0 +1,42 @@
+Actúa como un Senior Creative Technologist experto en WebGL2, Three.js, sistemas de partículas en GPU y diseño de interfaces Awwwards.
+
+Crea un componente Hero completo, modular y listo para producción llamado `KineticNebulaHero` para la librería Motiqo. El componente debe renderizar un campo hipnótico de 30,000 partículas fluidas con Curl Noise y profundidad de campo (Bokeh DOF) sobre un lienzo negro (`#030407`), integrado con una composición Hero minimalista e interactiva.
+
+### 1. Motor de Partículas WebGL en Three.js (30,000 Puntos a 60 FPS)
+- Crea un `THREE.BufferGeometry` con `30,000` vértices distribuidos en un volumen elipsoidal/ondulante que atraviesa horizontalmente la escena.
+- Atributos por partícula: `position`, `aSeed` (fase y velocidad individual), `aScale` (tamaño base) y `aColorMix` (`[0, 1]`).
+- Configura un `THREE.ShaderMaterial` con `transparent: true`, `depthWrite: false` y `blending: THREE.AdditiveBlending`.
+
+**En el Vertex Shader (Curl Noise Flow + Mouse Vortex + Bokeh DOF)**:
+- Incluye una función de **3D Simplex Noise** y calcula un campo de velocidad ondulatorio tipo **Curl Noise** para que las partículas fluyan en corrientes curvas y filamentos entrelazados sin cortes bruscos.
+- **Interacción con el Cursor (`uPointer3D` y `uPointerVelocity`)**:
+  - Calcula la distancia de cada partícula al cursor proyectado. Dentro de un radio `R = 2.2`, aplica una fuerza tangencial de remolino más una repulsión suave proporcional a la velocidad del mouse.
+- **Profundidad de Campo (Bokeh Focal Plane)**:
+  - Calcula la distancia al plano focal `float dof = abs(mvPosition.z + 4.5);`.
+  - Ajusta `gl_PointSize = (aScale * 3.5 + dof * 2.2) * uPixelRatio * (4.5 / -mvPosition.z);` y envía `vDof = clamp(dof * 0.35, 0.0, 1.0)` al Fragment Shader.
+
+**En el Fragment Shader**:
+- Dibuja partículas circulares (`float d = length(gl_PointCoord - 0.5) * 2.0; if (d > 1.0) discard;`).
+- Si la partícula está en foco (`vDof -> 0.0`), renderiza un núcleo brillante y definido (`exp(-d * d * 4.5)`). Si está fuera de foco (`vDof -> 1.0`), renderiza un disco bokeh suave con menor opacidad (`smoothstep(1.0, 0.2, d) * 0.18`).
+- **Paleta Cromática**: Mezcla entre azul medianoche (`#1D4ED8`), cian bioluminiscente (`#38BDF8`), violeta etéreo (`#A855F7`) y blanco estelar (`#F8FAFC`) en las zonas de mayor compresión de onda.
+
+### 2. Composición Editorial Hero y Controles de Campo (`z-10`)
+- **Barra Superior Minimalista**: Marca a la izquierda, indicador de partículas activas en tiempo real (`"30,000 GPU PARTICLES · CURL FIELD"`) en el centro y selector rápido de modo de flujo a la derecha (`"Laminar"`, `"Vortex"`, `"Pulse"`).
+- **Contenido Central/Izquierdo Asimétrico de Alto Impacto**:
+  - Etiqueta superior con borde luminoso: `"GENERATIVE FIELD SYSTEM"`.
+  - Titular de gran contraste (`text-5xl md:text-7xl font-medium tracking-[-0.035em] text-white leading-[1.03]`):
+    `Fluid intelligence`
+    `in every particle.`
+  - Subtítulo en `text-zinc-400 max-w-md mt-4 text-sm md:text-base`:
+    `"Divergence-free curl noise streams and real-time depth-of-field optics that respond organically to every gesture."`
+  - Botón CTA interactivo con halo reactivo que al mantenerlo presionado o hacer clic dispara una **implosión/expansión gravitacional (`uPulse`)** en todas las partículas del lienzo.
+- **Tarjeta de Telemetría Flotante (Esquina Inferior Derecha)**:
+  - Pequeño panel de vidrio esmerilado (`bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4`) que muestra las coordenadas del cursor en el campo, la turbulencia actual y permite alternar la paleta cromática en un clic.
+
+### 3. Limpieza y Props Configurables
+- Limpia `requestAnimationFrame`, `ResizeObserver`, geometría, material y renderer con `.dispose()` al desmontar.
+- Expón props: `particleCount` (default `30000`), `flowSpeed` (default `1.0`), `turbulence` (default `1.0`), `colorPreset` (`'cyber' | 'aurora' | 'gold'`), y `className`.
+
+Integración en Motiqo: usa Urbanist. Implementa los shaders, fuerzas, óptica y controles como código funcional; no como una captura. Adapta los controles a movimiento reducido, visibilidad y pausa externa. Mide cualquier telemetría de tiempo mostrada; no incluyas cifras fijas de rendimiento. Limpia observers, RAF, listeners y recursos GPU, y conserva un fondo estático útil si WebGL falla.
+
+Motiqo revision: omit the floating Field telemetry card entirely. Configure colorPreset and turbulence through props or the external panel. Preserve the field, flow-mode controls and primary pulse action.

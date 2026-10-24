@@ -14,7 +14,8 @@ export type LibraryElement = {
   previewSize?: 'cinema'; installNote?: string; addedAt?: string;
 };
 export const categories: Category[] = ['All elements', 'Linework', 'Motion', 'Objects', 'Navigation'];
-export const elements = registry.items as unknown as LibraryElement[];
+// New additions lead the collection; ties preserve their editorial registry order.
+export const elements = [...registry.items as unknown as LibraryElement[]].sort((a,b)=>(b.addedAt ?? '').localeCompare(a.addedAt ?? ''));
 
 export function isElementNew(element?: { addedAt?: string } | null): boolean {
   if (!element?.addedAt) return false;

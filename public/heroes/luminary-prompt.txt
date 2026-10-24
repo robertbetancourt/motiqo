@@ -1,0 +1,37 @@
+Actúa como un Senior Creative Technologist ganador de Awwwards experto en React, Tailwind CSS, Three.js y GLSL Shaders.
+
+Crea un componente Hero completo, original y listo para producción llamado `LuminaryHero` para la librería Motiqo. Debe tener un acabado visual nivel Apple / Linear / Raycast sobre fondo obsidiana (`#040508`), combinando un shader WebGL de refracción óptica y luz volumétrica con una interfaz espacial de cristal esmerilado.
+
+### 1. Escena WebGL2 / Three.js: Lente de Cristal Refractivo + Luz Volumétrica (`z-0`)
+- Configura un `<canvas>` a pantalla completa con `Math.min(window.devicePixelRatio, 2)`.
+- En un Fragment Shader GLSL de alta precisión (o escena Three.js con un `TorusGeometry` / monolito biselado + plano de fondo):
+  1. **Haces Volumétricos Atmosféricos (Aurora Caustics)**:
+     - Evalúa **3D Simplex fBm Noise con Domain Warping** para generar corrientes sedosas de luz volumétrica que nacen desde el arco central en tonos índigo profundo (`#1E1B4B`), azul cobalto (`#2563EB`), violeta (`#7C3AED`) y destellos cian hielo (`#BAE6FD`).
+  2. **Lente Escultórico Central con Dispersión Cromática (Chromatic Aberration SDF)**:
+     - Modela en el centro una escultura toroidal/prismática de cristal oscuro que se inclina suavemente siguiendo el cursor (`uPointer` con física de resortes).
+     - En los bordes del cristal, aplica el efecto **Fresnel** (`pow(1.0 - dot(normal, viewDir), 3.0)`) y separa los canales `R, G, B` en el muestreo del ruido de fondo para producir dispersión espectral realista como un lente óptico de precisión.
+  3. **Micro-Grilla Técnica con Máscara Radial**:
+     - Superpón una retícula geométrica fina (`1px`) que solo se ilumina allá donde pasan las cáusticas de luz y alrededor del cursor.
+
+### 2. Arquitectura UI Estilo Apple / Linear (`z-10`)
+- **Floating Glass Navbar**:
+  - Cápsula superior centrada (`mt-6 px-5 py-2.5 rounded-full bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] flex items-center gap-8`).
+  - Logo geométrico minimalista, 4 enlaces con indicador luminoso en hover y botón compacto `"Launch Studio"` con brillo perimetral.
+- **Bloque Editorial Central**:
+  - **Badge con Borde de Luz Viajera**: Píldora `"MOTIQO ENGINE 2.4 · REALTIME OPTICS"` con un punto pulsante cian y borde animado.
+  - **Titular Monumental**:
+    `Precision optics for`
+    `spatial interfaces.`
+    Usa tipografía `text-5xl md:text-7xl font-semibold tracking-[-0.04em] leading-[1.02]` con un gradiente metálico (`bg-gradient-to-b from-white via-white/95 to-white/55 bg-clip-text text-transparent`).
+  - **Subtítulo**: `"Sub-pixel shaders, physically damped springs, and refractive glass primitives engineered for 60 FPS web experiences."` (`max-w-xl text-center text-sm md:text-base text-zinc-400 mt-5 leading-relaxed`).
+  - **Doble CTA de Alta Costura**:
+    - Botón Primario con luz interna: `"Explore Primitives"` (`px-7 py-3.5 rounded-full bg-white text-black font-medium text-sm shadow-[0_0_40px_rgba(56,189,248,0.35)] hover:scale-[1.03] active:scale-[0.98] transition-all`).
+    - Botón Secundario en vidrio ahumado: `"View Documentation"` (`px-7 py-3.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/[0.1] backdrop-blur-md text-sm transition-all`).
+- **Dock Flotante Inferior de Inspección (3 Glass Cards en Perspectiva)**:
+  - En la parte inferior, muestra 3 tarjetas de cristal translúcido (`bg-[#0B0D13]/70 backdrop-blur-2xl border border-white/[0.09] rounded-2xl p-5`) que reaccionan con inclinación 3D individual al pasar el cursor, mostrando métricas en vivo del shader (`Frame Time: 1.4ms`, `Refraction IOR: 1.52`, `Active Uniforms: 18`) con controles deslizantes reales que alteran el shader de fondo en vivo.
+
+### 3. Limpieza y Props Configurables
+- Limpia `requestAnimationFrame`, `ResizeObserver` y recursos WebGL al desmontar.
+- Expón props para personalizar textos, `ior` (default `1.52`), `causticIntensity` (default `1.0`) y `className`.
+
+Integración en Motiqo: usa Urbanist. Implementa los shaders, fuerzas, óptica y controles como código funcional; no como una captura. Adapta los controles a movimiento reducido, visibilidad y pausa externa. Mide cualquier telemetría de tiempo mostrada; no incluyas cifras fijas de rendimiento. Limpia observers, RAF, listeners y recursos GPU, y conserva un fondo estático útil si WebGL falla.

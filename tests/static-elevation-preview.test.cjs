@@ -5,6 +5,7 @@ test('Elevation hover previews use live 3D while opening the workspace retains i
  const React=require('react'),dom=new JSDOM('<div id="mount"></div>'),old=new Map(),props=[];
  for(const[k,v]of Object.entries({window:dom.window,document:dom.window.document,IS_REACT_ACT_ENVIRONMENT:true})){old.set(k,Object.getOwnPropertyDescriptor(globalThis,k));Object.defineProperty(globalThis,k,{value:v,writable:true,configurable:true});}
  const loader=()=>{},Demo=load('components/demos.tsx',{
+  './section-preview-fit':{default:({children})=>children},
   'next/dynamic':{default:load=>load===loader?value=>{props.push(value);return React.createElement('div');}:()=>null},
   '@/lib/preview-loaders':{previewLoaders:{'elevation-matrix':loader}},
   'motion/react':{useReducedMotion:()=>false},

@@ -3,8 +3,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ComponentNavigationIcon from './component-navigation-icon';
-import { componentGroups, componentSections, componentGroupCounts, newComponentsByGroup, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
-import NavigationIcon from './navigation-icon';
+import { pricingCount, loginCount, componentGroups, componentSections, componentGroupCounts, newComponentsByGroup, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import { heroIds } from '@/lib/hero-catalog';
 import SidebarArt from './sidebar-art';
 import Brand from './brand';
@@ -84,15 +83,15 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
     } }; document.addEventListener('keydown', escape); return () => document.removeEventListener('keydown', escape); }, []);
     const library = pathname === '/library';
     const exploreItems = [
-        { name: 'Home', href: '/', icon: 'home' as const, active: active === '/' },
-        { name: 'Components', href: '/library', icon: 'library' as const, active: !!active?.startsWith('/library')&&active!=='/library?saved=1', action: library ? onCollection : undefined },
-        { name: 'Hero', href: '/hero', icon: 'hero' as const, active: active === '/hero', count: heroIds.length },
-        { name: 'Saved', href: '/library?saved=1', icon: 'saved' as const, active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount > 0 ? savedCount : localSavedCount }
+        { name: 'Home', href: '/', active: active === '/' },
+        { name: 'Components', href: '/library', active: !!active?.startsWith('/library')&&active!=='/library?saved=1', action: library ? onCollection : undefined },
+        { name: 'Hero', href: '/hero', active: active === '/hero', count: heroIds.length },
+        { name: 'Saved', href: '/library?saved=1', active: active === '/library?saved=1', action: library ? onSaved : undefined, count: savedCount > 0 ? savedCount : localSavedCount }
     ];
     const resourceItems = [
-        { name: 'MCP', href: '/mcp', icon: 'mcp' as const, active: active === '/mcp' },
-        { name: 'Skill', href: '/skill', icon: 'skill' as const, active: active === '/skill' },
-        { name: 'Docs', href: '/docs', icon: 'docs' as const, active: active === '/docs' }
+        { name: 'MCP', href: '/mcp', active: active === '/mcp' },
+        { name: 'Skill', href: '/skill', active: active === '/skill' },
+        { name: 'Docs', href: '/docs', active: active === '/docs' }
     ];
     function browse(href:string,action?:()=>void){setOpen(false);selectDestination(href);action?.();}
     return <>
@@ -105,10 +104,10 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
       <nav ref={nav} data-view={componentsOpen?'components':'main'} aria-label={componentsOpen?'Component navigation':'Main navigation'}>
         <div className="sidebar-light" aria-hidden="true" />
         {componentsOpen?<>
-        <Link href="/library" prefetch={false} className={`sidebar-link ${active==='/library'?'is-active':''}`} aria-current={active==='/library'?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse('/library',library&&onCollection?()=>onCollection():undefined);}}><NavigationIcon name="library"/><span>Browse all</span></Link>
+        <Link href="/library" prefetch={false} className={`sidebar-link ${active==='/library'?'is-active':''}`} aria-current={active==='/library'?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse('/library',library&&onCollection?()=>onCollection():undefined);}}><span>Browse all</span></Link>
         {componentSections.map(section=><div className="sidebar-group" key={section}><span className="sidebar-group-title">{section}</span>{componentGroups.filter(group=>group.section===section).map(group=>{
           const available=componentGroupCounts[group.id]>0,count=componentGroupCounts[group.id],newCount=newComponentsByGroup[group.id],href=`/library?group=${group.id}`,selected=active===href;
-          const content=<><ComponentNavigationIcon name={group.id==='sidebars'?'navigation':group.id}/><span>{group.title}</span>{!available&&<small className="sidebar-soon">Soon</small>}{available&&<span className="sidebar-badge" data-new={newCount>0?'New':undefined} data-has-new={newCount>0?'true':undefined} data-count={count}/>}</>;
+          const content=<><span>{group.title}</span>{!available&&<small className="sidebar-soon">Soon</small>}{available&&<span className="sidebar-badge" data-new={newCount>0?'New':undefined} data-has-new={newCount>0?'true':undefined} data-count={count}/>}</>;
           return available?<Link key={group.id} href={href} prefetch={false} className={`sidebar-link ${selected?'is-active':''}`} aria-current={selected?'page':undefined} onNavigate={event=>{if(library&&onCollection)event.preventDefault();browse(href,library&&onCollection?()=>onCollection(group.id):undefined);}}>{content}</Link>:<button key={group.id} type="button" className="sidebar-link" disabled>{content}</button>;
         })}</div>)}
       </>:<>
@@ -116,19 +115,22 @@ export default function SiteSidebar({ savedCount = 0, onCollection, onSaved }: S
         {exploreItems.filter(item=>item.name!=='Hero').map(item => <Link ref={item.name==='Components'?componentsLink:undefined} key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={event => {
           if(item.name==='Components'){focusMenu.current=true;keepMenuOpen.current=open;setComponentsOpen(true);}else setOpen(false);
           selectDestination(item.href);if(item.action){event.preventDefault();item.action();}
-        }}><NavigationIcon name={item.icon}/><span>{item.name}</span>{item.name==='Components'&&<ComponentNavigationIcon name="forward" className="sidebar-chevron" size={14}/>}{!!item.count && <small className="sidebar-count">{item.count}</small>}</Link>)}
+        }}><span>{item.name}</span>{item.name==='Components'&&<ComponentNavigationIcon name="forward" className="sidebar-chevron" size={14}/>}{!!item.count && <small className="sidebar-count">{item.count}</small>}</Link>)}
         <span className="sidebar-section-title">Sections</span>
-        <Link href="/hero" prefetch={true} className={`sidebar-link ${active==='/hero'?'is-active':''}`} aria-current={active==='/hero'?'page':undefined} onNavigate={()=>browse('/hero')}><NavigationIcon name="hero"/><span>Hero</span><small className="sidebar-count">{heroIds.length}</small></Link>
-        {([{name:'Pricing',icon:'cards'},{name:'Testimonials',icon:'assistants'},{name:'Footer',icon:'navigation'}] as const).map(({name,icon})=><button key={name} type="button" className="sidebar-link" disabled><ComponentNavigationIcon name={icon}/><span>{name}</span><small className="sidebar-soon">Soon</small></button>)}
+        <Link href="/hero" prefetch={true} className={`sidebar-link ${active==='/hero'?'is-active':''}`} aria-current={active==='/hero'?'page':undefined} onNavigate={()=>browse('/hero')}><span>Hero</span><small className="sidebar-count">{heroIds.length}</small></Link>
+        <Link href="/pricing" prefetch={true} className={`sidebar-link ${active==='/pricing'?'is-active':''}`} aria-current={active==='/pricing'?'page':undefined} onNavigate={()=>browse('/pricing')}><span>Pricing</span><small className="sidebar-count">{pricingCount}</small></Link>
+        <Link href="/login" prefetch={true} className={`sidebar-link ${active==='/login'?'is-active':''}`} aria-current={active==='/login'?'page':undefined} onNavigate={()=>browse('/login')}><span>Login</span><small className="sidebar-count">{loginCount}</small></Link>
+        {(['Testimonials','Footer'] as const).map(name=><button key={name} type="button" className="sidebar-link" disabled><span>{name}</span><small className="sidebar-soon">Soon</small></button>)}
         <span className="sidebar-section-title">Layouts</span>
-        <button type="button" className="sidebar-link" disabled><ComponentNavigationIcon name="data"/><span>Dashboard</span><small className="sidebar-soon">Soon</small></button>
+        <button type="button" className="sidebar-link" disabled><span>Dashboard</span><small className="sidebar-soon">Soon</small></button>
         <span className="sidebar-section-title">Resource</span>
         {resourceItems.map(item => <Link key={item.name} href={item.href} prefetch={true} aria-current={item.active ? 'page' : undefined} className={`sidebar-link ${item.active ? 'is-active' : ''}`} onNavigate={() => {
           setOpen(false);selectDestination(item.href);
-        }}><NavigationIcon name={item.icon}/><span>{item.name}</span></Link>)}
+        }}><span>{item.name}</span></Link>)}
       </>}</nav>
       {!componentsOpen&&<div className="sidebar-personality"><SidebarArt /></div>}
       <div className="sidebar-tools"><ThemeControl/><ColorPicker /></div>
     </aside>
   </>;
 }
+

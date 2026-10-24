@@ -1,0 +1,7 @@
+CosmosSplitAuth artwork
+Created with the built-in image_gen tool on 2026-10-23.
+Visual reference: Login-space.webp supplied by the user. Original generated asset; no remote photo requests at runtime.
+Saved project asset: public/media/cosmos-astronaut.png
+
+Prompt:
+Create only a new original portrait artwork asset for the dark right panel of a premium spatial login card, inspired by the attached reference's astronaut lighting. Portrait 3:4 composition, a single intricately detailed astronaut helmet and shoulder, turned slightly left, fiery orange and golden reflected nebula on the left half of the visor, electric cyan rim lighting and cyan blue suit on the right, subtle magenta interstellar dust around lower shoulders. Nearly pure black space background, generous dark negative space in top 18% and bottom 18% for separately coded UI overlays. Helmet central and occupies 65% width and 60% height. Cinematic high contrast rich fine surface detail. Absolutely NO UI, NO text, NO logos, NO letters, NO login card, NO buttons, NO border or rounded rectangle. Output only the artwork, edge to edge.
