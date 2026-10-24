@@ -1,0 +1,11 @@
+title = "Motiqo Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Registry preview revision hashes are metadata, not credentials"
+condition = "AND"
+paths = ['''^registry/preview-sources\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"[^"]+": "[a-f0-9]{20}",?$''']
