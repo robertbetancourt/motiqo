@@ -51,8 +51,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.172.0",
+    "autoprefixer": "^10.6.2",
     "jsdom": "^29.1.1",
+    "postcss": "^8.5.32",
     "sharp": "0.35.5",
+    "tailwindcss": "^3.4.19",
     "typescript": "^7",
     "typescript-compiler-api": "npm:typescript@5.9.3",
     "zod": "^4.6.7"

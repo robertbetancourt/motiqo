@@ -1,3 +1,4 @@
+@tailwind utilities;
 :root {
   --bg: #060606;
   --surface: #0f0f0f;

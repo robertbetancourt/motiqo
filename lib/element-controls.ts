@@ -39,6 +39,7 @@ export function normalizeSettings(id:ElementId,input:unknown):Settings {
   if(id==='thermal-smoke'&&result.warmColor==='#ff2e4c'&&result.coldColor==='#06b6d4'){
     result.warmColor=defaultsFor(id).warmColor;result.coldColor=defaultsFor(id).coldColor;
   }
+  if(id==='optical-artifact-card'&&String(result.accentColor).toLowerCase()==='#00f0a8')result.accentColor=defaultsFor(id).accentColor;
   return result;
 }
 export function decodeSettings(id:ElementId,raw:string|null):Settings|null {

@@ -378,6 +378,16 @@
       "tests": [
         "tests/material-studies.test.cjs"
       ]
+    },
+    "orbit-stage-hero": {
+      "tests": [
+        "tests/orbit-optical.test.cjs"
+      ]
+    },
+    "optical-artifact-card": {
+      "tests": [
+        "tests/orbit-optical.test.cjs"
+      ]
     }
   },
   "site": {

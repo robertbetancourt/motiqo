@@ -1,0 +1,2 @@
+AI-generated project artwork. Created 2026-10-27 with the built-in image_gen tool using the user-supplied card-optical.png as a visual reference.
+Prompt: Square artwork only, no UI/text/border. Classical male marble bust in three-quarter view looking upper right, dark teal stone with restrained organic pink, aqua, ochre and blue inlays, luminous mint turquoise backdrop (#00F0A8), physical gallery lighting and sculptural texture.

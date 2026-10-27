@@ -11,6 +11,8 @@ import type {SentimentProps} from './originals/sentiment';
 import type { ElementId } from '@/lib/catalog';
 import type { Settings } from '@/lib/element-controls';
 
+const OrbitStageHero=dynamic(previewLoaders['orbit-stage-hero'],{ssr:false});
+const OpticalArtifactCard=dynamic(previewLoaders['optical-artifact-card'],{ssr:false});
 const LumenButtonShowcase=dynamic(previewLoaders['lumen-button'],{ssr:false});
 const TitaniumCard=dynamic(previewLoaders['titanium-card'],{ssr:false});
 const InkHeadline=dynamic(previewLoaders['ink-headline'],{ssr:false});
@@ -96,6 +98,8 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, hov
   const still = paused || reduced;
   const motion={intensity:typeof settings.intensity==='number'?settings.intensity:1,speed:typeof settings.speed==='number'?settings.speed:1};
   return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`} style={expanded&&['prism-tier-pricing','horizon-grid-pricing','cosmos-split-auth','obsidian-gate','ink-headline','titanium-card','lumen-button'].includes(id)?{overflowY:'auto',alignItems:'flex-start'}:undefined}>
+    {id==='orbit-stage-hero'&&<SectionPreviewFit height={680} frameWidth={1100}><OrbitStageHero {...settings} titleMuted={settings.titleMuted as string|undefined} titleBright={settings.titleBright as string|undefined} ctaText={settings.ctaText as string|undefined} orbitSpeed={typeof settings.orbitSpeed==='number'?settings.orbitSpeed:1.0} compact={!expanded} paused={!!still}/></SectionPreviewFit>}
+    {id==='optical-artifact-card'&&<OpticalArtifactCard {...settings} theme={settings.theme as 'auto'|'light'|'dark'|undefined} accentColor={settings.accentColor as string|undefined} opticalIntensity={typeof settings.opticalIntensity==='number'?settings.opticalIntensity:1.0} compact={!expanded} paused={!!still}/>}
     {id==='lumen-button'&&<LumenButtonShowcase onStatusChange={status=>onSettingsChange?.({status})} label={String(settings.label??'Continue')} disabled={settings.disabled === "enabled"} status={settings.status as 'idle'|'success'|undefined} compact={!expanded} paused={!!still}/>}
     {id==='titanium-card'&&<TitaniumCard {...settings} showControls={expanded} foil={settings.foil!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='ink-headline'&&<InkHeadline {...settings} showControls={false} progress={settings.trigger==='manual'?Number(settings.progress??.5):undefined} compact={!expanded} paused={!!still}/>}
