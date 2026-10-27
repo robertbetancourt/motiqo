@@ -20,8 +20,8 @@ class PreviewBoundary extends Component<{children:ReactNode;onFailure:()=>void},
 
 /** Posters render with the page. Only visible, loaded scenes may enter the GPU. */
 export default memo(function CardPreview({id,paused,priority=false,settings}:{id:ElementId;paused:boolean;priority?:boolean;settings?:Settings}){
-  // Construct the larger matrix only while the visitor is exploring its card.
-  const hoverOnly=['elevation-matrix','halftone-wordmark','signal-grid'].includes(id);
+  // The heavier matrix enters the shared four-slot budget only on hover/focus.
+  const hoverOnly=id==='elevation-matrix';
   const host=useRef<HTMLDivElement>(null),[mounted,setMounted]=useState(false),[visible,setVisible]=useState(false),[ready,setReady]=useState(false),[granted,setGranted]=useState(false);
   const [cardHovered,setCardHovered]=useState(false);
   const painted=useRef(false),stopped=useRef(paused),wake=useRef<()=>void>(()=>{});stopped.current=paused;

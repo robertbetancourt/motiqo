@@ -29,8 +29,8 @@ export default function IrisTurbine({
   maxSpeed = 210,
   redlineThreshold = 55,
   bladeCount = 24,
-  cruiseColor = "#9b8cff",
-  ignitionColor = "#ffbf69",
+  cruiseColor = "#38bdf8",
+  ignitionColor = "#ef4444",
   autoDemo = true,
   interactive = true,
   showTelemetry = false,
@@ -91,21 +91,18 @@ export default function IrisTurbine({
       if (number.current)
         number.current.textContent = String(Math.round(s.speed));
       if (gearLabel.current) gearLabel.current.textContent = String(gear);
-      const hot = kineticSmooth(
-          redlineThreshold,
-          redlineThreshold + 10,
-          s.speed,
-        ),
-        rgb = (hex: string, fallback: string) =>
+      const rgb = (hex: string, fallback: string) =>
           (/^#[\da-f]{6}$/i.test(hex) ? hex : fallback)
             .slice(1)
             .match(/../g)!
             .map((channel) => parseInt(channel, 16)),
-        cool = rgb(cruiseColor, "#9b8cff"),
-        warm = rgb(ignitionColor, "#ffbf69"),
-        red = Math.round(kineticMix(cool[0], warm[0], hot)),
-        green = Math.round(kineticMix(cool[1], warm[1], hot)),
-        blue = Math.round(kineticMix(cool[2], warm[2], hot)),
+        palette = [rgb(cruiseColor,"#38bdf8"),rgb("#34d399","#34d399"),rgb("#facc15","#facc15"),rgb("#fb923c","#fb923c"),rgb(ignitionColor,"#ef4444")],
+        heat = kineticClamp(s.speed / limit,0,1) * 4,
+        zone = Math.min(3,Math.floor(heat)),
+        mix = kineticSmooth(0,1,heat-zone),
+        red = Math.round(kineticMix(palette[zone][0], palette[zone+1][0], mix)),
+        green = Math.round(kineticMix(palette[zone][1], palette[zone+1][1], mix)),
+        blue = Math.round(kineticMix(palette[zone][2], palette[zone+1][2], mix)),
         color = `${red},${green},${blue}`;
       const tipColor = `rgb(${[red, green, blue].map((c) => Math.round(kineticMix(c, 255, 0.82))).join(",")})`;
       host.current?.style.setProperty("--turbine-color", `rgb(${color})`);

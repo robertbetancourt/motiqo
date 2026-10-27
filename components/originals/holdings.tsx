@@ -18,7 +18,7 @@ export function holdingsArc(start:number,end:number,radius=116){
   return `M${a.map(n=>n.toFixed(3)).join(',')}A${radius},${radius} 0 ${end-start>180?1:0} 1 ${b.map(n=>n.toFixed(3)).join(',')}`;
 }
 
-export default function Holdings({holdings=sampleHoldings,target=80000,scale=1,speed=1,thickness=3,gap=2,activity=1,compact=false,paused=false,className=''}:HoldingsProps){
+export default function Holdings({holdings=sampleHoldings,target=80000,scale=1,speed=1,thickness=3,gap=2,activity=.1,compact=false,paused=false,className=''}:HoldingsProps){
   const host=useRef<HTMLDivElement>(null),paths=useRef<(SVGPathElement|null)[]>([]),dots=useRef<(SVGCircleElement|null)[]>([]),readout=useRef<HTMLSpanElement>(null),legend=useRef<(HTMLSpanElement|null)[]>([]),sync=useRef<()=>void>(()=>{});
   const [selected,setSelected]=useState(-1),[hovered,setHovered]=useState(-1),active=hovered>=0?hovered:selected;
   const id=useId().replace(/:/g,''),data=useMemo(()=>holdings.slice(0,12).map(d=>({...d,value:holdingsClamp(d.value,0,100000),color:/^#[\da-f]{6}$/i.test(d.color)?d.color:'#8d91ff'})),[holdings]);

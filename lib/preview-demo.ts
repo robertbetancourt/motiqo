@@ -2,6 +2,11 @@ import type {ElementId} from '@/lib/catalog';
 
 // Only card previews opt in. Reuse each scene's input handling without changing exports.
 const pointerTargets:Partial<Record<ElementId,string>>={
+  'titanium-card':'.ti-space',
+  'ink-headline':'.ih-replay',
+  'lumen-button':'.lumen-button',
+  'quantum-core':'.mq-quantum',
+  'orbit-stage-hero':'.orbit-stage-hero',
   'halftone-wordmark':'.hw-field canvas',
   'signal-grid':'.sg-plot',
   'sonic-aperture':'.sonic-aperture',
@@ -42,7 +47,7 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
   if(!selector)return;
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   let frame=0,last=0,time=0,entered=false,target:HTMLElement|null=null,step=-1;
-  const reactInput=id==='signal-grid'||id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav'||id==='elevation-matrix';
+  const reactInput=id==='orbit-stage-hero'||id==='titanium-card'||id==='signal-grid'||id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav'||id==='elevation-matrix';
   function pointer(type:string,bubbles=false,x=.5,y=.5){
     if(!target)return;
     const box=target.getBoundingClientRect();
@@ -63,7 +68,15 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
       }
     }else target=root.querySelector<HTMLElement>(selector!);
     if(target){
-      if(id==='sonic-aperture'){
+      if(id==='ink-headline'||id==='lumen-button'){
+        const next=Math.floor(time/(id==='ink-headline'?8:3));
+        if(next!==step){step=next;target.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));}
+      }else if(id==='titanium-card'){
+        const next=Math.floor(time/5);
+        if(next!==step){step=next;root.querySelector('.ti-card')?.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));}
+        if(!entered){pointer('pointerover',true);entered=true;}
+        pointer('pointermove',true,.5+Math.sin(time)*.25,.5+Math.cos(time*.7)*.2);
+      }else if(id==='sonic-aperture'){
         const button=target.querySelector<HTMLButtonElement>('.sa-mic');
         const open=time%12>=1.5&&time%12<8;
         if(button&&button.getAttribute('aria-pressed')!==String(open))button.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
@@ -75,6 +88,7 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
         if(stage!==step){const starting=step<0;step=stage;if(stage===1)root.querySelector<HTMLElement>(`.sleeve-card[data-album="${album}"] .sleeve-art`)?.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));else if(starting||stage===2)root.querySelector<HTMLElement>('.sleeve-card[data-active=true] .sleeve-art')?.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));}
         if(stage!==1)target.dispatchEvent(new WheelEvent('wheel',{deltaY:(wanted-cursor)*250,deltaMode:0,cancelable:true}));
       }else if(id!=='holdings'&&id!=='glow-nav'){
+        if(id.endsWith('-button')){const turn=Math.floor(time/8);if(turn!==step){step=turn;target.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));}}
         if(id==='gilded-signal'){const turn=Math.floor(time/10);if(turn!==step){if(turn>0)target.dispatchEvent(new MouseEvent('dblclick',{bubbles:true}));step=turn;}}
         const phase=time%8;
         if(id==='atelier'||phase<5.5){

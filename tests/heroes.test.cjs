@@ -73,7 +73,7 @@ test('Arcadia fades continuously across both edges and full revolutions without 
 test('Hero prompts use original identities and agree with their public downloads',()=>{
  const items=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../registry/hero-prompts.json'),'utf8')).items;
  assert.deepEqual([...load('lib/hero-catalog.ts').heroIds],items.map(hero=>hero.id),'lightweight sidebar catalog stays in sync');
- for(const hero of items){assert.equal(fs.readFileSync(path.resolve(__dirname,'../public/heroes/'+hero.id+'-prompt.txt'),'utf8'),hero.prompt);assert.doesNotMatch(hero.prompt,/BRRAL|Fulcrum|Yasir|Intelligence Canvas|Create Stunning AI Generated|Photos Instantly/);}
+ for(const hero of items){assert.equal(fs.readFileSync(path.resolve(__dirname,'../public/heroes/'+hero.id+'-prompt.txt'),'utf8').replace(/\r\n/g,'\n'),hero.prompt.replace(/\r\n/g,'\n'));assert.doesNotMatch(hero.prompt,/BRRAL|Fulcrum|Yasir|Intelligence Canvas|Create Stunning AI Generated|Photos Instantly/);}
  assert.ok(items[1].tags.includes('TypeScript'));assert.match(items[1].prompt,/diorama-foreground.png/);
 });
 

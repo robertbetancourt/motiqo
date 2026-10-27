@@ -9,6 +9,7 @@ export type ObsidianGateProps = {
   onProvider?: (provider: "github" | "google") => void;
   paused?: boolean;
   compact?: boolean;
+  autoDemo?: boolean;
   className?: string;
 };
 type Phase = "idle" | "focused" | "authenticating" | "success";
@@ -20,6 +21,7 @@ export default function ObsidianGate({
   onProvider,
   paused = false,
   compact = false,
+  autoDemo = false,
   className = "",
 }: ObsidianGateProps) {
   const root = useRef<HTMLDivElement>(null),
@@ -37,6 +39,20 @@ export default function ObsidianGate({
     [error, setError] = useState(""),
     [message, setMessage] = useState("");
   const uid = useId();
+  useEffect(() => {
+    if (!autoDemo || paused || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let step = 0;
+    const timer = setInterval(() => {
+      if (document.hidden) return;
+      step = (step + 1) % 4;
+      setPhase((['idle','focused','authenticating','success'] as Phase[])[step]);
+      setEmail(step ? 'hello@motiqo.design' : '');
+      setPassword(step ? 'motiqo-demo' : '');
+      setMessage(step === 3 ? 'Access granted · demo session ready.' : step === 2 ? 'Verifying demo session…' : '');
+      if (step === 2) ripples.current.push({radius:25,life:1});
+    }, 2400);
+    return () => clearInterval(timer);
+  }, [autoDemo, paused]);
   opts.current = { paused, phase };
   useEffect(() => {
     const host = root.current!,

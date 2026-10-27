@@ -300,6 +300,13 @@ export default function OrbitStage({
     e.currentTarget.setPointerCapture?.(e.pointerId);
     s.isDragging = true;
     s.lastPointerX = e.clientX;
+    if (s.camera && s.cardMeshes) {
+      const box=e.currentTarget.getBoundingClientRect(),raycaster=new THREE.Raycaster();
+      raycaster.setFromCamera(new THREE.Vector2((e.clientX-box.left)/box.width*2-1,-((e.clientY-box.top)/box.height*2-1)),s.camera);
+      const hit=raycaster.intersectObjects(s.cardMeshes,false)[0];
+      s.hoveredIndex=hit?s.cardMeshes.indexOf(hit.object as THREE.Mesh):-1;
+    }
+    wake.current();
   }, []);
 
   const handlePointerMove = useCallback((e: ReactPointerEvent) => {
@@ -337,8 +344,10 @@ export default function OrbitStage({
     }
   }, []);
 
-  const handlePointerUp = useCallback(() => {
+  const handlePointerUp = useCallback((event: ReactPointerEvent) => {
     sceneState.current.isDragging = false;
+    if(event.pointerType==='touch'||event.type==='pointerleave'||event.type==='pointercancel')sceneState.current.hoveredIndex=-1;
+    wake.current();
   }, []);
 
   // Mouse wheel scroll to smoothly zoom the camera
@@ -375,7 +384,7 @@ export default function OrbitStage({
         antialias: true,
         powerPreference: "high-performance",
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(2);
       renderer.setSize(width, height);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.15;
@@ -414,10 +423,11 @@ export default function OrbitStage({
 
     // 2. Central Monolith: Sleek Dark Glass UI Slab at (0, -0.35, 0)
     const monolithGroup = new THREE.Group();
-    monolithGroup.position.set(0, -1.0, 0);
-    monolithGroup.rotation.y = 0.24;
-    monolithGroup.rotation.x = -0.09;
-    monolithGroup.rotation.z = -0.035;
+    monolithGroup.position.set(0, -1.7, 0);
+    monolithGroup.scale.setScalar(1.3);
+    monolithGroup.rotation.y = 0.36;
+    monolithGroup.rotation.x = -0.14;
+    monolithGroup.rotation.z = -0.065;
     monolithGroup.name = "OrbitStage phone mockup";
 
     // Rounded chassis geometry
@@ -796,7 +806,7 @@ export default function OrbitStage({
         s.currentCameraZ +=
           (s.targetCameraZ - s.currentCameraZ) * (1 - Math.pow(0.9, dt * 60));
         camera.position.z = s.currentCameraZ;
-        monolithGroup.rotation.set(-0.09, 0.24, -0.035);
+        monolithGroup.rotation.set(-0.14, 0.36, -0.065);
 
         // Update slipstream ribbon uniforms
         for (const mat of s.slipstreamMaterials) {
@@ -828,9 +838,10 @@ export default function OrbitStage({
           const isHovered = s.hoveredIndex === i;
           const targetHover = isHovered ? 1.0 : 0.0;
           mat.uniforms.uHover.value +=
-            (targetHover - mat.uniforms.uHover.value) * 0.15;
+            (targetHover - mat.uniforms.uHover.value) * (dt ? Math.min(1,dt * 8) : 1);
           const targetScale = isHovered ? 1.08 : 1.0;
-          mesh.scale.set(targetScale, targetScale, targetScale);
+          const scale = THREE.MathUtils.damp(mesh.scale.x,targetScale,7,dt);
+          mesh.scale.setScalar(scale);
 
           // Zone reflection: Lime in front-left (cz > 0, cx < 0), Violet in rear-right (cz < 0, cx > 0)
           const angle = Math.atan2(cz, cx);
@@ -849,7 +860,8 @@ export default function OrbitStage({
       },
       () => options.current.paused || lost,
       (w, h, dpr) => {
-        renderer.setPixelRatio(dpr);
+        // Supersample even on 1x displays; retain the 2x GPU budget on Retina.
+        renderer.setPixelRatio(2);
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();

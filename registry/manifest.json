@@ -2649,13 +2649,13 @@
           "key": "cruiseColor",
           "label": "Cruise color",
           "kind": "color",
-          "defaultValue": "#9b8cff"
+          "defaultValue": "#38bdf8"
         },
         {
           "key": "ignitionColor",
           "label": "Ignition color",
           "kind": "color",
-          "defaultValue": "#ffbf69"
+          "defaultValue": "#ef4444"
         }
       ],
       "moods": [
@@ -2670,8 +2670,8 @@
             "bladeCount": 24,
             "interactive": "enabled",
             "showTelemetry": "disabled",
-            "cruiseColor": "#9b8cff",
-            "ignitionColor": "#ffbf69"
+            "cruiseColor": "#38bdf8",
+            "ignitionColor": "#ef4444"
           }
         },
         {
@@ -2685,8 +2685,8 @@
             "bladeCount": 24,
             "interactive": "enabled",
             "showTelemetry": "disabled",
-            "cruiseColor": "#9b8cff",
-            "ignitionColor": "#ffbf69"
+            "cruiseColor": "#38bdf8",
+            "ignitionColor": "#ef4444"
           }
         },
         {
@@ -2700,8 +2700,8 @@
             "bladeCount": 24,
             "interactive": "enabled",
             "showTelemetry": "disabled",
-            "cruiseColor": "#9b8cff",
-            "ignitionColor": "#ffbf69"
+            "cruiseColor": "#38bdf8",
+            "ignitionColor": "#ef4444"
           }
         }
       ]
@@ -7337,7 +7337,7 @@
           "key": "activity",
           "label": "Activity",
           "kind": "range",
-          "defaultValue": 1,
+          "defaultValue": 0.1,
           "min": 0,
           "max": 1,
           "step": 0.05
@@ -7353,7 +7353,7 @@
             "speed": 0.7,
             "thickness": 3,
             "gap": 3,
-            "activity": 0.25
+            "activity": 0.1
           }
         },
         {
@@ -7365,7 +7365,7 @@
             "speed": 1.25,
             "thickness": 3,
             "gap": 1.25,
-            "activity": 1
+            "activity": 0.1
           }
         }
       ]
@@ -8568,7 +8568,8 @@
             "vortexRadius": 0.4
           }
         }
-      ]
+      ],
+      "addedAt": "2026-10-27"
     },
     {
       "id": "crate",
@@ -9389,7 +9390,8 @@
             "backgroundSrc": "/media/starlit-cat.webp"
           }
         }
-      ]
+      ],
+      "addedAt": "2026-10-27"
     },
     {
       "id": "silk-aperture",
