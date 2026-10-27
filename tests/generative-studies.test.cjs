@@ -6,6 +6,17 @@ function load(relative,mocks={},cache=new Map()){
  m._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,filename);return m.exports;
 }
 const math=load('components/originals/kinetic-math.ts');
+test('Turbine moves continuously through cool, green, yellow, orange and danger at increasing speeds',async()=>{
+ const {mount}=require('./support/component-harness.cjs');let draw;
+ const gradient={addColorStop(){}},g=new Proxy({createLinearGradient:()=>gradient,createRadialGradient:()=>gradient},{get:(o,k)=>o[k]??(()=>{})});
+ const C=load('components/originals/iris-turbine.tsx',{'./kinetic-canvas':{useKineticCanvas(render){draw=render;return{host:React.useRef(null),canvas:React.useRef(null),invalidate(){}};}}}).default;
+ const e=await mount(C,{speed:0,paused:true});try{
+  for(const [speed,color] of [[0,'rgb(56,189,248)'],[52.5,'rgb(52,211,153)'],[105,'rgb(250,204,21)'],[157.5,'rgb(251,146,60)'],[210,'rgb(239,68,68)']]){
+   await e.update({speed,paused:true});draw({g,w:500,h:500,dt:0,still:true,time:0});
+   assert.equal(document.querySelector('.mq-turbine').style.getPropertyValue('--turbine-color'),color);
+  }
+ }finally{await e.close();}
+});
 test('Lotus progresses through rays, interlaced petals and a rounded halo with a continuous round trip',()=>{
  const rays=math.lotusPose(0),flower=math.lotusPose(56),halo=math.lotusPose(100);
  assert.ok(rays.spread<flower.spread/5);assert.equal(flower.roundness,0);assert.equal(halo.roundness,1);assert.ok(halo.radius<flower.radius);

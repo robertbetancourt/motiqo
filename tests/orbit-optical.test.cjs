@@ -83,7 +83,7 @@ test('OpticalArtifactCard mounts with provenance, cycles multiplier, opens histo
 
 test('Orbit initializes its paused 3D layout, retains its scene across live settings and releases late textures',async()=>{
   const three=require('three'),sessions=[],requests=[];
-  class Renderer{constructor(){this.capabilities={getMaxAnisotropy:()=>4};}setPixelRatio(){}setSize(){}render(scene){this.scene=scene;}dispose(){this.disposed=true;}}
+  class Renderer{constructor(){this.capabilities={getMaxAnisotropy:()=>4};}setPixelRatio(value){this.pixelRatio=value;}setSize(){}render(scene){this.scene=scene;}dispose(){this.disposed=true;}}
   const renderers=[];class TrackedRenderer extends Renderer{constructor(){super();renderers.push(this);}}
   class Loader{load(url,done){requests.push({url,done});return new three.Texture();}}
   const C=load('components/originals/orbit-stage-hero.tsx',{
@@ -96,11 +96,11 @@ test('Orbit initializes its paused 3D layout, retains its scene across live sett
     return React.createElement(C,{...props,images});
   },e=await mount(Wrapper,{paused:true});
   try{
-    const renderer=renderers.at(-1),session=sessions.at(-1),cards=[];
+    const renderer=renderers.at(-1),session=sessions.at(-1),cards=[];assert.equal(renderer.pixelRatio,2);
     renderer.scene.traverse(node=>{if(node.material?.uniforms?.uTexture)cards.push(node);});
     assert.equal(cards.length,10);assert.ok(cards.some(card=>card.position.z>2));assert.ok(cards.some(card=>card.position.z< -2));
     assert.ok(cards.every(card=>card.position.length()>2));
-    const phone=renderer.scene.getObjectByName('OrbitStage phone mockup');assert.equal(phone.rotation.y,.24);assert.equal(phone.rotation.x,-.09);assert.equal(phone.rotation.z,-.035);const layers={upper:[],lower:[]};renderer.scene.traverse(node=>{if(node.material?.userData.layer)layers[node.material.userData.layer].push(node.material);});assert.equal(layers.upper.length,8);assert.equal(layers.lower.length,8);assert.ok(Math.max(...layers.upper.map(m=>m.uniforms.uIntensity.value))<Math.max(...layers.lower.map(m=>m.uniforms.uIntensity.value)));assert.ok([...layers.upper,...layers.lower].every(m=>m.uniforms.uTime.value===2.5));assert.ok(requests.every(request=>request.url==='/media/lumi-orbit-screen.png'));
+    const phone=renderer.scene.getObjectByName('OrbitStage phone mockup');assert.equal(phone.rotation.y,.36);assert.equal(phone.rotation.x,-.14);assert.equal(phone.rotation.z,-.065);assert.equal(phone.scale.x,1.3);const layers={upper:[],lower:[]};renderer.scene.traverse(node=>{if(node.material?.userData.layer)layers[node.material.userData.layer].push(node.material);});assert.equal(layers.upper.length,8);assert.equal(layers.lower.length,8);assert.ok(Math.max(...layers.upper.map(m=>m.uniforms.uIntensity.value))<Math.max(...layers.lower.map(m=>m.uniforms.uIntensity.value)));assert.ok([...layers.upper,...layers.lower].every(m=>m.uniforms.uTime.value===2.5));assert.ok(requests.every(request=>request.url==='/media/lumi-orbit-screen.png'));
     assert.equal(phone.children[0].geometry.parameters.options.depth,.22);
     for(const material of [phone.children[0].material,phone.getObjectByName('Lumi display with lower fade').material]){
       const shader={vertexShader:'#include <begin_vertex>',fragmentShader:'#include <dithering_fragment>'};material.onBeforeCompile(shader);

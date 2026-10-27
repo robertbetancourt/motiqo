@@ -57,12 +57,12 @@ test('Gilded Signal demonstrates both sides and releases its demo on pause',()=>
  try{const stop=startPreviewDemo(env.root,'gilded-signal');env.advance(520);assert.equal(flips,2);env.reduce(true);const before=flips;env.advance(300);assert.equal(flips,before);stop();}finally{env.restore();}
 });
 
-test('Optical hover reaches React handlers inside an inert card without activating its button',async()=>{
+test('Optical demo reaches React hover handlers and demonstrates a click ripple inside its inert card',async()=>{
  const env=setup('<div id="mount"></div>'),React=require('react'),old=Object.getOwnPropertyDescriptor(globalThis,'IS_REACT_ACT_ENVIRONMENT');globalThis.IS_REACT_ACT_ENVIRONMENT=true;
  const root=require('react-dom/client').createRoot(document.getElementById('mount'));let enters=0,moves=0,leaves=0,clicks=0,stop;
  try{
   await React.act(()=>root.render(React.createElement('div',{inert:true},React.createElement('button',{className:'mq-optical-button',onPointerEnter:()=>enters++,onPointerMove:()=>moves++,onPointerLeave:()=>leaves++,onClick:()=>clicks++},'Optical'))));
-  stop=startPreviewDemo(env.root,'optical-button');env.advance(10);assert.equal(enters,1);assert.ok(moves>0);env.advance(140);assert.equal(leaves,1);assert.equal(clicks,0);stop();stop=undefined;
+  stop=startPreviewDemo(env.root,'optical-button');env.advance(10);assert.equal(enters,1);assert.ok(moves>0);env.advance(140);assert.equal(leaves,1);assert.equal(clicks,1);stop();stop=undefined;
  }finally{stop?.();await React.act(()=>root.unmount());if(old)Object.defineProperty(globalThis,'IS_REACT_ACT_ENVIRONMENT',old);else delete globalThis.IS_REACT_ACT_ENVIRONMENT;env.restore();}
 });
 
@@ -86,3 +86,13 @@ test('Elevation hover demo visits real cells and releases its pointer loop',()=>
 });
 
 test('Halftone and Signal Grid card demos receive scoped pointer input and stop cleanly',()=>{for(const [id,html]of [['halftone-wordmark','<div class="hw-field"><canvas></canvas></div>'],['signal-grid','<div class="sg-plot"></div>']]){const e=setup(html);let moves=0;const target=e.root.querySelector('canvas')??e.root.firstElementChild;target.addEventListener('pointermove',()=>moves++);try{const stop=startPreviewDemo(e.root,id);e.advance(20);assert.ok(moves>10);e.reduce(true);const before=moves;e.advance(10);assert.equal(moves,before);stop();assert.equal(e.jobs.size,0);}finally{e.restore();}}});
+
+test('Ink, Lumen and Titanium previews repeat their real interactions and release demo loops',()=>{
+ for(const [id,html,selector,event] of [
+  ['ink-headline','<button class="ih-replay"></button>','.ih-replay','click'],
+  ['lumen-button','<button class="lumen-button"></button>','.lumen-button','click'],
+  ['titanium-card','<div class="ti-space"><div class="ti-card"></div></div>','.ti-card','keydown'],
+ ]){const e=setup(html);let repeats=0;e.root.querySelector(selector).addEventListener(event,()=>repeats++);
+  try{const stop=startPreviewDemo(e.root,id);e.advance(650);assert.ok(repeats>=3,id+' loops after completion');stop();const count=repeats;e.advance(200);assert.equal(repeats,count);assert.equal(e.jobs.size,0);assert.equal(e.listeners.size,0);}finally{e.restore();}
+ }
+});

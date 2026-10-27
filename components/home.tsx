@@ -30,7 +30,7 @@ function DiscoveryRail({collection,still,children}:{collection:typeof homeCollec
 }
 
 export default function Home(){
-  const [hydrated,setHydrated]=useState(false),[saved,setSaved]=useState<string[]>([]),[settings,setSettings]=useState<Record<string,Settings>>({});
+  const [hydrated,setHydrated]=useState(false),[saved,setSaved]=useState<string[]>([]),[settings,setSettings]=useState<Record<string,Settings>>({'orbit-stage-hero':{orbitSpeed:.5,titleMuted:'Spatial Audio.',titleBright:'Infinite Resonance',lineColor:'#b898ff',lineColor2:'#a3e635',lineColor3:'#ec4899',lineSpeed:1}});
   const [context,setContext]=useState<CardMenuPosition|null>(null),[toast,setToast]=useState(''),[tool,setTool]=useState<AITool>('Universal');
   const trigger=useRef<HTMLElement|null>(null),toastTimer=useRef<ReturnType<typeof setTimeout>|null>(null),reduced=useReducedMotion(),still=hydrated&&!!reduced;
   const dismiss=useCallback((restore=false)=>{if(restore)trigger.current?.focus({preventScroll:true});setContext(null);},[]);

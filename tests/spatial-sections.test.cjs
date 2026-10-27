@@ -2,9 +2,22 @@ const { test } = require("node:test"),
   assert = require("node:assert/strict");
 const { load, mount, React } = require("./support/component-harness.cjs");
 
+test('Obsidian preview repeats its demo phases and releases its timer when paused',async()=>{
+ const originalSet=global.setInterval,originalClear=global.clearInterval,jobs=new Map();let serial=0;
+ global.setInterval=fn=>{jobs.set(++serial,fn);return serial;};global.clearInterval=id=>jobs.delete(id);
+ let e;try{
+  const C=load('components/originals/obsidian-gate.tsx').default;e=await mount(C,{autoDemo:true});
+  const node=document.querySelector('.obsidian-gate');assert.equal(jobs.size,1);
+  for(const expected of ['focused','authenticating','success','idle','focused']){
+   await React.act(()=>{for(const fn of jobs.values())fn();});assert.equal(node.dataset.phase,expected);
+  }
+  await e.update({autoDemo:true,paused:true});assert.equal(jobs.size,0);
+ }finally{await e?.close();global.setInterval=originalSet;global.clearInterval=originalClear;}
+});
+
 test('The library places additions first with a stable order within each release date',()=>{
  const {elements}=load('lib/catalog.ts'),items=require('../registry/manifest.json').items;
- assert.deepEqual(elements.slice(0,2).map(item=>item.id),['orbit-stage-hero','optical-artifact-card']);
+ assert.deepEqual(elements.slice(0,4).map(item=>item.id),['liquid-artifact-hero','gilded-signal','orbit-stage-hero','optical-artifact-card']);
  assert.equal(elements.length,items.length);
  for(let i=1;i<elements.length;i++)assert.ok((elements[i-1].addedAt??'')>=(elements[i].addedAt??''));
  for(const date of new Set(items.map(item=>item.addedAt)))assert.deepEqual(elements.filter(item=>item.addedAt===date).map(item=>item.id),items.filter(item=>item.addedAt===date).map(item=>item.id));

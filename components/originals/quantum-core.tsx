@@ -102,7 +102,7 @@ export default function QuantumCore({
     >
       <style>{styles}</style>
       <canvas ref={canvas} aria-hidden="true" />
-      <svg className="mq-quantum-hud" viewBox="0 0 800 800" aria-hidden="true">
+      <svg className="mq-quantum-hud" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <defs>
           <linearGradient id={`${id}-line`} x1="0" y1="0" x2="1" y2="1">
             <stop stopColor="#fff" stopOpacity=".7" />
@@ -243,4 +243,4 @@ export default function QuantumCore({
     </div>
   );
 }
-const styles = `.mq-quantum{position:relative;width:100%;height:100%;min-height:180px;background:#03050a;overflow:hidden;isolation:isolate}.mq-quantum>canvas{position:absolute;inset:0;width:100%;height:100%;display:block}.mq-quantum-hud{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;will-change:transform}`;
+const styles = `.mq-quantum{flex:1;align-self:stretch;min-width:0;position:relative;width:100%;height:100%;min-height:180px;background:#03050a;overflow:hidden;isolation:isolate}.mq-quantum>canvas{position:absolute;inset:0;width:100%;height:100%;display:block}.mq-quantum-hud{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;will-change:transform}`;
