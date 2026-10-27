@@ -4,7 +4,7 @@ const { load, mount, React } = require("./support/component-harness.cjs");
 
 test('The library places additions first with a stable order within each release date',()=>{
  const {elements}=load('lib/catalog.ts'),items=require('../registry/manifest.json').items;
- assert.deepEqual(elements.slice(0,3).map(item=>item.id),['ink-headline','lumen-button','titanium-card']);
+ assert.deepEqual(elements.slice(0,2).map(item=>item.id),['orbit-stage-hero','optical-artifact-card']);
  assert.equal(elements.length,items.length);
  for(let i=1;i<elements.length;i++)assert.ok((elements[i-1].addedAt??'')>=(elements[i].addedAt??''));
  for(const date of new Set(items.map(item=>item.addedAt)))assert.deepEqual(elements.filter(item=>item.addedAt===date).map(item=>item.id),items.filter(item=>item.addedAt===date).map(item=>item.id));

@@ -15,7 +15,7 @@ const items=manifest.items.map(item=>{
  }
  const files=item.files.map(file=>{
   if(file.source.includes('..')||file.target.includes('..')||!file.source.startsWith('components/')&&!file.source.startsWith('public/'))throw Error(`Unsafe source: ${file.source}`);
-  const bytes=fs.readFileSync(path.join(root,file.source)),encoding=/\.(webp|png|jpe?g|woff2?|mp3|wav)$/.test(file.source)?'base64':'utf8';
+  const bytes=fs.readFileSync(path.join(root,file.source)),encoding=/\.(webp|png|jpe?g|woff2?|mp3|wav|mp4)$/.test(file.source)?'base64':'utf8';
   if(encoding==='utf8'&&!Buffer.from(bytes.toString('utf8')).equals(bytes))throw Error(`Invalid UTF-8 source: ${file.source}`);
   return{...file,encoding,content:bytes.toString(encoding),sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
  });

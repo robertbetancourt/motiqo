@@ -161,6 +161,7 @@ html[data-theme=light] .card-badge-new{background:color-mix(in srgb,var(--accent
 .site-sidebar .sidebar-group{padding-top:16px}.sidebar-group-title{margin-bottom:6px}
 @media(pointer:coarse){.site-sidebar nav[data-view] .sidebar-link,.site-sidebar .sidebar-back{height:44px;min-height:44px}}
 :root .element-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:18px}
+@media(min-width:1080px){:root .element-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .element-card[data-element] .card-stage{height:auto;aspect-ratio:4/3}
 .card-poster{object-fit:contain}
 

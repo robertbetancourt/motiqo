@@ -7,6 +7,8 @@ function once<T>(load:()=>Promise<T>){
   return()=>pending??=load().catch(error=>{pending=undefined;throw error;});
 }
 export const previewLoaders={
+  'orbit-stage-hero':()=>import('../components/originals/orbit-stage-hero'),
+  'optical-artifact-card':()=>import('../components/originals/optical-artifact-card'),
   'titanium-card':()=>import('../components/originals/titanium-card'),
   'lumen-button':():Promise<{default:typeof import('../components/originals/lumen-button').LumenButtonShowcase}>=>import('../components/originals/lumen-button').then(module=>({default:module.LumenButtonShowcase})),
   'ink-headline':()=>import('../components/originals/ink-headline'),

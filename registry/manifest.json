@@ -10030,6 +10030,310 @@
           }
         }
       ]
+    },
+    {
+      "id": "orbit-stage-hero",
+      "number": "83",
+      "title": "OrbitStage",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-26",
+      "previewSize": "cinema",
+      "description": "Real-time 3D orbital ring of media cards around a glass interface with true physical occlusion and bi-chromatic slipstream light trails.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Hero",
+        "3D",
+        "Interactive",
+        "WebGL2"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Three.js orbital media scene with a supplied Lumi screen asset, curved local gallery textures, chromatic light trails and a demand-driven lifecycle. Copy all listed files and public assets.",
+      "code": "import OrbitStage from './orbit-stage-hero';\n\nexport default function Example() {\n  return <OrbitStage />;\n}",
+      "brief": "Create a wide cinematic orbital showcase on black, matching the supplied reference proportions: monumental two-line Urbanist headline behind a smaller rounded smartphone mockup displaying the complete supplied Lumi screen. Arrange ten curved photographic cards around a low inclined elliptical orbit; cards must occlude the phone in front and pass behind it at the rear. Add smooth lime/violet light ribbons and soft atmospheric glow, restrained pointer drag inertia, keyboard orbit and bounded wheel zoom. Preserve the image aspect, initialize the scene even when paused, respect reduced motion and visibility, recover context loss, and dispose all GPU resources and late-loaded textures. Display the name OrbitStage. Omit the navbar, brand and action menu. Use a physically lit phone chassis with visible metal thickness and side controls, stronger three-quarter perspective and a black gradient fading out its lower portion. Add a second set of upper orbital light trails at lower intensity, sharing the lower trails motion. Three editable trail colors blend in moving zones around the loop. lineSpeed controls trail pulses and color travel independently of orbitSpeed; upper trails travel in the opposite direction. Zero freezes trail phase without freezing cards.",
+      "entry": "orbit-stage-hero.tsx",
+      "exportName": "OrbitStage",
+      "files": [
+        {
+          "source": "components/originals/orbit-stage-hero.tsx",
+          "target": "components/motiqo/orbit-stage-hero.tsx"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/lumi-orbit-screen.png",
+          "target": "public/media/lumi-orbit-screen.png"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-08.webp",
+          "target": "public/media/gallery/image-08.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "orbitSpeed",
+          "label": "Orbit speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 3,
+          "step": 0.1
+        },
+        {
+          "key": "titleMuted",
+          "label": "Top title",
+          "kind": "text",
+          "defaultValue": "Your Motion.",
+          "maxLength": 60
+        },
+        {
+          "key": "titleBright",
+          "label": "Bottom title",
+          "kind": "text",
+          "defaultValue": "Your System. One Engine",
+          "maxLength": 80
+        },
+        {
+          "key": "lineColor",
+          "label": "Trail color 1",
+          "kind": "color",
+          "defaultValue": "#b898ff"
+        },
+        {
+          "key": "lineColor2",
+          "label": "Trail color 2",
+          "kind": "color",
+          "defaultValue": "#a3e635"
+        },
+        {
+          "key": "lineColor3",
+          "label": "Trail color 3",
+          "kind": "color",
+          "defaultValue": "#ec4899"
+        },
+        {
+          "key": "lineSpeed",
+          "label": "Trail speed",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 4,
+          "step": 0.1
+        }
+      ],
+      "moods": [
+        {
+          "id": "warp",
+          "label": "High Speed",
+          "settings": {
+            "orbitSpeed": 2.2,
+            "titleMuted": "Your Motion.",
+            "titleBright": "Your System. One Engine",
+            "lineColor": "#b898ff",
+            "lineColor2": "#a3e635",
+            "lineColor3": "#ec4899",
+            "lineSpeed": 1
+          }
+        },
+        {
+          "id": "zen",
+          "label": "Ambient",
+          "settings": {
+            "orbitSpeed": 0.5,
+            "titleMuted": "Spatial Audio.",
+            "titleBright": "Infinite Resonance",
+            "lineColor": "#b898ff",
+            "lineColor2": "#a3e635",
+            "lineColor3": "#ec4899",
+            "lineSpeed": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "optical-artifact-card",
+      "number": "84",
+      "title": "OpticalArtifactCard",
+      "category": "Objects",
+      "original": true,
+      "addedAt": "2026-10-26",
+      "previewSize": "cinema",
+      "description": "Digital collectible artifact card featuring a frosted chassis, WebGL2 chromatic optical border, subsurface artwork bleed, and physical 3D spring tilt.",
+      "hint": "",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Card",
+        "Interactive",
+        "3D",
+        "WebGL2"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Includes the OpticalButton shader adapted to a rounded card perimeter, the native WebGL runtime and local artwork/avatar assets. Theme auto follows the host html data-theme attribute or system preference.",
+      "code": "import OpticalArtifactCard from './optical-artifact-card';\n\nexport default function Example() {\n  return <OpticalArtifactCard />;\n}",
+      "brief": "Build a compact NFT-style collectible card: dual ownership/creator row with small avatars, a wide mint artwork well containing the chromatic classical bust, a compact ETH/multiplier/equivalence row and an inset action dock. Default to black and follow the website light/dark theme automatically; keep explicit light/dark overrides in the external inspector. Reuse OpticalButton spectral refraction, flowing caustic folds, moving perimeter beam, cursor response and click ripple on the whole rounded card edge. Use stable untransformed pointer bounds, smooth restrained tilt, consistent CSS pixel uniforms at every DPR, useful fallback and context recovery. Fit the entire card uniformly inside previews. Include demo history and collection feedback, keyboard actions and reduced motion. Use a purple/amethyst artwork variant and neutral grayscale card surfaces. Buy Now is white on dark and black on light. Remove plain stroke borders from the action button and its dock while keeping the animated optical perimeter.",
+      "entry": "optical-artifact-card.tsx",
+      "exportName": "OpticalArtifactCard",
+      "files": [
+        {
+          "source": "components/originals/optical-artifact-card.tsx",
+          "target": "components/motiqo/optical-artifact-card.tsx"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "components/originals/optical-shaders.ts",
+          "target": "components/motiqo/optical-shaders.ts"
+        },
+        {
+          "source": "public/media/optical-artifact-bust-purple.png",
+          "target": "public/media/optical-artifact-bust-purple.png"
+        },
+        {
+          "source": "public/media/optical-artifact-bust-purple.provenance.txt",
+          "target": "public/media/optical-artifact-bust-purple.provenance.txt"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "theme",
+          "label": "Theme",
+          "kind": "select",
+          "defaultValue": "auto",
+          "choices": [
+            {
+              "value": "auto",
+              "label": "Website theme"
+            },
+            {
+              "value": "dark",
+              "label": "Obsidian Dark"
+            },
+            {
+              "value": "light",
+              "label": "Silica Glass"
+            }
+          ]
+        },
+        {
+          "key": "priceEth",
+          "label": "Price (ETH)",
+          "kind": "text",
+          "defaultValue": "5.65",
+          "maxLength": 10
+        },
+        {
+          "key": "accentColor",
+          "label": "Accent color",
+          "kind": "color",
+          "defaultValue": "#9b6be8"
+        },
+        {
+          "key": "opticalIntensity",
+          "label": "Optical intensity",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0.2,
+          "max": 2.5,
+          "step": 0.1
+        },
+        {
+          "key": "artworkSrc",
+          "label": "Image URL",
+          "kind": "text",
+          "defaultValue": "/media/optical-artifact-bust-purple.png",
+          "maxLength": 1024
+        }
+      ],
+      "moods": [
+        {
+          "id": "obsidian",
+          "label": "Obsidian",
+          "settings": {
+            "theme": "dark",
+            "priceEth": "5.65",
+            "accentColor": "#8b5cf6",
+            "opticalIntensity": 1.4,
+            "artworkSrc": "/media/optical-artifact-bust-purple.png"
+          }
+        },
+        {
+          "id": "silica",
+          "label": "Silica",
+          "settings": {
+            "theme": "light",
+            "priceEth": "5.65",
+            "accentColor": "#9b6be8",
+            "opticalIntensity": 1,
+            "artworkSrc": "/media/optical-artifact-bust-purple.png"
+          }
+        }
+      ]
     }
   ]
 }
