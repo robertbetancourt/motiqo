@@ -20,7 +20,7 @@ float perimeter(vec2 p){float r=min(uSize.x,uSize.y)*.5,l=max(0.,uSize.x*.5-r),t
 }
 void main(){
  vec2 p=vUv*uResolution-uResolution*.5;float d=shape(p),aa=max(fwidth(d),.5),inside=1.-smoothstep(-aa,aa,d);
- if(d>5.){fragColor=vec4(0.);return;}
+ if(d>=18.){fragColor=vec4(0.);return;}
  float depth=max(-d,0.),t=uTime*uWaveSpeed*.01;
  vec2 gradient=vec2(shape(p+vec2(.4,0))-shape(p-vec2(.4,0)),shape(p+vec2(0,.4))-shape(p-vec2(0,.4)))/.8;
  vec2 slope=vec2(heightAt(p+vec2(.5,0))-heightAt(p-vec2(.5,0)),heightAt(p+vec2(0,.5))-heightAt(p-vec2(0,.5)));
@@ -70,6 +70,11 @@ void main(){
  float neutralRim=exp(-depth/.65)*(.025+max(dot(gradient,light.xy),0.)*.06)*uEdgeRim*.05;
  color+=vec3(.7,.8,1.)*(neutralRim+spec*uLightSheen*.0006);
  color=mix(color,vec3(dot(color,vec3(.2126,.7152,.0722))),uFrost*.0012);
- float outer=exp(-max(d,0.)*1.6)*.12;vec3 glow=spectrum*illumination*uBrightness*.012;
- fragColor=vec4(mix(glow,color,inside),max(inside,outer*smoothstep(0.,1.,d)));
+ float od=max(d,0.);
+ float outer=exp(-od*.65)*(1.-smoothstep(5.,18.,od))*.12;
+ vec3 glow=spectrum*illumination*uBrightness*.012;
+ float alpha=inside+(1.-inside)*outer;
+ // Straight-alpha output: browser compositing applies coverage exactly once.
+ vec3 radiance=color*inside+glow*outer*(1.-inside);
+ fragColor=vec4(radiance/max(alpha,.00001),alpha);
 }`;

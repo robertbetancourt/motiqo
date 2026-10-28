@@ -3,7 +3,7 @@ export const photonFragment=buttonOpticsGLSL+`
 uniform vec3 uPulseColor,uTrailColor;
 uniform float uPulseCount,uSpeed,uTrailLength,uPulseWidth,uEnergy;
 void main(){
- vec2 p=vUv*uResolution-uResolution*.5;float d=capsule(p);if(d>5.){fragColor=vec4(0.);return;}float depth=max(-d,0.);
+ vec2 p=vUv*uResolution-uResolution*.5;float d=capsule(p);if(d>=18.){fragColor=vec4(0.);return;}float depth=max(-d,0.);
  float s=arcLength(p),headEnergy=0.,tailEnergy=0.;
  for(int i=0;i<3;i++){
   if(float(i)>=uPulseCount)break;
