@@ -8,7 +8,7 @@ vec3 sceneAt(vec2 q){
  return vec3(.031,.039,.051)+uLensTint*light;
 }
 void main(){
- vec2 p=vUv*uResolution-uResolution*.5;float d=capsule(p);if(d>5.){fragColor=vec4(0.);return;}float depth=max(-d,0.);
+ vec2 p=vUv*uResolution-uResolution*.5;float d=capsule(p);if(d>=18.){fragColor=vec4(0.);return;}float depth=max(-d,0.);
  vec2 rest=vec2(sin(uTime*.31)*uSize.x*.24,cos(uTime*.39)*uSize.y*.13)*uIdleMotion;
  vec2 center=mix(rest,uCursor,uHover);center=clamp(center,-uSize*.5+vec2(12.),uSize*.5-vec2(12.));
  vec2 delta=p-center;float radius=max(8.,uLensRadius),distanceToLens=length(delta),profile=exp(-pow(distanceToLens/radius,4.)*1.6);
