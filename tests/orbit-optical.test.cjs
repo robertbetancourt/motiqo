@@ -134,8 +134,9 @@ test('Optical card uses CSS pixel optics, stable edge input and live theme/pause
     Object.defineProperty(card,'clientWidth',{value:350});Object.defineProperty(card,'clientHeight',{value:454});canvas.width=700;canvas.height=908;
     hit.getBoundingClientRect=()=>({left:0,top:0,width:350,height:454});card.getBoundingClientRect=()=>{throw Error('Transformed card bounds must not drive hover');};
     await React.act(()=>hit.dispatchEvent(new window.MouseEvent('pointermove',{bubbles:true,clientX:349,clientY:227})));
-    assert.deepEqual(draws.at(-1).uResolution,[350,454]);assert.deepEqual(draws.at(-1).uSize,[338,442]);
+    assert.deepEqual(draws.at(-1).uResolution,[390,494]);assert.deepEqual(draws.at(-1).uSize,[338,442]);
     assert.equal(passes.at(-1).includes('#version'),false,'Native renderer supplies one version/header');
+    assert.ok(passes.at(-1).includes('min(26.,min(uSize.x,uSize.y)*.5)-depth'),'Rounded card chart fades before its corner medial axes');
     const count=sessions.length;await e.update({theme:'light',paused:true});assert.equal(sessions.length,count);assert.equal(draws.at(-1).uIsDark,0);assert.equal(document.querySelector('.optical-artifact-wrapper').dataset.theme,'light');
     assert.equal(document.querySelector('.opt-theme-bar'),null);assert.equal(document.querySelector('.opt-artwork').getAttribute('src'),'/media/optical-artifact-bust-purple.png');
     await e.update({artworkSrc:'https://example.com/my-art.png'});

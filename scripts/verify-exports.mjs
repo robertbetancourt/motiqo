@@ -10,6 +10,7 @@ const require=createRequire(import.meta.url),ts=require('typescript-compiler-api
 // Evaluate the pure prop/example adapter without a Next.js runtime or alias.
 const source=fs.readFileSync(path.join(root,'lib/element-controls.ts'),'utf8'),adapter={exports:{}};
 new Function('require','module','exports',ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name==='../registry/manifest.json'?manifest:require(name),adapter,adapter.exports);
+manifest.items=manifest.items.filter(item=>item.visibility!=='draft');
 const npm=process.env.npm_execpath??path.join(path.dirname(process.execPath),'node_modules/npm/bin/npm-cli.js');
 function command(bin,args){const result=spawnSync(bin,args,{cwd:fixture,stdio:'inherit',env:{...process.env,npm_config_cache:path.join(root,'screenshots/.npm-cache')}});if(result.error||result.status!==0)throw Error(`Export verification failed: ${args[0]}`);}
 try{

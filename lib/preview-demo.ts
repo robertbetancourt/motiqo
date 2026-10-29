@@ -2,6 +2,11 @@ import type {ElementId} from '@/lib/catalog';
 
 // Only card previews opt in. Reuse each scene's input handling without changing exports.
 const pointerTargets:Partial<Record<ElementId,string>>={
+  'liquid-veil':'.liquid-veil',
+  'verlet-chime':'.chime-surface',
+  'prism-chime':'.chime-surface',
+  'swiss-prism':'.swiss-prism',
+  'mercury-dock':'.mercury-dock',
   'titanium-card':'.ti-space',
   'ink-headline':'.ih-replay',
   'lumen-button':'.lumen-button',
@@ -47,7 +52,7 @@ export function startPreviewDemo(root:HTMLElement,id:ElementId){
   if(!selector)return;
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   let frame=0,last=0,time=0,entered=false,target:HTMLElement|null=null,step=-1;
-  const reactInput=id==='orbit-stage-hero'||id==='titanium-card'||id==='signal-grid'||id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav'||id==='elevation-matrix';
+  const reactInput=['liquid-veil','verlet-chime','prism-chime','mercury-dock','swiss-prism'].includes(id)||id==='orbit-stage-hero'||id==='titanium-card'||id==='signal-grid'||id.endsWith('-button')||id==='orbit-agent'||id==='holdings'||id==='glow-nav'||id==='elevation-matrix';
   function pointer(type:string,bubbles=false,x=.5,y=.5){
     if(!target)return;
     const box=target.getBoundingClientRect();

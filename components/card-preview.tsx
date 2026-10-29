@@ -8,7 +8,6 @@ import {startPreviewDemo} from '@/lib/preview-demo';
 import {schedulePreview,retainPreview,releasePreview} from '@/lib/preview-scheduler';
 import {registerPreviewCandidate} from '@/lib/preview-budget';
 import * as posters from '@/registry/previews.json';
-import * as revisions from '../registry/preview-sources.json';
 import {Demo} from './demos';
 
 class PreviewBoundary extends Component<{children:ReactNode;onFailure:()=>void},{failed:boolean}>{
@@ -20,13 +19,15 @@ class PreviewBoundary extends Component<{children:ReactNode;onFailure:()=>void},
 
 /** Posters render with the page. Only visible, loaded scenes may enter the GPU. */
 export default memo(function CardPreview({id,paused,priority=false,settings}:{id:ElementId;paused:boolean;priority?:boolean;settings?:Settings}){
-  // The heavier matrix enters the shared four-slot budget only on hover/focus.
-  const hoverOnly=id==='elevation-matrix';
+  // The heavier matrix never mounts in cards; its 2D poster is the complete preview.
+  const staticPreview=id==='elevation-matrix';
+  const hoverOnly=false;
   const host=useRef<HTMLDivElement>(null),[mounted,setMounted]=useState(false),[visible,setVisible]=useState(false),[ready,setReady]=useState(false),[granted,setGranted]=useState(false);
   const [cardHovered,setCardHovered]=useState(false);
   const painted=useRef(false),stopped=useRef(paused),wake=useRef<()=>void>(()=>{});stopped.current=paused;
   const captured=(posters.items as Partial<Record<ElementId,{dark:string;light:string;sourceHash?:string}>>)[id];
-  const artwork=captured?.sourceHash===revisions[id]?captured:undefined;
+  // Keep the last valid poster visible while a newer live scene is loading.
+  const artwork=captured;
   useEffect(()=>{
     const root=host.current!;
     const measure=()=>{if(root.clientWidth&&root.clientHeight)root.style.setProperty('--preview-fit',String(Math.min(root.clientWidth/400,root.clientHeight/300)));};
@@ -35,6 +36,7 @@ export default memo(function CardPreview({id,paused,priority=false,settings}:{id
   },[]);
   useEffect(()=>{
     const root=host.current!,key=Symbol(id);
+    if(staticPreview)return;
     let gone=false,active=false,near=false,live=false,loaded=false,loading=false,allowed=false,hovered=false,cancelLoad:(()=>void)|undefined,cancelMount:(()=>void)|undefined;
     const distance=()=>{const r=root.getBoundingClientRect();return r.bottom>0&&r.top<window.innerHeight?Math.max(0,r.top):100000+Math.abs(r.top);};
     const item=root.closest('article')??root;
@@ -82,15 +84,15 @@ export default memo(function CardPreview({id,paused,priority=false,settings}:{id
     },{rootMargin:'200px'});
     actual.observe(root);anticipate.observe(root);
     return()=>{actual.disconnect();anticipate.disconnect();cleanup();};
-  },[id,hoverOnly]);
+  },[id,hoverOnly,staticPreview]);
   useEffect(()=>wake.current(),[paused]);
   useEffect(()=>{
     if(mounted)return observePreviewReady(host.current!,()=>{painted.current=true;setReady(true);},()=>{painted.current=false;setReady(false);setMounted(false);});
   },[mounted]);
   useEffect(()=>{
-    if(mounted&&ready&&visible&&granted&&!paused&&(!hoverOnly||cardHovered))return startPreviewDemo(host.current!,id);
+    if(!staticPreview&&mounted&&ready&&visible&&granted&&!paused&&(!hoverOnly||cardHovered))return startPreviewDemo(host.current!,id);
   },[id,mounted,ready,visible,granted,paused,hoverOnly,cardHovered]);
-  return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-preview-mode={hoverOnly?'hover-3d':undefined} data-live={mounted&&ready&&visible&&granted&&!paused||undefined} data-preview-state={mounted?(visible&&granted?'live':'cached'):'poster'}>
+  return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-preview-mode={staticPreview?'static-2d':undefined} data-live={mounted&&ready&&visible&&granted&&!paused||undefined} data-preview-state={mounted?(visible&&granted?'live':'cached'):'poster'}>
     {artwork&&<><img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
     <img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></>}
     {mounted&&<div className="card-live" style={{width:400,height:300,left:'50%',top:'50%',right:'auto',bottom:'auto',transform:'translate(-50%,-50%) scale(var(--preview-fit,1))',transformOrigin:'center'}}><PreviewBoundary onFailure={()=>{painted.current=false;setReady(false);setMounted(false);}}><Demo id={id} paused={paused||!visible||!granted} autoDemo hovered={cardHovered} settings={settings}/></PreviewBoundary></div>}

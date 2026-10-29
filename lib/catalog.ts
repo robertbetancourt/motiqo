@@ -11,11 +11,14 @@ export type LibraryElement = {
   id: ElementId; number: string; title: string; category: Exclude<Category, 'All elements'>;
   description: string; hint: string; source: string; sourceUrl: string;
   tags: string[]; dependencies: string[]; code: string; brief: string; original?: boolean;
-  previewSize?: 'cinema'; installNote?: string; addedAt?: string;
+  previewSize?: 'cinema'; installNote?: string; addedAt?: string; newPriority?: 'last'; visibility?: 'draft';
 };
 export const categories: Category[] = ['All elements', 'Linework', 'Motion', 'Objects', 'Navigation'];
 // New additions lead the collection; ties preserve their editorial registry order.
-export const elements = [...registry.items as unknown as LibraryElement[]].sort((a,b)=>(b.addedAt ?? '').localeCompare(a.addedAt ?? ''));
+export const releaseGroup=(item:LibraryElement)=>isElementNew(item)?item.newPriority==='last'?1:0:2;
+export const elements = [...registry.items as unknown as LibraryElement[]].filter(item=>item.visibility!=='draft').sort((a,b)=>releaseGroup(a)-releaseGroup(b)||(b.addedAt ?? '').localeCompare(a.addedAt ?? ''));
+// Editorial popular selection, not invented usage statistics.
+export const popularIds=['optical-button','orbit-stage-hero','optical-artifact-card','thermal-smoke','atelier','companion','inkshift','radial-spectrum','water-ripple-carousel','sacred-lotus'];
 
 export function isElementNew(element?: { addedAt?: string } | null): boolean {
   if (!element?.addedAt) return false;

@@ -298,11 +298,6 @@
         "tests/catalog-behavior.test.cjs"
       ]
     },
-    "silk-aperture": {
-      "tests": [
-        "tests/silk-aperture.test.cjs"
-      ]
-    },
     "elastic-showcase": {
       "tests": [
         "tests/elastic-showcase.test.cjs"
@@ -387,6 +382,31 @@
     "optical-artifact-card": {
       "tests": [
         "tests/orbit-optical.test.cjs"
+      ]
+    },
+    "liquid-veil": {
+      "tests": [
+        "tests/navigation-studies.test.cjs"
+      ]
+    },
+    "mercury-dock": {
+      "tests": [
+        "tests/navigation-studies.test.cjs"
+      ]
+    },
+    "swiss-prism": {
+      "tests": [
+        "tests/navigation-studies.test.cjs"
+      ]
+    },
+    "verlet-chime": {
+      "tests": [
+        "tests/chimes.test.cjs"
+      ]
+    },
+    "prism-chime": {
+      "tests": [
+        "tests/chimes.test.cjs"
       ]
     }
   },

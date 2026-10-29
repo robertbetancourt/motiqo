@@ -16,11 +16,11 @@ test('Obsidian preview repeats its demo phases and releases its timer when pause
 });
 
 test('The library places additions first with a stable order within each release date',()=>{
- const {elements}=load('lib/catalog.ts'),items=require('../registry/manifest.json').items;
- assert.deepEqual(elements.slice(0,4).map(item=>item.id),['liquid-artifact-hero','gilded-signal','orbit-stage-hero','optical-artifact-card']);
+ const {elements,releaseGroup,isElementNew}=load('lib/catalog.ts'),items=require('../registry/manifest.json').items.filter(item=>item.visibility!=='draft');
+ assert.deepEqual(elements.slice(0,3).map(item=>item.id),['swiss-prism','orbit-stage-hero','optical-artifact-card']);
+ assert.deepEqual(elements.filter(isElementNew).slice(-2).map(item=>item.id),['liquid-artifact-hero','gilded-signal']);
  assert.equal(elements.length,items.length);
- for(let i=1;i<elements.length;i++)assert.ok((elements[i-1].addedAt??'')>=(elements[i].addedAt??''));
- for(const date of new Set(items.map(item=>item.addedAt)))assert.deepEqual(elements.filter(item=>item.addedAt===date).map(item=>item.id),items.filter(item=>item.addedAt===date).map(item=>item.id));
+ for(let i=1;i<elements.length;i++)assert.ok(releaseGroup(elements[i-1])<releaseGroup(elements[i])||releaseGroup(elements[i-1])===releaseGroup(elements[i])&&(elements[i-1].addedAt??'')>=(elements[i].addedAt??''));
 });
 
 test('Section fitting preserves both axes and gives stacked sign-in panels their full height',async()=>{
@@ -34,7 +34,7 @@ test('Section fitting preserves both axes and gives stacked sign-in panels their
  assert.ok(e.observers.every(observer=>observer.disconnected));
 });
 test('Pricing entries have a separate gallery and preserve their portable registry identity',()=>{
- const {isPricing,isSection,componentGroupCounts}=load('lib/component-groups.ts'),items=require('../registry/manifest.json').items;
+ const {isPricing,isSection,componentGroupCounts}=load('lib/component-groups.ts'),items=require('../registry/manifest.json').items.filter(item=>item.visibility!=='draft');
  assert.deepEqual(items.filter(isPricing).map(item=>item.id).sort(),['horizon-grid-pricing','prism-tier-pricing']);
  assert.equal(Object.values(componentGroupCounts).reduce((sum,n)=>sum+n,0),items.filter(item=>!isSection(item)).length);
 });

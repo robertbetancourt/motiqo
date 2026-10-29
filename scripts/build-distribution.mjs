@@ -7,7 +7,7 @@ import {writePreviewRevisions} from './preview-revisions.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),manifest=JSON.parse(fs.readFileSync(path.join(root,'registry/manifest.json'),'utf8'));
 const ids=new Set();
-const items=manifest.items.map(item=>{
+const items=manifest.items.filter(item=>item.visibility!=='draft').map(item=>{
  if(!/^[a-z][a-z0-9-]*$/.test(item.id)||ids.has(item.id))throw Error(`Invalid or duplicate id: ${item.id}`);ids.add(item.id);
  const controls=new Map(item.controls.map(c=>[c.key,c]));if(controls.size!==item.controls.length)throw Error(`Duplicate controls: ${item.id}`);
  for(const mood of item.moods)for(const[key,value]of Object.entries(mood.settings)){
@@ -32,7 +32,7 @@ const items=manifest.items.map(item=>{
 const cli=path.join(root,'packages/cli');fs.mkdirSync(path.join(cli,'skill'),{recursive:true});
 fs.writeFileSync(path.join(cli,'registry.json'),JSON.stringify({...manifest,items}));
 fs.copyFileSync(path.join(root,'skills/motiqo/SKILL.md'),path.join(cli,'skill/SKILL.md'));
-fs.writeFileSync(path.join(root,'registry/element-ids.ts'),'// Generated from manifest.json; run npm run distribution:build.\nexport const elementIds = '+JSON.stringify(items.map(i=>i.id))+' as const;\nexport type ElementId = typeof elementIds[number];\n');
+fs.writeFileSync(path.join(root,'registry/element-ids.ts'),'// Generated from manifest.json; run npm run distribution:build.\nexport const elementIds = '+JSON.stringify(manifest.items.map(i=>i.id))+' as const;\nexport type ElementId = typeof elementIds[number];\n');
 for(const name of ['LICENSE','THIRD_PARTY_NOTICES.md'])fs.copyFileSync(path.join(root,name),path.join(cli,name));
 fs.writeFileSync(path.join(cli,'NOTICE.md'),'Motiqo code: MIT, copyright 2026 Robert Betancourt. See LICENSE and THIRD_PARTY_NOTICES.md. Artwork and audio have separate permissions.\n');
 if(process.argv.includes('--pack')){

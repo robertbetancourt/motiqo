@@ -38,10 +38,10 @@ export default function LiquidForm({compact=false,paused=false,shape='knot',liqu
     function tick(now:number){frame=0;if(gone||!visible||document.hidden||options.current.paused||media.matches)return;
       const dt=Math.min(.05,(now-last)/1000);last=now;clock+=dt;const alpha=1-Math.exp(-dt*9);
       current.x+=(target.x-current.x)*alpha;current.y+=(target.y-current.y)*alpha;current.presence+=(target.presence-current.presence)*alpha;draw();
-      if(Math.abs(target.x-current.x)+Math.abs(target.y-current.y)+Math.abs(target.presence-current.presence)>.002||now-lastInput<900)frame=requestAnimationFrame(tick);
+      frame=requestAnimationFrame(tick);
     }
     function wake(){if(!frame&&!gone&&visible&&!document.hidden&&!options.current.paused&&!media.matches){last=performance.now();frame=requestAnimationFrame(tick);}}
-    function resize(){const r=host.getBoundingClientRect();let dpr=Math.min(window.devicePixelRatio||1,compact||coarse?1:1.5);dpr=Math.min(dpr,Math.sqrt(900000/Math.max(1,r.width*r.height)));surface.width=Math.max(1,Math.round(r.width*dpr));surface.height=Math.max(1,Math.round(r.height*dpr));draw();}
+    function resize(){const r=host.getBoundingClientRect();let dpr=Math.min(window.devicePixelRatio||1,compact||coarse?1:1.5);dpr=Math.min(dpr,Math.sqrt((compact?180000:550000)/Math.max(1,r.width*r.height)));surface.width=Math.max(1,Math.round(r.width*dpr));surface.height=Math.max(1,Math.round(r.height*dpr));draw();}
     function move(event:PointerEvent){if(options.current.paused||media.matches)return;const r=host.getBoundingClientRect();target.x=bound((event.clientX-r.left)/r.width*2-1,-1,1);target.y=bound(1-(event.clientY-r.top)/r.height*2,-1,1);target.presence=1;lastInput=performance.now();wake();}
     function leave(){target.presence=0;wake();}
     function up(event:PointerEvent){if(event.pointerType==='touch'){clearTimeout(release);release=window.setTimeout(leave,450);}}
