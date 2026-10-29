@@ -141,6 +141,606 @@
       ]
     },
     {
+      "id": "elastic-reel",
+      "number": "89",
+      "title": "ElasticReel",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-29",
+      "description": "A continuous liquid waist, stretched by momentum and settled by a spring.",
+      "hint": "Scroll or drag. Tap a neighboring image to bring it to the center.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Carousel",
+        "WebGL",
+        "Interactive",
+        "Gallery"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy the entry, shared rail engine, motion helper and all companion images. items accepts local or CORS-enabled HTTP image sources with label/meta. No Next.js or global CSS dependency.",
+      "code": "import ElasticReel from './elastic-reel';\n\nexport default function Example(){return <div style={{height:680}}><ElasticReel/></div>;}",
+      "brief": "Render an infinite vertical image reel on #05060a. Use 64x64 subdivided planes and a continuous world-space Gaussian width profile, with velocity-dependent pinch, vertical rubber stretch, optical cover UVs, subtle focus dimming and antialiased curved edges. Use one monotonic vertical map to preserve clear gaps at all tensions. Keep both vertical label endpoints synchronized to the same CPU-mirrored shader curve. Native wheel, inertial vertical drag, click-to-focus neighboring cards and arrow keys share a damped spring. Autoplay advances one image every 3200 ms when idle. Expose items with src/label/meta, minWidthRatio .54, waistSigma .42, stretchAmount .30, backgroundColor #05060a, autoPlay, paused, compact and className. Include no navbar or heading, bundle local artwork, preserve reduced motion, external preview pause, visibility/context recovery and resource cleanup.",
+      "entry": "elastic-reel.tsx",
+      "exportName": "ElasticReel",
+      "files": [
+        {
+          "source": "components/originals/elastic-reel.tsx",
+          "target": "components/motiqo/elastic-reel.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail.tsx",
+          "target": "components/motiqo/liquid-rail.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail-motion.ts",
+          "target": "components/motiqo/liquid-rail-motion.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-12.webp",
+          "target": "public/media/gallery/image-12.webp"
+        },
+        {
+          "source": "public/media/gallery/image-13.webp",
+          "target": "public/media/gallery/image-13.webp"
+        },
+        {
+          "source": "public/media/gallery/image-14.webp",
+          "target": "public/media/gallery/image-14.webp"
+        },
+        {
+          "source": "public/media/gallery/image-15.webp",
+          "target": "public/media/gallery/image-15.webp"
+        },
+        {
+          "source": "public/media/gallery/image-17.webp",
+          "target": "public/media/gallery/image-17.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "minWidthRatio",
+          "label": "Minimum width",
+          "kind": "range",
+          "defaultValue": 0.54,
+          "min": 0.38,
+          "max": 0.8,
+          "step": 0.01
+        },
+        {
+          "key": "waistSigma",
+          "label": "Waist spread",
+          "kind": "range",
+          "defaultValue": 0.42,
+          "min": 0.15,
+          "max": 0.8,
+          "step": 0.01
+        },
+        {
+          "key": "stretchAmount",
+          "label": "Stretch",
+          "kind": "range",
+          "defaultValue": 0.3,
+          "min": 0,
+          "max": 0.8,
+          "step": 0.01
+        },
+        {
+          "key": "backgroundColor",
+          "label": "Background",
+          "kind": "color",
+          "defaultValue": "#05060a"
+        },
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "frame-bloom",
+      "number": "88",
+      "title": "FrameBloom",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-29",
+      "description": "An image within an image opens into the next frame.",
+      "hint": "Drag to open the next image. Use arrows to browse.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Carousel",
+        "WebGL",
+        "Interactive",
+        "Gallery"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy every listed implementation file and bundled Motiqo image. Standalone React and Three.js, without Next.js or site CSS. Supports touch, keyboard, reduced motion, lifecycle pause, DOM fallback and WebGL context restoration.",
+      "code": "import FrameBloom from './frame-bloom';\n\nexport default function Example(){return <div style={{height:680}}><FrameBloom/></div>;}",
+      "brief": "A portrait image contains the next artwork as a small centered inset. The inset expands continuously into the full frame using a quintic interpolation and texture cover mapping. A fresh inset fades in after each completion. Drag vertically to scrub the expansion; arrows and keyboard advance or rewind, while autoplay repeats the sequence. Keep a neutral background and a subtle framed shadow, with no headings, branding or decorative labels.",
+      "entry": "frame-bloom.tsx",
+      "exportName": "FrameBloom",
+      "files": [
+        {
+          "source": "components/originals/frame-bloom.tsx",
+          "target": "components/motiqo/frame-bloom.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail-motion.ts",
+          "target": "components/motiqo/liquid-rail-motion.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "interval",
+          "label": "Hold",
+          "kind": "range",
+          "defaultValue": 2.8,
+          "min": 1,
+          "max": 8,
+          "step": 0.1
+        },
+        {
+          "key": "duration",
+          "label": "Expansion duration",
+          "kind": "range",
+          "defaultValue": 1.65,
+          "min": 0.7,
+          "max": 3,
+          "step": 0.05
+        },
+        {
+          "key": "insetScale",
+          "label": "Inset size",
+          "kind": "range",
+          "defaultValue": 0.22,
+          "min": 0.1,
+          "max": 0.4,
+          "step": 0.01
+        },
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "theme",
+          "label": "Theme",
+          "kind": "select",
+          "defaultValue": "auto",
+          "choices": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "light",
+              "label": "Light"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "arc-drift",
+      "number": "87",
+      "title": "ArcDrift",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-29",
+      "description": "A horizontal WebGL gallery with banking images and a soft wake.",
+      "hint": "Drag horizontally, scroll or select an image.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Carousel",
+        "WebGL",
+        "Interactive",
+        "Gallery"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy every listed implementation file and bundled Motiqo image. Standalone React and Three.js, without Next.js or site CSS. Supports touch, keyboard, reduced motion, lifecycle pause, DOM fallback and WebGL context restoration.",
+      "code": "import ArcDrift from './arc-drift';\n\nexport default function Example(){return <div style={{height:680}}><ArcDrift/></div>;}",
+      "brief": "A horizontal image carousel following a shallow curved path. Cards bank and turn at the sides while the center straightens; horizontal pointer dragging, horizontal trackpad input and wheel navigation share the same critically damped carrier. The GPU adds a soft transverse membrane wake. Keep only a small horizontal thumbnail rail; no editorial labels.",
+      "entry": "arc-drift.tsx",
+      "exportName": "ArcDrift",
+      "files": [
+        {
+          "source": "components/originals/arc-drift.tsx",
+          "target": "components/motiqo/arc-drift.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail.tsx",
+          "target": "components/motiqo/liquid-rail.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail-motion.ts",
+          "target": "components/motiqo/liquid-rail-motion.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "flowSpeed",
+          "label": "Flow speed",
+          "kind": "range",
+          "defaultValue": 0.22,
+          "min": 0.08,
+          "max": 1,
+          "step": 0.01
+        },
+        {
+          "key": "liquidStrength",
+          "label": "Liquid strength",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "response",
+          "label": "Response",
+          "kind": "range",
+          "defaultValue": 0.65,
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "spacing",
+          "label": "Spacing",
+          "kind": "range",
+          "defaultValue": 0.055,
+          "min": 0.02,
+          "max": 0.2,
+          "step": 0.005
+        },
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "theme",
+          "label": "Theme",
+          "kind": "select",
+          "defaultValue": "auto",
+          "choices": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "light",
+              "label": "Light"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
+      "id": "silk-stream",
+      "number": "86",
+      "title": "SilkStream",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-29",
+      "description": "A soft rubber image stream that relaxes at the center.",
+      "hint": "Drag or scroll through the flowing images.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Carousel",
+        "WebGL",
+        "Interactive",
+        "Gallery"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy every listed implementation file and bundled Motiqo image. Standalone React and Three.js, without Next.js or site CSS. Supports touch, keyboard, reduced motion, lifecycle pause, DOM fallback and WebGL context restoration.",
+      "code": "import SilkStream from './silk-stream';\n\nexport default function Example(){return <div style={{height:680}}><SilkStream/></div>;}",
+      "brief": "Use its own bundled artwork, distinct from LiquidRail. Deform a 64x64 mesh using a symmetric continuous world-space Gaussian aperture and monotonic vertical stretch. Do not fold, bank or oscillate the silhouettes sideways. Width responds to speed and relaxes into the center while labels follow both actual warped right-edge endpoints. Default gap .018. Keep the frame focused on the image column with vertical year/title labels, no heading, branding or decorative copy. Preserve the shared preview budget, inputs, reduced motion, DOM fallback and cleanup.",
+      "entry": "silk-stream.tsx",
+      "exportName": "SilkStream",
+      "files": [
+        {
+          "source": "components/originals/silk-stream.tsx",
+          "target": "components/motiqo/silk-stream.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail.tsx",
+          "target": "components/motiqo/liquid-rail.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail-motion.ts",
+          "target": "components/motiqo/liquid-rail-motion.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-02.webp",
+          "target": "public/media/gallery/image-02.webp"
+        },
+        {
+          "source": "public/media/gallery/image-04.webp",
+          "target": "public/media/gallery/image-04.webp"
+        },
+        {
+          "source": "public/media/gallery/image-06.webp",
+          "target": "public/media/gallery/image-06.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        },
+        {
+          "source": "public/media/gallery/image-09.webp",
+          "target": "public/media/gallery/image-09.webp"
+        },
+        {
+          "source": "public/media/gallery/image-10.webp",
+          "target": "public/media/gallery/image-10.webp"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "flowSpeed",
+          "label": "Flow speed",
+          "kind": "range",
+          "defaultValue": 0.22,
+          "min": 0.08,
+          "max": 1,
+          "step": 0.01
+        },
+        {
+          "key": "liquidStrength",
+          "label": "Liquid strength",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "response",
+          "label": "Response",
+          "kind": "range",
+          "defaultValue": 0.65,
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "spacing",
+          "label": "Spacing",
+          "kind": "range",
+          "defaultValue": 0.018,
+          "min": 0.005,
+          "max": 0.2,
+          "step": 0.001
+        },
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "theme",
+          "label": "Theme",
+          "kind": "select",
+          "defaultValue": "auto",
+          "choices": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "light",
+              "label": "Light"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ]
+        }
+      ],
+      "moods": []
+    },
+    {
       "id": "vortex-camera",
       "number": "75",
       "title": "VortexCamera",
@@ -10784,6 +11384,195 @@
         }
       ],
       "visibility": "draft"
+    },
+    {
+      "id": "liquid-rail",
+      "number": "85",
+      "title": "LiquidRail",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-29",
+      "description": "An editorial image rail with a liquid sense of momentum.",
+      "hint": "Drag vertically, scroll, or use the arrow keys.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Carousel",
+        "WebGL",
+        "Interactive",
+        "Gallery"
+      ],
+      "dependencies": [
+        "React",
+        "Three.js"
+      ],
+      "installNote": "Copy both implementation files and the six bundled images. Accepts items={{src,title,year}[]} with root-relative or HTTPS image URLs; external images need CORS permission for the WebGL view. DOM images remain available if WebGL fails. No site CSS or Next.js dependency.",
+      "code": "import LiquidRail from './liquid-rail';\n\nexport default function Example(){return <div style={{height:680}}><LiquidRail/></div>;}",
+      "brief": "Create a centered, infinite vertical image carousel with an editorial ivory or charcoal canvas, modest vertical project captions and a slim thumbnail index. The focused image becomes slightly wider while its neighbors continue above and below the frame. Use a critically damped, refresh-independent carrier and a velocity-driven soft membrane shader: leading and trailing edges flex, the image stretches subtly, and the texture has a restrained liquid wake that settles fully when idle. Pointer dragging follows direction changes continuously; wheel, touch, thumbnails and arrow/Home/End keys share one motion state. Autoplay moves at a constant average rate and yields to manual input before resuming. Keep static geometry and change uniforms instead of allocating mesh data every frame. Expose title, autoPlay, flowSpeed, liquidStrength, response, spacing, theme, items, onIndexChange, compact and paused. Pause offscreen, while the document is hidden and under the shared preview budget. Reduced motion keeps navigation immediate. Include DOM fallback, context restoration, late-texture disposal, finite controls and meaningful image errors. Use the bundled Motiqo artwork; never use arbitrary HTML.",
+      "entry": "liquid-rail.tsx",
+      "exportName": "LiquidRail",
+      "files": [
+        {
+          "source": "components/originals/liquid-rail.tsx",
+          "target": "components/motiqo/liquid-rail.tsx"
+        },
+        {
+          "source": "components/originals/liquid-rail-motion.ts",
+          "target": "components/motiqo/liquid-rail-motion.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-11.webp",
+          "target": "public/media/gallery/image-11.webp"
+        },
+        {
+          "source": "public/media/gallery/image-18.webp",
+          "target": "public/media/gallery/image-18.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-16.webp",
+          "target": "public/media/gallery/image-16.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        }
+      ],
+      "packageDependencies": {
+        "three": "^0.172.0"
+      },
+      "devDependencies": {
+        "@types/three": "^0.172.0"
+      },
+      "controls": [
+        {
+          "key": "title",
+          "label": "Collection title",
+          "kind": "text",
+          "defaultValue": "perspectives.",
+          "maxLength": 32
+        },
+        {
+          "key": "flowSpeed",
+          "label": "Flow speed",
+          "kind": "range",
+          "defaultValue": 0.22,
+          "min": 0.08,
+          "max": 1,
+          "step": 0.01
+        },
+        {
+          "key": "liquidStrength",
+          "label": "Liquid strength",
+          "kind": "range",
+          "defaultValue": 1,
+          "min": 0,
+          "max": 2,
+          "step": 0.05
+        },
+        {
+          "key": "response",
+          "label": "Response",
+          "kind": "range",
+          "defaultValue": 0.65,
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "spacing",
+          "label": "Spacing",
+          "kind": "range",
+          "defaultValue": 0.055,
+          "min": 0.02,
+          "max": 0.2,
+          "step": 0.005
+        },
+        {
+          "key": "autoPlay",
+          "label": "Autoplay",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "theme",
+          "label": "Theme",
+          "kind": "select",
+          "defaultValue": "auto",
+          "choices": [
+            {
+              "value": "auto",
+              "label": "Auto"
+            },
+            {
+              "value": "light",
+              "label": "Light"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "velvet",
+          "label": "Velvet",
+          "settings": {
+            "title": "perspectives.",
+            "flowSpeed": 0.16,
+            "liquidStrength": 1.35,
+            "response": 0.45,
+            "spacing": 0.055,
+            "autoPlay": "enabled",
+            "theme": "auto"
+          }
+        },
+        {
+          "id": "current",
+          "label": "Current",
+          "settings": {
+            "title": "perspectives.",
+            "flowSpeed": 0.42,
+            "liquidStrength": 1.6,
+            "response": 0.8,
+            "spacing": 0.055,
+            "autoPlay": "enabled",
+            "theme": "auto"
+          }
+        },
+        {
+          "id": "archive",
+          "label": "Archive",
+          "settings": {
+            "title": "perspectives.",
+            "flowSpeed": 0.22,
+            "liquidStrength": 0.6,
+            "response": 0.65,
+            "spacing": 0.055,
+            "autoPlay": "disabled",
+            "theme": "light"
+          }
+        }
+      ]
     }
   ]
 }

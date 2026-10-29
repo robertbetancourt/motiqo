@@ -12,6 +12,11 @@ import type { ElementId } from '@/lib/catalog';
 import type { Settings } from '@/lib/element-controls';
 
 const OrbitStageHero=dynamic(previewLoaders['orbit-stage-hero'],{ssr:false});
+const ElasticReel=dynamic(previewLoaders['elastic-reel'],{ssr:false});
+const SilkStream=dynamic(previewLoaders['silk-stream'],{ssr:false});
+const ArcDrift=dynamic(previewLoaders['arc-drift'],{ssr:false});
+const FrameBloom=dynamic(previewLoaders['frame-bloom'],{ssr:false});
+const LiquidRail=dynamic(previewLoaders['liquid-rail'],{ssr:false});
 const OpticalArtifactCard=dynamic(previewLoaders['optical-artifact-card'],{ssr:false});
 const LumenButtonShowcase=dynamic(previewLoaders['lumen-button'],{ssr:false});
 const TitaniumCard=dynamic(previewLoaders['titanium-card'],{ssr:false});
@@ -102,6 +107,11 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, hov
   const still = paused || reduced;
   const motion={intensity:typeof settings.intensity==='number'?settings.intensity:1,speed:typeof settings.speed==='number'?settings.speed:1};
   return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`} style={expanded&&['prism-tier-pricing','horizon-grid-pricing','cosmos-split-auth','obsidian-gate','ink-headline','titanium-card','lumen-button'].includes(id)?{overflowY:'auto',alignItems:'flex-start'}:undefined}>
+    {id==='elastic-reel'&&<ElasticReel {...settings} autoPlay={settings.autoPlay!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='silk-stream'&&<SilkStream {...settings} autoPlay={settings.autoPlay!=='disabled'} theme={settings.theme as 'auto'|'light'|'dark'|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='arc-drift'&&<ArcDrift {...settings} autoPlay={settings.autoPlay!=='disabled'} theme={settings.theme as 'auto'|'light'|'dark'|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='frame-bloom'&&<FrameBloom {...settings} autoPlay={settings.autoPlay!=='disabled'} theme={settings.theme as 'auto'|'light'|'dark'|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='liquid-rail'&&<LiquidRail {...settings} autoPlay={settings.autoPlay!=='disabled'} theme={settings.theme as 'auto'|'light'|'dark'|undefined} compact={!expanded} paused={!!still}/>}
     {id==='liquid-veil'&&<LiquidVeil {...settings} defaultOpen={settings.defaultOpen!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='mercury-dock'&&<MercuryDock {...settings} compact={!expanded} paused={!!still}/>}
     {id==='swiss-prism'&&<SwissPrism {...settings} showTelemetryTicker={settings.showTelemetryTicker!=='disabled'} compact={!expanded} paused={!!still}/>}
