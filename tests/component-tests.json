@@ -408,6 +408,34 @@
       "tests": [
         "tests/chimes.test.cjs"
       ]
+    },
+    "liquid-rail": {
+      "tests": [
+        "tests/liquid-rail.test.cjs"
+      ]
+    },
+    "silk-stream": {
+      "tests": [
+        "tests/flow-family.test.cjs",
+        "tests/liquid-rail.test.cjs"
+      ]
+    },
+    "arc-drift": {
+      "tests": [
+        "tests/flow-family.test.cjs",
+        "tests/liquid-rail.test.cjs"
+      ]
+    },
+    "frame-bloom": {
+      "tests": [
+        "tests/flow-family.test.cjs"
+      ]
+    },
+    "elastic-reel": {
+      "tests": [
+        "tests/elastic-reel.test.cjs",
+        "tests/liquid-rail.test.cjs"
+      ]
     }
   },
   "site": {

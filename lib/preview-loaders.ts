@@ -7,6 +7,11 @@ function once<T>(load:()=>Promise<T>){
   return()=>pending??=load().catch(error=>{pending=undefined;throw error;});
 }
 export const previewLoaders={
+  'elastic-reel':once(()=>import('../components/originals/elastic-reel')),
+  'silk-stream':once(()=>import('../components/originals/silk-stream')),
+  'arc-drift':once(()=>import('../components/originals/arc-drift')),
+  'frame-bloom':once(()=>import('../components/originals/frame-bloom')),
+  'liquid-rail':once(()=>import('../components/originals/liquid-rail')),
   'liquid-veil':()=>import('../components/originals/liquid-veil'),
   'mercury-dock':()=>import('../components/originals/mercury-dock'),
   'swiss-prism':()=>import('../components/originals/swiss-prism'),

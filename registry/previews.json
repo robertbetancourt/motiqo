@@ -397,6 +397,31 @@
       "sourceHash": "6522812c719db5ff7c26",
       "dark": "/previews/prism-chime-dark-925209fc550b.webp",
       "light": "/previews/prism-chime-light-925209fc550b.webp"
+    },
+    "liquid-rail": {
+      "sourceHash": "ce7d5f223511d379f55d",
+      "dark": "/previews/liquid-rail-dark-9162c0508416.webp",
+      "light": "/previews/liquid-rail-light-78486f38abc3.webp"
+    },
+    "silk-stream": {
+      "sourceHash": "63ff3308e615513fce7a",
+      "dark": "/previews/silk-stream-dark-326be9ab5833.webp",
+      "light": "/previews/silk-stream-light-1cb20c6358c0.webp"
+    },
+    "arc-drift": {
+      "sourceHash": "bb8bfa5e05105130178f",
+      "dark": "/previews/arc-drift-dark-36586fba8eb9.webp",
+      "light": "/previews/arc-drift-light-04921972c3e4.webp"
+    },
+    "frame-bloom": {
+      "sourceHash": "2f554bb177a5f6f55eb3",
+      "dark": "/previews/frame-bloom-dark-217186c078d8.webp",
+      "light": "/previews/frame-bloom-light-86b523ea1f7a.webp"
+    },
+    "elastic-reel": {
+      "sourceHash": "5a1c8233abf10743650a",
+      "dark": "/previews/elastic-reel-dark-9ad2581b6c46.webp",
+      "light": "/previews/elastic-reel-light-9ad2581b6c46.webp"
     }
   }
 }
