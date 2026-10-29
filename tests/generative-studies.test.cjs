@@ -6,6 +6,12 @@ function load(relative,mocks={},cache=new Map()){
  m._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,filename);return m.exports;
 }
 const math=load('components/originals/kinetic-math.ts');
+test('Lotus retains its full formation without per-petal canvas blur at maximum density',async()=>{
+ const {mount}=require('./support/component-harness.cjs');let draw,strokes=0,blurred=0;
+ const gradient={addColorStop(){}},g=new Proxy({shadowBlur:0,createLinearGradient:()=>gradient,createRadialGradient:()=>gradient,stroke(){strokes++;if(this.shadowBlur>0)blurred++;}},{get:(o,k)=>o[k]??(()=>{})});
+ const C=load('components/originals/sacred-lotus.tsx',{'./kinetic-canvas':{useKineticCanvas(render){draw=render;return{host:React.useRef(null),canvas:React.useRef(null)};}}}).default;
+ const e=await mount(C,{progress:56,petalCount:24,layerCount:5});try{for(const progress of [0,35,56,100]){await e.update({progress,petalCount:24,layerCount:5});draw({g,w:1000,h:760,dt:.016,still:false,time:1});}assert.ok(strokes>480);assert.equal(blurred,0);}finally{await e.close();}
+});
 test('Turbine moves continuously through cool, green, yellow, orange and danger at increasing speeds',async()=>{
  const {mount}=require('./support/component-harness.cjs');let draw;
  const gradient={addColorStop(){}},g=new Proxy({createLinearGradient:()=>gradient,createRadialGradient:()=>gradient},{get:(o,k)=>o[k]??(()=>{})});

@@ -6,8 +6,8 @@ function preview(sourceHash){
  entry._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,filename);
  return renderToStaticMarkup(React.createElement(entry.exports.default,{id:'sonic-aperture',paused:true}));
 }
-test('Unversioned and stale posters never flash old content while a preview loads; current captures remain available in both themes',()=>{
- for(const hash of [undefined,'old'])assert.doesNotMatch(preview(hash),/<img/);
+test('The last stored poster remains visible during revision changes rather than leaving a blank card',()=>{
+ for(const hash of [undefined,'old']){assert.match(preview(hash),/current-dark\.webp/);assert.match(preview(hash),/current-light\.webp/);}
  const current=preview('current');assert.match(current,/current-dark\.webp/);assert.match(current,/current-light\.webp/);assert.match(current,/data-preview-state="poster"/);
 });
 test('Implementation and default changes invalidate their poster; a shared frame change invalidates every poster',async()=>{

@@ -11,7 +11,7 @@ const manifest=JSON.parse(fs.readFileSync(path.join(root,'registry/manifest.json
 const crc32=bytes=>{let crc=0xffffffff;for(const byte of bytes){crc^=byte;for(let i=0;i<8;i++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}return(crc^0xffffffff)>>>0;};
 const get=relative=>fetch(new URL(relative,base),{signal:AbortSignal.timeout(30000)});
 const records=[];
-for(const item of manifest.items){
+for(const item of manifest.items.filter(item=>item.visibility!=='draft')){
  const response=await get(`/api/components/${item.id}`);assert.equal(response.status,200,item.id);assert.match(response.headers.get('content-type'),/application\/zip/);assert.equal(response.headers.get('x-content-type-options'),'nosniff');
  const bytes=Buffer.from(await response.arrayBuffer()),names=new Set(),allowed=new Set([...item.files.map(file=>file.target),'LICENSE','THIRD_PARTY_NOTICES.md','README.md','Example.tsx','motiqo.json']);let offset=0;
  while(bytes.readUInt32LE(offset)===0x04034b50){
@@ -22,6 +22,7 @@ for(const item of manifest.items){
  assert.equal(bytes.readUInt32LE(offset),0x02014b50);assert.equal(bytes.readUInt32LE(bytes.length-22),0x06054b50);assert.equal(names.size,allowed.size);
  records.push({id:item.id,bytes:bytes.length,files:names.size});
 }
+for(const item of manifest.items.filter(item=>item.visibility==='draft'))assert.equal((await get(`/api/components/${item.id}`)).status,404,`${item.id} is hidden from the public API`);
 for(const[route,status]of [['/api/components/missing',404],['/api/components/gyro?format=no',400],['/api/components/gyro?config=bad',400],['/api/components/gyro?format=source&format=zip',400],['/api/components/gyro?other=x',400]])assert.equal((await get(route)).status,status,route);
 // Next returns HTTP 200 for streamed not-found pages. Check the denial content too.
 const capture=await get('/preview-capture/gyro'),denied=await capture.text();assert.ok([200,404].includes(capture.status));assert.ok(denied.includes('This page could not be found'));assert.ok(denied.includes('noindex'));assert.ok(!denied.includes('data-testid="poster-surface"'));

@@ -8569,7 +8569,8 @@
           }
         }
       ],
-      "addedAt": "2026-10-27"
+      "addedAt": "2026-10-27",
+      "newPriority": "last"
     },
     {
       "id": "crate",
@@ -9391,73 +9392,8 @@
           }
         }
       ],
-      "addedAt": "2026-10-27"
-    },
-    {
-      "id": "silk-aperture",
-      "number": "05",
-      "title": "Silk Aperture",
-      "category": "Motion",
-      "original": true,
-      "description": "An architectural reveal. A slower kind of motion.",
-      "hint": "Move or tap to reveal the light",
-      "source": "Motiqo",
-      "sourceUrl": "/docs#installation",
-      "installNote": "Save as silk-aperture.tsx. Includes all CSS; only React is required. Minimal by default; control light with dawn or dusk.",
-      "tags": [
-        "SVG",
-        "Lerp",
-        "Reveal"
-      ],
-      "dependencies": [
-        "React"
-      ],
-      "code": "import SilkAperture from './silk-aperture';\n\nexport default function Preview() {\n  return <SilkAperture minimal light=\"dusk\" />;\n}",
-      "brief": "Integrate the original Motiqo Silk Aperture component. Copy the complete self-contained TSX implementation from its Code panel; it only requires React and includes scoped CSS. An illustrated arch is veiled by 23 metallic ribs that bow and spread with frame-rate independent exponential Lerp. Use obsidian, ivory, copper and sage. Keep the minimal view with only The Art of Being Elsewhere over the illustration. Place Dawn/Dusk controls outside the component and pass the controlled light prop. Preserve unique SVG IDs, reduced motion, pause support and cleanup. Rich header, subtitle and CTA are opt-in with minimal=false; do not invent a booking destination.",
-      "entry": "silk-aperture.tsx",
-      "exportName": "SilkAperture",
-      "files": [
-        {
-          "source": "components/originals/silk-aperture.tsx",
-          "target": "components/motiqo/silk-aperture.tsx"
-        }
-      ],
-      "packageDependencies": {},
-      "devDependencies": {},
-      "controls": [
-        {
-          "key": "light",
-          "label": "Light",
-          "kind": "select",
-          "defaultValue": "dusk",
-          "choices": [
-            {
-              "value": "dawn",
-              "label": "Dawn"
-            },
-            {
-              "value": "dusk",
-              "label": "Dusk"
-            }
-          ]
-        }
-      ],
-      "moods": [
-        {
-          "id": "calm",
-          "label": "Dawn",
-          "settings": {
-            "light": "dawn"
-          }
-        },
-        {
-          "id": "expressive",
-          "label": "Dusk",
-          "settings": {
-            "light": "dusk"
-          }
-        }
-      ]
+      "addedAt": "2026-10-27",
+      "newPriority": "last"
     },
     {
       "id": "horizon-grid-pricing",
@@ -10336,6 +10272,518 @@
           }
         }
       ]
+    },
+    {
+      "id": "liquid-veil",
+      "number": "80",
+      "title": "LiquidVeil",
+      "category": "Navigation",
+      "original": true,
+      "addedAt": "2026-10-28",
+      "description": "A chromatic curtain and velocity-warped photographic index.",
+      "hint": "Move across the field. Explore the controls.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Navigation",
+        "WebGL2",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all companion files. No external dependencies. Audio is synthesized only after a user gesture and is disabled in compact previews. Styles are scoped. Connect navigation callbacks to your router.",
+      "code": "import LiquidVeil from './liquid-veil';\n\nexport default function Example(){return <div style={{height:640}}><LiquidVeil/></div>;}",
+      "brief": "Actúa como un Creative Developer ganador de Awwwards Site of the Year (estilo Locomotive, Monopo y Aristide Benoist) experto en React, TypeScript, Tailwind CSS y WebGL2 / GLSL Shaders.\n\nCrea un componente de navegación experimental completo, modular y listo para producción llamado `LiquidVeil` para motiqo\n\n### REGLA ESTRICTA ANTI-AI-SLOP (PROHIBICIONES)\n- PROHIBIDO crear el típico navbar SaaS de pastilla redondeada (`rounded-full`) o segmented control con pestañas deslizantes.\n- PROHIBIDO usar botones con gradientes morados/azules genéricos o menús hamburguesa de 3 rayas estándar.\n- El diseño debe sentirse como una pieza de dirección de arte de agencia senior: tipografía editorial de alto contraste (`'Instrument Serif'` combinada con `'Space Mono'`), líneas arquitectónicas de `1px`, telemetría en vivo y un motor WebGL2 a 60 FPS.\n\n### 1. Estado Base: Cabecera Arquitectónica de Precisión (`z-30`)\nSobre un escenario oscuro (`#05060a`) que muestre una vista previa limpia del lienzo de Motiqo:\n- Dibuja una barra superior de ancho completo (`h-20 px-8 md:px-12 flex items-center justify-between border-b border-white/[0.08] relative`).\n- Coloca signos técnicos `+` (`font-mono text-[10px] text-white/30`) exactamente en las intersecciones inferiores de la barra.\n- **Izquierda**: Wordmark `\"MOTIQO®\"` en tracking cerrado (`font-bold tracking-[-0.04em] text-sm text-white`) + sub-índice `\"SYS / 026\"` en `font-mono text-[10px] text-zinc-500`.\n- **Centro**: Telemetría viva en fuente monoespaciada (`text-[10px] tracking-[0.2em] text-zinc-500 hidden md:flex items-center gap-6`): reloj UTC con milisegundos corriendo en vivo y coordenadas normalizadas del cursor `X: 0.42 Y: 0.18`.\n- **Derecha (Magnetic Kinetic Trigger)**:\n  - Un botón magnético sin bordes de caja que tira hacia el cursor (`±8px` con resorte).\n  - Contiene la etiqueta `\"INDEX\"` (`font-mono text-[11px] tracking-[0.22em]`) junto a dos líneas horizontales de ancho asimétrico (`w-7` y `w-4`, `h-[1.5px] bg-white`) que se cruzan con precisión geométrica cuando el menú está abierto (`isOpen = true`).\n\n### 2. Cortina WebGL2 y Lente de Deformación por Velocidad (`z-20`)\nMonta un `<canvas>` WebGL2 a pantalla completa (`Math.min(window.devicePixelRatio, 2)`) gobernado por un loop `requestAnimationFrame` a 60 FPS:\n\n1. **Transición de Cortina Líquida con Dispersión Cromática (`uOpenProgress` 0.0 -> 1.0)**:\n   - Cuando el usuario hace clic en `\"INDEX\"` (o presiona `ESC` para cerrar), interpola `uOpenProgress` con física de resorte amortiguado.\n   - En el Fragment Shader, calcula el borde curvo de la cortina que cae desde arriba:\n     ```glsl\n     float bend = sin(vUv.x * 3.14159265) * sin(uOpenProgress * 3.14159265) * 0.26 * uDirection;\n     float threshold = 1.0 - (uOpenProgress * 1.25 - bend);\n     float mask = smoothstep(threshold - 0.015, threshold + 0.005, vUv.y);\n     ```\n   - Justo en la frontera `abs(vUv.y - threshold) < 0.03`, aplica una franja de aberración cromática espectral (`#38BDF8`, `#F43F5E`, `#A855F7`) y grano cinematográfico (`hash21`) sobre el fondo `#08090E` del menú.\n\n2. **Lente Flotante de Vista Previa Reactivo a la Velocidad del Cursor (`Velocity Warp Card`)**:\n   - Dentro del mismo shader (o un mesh `PlaneGeometry(1, 1, 32, 32)` en el canvas), renderiza una ventana flotante (`aspect-[4/5]`) que sigue suavemente las coordenadas del cursor `(uMouse.x, uMouse.y)` cuando el menú está abierto.\n   - Calcula la velocidad instantánea del mouse `vec2 vel = uMouse - uPrevMouse;`.\n   - Deforma la ventana y las UVs de la textura del capítulo activo usando `vel`:\n     - Las esquinas del cuadro se inclinan y estiran en dirección del movimiento (`shear + pincushion warp`).\n     - Separa los canales `R`, `G` y `B` de la textura fotográfica proporcionalmente a `length(vel) * 0.08` para que al mover rápido el ratón entre los enlaces del menú, la imagen sufra una refracción líquida sedosa y vuelva a enfocarse al detenerse.\n\n### 3. Tipografía Monumental del Menú Editorial (DOM sincronizado sobre el Canvas)\nCuando `isOpen` está activo, revela una lista vertical asimétrica de 4 capítulos:\n- `01` — `Primitives` *(Sub: `\"64 WebGL2 & Canvas Components\"`)*\n- `02` — `Shaders` *(Sub: `\"GLSL Fragment & Vertex Lab\"`)*\n- `03` — `Architecture` *(Sub: `\"Design Tokens & Motion Physics\"`)*\n- `04` — `Manifesto` *(Sub: `\"Crafted for 60 FPS Web\"`)*\n- **Interacción Tipográfica**:\n  - Cada fila combina el índice en `'Space Mono'` (`text-xs text-zinc-500`) con el título gigante (`text-5xl md:text-[76px] leading-[0.95] tracking-[-0.03em]`).\n  - En reposo, los títulos están en serif/sans limpia; al hacer **hover** sobre un ítem, el título cambia a *Italic Serif* con un desplazamiento elástico horizontal (`translateX(24px)`), los demás ítems bajan su opacidad a `0.2`, y el lente WebGL realiza un *crossfade* líquido hacia la imagen de ese capítulo.\n- Incluye un pie de menú minimalista con enlaces a redes (`GitHub`, `X / Twitter`, `Dribbble`) con subrayado cinético.\n\n### 4. Rendimiento, Limpieza y Props Configurables\n- En el modo de demostración, abre automáticamente el menú a los `800ms` de montar (configurable vía prop `defaultOpen = true`) para que el efecto se aprecie de inmediato en el catálogo de Motiqo.\n- Cancela `requestAnimationFrame`, desconecta `ResizeObserver` y libera texturas/programas WebGL al desmontar.\n- Expón props: `items`, `defaultOpen` (default `true`), `brandName` (default `'MOTIQO®'`), y `className`.\nMotiqo integration: no brand wordmark by default. Use real measured telemetry only, never promise a fixed FPS. Honor paused, reduced motion, visibility, GPU/context loss and complete cleanup. Compact previews may demonstrate interactions but must never request audio.",
+      "entry": "liquid-veil.tsx",
+      "exportName": "LiquidVeil",
+      "files": [
+        {
+          "source": "components/originals/liquid-veil.tsx",
+          "target": "components/motiqo/liquid-veil.tsx"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        },
+        {
+          "source": "public/media/gallery/image-01.webp",
+          "target": "public/media/gallery/image-01.webp"
+        },
+        {
+          "source": "public/media/gallery/image-03.webp",
+          "target": "public/media/gallery/image-03.webp"
+        },
+        {
+          "source": "public/media/gallery/image-05.webp",
+          "target": "public/media/gallery/image-05.webp"
+        },
+        {
+          "source": "public/media/gallery/image-07.webp",
+          "target": "public/media/gallery/image-07.webp"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "brandName",
+          "label": "Brand (optional)",
+          "kind": "text",
+          "defaultValue": "",
+          "maxLength": 24
+        },
+        {
+          "key": "defaultOpen",
+          "label": "Open index",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "original",
+          "label": "Original",
+          "settings": {
+            "brandName": "",
+            "defaultOpen": "enabled"
+          }
+        },
+        {
+          "id": "alternate",
+          "label": "Alternate",
+          "settings": {
+            "brandName": "",
+            "defaultOpen": "disabled"
+          }
+        }
+      ],
+      "visibility": "draft"
+    },
+    {
+      "id": "mercury-dock",
+      "number": "81",
+      "title": "MercuryDock",
+      "category": "Navigation",
+      "original": true,
+      "addedAt": "2026-10-28",
+      "description": "Three coupled masses of physical liquid metal.",
+      "hint": "Move across the field. Explore the controls.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Navigation",
+        "WebGL2",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all companion files. No external dependencies. Audio is synthesized only after a user gesture and is disabled in compact previews. Styles are scoped. Connect navigation callbacks to your router.",
+      "code": "import MercuryDock from './mercury-dock';\n\nexport default function Example(){return <div style={{height:640}}><MercuryDock/></div>;}",
+      "brief": "Actúa como un Principal Graphics Engineer de Lusion / Active Theory experto en WebGL2, GLSL Signed Distance Fields (SDF), física de resortes y React.\n\nCrea un componente de navegación interactivo completo, modular y listo para producción llamado `MercuryDock` para motiqo\n\n### REGLA ESTRICTA ANTI-AI-SLOP (PROHIBICIONES)\n- PROHIBIDO usar bordes CSS (`border`, `border-radius`, `backdrop-filter`) para dibujar la barra. El cuerpo físico de la barra DEBE ser renderizado al 100% por un **Fragment Shader WebGL2 de Metaballs (Smooth Minimum SDF)**.\n- PROHIBIDO hacer un segmented control estático. La barra debe comportarse como un organismo vivo de cristal líquido / ferrofluido con tensión superficial real.\n\n### 1. Física de Resortes de los Nodos Líquidos (CPU -> GPU Uniforms a 60 FPS)\nEl sistema consta de 3 masas físicas acopladas por resortes (`stiffness = 180`, `damping = 14`) actualizadas en `requestAnimationFrame`:\n1. **Nodo 1 — Cuerpo Principal (`uMainRect`)**: Aloja el emblema izquierdo y los 4 enlaces de navegación (`Primitives`, `Shaders`, `Engines`, `Lab`). Se estira ligeramente hacia donde se mueve el cursor.\n2. **Nodo 2 — Isla Satélite de Acción (`uActionOrb`)**: Aloja el botón derecho `\"Get Access\"` / `\"⌘K\"`. En reposo flota a `18px` a la derecha del cuerpo principal (casi tocándolo con un puente líquido fino). Cuando el cursor pasa del cuerpo principal hacia el botón derecho (o hace clic), la isla se fusiona y se separa estirando un cuello viscoso de mercurio con rebote elástico.\n3. **Nodo 3 — Gota Magnética del Cursor (`uCursorBlob`)**: Sigue al puntero del ratón. Cuando el cursor se acerca a menos de `60px` del borde del navbar o se mueve entre los enlaces, la gota se funde con la barra principal deformando su silueta exterior como una gota de agua uniéndose a un charco.\n\n### 2. Fragment Shader WebGL2 de Metaballs e Iluminación de Mercurio (`#version 300 es`)\nCrea un `<canvas>` amplio (`h-[160px] w-full`) alrededor de la zona superior para que las deformaciones líquidas tengan margen libre sin cortarse nunca:\n- Implementa en GLSL:\n  ```glsl\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n  float smin(float a, float b, float k) {\n    float h = max(k - abs(a - b), 0.0) / k;\n    return min(a, b) - h * h * k * 0.25;\n  }\nMotiqo integration: no brand wordmark by default. Use real measured telemetry only, never promise a fixed FPS. Honor paused, reduced motion, visibility, GPU/context loss and complete cleanup. Compact previews may demonstrate interactions but must never request audio.",
+      "entry": "mercury-dock.tsx",
+      "exportName": "MercuryDock",
+      "files": [
+        {
+          "source": "components/originals/mercury-dock.tsx",
+          "target": "components/motiqo/mercury-dock.tsx"
+        },
+        {
+          "source": "components/originals/native-gl.ts",
+          "target": "components/motiqo/native-gl.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "accentColor",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#becde0"
+        }
+      ],
+      "moods": [
+        {
+          "id": "original",
+          "label": "Original",
+          "settings": {
+            "accentColor": "#becde0"
+          }
+        },
+        {
+          "id": "alternate",
+          "label": "Alternate",
+          "settings": {
+            "accentColor": "#d4ff00"
+          }
+        }
+      ],
+      "visibility": "draft"
+    },
+    {
+      "id": "swiss-prism",
+      "number": "82",
+      "title": "SwissPrism",
+      "category": "Navigation",
+      "original": true,
+      "addedAt": "2026-10-28",
+      "description": "Directional type drums and an architectural field drawer.",
+      "hint": "Move across the field. Explore the controls.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Navigation",
+        "Canvas",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all companion files. No external dependencies. Audio is synthesized only after a user gesture and is disabled in compact previews. Styles are scoped. Connect navigation callbacks to your router.",
+      "code": "import SwissPrism from './swiss-prism';\n\nexport default function Example(){return <div style={{height:640}}><SwissPrism/></div>;}",
+      "brief": "Actúa como un Creative Technologist de Studio Freight / Area 17 experto en diseño editorial suizo, tipografía cinética 3D, Canvas 2D de alta precisión y React.\n\nCrea un componente de navegación completo, modular y listo para producción llamado `SwissPrism` para motiqo\n\n### REGLA ESTRICTA ANTI-AI-SLOP (PROHIBICIONES)\n- PROHIBIDO usar píldoras redondeadas (`rounded-full`), sombras borrosas genéricas o layouts centrados aburridos.\n- El diseño debe ser una estructura arquitectónica brutalista-editorial de ultra-alta gama: bordes rectos de `1px`, cruces de registro (`+`) en cada vértice, detección direccional de entrada del cursor, tambores tipográficos 3D letra por letra y un osciloscopio en Canvas integrado en la barra.\n\n### 1. Arquitectura de Retícula Suiza Asimétrica (5 Columnas + Sub-Barra de Telemetría)\nSobre un lienzo negro profundo (`#050608`), construye el bloque superior (`w-full border-b border-white/[0.12] relative select-none`):\n- **Fila Principal (`grid grid-cols-12 h-[76px] divide-x divide-white/[0.12]`)**:\n  1. **Celda 0 (`col-span-3`) — Identidad + Osciloscopio en Vivo**:\n     - Índice `[00 // CORE]` arriba a la izquierda en `'Space Mono'` (`text-[9px] text-zinc-500`).\n     - Abajo: Wordmark `\"MOTIQO\"` (`font-black tracking-[-0.05em] text-lg text-white`) acompañado a la derecha de un mini `<canvas>` de `64x24px` que dibuja una onda armónica doble a 60 FPS cuya frecuencia se acelera cuando el usuario mueve el ratón por el navbar.\n  2. **Celdas 1 a 3 (`col-span-2` cada una) — Navegación Modular**:\n     - `[01]` `PRIMITIVES` *(Meta: `\"64 UNITS\"`)*\n     - `[02]` `SHADERS` *(Meta: `\"WEBGL2\"`)*\n     - `[03]` `ARCHIVE` *(Meta: `\"2026.Q4\"`)*\n  3. **Celda 4 (`col-span-3`) — Acción / Command Palette Trigger**:\n     - `[04 // ACCESS]` + `\"LAUNCH STUDIO ↗\"` con atajo técnico `[⌘ + K]`.\n- Coloca en cada intersección de líneas de la retícula una micro-cruz `+` (`w-2.5 h-2.5 text-white/40`) que gire `90°` con un resorte cuando el cursor entre en cualquiera de las celdas adyacentes.\n\n### 2. Detección Direccional de Entrada + Tambor Tipográfico 3D Letra por Letra\nEn cada celda de navegación implementa dos mecánicas cinéticas simultáneas:\n1. **Directional-Aware Wipe (`atan2` Entry/Exit)**:\n   - Al dispararse `onPointerEnter` y `onPointerLeave`, calcula el ángulo desde el centro de la celda hasta el cursor para determinar si el mouse entró por `top`, `bottom`, `left` o `right`.\n   - Desliza desde ese borde exacto un plano de alto contraste (`#F4F4F0` blanco editorial o `#D4FF00` lima ácido configurable) que invierte instantáneamente el color de los textos e índices de esa celda a negro (`#050608`).\n2. **3D Isometric Character Drum Roll**:\n   - Divide la palabra de cada enlace letra por letra dentro de un contenedor con `perspective: 600px`.\n   - Cada letra tiene dos caras perpendiculares en 3D: la cara frontal (`rotateX(0deg) translateZ(10px)`) en tipografía sans geométrica bold y la cara inferior (`rotateX(-90deg) translateZ(10px)`) en tipografía *Editorial Serif Italic* o monoespaciada.\n   - Al entrar en la celda, todas las letras ruedan `90°` en cascada (`transitionDelay: `${i * 22}ms`` con curva `cubic-bezier(0.22, 1, 0.36, 1)`).\n\n### 3. Cajón Desplegable de Vista Previa con Canvas de Distorsión de Líneas (Mega-Drawer)\nAl hacer hover o clic sobre `PRIMITIVES`, `SHADERS` o `ARCHIVE`, despliega suavemente debajo de la barra un panel arquitectónico (`h-[280px] border-b border-white/[0.12] grid grid-cols-12 divide-x divide-white/[0.12] bg-[#07080C]`):\n- **Izquierda (`col-span-4 p-6`)**: Lista de sub-componentes con numeración técnica y descripción.\n- **Derecha (`col-span-8 relative overflow-hidden`)**: Un `<canvas>` interactivo a 60 FPS que renderiza una vista previa generativa de líneas de campo / partículas reactivas al cursor correspondiente a la categoría seleccionada, con telemetría de FPS y coordenadas en las esquinas.\n\n### 4. Sub-Barra Inferior de Ticker Cinético (`h-7 border-b border-white/[0.08]`)\n- Debajo de la fila principal, incluye una cinta horizontal continua (`font-mono text-[10px] tracking-[0.18em] text-zinc-500 uppercase`) cuya velocidad de desplazamiento y ángulo de inclinación (`skewX`) reaccionan a la velocidad horizontal del ratón.\n\n### 5. Limpieza y Props Configurables\n- Cancela todos los `requestAnimationFrame` de los canvas al desmontar.\n- Expón props: `accentColor` (default `'#F4F4F0'`), `items`, `showTelemetryTicker` (default `true`), y `className`.\nMotiqo integration: no brand wordmark by default. Use real measured telemetry only, never promise a fixed FPS. Honor paused, reduced motion, visibility, GPU/context loss and complete cleanup. Compact previews may demonstrate interactions but must never request audio.",
+      "entry": "swiss-prism.tsx",
+      "exportName": "SwissPrism",
+      "files": [
+        {
+          "source": "components/originals/swiss-prism.tsx",
+          "target": "components/motiqo/swiss-prism.tsx"
+        },
+        {
+          "source": "components/originals/kinetic-canvas.ts",
+          "target": "components/motiqo/kinetic-canvas.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "accentColor",
+          "label": "Accent",
+          "kind": "color",
+          "defaultValue": "#f4f4f0"
+        },
+        {
+          "key": "showTelemetryTicker",
+          "label": "Ticker",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "original",
+          "label": "Original",
+          "settings": {
+            "accentColor": "#f4f4f0",
+            "showTelemetryTicker": "enabled"
+          }
+        },
+        {
+          "id": "alternate",
+          "label": "Alternate",
+          "settings": {
+            "accentColor": "#d4ff00",
+            "showTelemetryTicker": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "verlet-chime",
+      "number": "83",
+      "title": "VerletChime",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-28",
+      "description": "Acoustic architecture suspended on living typographic strings.",
+      "hint": "Move across the field. Explore the controls.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Audio",
+        "Physics",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all companion files. No external dependencies. Audio is synthesized only after a user gesture and is disabled in compact previews. Styles are scoped. Connect navigation callbacks to your router.",
+      "code": "import VerletChime from './verlet-chime';\n\nexport default function Example(){return <div style={{height:640}}><VerletChime/></div>;}",
+      "brief": "Actúa como un Principal Creative Technologist ganador de Awwwards experto en React, TypeScript, Tailwind CSS, física de cuerdas por Integración de Verlet en Canvas 2D y síntesis musical con Web Audio API.\n\nCrea un componente completo, modular y listo para producción llamado `VerletChime` para la librería Motiqo.\nCONCEPTO Y DIRECCIÓN DE ARTE ORIGINAL:\nInspirado en la mecánica física de cortinas tipográficas colgantes y carillones de viento interactivos, pero con una dirección de arte original de **\"Arquitectura Cinética, Horología Astronómica y Monolitos Acústicos\"** (evitando copiar los tejados asiáticos o textos de viajes de la referencia). El lienzo presenta una textura de papel arquitectónico cálido de piedra caliza (`#EAE5DC` con grano fino procedural, conmutable a modo Obsidiana `#0A0B0E`) sobre el cual flotan cabezales escultóricos 3D/2.5D que proyectan una sombra diagonal profunda y sostienen una cortina densa de glifos tipográficos que se abren físicamente y suenan como un arpa al pasar el cursor.\n\n### 1. Los 3 Monolitos Escultóricos (Arte Procedural de Alta Precisión en Canvas)\nDefine 3 capítulos/monolitos intercambiables (cada uno con su geometría escultórica superior dibujada con gradientes metálicos/lacados de alta precisión, su propio alfabeto de glifos para la cortina, su poema editorial izquierdo y su escala musical en Web Audio API):\n\n1. **Monolito 01 — `SOLARIS ASTROLABE` (Domo Ecuatorial de Latón y Oro)**:\n   - **Escultura Superior**: Un pabellón/domo astronómico escalonado con anillos concéntricos y nervaduras en oro bruñido (`#D99B26`, `#F4C44E`, sombras en bronce `#5A380C`).\n   - **Alfabeto de la Cortina**: Glifos astronómicos, coordenadas y alquimia geométrica (`☉ ☽  ∆ ◊ Ω Ψ Φ 0 1 4 9 ° ′ ″ + − ≡`).\n   - **Texto Editorial Izquierdo**:\n     - Kicker: `01 / HOROLOGY — Celestial mechanics & solar resonance`\n     - Poema Serif: `\"Solaris — brass meridians, golden arcs, and pendulums that measure silence\"`\n   - **Timbre Musical (Web Audio)**: Escala Pentatónica Mayor en Fa# con timbre cálido de Marimba de Cristal / Kalimba (onda sinusoidal + armónico `3x` con caída exponencial suave).\n\n2. **Monolito 02 — `KINETIC CANTILEVER` (Viga Brutalista en Laca Bermellón y Acero)**:\n   - **Escultura Superior**: Una estructura arquitectónica en voladizo de inspiración Bauhaus/Brutalista con aleros biselados en rojo bermellón profundo (`#C82D26`, `#E0483E`) y base de acero carbón (`#1A1817`).\n   - **Alfabeto de la Cortina**: Caracteres tipográficos técnicos y geométricos (`A E K M O Q R S T V X Z 0 1 2 3 / / : . ▪ ▫`).\n   - **Texto Editorial Izquierdo**:\n     - Kicker: `02 / TECTONICS — Tension, counterweight & cast shadow`\n     - Poema Serif: `\"Bauhaus — vermilion cantilevers, steel beams, and gravity turned into rhythm\"`\n   - **Timbre Musical (Web Audio)**: Escala Japonesa Hirajoshi con timbre de Koto / Cuerda pulsada (síntesis con filtro pasa-bajos resonante).\n\n3. **Monolito 03 — `AETHER OCULUS` (Bóveda Parabólica de Alabastro y Cobre)**:\n   - **Escultura Superior**: Una cúpula cónica estriada en blanco alabastro (`#F5F2EB`) con costillas radiales oscuras y anillo inferior decorado con patrones geométricos en terracota y bronce (`#7A3E26`).\n   - **Alfabeto de la Cortina**: Runas matemáticas y notación armónica (`∑ ∏ √ ∞ ∫ ≈ ≠ ≤ ≥ ⊕ ⊗ ⊙ ⊢ ⊣ ⊤ ⊥`).\n   - **Texto Editorial Izquierdo**:\n     - Kicker: `03 / ACOUSTICS — Parabolic vaults & harmonic fields`\n     - Poema Serif: `\"Oculus — alabaster ribs, desert wind, and equations that sing when touched\"`\n   - **Timbre Musical (Web Audio)**: Escala Lydian Dream con timbre de Campana Tibetana / Arpa Etérea (con delay/reverb algorítmico sutil).\n\n### 2. Motor Físico de Cuerdas por Integración de Verlet (60 FPS)\nDebajo de la base de cada monolito, genera una cortina cuadrada perfecta de **`28` columnas verticales x `26` nodos por columna (`728` glifos por cortina)**:\n- **Física Verlet por Nodo**:\n  - El nodo `j = 0` de cada columna está anclado (`pinned`) a la coordenada inferior del monolito `(monolithX + colOffset, monolithBottomY)`.\n  - Los nodos `j = 1..25` almacenan `x, y, oldX, oldY, char, angle,highlight`.\n  - En cada frame:\n    1. Calcula velocidad `vx = (x - oldX) * 0.965`, `vy = (y - oldY) * 0.965`.\n    2. Aplica gravedad vertical `vy += 0.42` más una brisa sinusoidal muy sutil para que la cortina tenga vida propia en reposo.\n    3. **Colisión e Impulso con el Cursor**: Si la distancia del nodo al segmento de movimiento del cursor `(mouseX, mouseY)` es menor al radio de influencia (`R = 48px`), empuja el nodo en la dirección del vector velocidad del mouse `(mouseVx, mouseVy)` multiplicado por un factor de arrastre fluido, e ilumina `node.highlight = 1.0`.\n    4. **Resolución de Restricciones (4 Iteraciones por Frame)**: Mantén la distancia exacta `segmentLength` entre `node[j]` y `node[j-1]` para que los hilos de letras sean inextensibles y formen curvas limpias como collares de cuentas.\n- **Dibujo Tangencial y Sombra Diagonal Proyectada**:\n  - Antes de dibujar el monolito y las letras, dibuja su **Sombra Proyectada Diagonal (`45°` hacia abajo-derecha)**: un polígono/gradiente difuso oscuro (`rgba(35, 25, 15, 0.18)`) que cae desde el costado derecho del monolito más una copia desplazada `(+28px, +34px)` en opacidad `0.08` de cada glifo de la cortina sobre el papel.\n  - Dibuja cada glifo en su nodo con `ctx.save(); ctx.translate(node.x, node.y); ctx.rotate(tangentAngle); ctx.fillText(node.char, 0, 0); ctx.restore();`.\n\n### 3. Transiciones con Inercia Horizontal y Modo \"Ensemble\" (Vista de 3 Monolitos)\n1. **Navegación Lateral con Inercia de Péndulo (`Prev` / `Next` Stamps)**:\n   - Coloca a la izquierda (`left-10 top-1/3`) y a la derecha (`right-10 top-1/3`) dos sellos/botones enmarcados (`w-16 h-16 border border-stone-400/60 bg-[#EAE5DC]/80 flex flex-col items-center justify-center gap-1 hover:scale-105 transition-all`) con una mini-ilustración del monolito anterior y siguiente.\n   - Al hacer clic en un sello lateral, anima la posición horizontal `monolithX` mediante un resorte rápido: la cortina saliente y la entrante deben **ondear dramáticamente en diagonal por la aceleración horizontal** antes de estabilizarse en el centro.\n2. **Revelado Editorial Palabra por Palabra (Izquierda)**:\n   - Al entrar un nuevo monolito, el poema en fuente Serif (`'Instrument Serif'` o `'Playfair Display'`, `text-4xl md:text-[52px] leading-[1.05] tracking-[-0.02em]`) aparece progresivamente palabra por palabra con transición de `blur(8px) -> 0px` y `opacity: 0.15 -> 1`.\n   - En la esquina inferior derecha coloca la nota poética corta en fuente monoespaciada (`text-[11px] max-w-[240px] leading-relaxed opacity-70`).\n3. **Modo \"Ensemble / Trio View\" (Botón Superior Derecho `\"Ensemble / Solo\"`)**:\n   - Al hacer clic en el botón superior derecho (inspirado en el segundo `00:16–00:19` del video de referencia), la cámara se aleja suavemente y **muestra los 3 monolitos con sus 3 cortinas colgando lado a lado en la misma pantalla**, permitiendo pasar el cursor de izquierda a derecha a través de las 3 cortinas como una gran arpa orquestal.\n\n### 4. Sintetizador Web Audio API Integrado (Zero External Dependencies)\n- Inicializa `AudioContext` de forma segura en la primera interacción del usuario (`pointermove` / `pointerdown`).\n- Cada vez que el cursor cruce una cuerda vertical `colIndex` (con `cooldown` de `65ms` por cuerda), dispara una nota cuya frecuencia provenga de la escala del monolito activo (`colIndex % scale.length`) con paneo estéreo (`StereoPannerNode`) según la posición X de la cuerda en pantalla y volumen proporcional a la velocidad del cursor.\n- Incluye un pequeño botón de `Sound On / Mute` con icono de onda en la barra superior.\n\n### 5. Limpieza y Props Configurables\n- Cancela `requestAnimationFrame`, desconecta `ResizeObserver` y cierra el `AudioContext` al desmontar.\n- Expón props: `initialMonolith?: 0 | 1 | 2` (default `0`), `defaultEnsembleMode?: boolean` (default `false`), `soundEnabled?: boolean` (default `true`), `theme?: 'paper' | 'obsidian'` (default `'paper'`), y `className?: string`.\nMotiqo integration: no brand wordmark by default. Use real measured telemetry only, never promise a fixed FPS. Honor paused, reduced motion, visibility, GPU/context loss and complete cleanup. Compact previews may demonstrate interactions but must never request audio.",
+      "entry": "verlet-chime.tsx",
+      "exportName": "VerletChime",
+      "files": [
+        {
+          "source": "components/originals/verlet-chime.tsx",
+          "target": "components/motiqo/verlet-chime.tsx"
+        },
+        {
+          "source": "components/originals/chime-stage.tsx",
+          "target": "components/motiqo/chime-stage.tsx"
+        },
+        {
+          "source": "components/originals/chime-physics.ts",
+          "target": "components/motiqo/chime-physics.ts"
+        },
+        {
+          "source": "components/originals/chime-audio.ts",
+          "target": "components/motiqo/chime-audio.ts"
+        },
+        {
+          "source": "components/originals/chime-sculptures.ts",
+          "target": "components/motiqo/chime-sculptures.ts"
+        },
+        {
+          "source": "components/originals/kinetic-canvas.ts",
+          "target": "components/motiqo/kinetic-canvas.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "initialMonolith",
+          "label": "Sculpture",
+          "kind": "range",
+          "defaultValue": 0,
+          "min": 0,
+          "max": 2,
+          "step": 1
+        },
+        {
+          "key": "defaultEnsembleMode",
+          "label": "Ensemble",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "soundEnabled",
+          "label": "Sound after gesture",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "theme",
+          "label": "Surface",
+          "kind": "select",
+          "defaultValue": "paper",
+          "choices": [
+            {
+              "value": "paper",
+              "label": "Limestone"
+            },
+            {
+              "value": "obsidian",
+              "label": "Obsidian"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "original",
+          "label": "Original",
+          "settings": {
+            "initialMonolith": 0,
+            "defaultEnsembleMode": "disabled",
+            "soundEnabled": "enabled",
+            "theme": "paper"
+          }
+        },
+        {
+          "id": "alternate",
+          "label": "Alternate",
+          "settings": {
+            "initialMonolith": 2,
+            "defaultEnsembleMode": "enabled",
+            "soundEnabled": "enabled",
+            "theme": "paper"
+          }
+        }
+      ],
+      "visibility": "draft"
+    },
+    {
+      "id": "prism-chime",
+      "number": "84",
+      "title": "PrismChime",
+      "category": "Motion",
+      "original": true,
+      "addedAt": "2026-10-28",
+      "description": "Dichroic geometry and a curtain of harmonic light.",
+      "hint": "Move across the field. Explore the controls.",
+      "source": "Motiqo",
+      "sourceUrl": "/docs#installation",
+      "tags": [
+        "Canvas",
+        "Audio",
+        "Physics",
+        "Interactive"
+      ],
+      "dependencies": [
+        "React"
+      ],
+      "installNote": "Copy all companion files. No external dependencies. Audio is synthesized only after a user gesture and is disabled in compact previews. Styles are scoped. Connect navigation callbacks to your router.",
+      "code": "import PrismChime from './prism-chime';\n\nexport default function Example(){return <div style={{height:640}}><PrismChime/></div>;}",
+      "brief": "Actúa como un Senior Creative Technologist experto en React, TypeScript, Tailwind CSS, física de cuerdas por Integración de Verlet en Canvas 2D de ultra-rendimiento y síntesis de audio armónico con Web Audio API.\n\nCrea un componente completo, modular y listo para producción llamado `PrismChime` para la librería Motiqo (`https://motiqo.site/`).\n\n### CONCEPTO VISUAL Y DIRECCIÓN DE ARTE\nEl componente presenta una experiencia interactiva inmersiva sobre un fondo de obsidiana profunda (`#030407`). Muestra en la parte superior esculturas flotantes de **Prismas Dicroicos y Geometría Sagrada** de cuyas aristas inferiores penden densas cortinas de **hileras verticales de glifos cuánticos y símbolos matemáticos**. Al mover el cursor a través de las cuerdas, estas se abren físicamente con la misma física de péndulo y resortes de la integración de Verlet, proyectando destellos de luz de película delgada y emitiendo notas musicales armónicas a través de la Web Audio API.\n\n### 1. Los 3 Monolitos de Geometría Sagrada (Arte Procedural en Canvas 2D)\nConstruye 3 capítulos escultóricos intercambiables (con controles laterales de avance y retroceso dotados de inercia de péndulo en las cortinas):\n1. **Monolito 01 — `TESSERACT GATE` (Hipercubo Dicroico Intermitente)**:\n   - **Escultura Superior**: Un hipercubo isométrico facetado con aristas de luz láser cian y caras de cristal tornasolado que cambian de violeta a verde menta.\n   - **Alfabeto de la Cortina**: Símbolos de topología y relatividad (`Ψ ∇ ∮ ℵ ∇² ℋ ℏ ℓ 𝔖 ℜ ℂ`).\n   - **Timbre Musical**: Acordes modales en escala Lidia con resonancia de campana de cristal.\n2. **Monolito 02 — `CYMATIC TORUS` (Anillo Armónico Toroidal de Frecuencia)**:\n   - **Escultura Superior**: Un toroide armónico metálico flotante con anillos concéntricos dorados y un núcleo láser pulsante.\n   - **Alfabeto de la Cortina**: Operadores cuánticos y matrices (`⊕ ⊗ ⊙ ∰ ℳ ℱ 𝒯 ℰ 𝒬 𝒰`).\n   - **Timbre Musical**: Escala Pentatónica Etérea con síntesis FM armónica suave.\n3. **Monolito 03 — `SINGULARITY SPIRE` (Monolito Cristalino Multifacético)**:\n   - **Escultura Superior**: Una aguja monolítica vertical de obsidiana refractiva con destellos especulares y anillos orbitales flotantes.\n   - **Alfabeto de la Cortina**: Constantes universales y símbolos de campo (`c ℏ G k_B e μ_0 ε_0 h π e i`).\n\n### 2. Motor Físico de Cuerdas por Integración de Verlet (60 FPS)\nDebajo de cada monolito, renderiza una cortina de **`32` columnas verticales x `28` nodos por columna (`896` glifos en total)**:\n- **Simulación Verlet por Nodo**:\n  - Nodo superior `j = 0` anclado a la base del monolito.\n  - Nodos `j = 1..27` con resolución estricta de restricciones de distancia (`iterations = 5`) para evitar deformaciones elásticas falsas.\n  - **Fuerza de Cursor e Impulso**: Al mover el cursor, los nodos colisionan y se separan fluidamente del vector de movimiento del puntero (`velocity`), iluminándose con un factor `highlight = 1.0` que decae exponencialmente.\n- **Renderizado Óptico Avanzado**:\n  - Cada glifo se dibuja rotado según la tangente de su cuerda (`Math.atan2(dy, dx) - Math.PI / 2`) y con un color dinámico derivado de una paleta dicroica (Cian `#38BDF8`, Violeta `#818CF8`, Menta `#34D399`) modulada por su velocidad de vibración.\n  - Proyecta un **Glow Bloom difuso (`AdditiveBlending`)** detrás de cada cuerda para que las vibraciones dejen estelas de luz en el fondo oscuro.\n\n### 3. Controles, Modos y Web Audio API\n- **Navegación Lateral (Prev / Next Stamps)**: Sellos geométricos laterales que al hacer clic desplazan la estructura con una ola de inercia diagonal en las cuerdas.\n- **Modo Ensemble (Trio View)**: Botón superior para colgar los 3 monolitos simultáneamente en un tríptico interactivo.\n- **Sintetizador Web Audio Integrado**: Genera notas musicales espaciales en tiempo real al cruzar las cuerdas, con control de volumen estéreo por posición `X`.\n\n### 4. Rendimiento, Limpieza y Props Configurables\n- Limpia `requestAnimationFrame`, `ResizeObserver` y el `AudioContext` al desmontar.\n- Expón props configurables: `initialMonolith` (default `0`), `ensembleMode` (default `false`), `soundEnabled` (default `true`), y `className`.\nMotiqo integration: no brand wordmark by default. Use real measured telemetry only, never promise a fixed FPS. Honor paused, reduced motion, visibility, GPU/context loss and complete cleanup. Compact previews may demonstrate interactions but must never request audio.",
+      "entry": "prism-chime.tsx",
+      "exportName": "PrismChime",
+      "files": [
+        {
+          "source": "components/originals/prism-chime.tsx",
+          "target": "components/motiqo/prism-chime.tsx"
+        },
+        {
+          "source": "components/originals/chime-stage.tsx",
+          "target": "components/motiqo/chime-stage.tsx"
+        },
+        {
+          "source": "components/originals/chime-physics.ts",
+          "target": "components/motiqo/chime-physics.ts"
+        },
+        {
+          "source": "components/originals/chime-audio.ts",
+          "target": "components/motiqo/chime-audio.ts"
+        },
+        {
+          "source": "components/originals/chime-sculptures.ts",
+          "target": "components/motiqo/chime-sculptures.ts"
+        },
+        {
+          "source": "components/originals/kinetic-canvas.ts",
+          "target": "components/motiqo/kinetic-canvas.ts"
+        },
+        {
+          "source": "components/originals/effect-runtime.ts",
+          "target": "components/motiqo/effect-runtime.ts"
+        }
+      ],
+      "packageDependencies": {},
+      "devDependencies": {},
+      "controls": [
+        {
+          "key": "initialMonolith",
+          "label": "Sculpture",
+          "kind": "range",
+          "defaultValue": 0,
+          "min": 0,
+          "max": 2,
+          "step": 1
+        },
+        {
+          "key": "ensembleMode",
+          "label": "Ensemble",
+          "kind": "select",
+          "defaultValue": "disabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        },
+        {
+          "key": "soundEnabled",
+          "label": "Sound after gesture",
+          "kind": "select",
+          "defaultValue": "enabled",
+          "choices": [
+            {
+              "value": "enabled",
+              "label": "On"
+            },
+            {
+              "value": "disabled",
+              "label": "Off"
+            }
+          ]
+        }
+      ],
+      "moods": [
+        {
+          "id": "original",
+          "label": "Original",
+          "settings": {
+            "initialMonolith": 0,
+            "ensembleMode": "disabled",
+            "soundEnabled": "enabled"
+          }
+        },
+        {
+          "id": "alternate",
+          "label": "Alternate",
+          "settings": {
+            "initialMonolith": 2,
+            "ensembleMode": "enabled",
+            "soundEnabled": "enabled"
+          }
+        }
+      ],
+      "visibility": "draft"
     }
   ]
 }

@@ -57,7 +57,7 @@ export function readComponentGroup(value: string | null | undefined): ComponentG
 
 export const pricingCount=registry.items.filter(isPricing).length;
 export const loginCount=registry.items.filter(isLogin).length;
-const catalogItems = registry.items.filter(item=>!isSection(item));
+const catalogItems = registry.items.filter(item=>!isSection(item)&& !('visibility' in item && item.visibility==='draft'));
 export const componentGroupCounts = Object.fromEntries(componentGroups.map(group => [
   group.id, catalogItems.filter(item => componentGroupFor(item) === group.id).length,
 ])) as Record<ComponentGroup, number>;

@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "previews:build": "node scripts/build-preview-posters.mjs",
     "test:loader": "node --test tests/brand-loader.test.cjs",
-    "test:interface": "node --test tests/silk-aperture.test.cjs",
+    "test:interface": "node --test tests/chimes.test.cjs",
     "quality:check": "node scripts/check-component-quality.mjs",
     "publication:check": "node scripts/check-public-files.mjs",
     "test:component": "node scripts/check-component-quality.mjs",

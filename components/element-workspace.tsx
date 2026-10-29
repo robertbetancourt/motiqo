@@ -65,7 +65,7 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
         <div className={`workbench-stage ${element.id==='cosmos-split-auth'&&tab==='preview'?'section-workbench-stage':''}`} data-viewport={viewport}>
           <div id="detail-panel" className="detail-workspace" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0}>
             <div className="workbench-preview" hidden={tab !== 'preview'}>
-              <Demo id={element.id} paused={paused || tab !== 'preview'} expanded silkLight={settings.light as 'dawn'|'dusk'|undefined} settings={settings} onSettingsChange={update}/>
+              <Demo id={element.id} paused={paused || tab !== 'preview'} expanded settings={settings} onSettingsChange={update}/>
             </div>
             {tab !== 'preview' && <div key={tab} className={`document-surface panel-enter ${tab === 'code' ? 'source-surface' : 'prompt-surface'}`}>
               <div className="document-toolbar">

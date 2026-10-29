@@ -169,3 +169,5 @@ html[data-theme=light] .card-badge-new{background:color-mix(in srgb,var(--accent
 
 /* Composed sign-in previews grow with their full composition rather than clipping it. */
 .workbench-stage.section-workbench-stage{height:auto;align-self:start}.section-workbench-stage .detail-workspace,.section-workbench-stage .workbench-preview,.section-workbench-stage .demo{height:auto;min-height:0}.section-workbench-stage .demo{align-items:center!important;overflow:visible!important}
+
+.sidebar-link small.sidebar-soon,.sidebar-badge[data-new]::before{font-size:12px;text-transform:none;letter-spacing:0}

@@ -161,10 +161,17 @@ export default function SacredLotus({
           stroke.addColorStop(1, "#fffaf2");
           g.strokeStyle = stroke;
           g.lineWidth = Math.max(0.7, radius / 160) * 1.15;
-          g.shadowColor = layer === 0 ? a : c;
-          g.shadowBlur = 7;
+          // Layered strokes retain the halo without a full blurred surface per petal.
+          const width = g.lineWidth;
+          g.globalAlpha = formation.petals * 0.12;
+          g.lineWidth = width + 4;
           g.stroke();
-          g.shadowBlur = 0;
+          g.globalAlpha = formation.petals * 0.25;
+          g.lineWidth = width + 2;
+          g.stroke();
+          g.globalAlpha = formation.petals;
+          g.lineWidth = width;
+          g.stroke();
           if (layer === layers - 1 || layer === 0) {
             g.beginPath();
             g.arc(
@@ -184,11 +191,14 @@ export default function SacredLotus({
       const halo = pose.roundness;
       g.globalAlpha = halo * 0.8;
       g.strokeStyle = c;
-      g.shadowColor = b;
-      g.shadowBlur = 10;
       g.lineWidth = 1.25;
       g.beginPath();
       g.arc(0, 0, radius * pose.radius, 0, Math.PI * 2);
+      g.globalAlpha = halo * 0.12;
+      g.lineWidth = 5;
+      g.stroke();
+      g.globalAlpha = halo * 0.8;
+      g.lineWidth = 1.25;
       g.stroke();
       g.globalAlpha = formation.petals;
       g.shadowBlur = 0;

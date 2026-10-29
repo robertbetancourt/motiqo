@@ -52,7 +52,10 @@ export const cardOpticalShader = opticalFragment
     "vec3 color=mix(vec3(.965),vec3(.035),uIsDark)*(1.-uDarkness*.007);",
   )
   .replaceAll("vec3(.7,.8,1.)", "vec3(.85)")
-  .replaceAll("vec3(.72,.82,.95)", "vec3(.82)");
+  .replaceAll("vec3(.72,.82,.95)", "vec3(.82)")
+  // The rectangle's medial axes begin one corner-radius inward, not half its width.
+  // Stop the perimeter chart there, matching OpticalButton's singularity treatment.
+  .replace("min(uSize.x,uSize.y)*.5-depth", "min(26.,min(uSize.x,uSize.y)*.5)-depth");
 
 export default function OpticalArtifactCard({
   ownerId = "5811EX",
@@ -304,7 +307,7 @@ export default function OpticalArtifactCard({
           }
 
           const uniforms: Record<string, number | readonly number[]> = {
-            uResolution: [card.clientWidth, card.clientHeight],
+            uResolution: [card.clientWidth + 40, card.clientHeight + 40],
             uSize: [card.clientWidth - 12, card.clientHeight - 12],
             uTime: time,
             uHueOffset: 0.0,
@@ -342,7 +345,10 @@ export default function OpticalArtifactCard({
           card.dataset.gl = "on";
         },
         () => renderOptions.current.paused,
-        undefined,
+        (w,h,dpr) => {
+          canvas.width=Math.round((w+40)*dpr);
+          canvas.height=Math.round((h+40)*dpr);
+        },
         compact,
       );
     } catch (e) {
@@ -595,7 +601,7 @@ const scopedCardStyles = `
 .optical-artifact-wrapper{--opt-bg:#0c0c0c;--opt-text:#f3f3f3;--opt-muted:#999;--opt-dock:#191919;--opt-buy-bg:#f5f5f5;--opt-buy-text:#111;--opt-buy-hover:#ddd;--opt-line:#ffffff16;box-sizing:border-box;position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:260px;overflow:hidden;font-family:'Urbanist Variable',Urbanist,Arial,sans-serif;color:var(--opt-text)}
 .optical-artifact-wrapper[data-theme=light]{--opt-bg:#f8f8f8;--opt-text:#171717;--opt-muted:#777;--opt-dock:#eee;--opt-buy-bg:#151515;--opt-buy-text:#fff;--opt-buy-hover:#333;--opt-line:#14171b13}
 .optical-artifact-wrapper *{box-sizing:border-box}.opt-card-fit{width:350px;flex:none;transform-origin:center}.opt-card-hit{width:350px;perspective:1100px}.optical-card{position:relative;isolation:isolate;width:100%;padding:18px;border-radius:32px;color:var(--opt-text);transform-style:preserve-3d;box-shadow:0 20px 45px #00000014}
-.optical-card:before{content:'';position:absolute;inset:6px;border:0;border-radius:26px;background:var(--opt-bg);z-index:-1}.opt-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}.optical-card>*:not(canvas){position:relative;z-index:1}
+.optical-card:before{content:'';position:absolute;inset:6px;border:0;border-radius:26px;background:var(--opt-bg);z-index:-1}.opt-canvas{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);pointer-events:none;z-index:0}.optical-card>*:not(canvas){position:relative;z-index:1}
 .opt-provenance{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 3px 12px}.opt-user-cell{display:flex;align-items:center;gap:8px}.opt-user-meta{display:flex;flex-direction:column;gap:2px}.opt-user-id{font-size:12px;font-weight:600;letter-spacing:.015em}.opt-user-label{font-size:9px;color:var(--opt-muted)}.opt-user-meta-right{text-align:right}.opt-avatar-ring{width:32px;height:32px;border-radius:50%;overflow:hidden}.opt-avatar-inner{width:100%;height:100%}.opt-avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:2px solid color-mix(in srgb,var(--opt-accent) 35%,transparent)}.opt-user-creator .opt-avatar-img{border-color:#d08b3c88}.opt-divider{width:1px;height:24px;background:var(--opt-line)}.opt-badge{display:none}
 .opt-art-container{aspect-ratio:1.21;border-radius:15px;overflow:hidden;background:#7a3fbd;box-shadow:0 10px 24px color-mix(in srgb,var(--opt-accent) 10%,transparent)}.opt-art-inner{position:relative;width:100%;height:100%;overflow:hidden;border-radius:inherit}.opt-artwork{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}.opt-subsurface{display:none}.opt-sheen{position:absolute;inset:0;background:linear-gradient(125deg,#fff0 38%,#ffffff0b 52%,#fff0 65%);pointer-events:none}
 .opt-price-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:17px 1px 13px;font-size:11px;white-space:nowrap}.opt-price-left{display:flex;align-items:center;gap:4px}.opt-price-tag{font-weight:650}.optical-card button{font-family:inherit;cursor:pointer;color:inherit}.opt-price-bar button{border:0;padding:0;background:none;font-size:11px}.opt-equals{display:flex;flex-direction:column;gap:3px}.opt-equals-bar{height:1px;width:14px;background:var(--opt-muted)}

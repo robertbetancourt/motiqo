@@ -78,7 +78,7 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
   }
   let mounted = true;
   try {
-    const registered = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../registry/manifest.json'), 'utf8')).items.map(item => item.id).sort();
+    const registered = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../registry/manifest.json'), 'utf8')).items.filter(item=>item.visibility!=='draft').map(item => item.id).sort();
     assert.deepEqual(catalog.elements.map(e => e.id).sort(), registered);
     assert.deepEqual(catalog.elements.filter(e=>e.category==='Linework').map(e=>e.id).sort(), ['arbor','clustered','crate','deck','district','drawer','gyro','lantern','pleat','tempo']);
     assert.ok(catalog.elements.every(e => !e.tags.includes('Original') && catalog.categories.includes(e.category)));

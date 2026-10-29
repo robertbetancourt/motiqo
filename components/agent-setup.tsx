@@ -23,7 +23,7 @@ function HighlightedCode({text,label}:{text:string;label:string}){
   })}</>;
 }
 
-function CodeBlock({text, label,onCopied}:{text:string;label:string;onCopied:()=>void}) {
+export function CodeBlock({text, label,onCopied=()=>{}}:{text:string;label:string;onCopied?:()=>void}) {
   const [status,setStatus]=useState('');
   const request=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|null>(null),id=useId();
   useEffect(()=>()=>{request.current++;if(timer.current!==null)clearTimeout(timer.current);},[]);

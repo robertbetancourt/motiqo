@@ -19,7 +19,8 @@ const InkHeadline=dynamic(previewLoaders['ink-headline'],{ssr:false});
 const SonicAperture=dynamic(previewLoaders['sonic-aperture'],{ssr:false});
 const PrismCore=dynamic(previewLoaders['prism-core'],{ssr:false});
 const ApertureLoader=dynamic(previewLoaders['aperture-loader'],{ssr:false});
-const SilkAperture=dynamic(previewLoaders['silk-aperture'],{ssr:false});
+const VerletChime=dynamic(previewLoaders['verlet-chime'],{ssr:false});
+const PrismChime=dynamic(previewLoaders['prism-chime'],{ssr:false});
 const ElasticShowcase=dynamic(previewLoaders['elastic-showcase'],{ssr:false});
 const HorizonGridPricing=dynamic(previewLoaders['horizon-grid-pricing'],{ssr:false});
 const PrismTierPricing=dynamic(previewLoaders['prism-tier-pricing'],{ssr:false});
@@ -28,6 +29,9 @@ const ObsidianGate=dynamic(previewLoaders['obsidian-gate'],{ssr:false});
 const VortexCamera=dynamic(previewLoaders['vortex-camera'],{ssr:false});
 const Voyage=dynamic(previewLoaders['voyage'],{ssr:false});
 const ElevationMatrix=dynamic(previewLoaders['elevation-matrix'],{ssr:false});
+const LiquidVeil=dynamic(previewLoaders['liquid-veil'],{ssr:false});
+const MercuryDock=dynamic(previewLoaders['mercury-dock'],{ssr:false});
+const SwissPrism=dynamic(previewLoaders['swiss-prism'],{ssr:false});
 const VaporRing=dynamic(previewLoaders['vapor-ring'],{ssr:false});
 const Pleat=dynamic(previewLoaders['pleat'],{ssr:false});
 const Arbor=dynamic(previewLoaders['arbor'],{ssr:false});
@@ -90,7 +94,7 @@ const BokehTerrain=dynamic(previewLoaders['bokeh-terrain'],{ssr:false});
 const OpalineOrb=dynamic(previewLoaders['opaline-orb'],{ssr:false});
 const OrbitAgent=dynamic(previewLoaders['orbit-agent'],{ssr:false});
 
-export function Demo({ id, paused = false, expanded = false, autoDemo=false, hovered=false, silkLight, settings={},onSettingsChange }: { id: ElementId; paused?: boolean; expanded?: boolean; autoDemo?:boolean; hovered?: boolean; silkLight?: 'dawn' | 'dusk';settings?:Settings;onSettingsChange?:(patch:Settings)=>void }) {
+export function Demo({ id, paused = false, expanded = false, autoDemo=false, hovered=false, settings={},onSettingsChange }: { id: ElementId; paused?: boolean; expanded?: boolean; autoDemo?:boolean; hovered?: boolean; settings?:Settings;onSettingsChange?:(patch:Settings)=>void }) {
   const prefersReduced = useReducedMotion();
   const [hydrated,setHydrated] = useState(false);
   useEffect(()=>setHydrated(true),[]);
@@ -98,6 +102,9 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, hov
   const still = paused || reduced;
   const motion={intensity:typeof settings.intensity==='number'?settings.intensity:1,speed:typeof settings.speed==='number'?settings.speed:1};
   return <div className={`demo demo-${id} ${still ? 'demo-still' : ''}`} style={expanded&&['prism-tier-pricing','horizon-grid-pricing','cosmos-split-auth','obsidian-gate','ink-headline','titanium-card','lumen-button'].includes(id)?{overflowY:'auto',alignItems:'flex-start'}:undefined}>
+    {id==='liquid-veil'&&<LiquidVeil {...settings} defaultOpen={settings.defaultOpen!=='disabled'} compact={!expanded} paused={!!still}/>}
+    {id==='mercury-dock'&&<MercuryDock {...settings} compact={!expanded} paused={!!still}/>}
+    {id==='swiss-prism'&&<SwissPrism {...settings} showTelemetryTicker={settings.showTelemetryTicker!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='orbit-stage-hero'&&<SectionPreviewFit height={680} frameWidth={1100}><OrbitStageHero {...settings} titleMuted={settings.titleMuted as string|undefined} titleBright={settings.titleBright as string|undefined} ctaText={settings.ctaText as string|undefined} orbitSpeed={typeof settings.orbitSpeed==='number'?settings.orbitSpeed:1.0} compact={!expanded} paused={!!still}/></SectionPreviewFit>}
     {id==='optical-artifact-card'&&<OpticalArtifactCard {...settings} theme={settings.theme as 'auto'|'light'|'dark'|undefined} accentColor={settings.accentColor as string|undefined} opticalIntensity={typeof settings.opticalIntensity==='number'?settings.opticalIntensity:1.0} compact={!expanded} paused={!!still}/>}
     {id==='lumen-button'&&<LumenButtonShowcase onStatusChange={status=>onSettingsChange?.({status})} label={String(settings.label??'Continue')} disabled={settings.disabled === "enabled"} status={settings.status as 'idle'|'success'|undefined} compact={!expanded} paused={!!still}/>}
@@ -110,7 +117,7 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, hov
     {id==='obsidian-gate'&&<ObsidianGate {...settings} autoDemo={autoDemo&&!expanded} compact={!expanded} paused={!!still}/>}
     {id==='vortex-camera'&&<VortexCamera {...settings} autoFlight={settings.autoFlight!=='disabled'} showHUD={settings.showHUD!=='disabled'} compact={!expanded} paused={paused}/>}
     {id==='voyage'&&<Voyage {...settings} autoPlay={settings.autoPlay!=='disabled'} compact={!expanded} paused={paused}/>}
-    {id==='elevation-matrix'&&<ElevationMatrix unitLabel={settings.unitLabel as string|undefined} view={expanded ? (settings.defaultView as '2d'|'3d'|undefined ?? '2d') : (autoDemo || hovered || settings.defaultView === '3d' ? '3d' : '2d')} theme={settings.defaultTheme as 'emerald'|'violet'|'amber'|'cyan'|undefined} perspective={settings.perspective as 'iso'|'front'|'wide'|undefined} compact={!expanded} paused={!!still}/>}
+    {id==='elevation-matrix'&&<ElevationMatrix unitLabel={settings.unitLabel as string|undefined} view={expanded ? (settings.defaultView as '2d'|'3d'|undefined ?? '2d') : '2d'} theme={settings.defaultTheme as 'emerald'|'violet'|'amber'|'cyan'|undefined} perspective={settings.perspective as 'iso'|'front'|'wide'|undefined} compact={!expanded} paused={!!still||!expanded}/>}
     {id==='sacred-lotus'&&<SacredLotus {...settings} progress={settings.playback==='controlled'?Number(settings.progress??56):undefined} interactive={settings.interactive!=='disabled'} compact={!expanded} paused={!!still}/>}
     {id==='iris-turbine'&&<IrisTurbine {...settings} speed={settings.mode==='controlled'?Number(settings.speed??88):undefined} autoDemo={settings.mode!=='interactive'&&settings.mode!=='controlled'} interactive={settings.interactive!=='disabled'} showTelemetry={settings.showTelemetry==='enabled'} compact={!expanded} paused={!!still}/>}
     {id==='bokeh-terrain'&&<BokehTerrain {...settings} showStars={settings.showStars!=='disabled'} interactive={settings.interactive!=='disabled'} showTitle={settings.showTitle==='enabled'} compact={!expanded} paused={!!still}/>}
@@ -172,7 +179,8 @@ export function Demo({ id, paused = false, expanded = false, autoDemo=false, hov
     {id === 'tempo' && <Tempo {...motion} compact={!expanded} paused={!!still} />}
     {id === 'pleat' && <Pleat {...motion} compact={!expanded} paused={!!still} />}
     {id === 'gilded-signal' && <GildedCard compact={!expanded} paused={!!still} backgroundSrc={settings.backgroundSrc as string|undefined}/>}
-    {id === 'silk-aperture' && <SilkAperture paused={!!still} compact={!expanded} light={silkLight} minimal showControls={false} />}
+    {id==='verlet-chime'&&<VerletChime {...settings} soundEnabled={settings.soundEnabled!=='disabled'} defaultEnsembleMode={settings.defaultEnsembleMode==='enabled'} compact={!expanded} paused={!!still}/>}
+    {id==='prism-chime'&&<PrismChime {...settings} soundEnabled={settings.soundEnabled!=='disabled'} ensembleMode={settings.ensembleMode==='enabled'} compact={!expanded} paused={!!still}/>}
 
   </div>;
 }

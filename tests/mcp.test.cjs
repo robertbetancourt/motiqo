@@ -22,7 +22,7 @@ test('MCP stdio discovers and reads catalog sources, rejects invalid inputs, and
   child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/initialized'})+'\n');
   const list=await send('tools/list',{});assert.equal(list.result.tools.length,3);assert.ok(list.result.tools.every(tool=>tool.annotations.readOnlyHint&&!tool.annotations.openWorldHint));
   const call=async(name,args)=>(await send('tools/call',{name,arguments:args}));
-  const all=await call('list_components',{});assert.equal(JSON.parse(all.result.content[0].text).length,require('../registry/manifest.json').items.length);
+  const all=await call('list_components',{});assert.equal(JSON.parse(all.result.content[0].text).length,require('../registry/manifest.json').items.filter(i=>i.visibility!=='draft').length);
   const info=await call('get_component',{id:'radial-spectrum'});const metadata=JSON.parse(info.result.content[0].text);assert.ok(metadata.controls.length);assert.ok(!metadata.files.some(file=>'content'in file));
   const src=await call('get_component_source',{id:'radial-spectrum',file:'components/originals/radial-spectrum.tsx'});assert.match(JSON.parse(src.result.content[0].text).content,/RadialSpectrum/);
   for(const args of [{id:'../secret'},{id:'radial-spectrum',extra:'unexpected'}]){const invalid=await call('get_component',args);assert.ok(invalid.error||invalid.result.isError);}

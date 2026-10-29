@@ -7,6 +7,9 @@ function once<T>(load:()=>Promise<T>){
   return()=>pending??=load().catch(error=>{pending=undefined;throw error;});
 }
 export const previewLoaders={
+  'liquid-veil':()=>import('../components/originals/liquid-veil'),
+  'mercury-dock':()=>import('../components/originals/mercury-dock'),
+  'swiss-prism':()=>import('../components/originals/swiss-prism'),
   'orbit-stage-hero':()=>import('../components/originals/orbit-stage-hero'),
   'optical-artifact-card':()=>import('../components/originals/optical-artifact-card'),
   'titanium-card':()=>import('../components/originals/titanium-card'),
@@ -44,7 +47,8 @@ export const previewLoaders={
   'atelier':once(()=>import('../components/originals/atelier')),
   'charge':once(()=>import('../components/originals/charge')),
   'elastic-showcase':once(()=>import('../components/originals/elastic-showcase')),
-  'silk-aperture':once(()=>import('../components/originals/silk-aperture')),
+  'verlet-chime':once(()=>import('../components/originals/verlet-chime')),
+  'prism-chime':once(()=>import('../components/originals/prism-chime')),
   'pleat':once(()=>import('../components/originals/pleat')),
   'arbor':once(()=>import('../components/originals/arbor')),
   'drawer':once(()=>import('../components/originals/drawer')),

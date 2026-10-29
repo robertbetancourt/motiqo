@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { ArrowRight, Bookmark, Check, Command, Search, SlidersHorizontal } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { aiTools, elements as allElements, makePrompt, isElementNew, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
+import { aiTools, elements as allElements, popularIds, makePrompt, isElementNew, type AITool, type LibraryElement, type OriginalSources } from '@/lib/catalog';
 import { isPricing, isLogin, isSection, componentGroups, componentGroupFor, readComponentGroup, type ComponentGroup } from '@/lib/component-groups';
 import { heroes, type HeroEntry } from '@/lib/heroes';
 import LiquidSelection from './liquid-selection';
@@ -21,6 +21,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
   const collectionTitle=section==='pricing'?'Pricing':section==='login'?'Login':'Components';
   const [group,setGroup] = useState(initialGroup);
   const [query,setQuery] = useState('');
+  const [order,setOrder] = useState<'new'|'popular'>('new');
   const [tag,setTag] = useState(initialTag);
   const [allSaved, setAllSaved] = useState<string[]>([]);
   const [saved,setSaved] = useState<string[]>([]);
@@ -181,6 +182,7 @@ export default function Library({ originalSource, initialElement, initialConfigu
   }
   function showSaved(){collection(true);}
   const filtered=filterTaggedElements(elements,{query,savedOnly,saved,tag}).filter(element=>!group||componentGroupFor(element)===group);
+  if(order==='popular')filtered.sort((a,b)=>{const rank=(id:string)=>{const i=popularIds.indexOf(id);return i<0?999:i;};return rank(a.id)-rank(b.id);});
   const groupTitle=componentGroups.find(item=>item.id===group)?.title;
   function elementHref(element:LibraryElement){return `${isPricing(element)?'/pricing':isLogin(element)?'/login':'/library'}?element=${element.id}${group?`&group=${group}`:''}${savedOnly?'&saved=1':''}${tag?`&tag=${encodeURIComponent(tag)}`:''}${cardSettings[element.id]?`&config=${encodeURIComponent(encodeSettings(element.id,cardSettings[element.id]))}`:''}`;}
   function follow(event:MouseEvent<HTMLAnchorElement>,element:LibraryElement){if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();if(event.detail<2)open(element);}
@@ -234,6 +236,10 @@ export default function Library({ originalSource, initialElement, initialConfigu
               {savedOnly ? (savedSection === 'components' ? 'Saved components' : 'Saved heroes') : (groupTitle ?? collectionTitle)}
             </span>
             <div className="search-tools">
+              {!savedOnly&&!section&&<div className="library-order" role="group" aria-label="Library order">
+                <button type="button" aria-pressed={order==='new'} onClick={()=>setOrder('new')}>New</button>
+                <button type="button" aria-pressed={order==='popular'} title="Curated popular picks" onClick={()=>setOrder('popular')}>Populars</button>
+              </div>}
               <OutlineField className="search-frame" paused={still}>
                 <label className="search">
                   <Search size={15}/>

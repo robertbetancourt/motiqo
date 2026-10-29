@@ -81,7 +81,7 @@ test('Sidebar targets only the selected destination and keeps same-page Saved/Li
 });
 
 test('Component groups cover the catalog once and reserve empty interface types for Soon',()=>{
- const {componentGroups,componentGroupFor,componentGroupCounts,readComponentGroup}=load('lib/component-groups.ts'),items=require('../registry/manifest.json').items.filter(item=>!item.tags.includes('Pricing')&&item.id!=='cosmos-split-auth');
+ const {componentGroups,componentGroupFor,componentGroupCounts,readComponentGroup}=load('lib/component-groups.ts'),items=require('../registry/manifest.json').items.filter(item=>!item.tags.includes('Pricing')&&item.id!=='cosmos-split-auth'&&item.visibility!=='draft');
  assert.equal(Object.values(componentGroupCounts).reduce((sum,count)=>sum+count,0),items.length);
  for(const item of items)assert.equal(componentGroups.filter(group=>group.id===componentGroupFor(item)).length,1);
  for(const id of ['buttons','carousels','navigation','loaders','typography','data','objects','linework','backgrounds'])assert.ok(componentGroupCounts[id]>0);
