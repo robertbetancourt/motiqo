@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start --hostname 127.0.0.1 --port 3014",
     "typecheck": "tsc --noEmit",
+    "previews:videos": "node scripts/capture-preview-videos.cjs",
     "previews:build": "node scripts/build-preview-posters.mjs",
     "test:loader": "node --test tests/brand-loader.test.cjs",
     "test:interface": "node --test tests/chimes.test.cjs",

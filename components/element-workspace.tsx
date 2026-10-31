@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { ArrowLeft, Bookmark, ChevronDown, ChevronLeft, ChevronRight, Code2, Download, Link, Monitor, Play, SlidersHorizontal, Smartphone, Sparkles, Tablet } from 'lucide-react';
 import { Demo } from './demos';
+import dynamic from 'next/dynamic';
+import styles from './element-workspace.module.css';
 import { makePrompt, type AITool, type LibraryElement, type OriginalSources, type SourceFile } from '@/lib/catalog';
 import PromptControl from './prompt-control';
 import ChoiceSelect, { workflowOptions } from './choice-select';
@@ -12,6 +14,7 @@ import { controlsFor, moodsFor, normalizeSettings, configurationUrl, type Settin
 import useComponentSettings from './use-component-settings';
 
 type View = 'preview' | 'code' | 'prompt';
+const CosmosSplitAuth = dynamic(() => import('./originals/cosmos-split-auth'), {ssr:false});
 type Viewport = 'desktop' | 'tablet' | 'mobile';
 const views: View[] = ['preview', 'code', 'prompt'];
 
@@ -62,10 +65,12 @@ export default function ElementWorkspace({ element, onBack, onPrevious, onNext, 
     </div>
     <div className="workbench-layout">
       <div className="workbench-canvas">
-        <div className={`workbench-stage ${element.id==='cosmos-split-auth'&&tab==='preview'?'section-workbench-stage':''}`} data-viewport={viewport}>
+        <div className={`workbench-stage ${element.id==='cosmos-split-auth'&&tab==='preview'?styles.cosmosStage:''}`} data-viewport={viewport}>
           <div id="detail-panel" className="detail-workspace" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0}>
             <div className="workbench-preview" hidden={tab !== 'preview'}>
-              <Demo id={element.id} paused={paused || tab !== 'preview'} expanded settings={settings} onSettingsChange={update}/>
+              {element.id==='cosmos-split-auth'
+                ? <CosmosSplitAuth {...settings} autoCycleSlides={settings.autoCycleSlides!=='disabled'} paused={paused || tab !== 'preview'}/>
+                : <Demo id={element.id} paused={paused || tab !== 'preview'} expanded settings={settings} onSettingsChange={update}/>}
             </div>
             {tab !== 'preview' && <div key={tab} className={`document-surface panel-enter ${tab === 'code' ? 'source-surface' : 'prompt-surface'}`}>
               <div className="document-toolbar">

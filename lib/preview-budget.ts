@@ -1,4 +1,4 @@
-export const MAX_AUTOMATIC_PREVIEWS = 4;
+export const MAX_AUTOMATIC_PREVIEWS = 8;
 type Candidate = {visible:boolean;engaged:boolean;granted:boolean;priority:()=>number;onChange:(granted:boolean)=>void};
 const candidates = new Set<Candidate>();
 

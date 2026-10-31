@@ -1,100 +1,38 @@
 'use client';
-import {Component,memo,startTransition,useEffect,useRef,useState,type ReactNode} from 'react';
+import {memo,useEffect,useRef,useState} from 'react';
 import type {ElementId} from '@/lib/catalog';
 import type {Settings} from '@/lib/element-controls';
-import {preloadPreview} from '@/lib/preview-loaders';
-import {observePreviewReady} from '@/lib/preview-ready';
-import {startPreviewDemo} from '@/lib/preview-demo';
-import {schedulePreview,retainPreview,releasePreview} from '@/lib/preview-scheduler';
 import {registerPreviewCandidate} from '@/lib/preview-budget';
 import * as posters from '@/registry/previews.json';
-import {Demo} from './demos';
+import * as clips from '@/registry/preview-videos.json';
 
-class PreviewBoundary extends Component<{children:ReactNode;onFailure:()=>void},{failed:boolean}>{
-  state={failed:false};
-  static getDerivedStateFromError(){return{failed:true};}
-  componentDidCatch(){this.props.onFailure();}
-  render(){return this.state.failed?null:this.props.children;}
-}
-
-/** Posters render with the page. Only visible, loaded scenes may enter the GPU. */
-export default memo(function CardPreview({id,paused,priority=false,settings}:{id:ElementId;paused:boolean;priority?:boolean;settings?:Settings}){
-  // The heavier matrix never mounts in cards; its 2D poster is the complete preview.
-  const staticPreview=id==='elevation-matrix';
-  const hoverOnly=false;
-  const host=useRef<HTMLDivElement>(null),[mounted,setMounted]=useState(false),[visible,setVisible]=useState(false),[ready,setReady]=useState(false),[granted,setGranted]=useState(false);
-  const [cardHovered,setCardHovered]=useState(false);
-  const painted=useRef(false),stopped=useRef(paused),wake=useRef<()=>void>(()=>{});stopped.current=paused;
-  const captured=(posters.items as Partial<Record<ElementId,{dark:string;light:string;sourceHash?:string}>>)[id];
-  // Keep the last valid poster visible while a newer live scene is loading.
-  const artwork=captured;
+/** Catalog media never imports or mounts the interactive component. */
+export default memo(function CardPreview({id,paused,priority=false}:{id:ElementId;paused:boolean;priority?:boolean;settings?:Settings}){
+  const host=useRef<HTMLDivElement>(null),video=useRef<HTMLVideoElement>(null);
+  const [active,setActive]=useState(false),[ready,setReady]=useState(false),[theme,setTheme]=useState<'dark'|'light'>('dark');
+  const artwork=(posters.items as Record<string,{dark:string;light:string}>)[id];
+  const source=(clips.items as Record<string,{dark:string;light:string}>)[id]?.[theme];
   useEffect(()=>{
-    const root=host.current!;
-    const measure=()=>{if(root.clientWidth&&root.clientHeight)root.style.setProperty('--preview-fit',String(Math.min(root.clientWidth/400,root.clientHeight/300)));};
-    measure();if(typeof ResizeObserver==='undefined'){window.addEventListener('resize',measure);return()=>window.removeEventListener('resize',measure);}
-    const observer=new ResizeObserver(measure);observer.observe(root);return()=>observer.disconnect();
+    const update=()=>setTheme(document.documentElement.dataset.theme==='light'?'light':'dark');update();
+    const observer=new MutationObserver(update);observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});return()=>observer.disconnect();
   },[]);
   useEffect(()=>{
-    const root=host.current!,key=Symbol(id);
-    if(staticPreview)return;
-    let gone=false,active=false,near=false,live=false,loaded=false,loading=false,allowed=false,hovered=false,cancelLoad:(()=>void)|undefined,cancelMount:(()=>void)|undefined;
-    const distance=()=>{const r=root.getBoundingClientRect();return r.bottom>0&&r.top<window.innerHeight?Math.max(0,r.top):100000+Math.abs(r.top);};
-    const item=root.closest('article')??root;
-    function sleep(){
-      cancelMount?.();cancelMount=undefined;
-      if(live&&!painted.current){live=false;setMounted(false);setReady(false);}
-      else if(live)retainPreview(key,()=>{live=false;painted.current=false;if(!gone){setMounted(false);setReady(false);}});
-    }
-    const candidate=registerPreviewCandidate(distance,value=>{
-      allowed=value;if(gone)return;setGranted(value);
-      if(value){releasePreview(key);load();}else{cancelLoad?.();cancelLoad=undefined;sleep();}
-    });
-    function updateBudget(){const engaged=hovered||item.contains(document.activeElement);candidate.update(active&&!stopped.current&&!document.hidden&&(!hoverOnly||engaged),engaged);}
-    const enter=()=>{hovered=true;setCardHovered(true);updateBudget();},leave=()=>{hovered=false;setCardHovered(false);updateBudget();};
-    function mount(){
-      if(gone||live||cancelMount||!active||!allowed||stopped.current)return;
-      cancelMount=schedulePreview(()=>{
-        cancelMount=undefined;
-        if(gone||!active||!allowed||stopped.current)return;
-        live=true;startTransition(()=>setMounted(true));
-      },()=>distance()-1000);
-    }
-    function load(){
-      if(gone||stopped.current||live||active&&!allowed||hoverOnly&&!allowed)return;
-      if(loaded){if(active)mount();return;}
-      if(loading||cancelLoad)return;
-      cancelLoad=schedulePreview(()=>{
-        cancelLoad=undefined;if(gone||!near&&!active||stopped.current)return;
-        loading=true;
-        preloadPreview(id).then(()=>{loading=false;loaded=true;if(!gone&&active)mount();}).catch(()=>{loading=false;});
-      },distance);
-    }
-    function show(value:boolean){
-      active=value;setVisible(value);
-      updateBudget();
-    }
-    wake.current=()=>{updateBudget();if(stopped.current){cancelLoad?.();cancelLoad=undefined;cancelMount?.();cancelMount=undefined;}else if(active||near)load();};
-    item.addEventListener('pointerenter',enter);item.addEventListener('pointerleave',leave);item.addEventListener('focusin',updateBudget);item.addEventListener('focusout',updateBudget);document.addEventListener('visibilitychange',updateBudget);
-    function cleanup(){gone=true;wake.current=()=>{};candidate.dispose();cancelLoad?.();cancelMount?.();releasePreview(key);item.removeEventListener('pointerenter',enter);item.removeEventListener('pointerleave',leave);item.removeEventListener('focusin',updateBudget);item.removeEventListener('focusout',updateBudget);document.removeEventListener('visibilitychange',updateBudget);}
-    if(typeof IntersectionObserver==='undefined'){show(true);return cleanup;}
-    const actual=new IntersectionObserver(([entry])=>show(entry.isIntersecting),{rootMargin:'0px'});
-    const anticipate=new IntersectionObserver(([entry])=>{
-      near=entry.isIntersecting;
-      if(near)load();else{cancelLoad?.();cancelLoad=undefined;}
-    },{rootMargin:'200px'});
-    actual.observe(root);anticipate.observe(root);
-    return()=>{actual.disconnect();anticipate.disconnect();cleanup();};
-  },[id,hoverOnly,staticPreview]);
-  useEffect(()=>wake.current(),[paused]);
+    const root=host.current!,motion=matchMedia('(prefers-reduced-motion: reduce)');let visible=false;
+    const candidate=registerPreviewCandidate(()=>Math.abs(root.getBoundingClientRect().top),setActive);
+    const update=()=>candidate.update(visible&&!!source&&!paused&&!document.hidden&&!motion.matches);
+    const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update();},{threshold:0.1});observer.observe(root);
+    document.addEventListener('visibilitychange',update);motion.addEventListener('change',update);
+    return()=>{observer.disconnect();candidate.dispose();document.removeEventListener('visibilitychange',update);motion.removeEventListener('change',update);};
+  },[paused,id,source]);
+  useEffect(()=>{setReady(false);},[source]);
   useEffect(()=>{
-    if(mounted)return observePreviewReady(host.current!,()=>{painted.current=true;setReady(true);},()=>{painted.current=false;setReady(false);setMounted(false);});
-  },[mounted]);
-  useEffect(()=>{
-    if(!staticPreview&&mounted&&ready&&visible&&granted&&!paused&&(!hoverOnly||cardHovered))return startPreviewDemo(host.current!,id);
-  },[id,mounted,ready,visible,granted,paused,hoverOnly,cardHovered]);
-  return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-preview-mode={staticPreview?'static-2d':undefined} data-live={mounted&&ready&&visible&&granted&&!paused||undefined} data-preview-state={mounted?(visible&&granted?'live':'cached'):'poster'}>
-    {artwork&&<><img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/>
-    <img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></>}
-    {mounted&&<div className="card-live" style={{width:400,height:300,left:'50%',top:'50%',right:'auto',bottom:'auto',transform:'translate(-50%,-50%) scale(var(--preview-fit,1))',transformOrigin:'center'}}><PreviewBoundary onFailure={()=>{painted.current=false;setReady(false);setMounted(false);}}><Demo id={id} paused={paused||!visible||!granted} autoDemo hovered={cardHovered} settings={settings}/></PreviewBoundary></div>}
+    const player=video.current;if(!player)return;
+    let cancelled=false;
+    if(active&&source)player.play().catch(()=>{if(!cancelled)setReady(false);});else {player.pause();setReady(false);}
+    return()=>{cancelled=true;player.pause();};
+  },[active,source]);
+  return <div ref={host} className="card-preview" inert aria-hidden="true" data-preview-id={id} data-preview-mode="video" data-live={active&&ready||undefined} data-preview-state={active&&ready?'video':'poster'}>
+    {artwork&&<><img className="card-poster card-poster-dark" src={artwork.dark} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} decoding="async"/><img className="card-poster card-poster-light" src={artwork.light} alt="" width={posters.width} height={posters.height} loading={priority?'eager':'lazy'} decoding="async"/></>}
+    {source&&<video ref={video} className="card-live" src={active?source:undefined} muted loop playsInline preload="none" disablePictureInPicture onPlaying={()=>setReady(true)} onError={()=>setReady(false)} style={{width:'100%',height:'100%',objectFit:'cover',pointerEvents:'none'}}/>}
   </div>;
 });

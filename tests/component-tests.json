@@ -578,6 +578,19 @@
     ],
     "lib/catalog.ts": [
       "tests/spatial-sections.test.cjs"
+    ],
+    "registry/preview-videos.json": [
+      "tests/preview-videos.test.cjs"
+    ],
+    "components/preview-capture.tsx": [
+      "tests/preview-videos.test.cjs",
+      "tests/preview-demo.test.cjs"
+    ],
+    "components/element-workspace.tsx": [
+      "tests/prompt-control.test.cjs"
+    ],
+    "components/element-workspace.module.css": [
+      "tests/prompt-control.test.cjs"
     ]
   }
 }
