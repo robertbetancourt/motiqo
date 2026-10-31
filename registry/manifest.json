@@ -10066,9 +10066,9 @@
       "dependencies": [
         "React"
       ],
-      "installNote": "Copy the TSX, effect-runtime.ts and included public/media/cosmos-astronaut.png. Generated artwork has no third-party photo dependency. Urbanist with system fallback.",
+      "installNote": "Copy the TSX, effect-runtime.ts and included public/media/cosmos-astronaut.png. Generated artwork has no third-party photo dependency. Urbanist with system fallback. Desktop layout: the form stays left and artwork right at every width. Set the parent height; the component fills its width and height without an outer border or rounded corners.",
       "code": "import CosmosSplitAuth from './cosmos-split-auth';\n\nexport default function Example(){return <CosmosSplitAuth/>;}",
-      "brief": "Split light/dark authentication interface with live English, Spanish and Japanese form translation, credential validation, async onSubmit, optional Google/sign-up/reset callbacks, four cosmic visual treatments and quotes, and a visibility-aware particle scene. Local generated astronaut artwork included. Pointer lighting and typing excite the particles. Missing auth callbacks announce demo mode without sending credentials. Preserve keyboard controls, reduced motion, external pause and cleanup.",
+      "brief": "Split light/dark authentication interface with live English, Spanish and Japanese form translation, credential validation, async onSubmit, optional Google/sign-up/reset callbacks, four cosmic visual treatments and quotes, and a visibility-aware particle scene. Local generated astronaut artwork included. Pointer lighting and typing excite the particles. Missing auth callbacks announce demo mode without sending credentials. Preserve keyboard controls, reduced motion, external pause and cleanup. Keep a horizontal desktop split at every width. Fill the parent container without a maximum width, outer border, shadow or rounded corners; never stack the image below the form.",
       "entry": "cosmos-split-auth.tsx",
       "exportName": "CosmosSplitAuth",
       "files": [

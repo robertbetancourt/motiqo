@@ -101,3 +101,9 @@ Motiqo is still evolving. APIs and visuals may change before a stable release. B
 Original Motiqo code and documentation are **MIT licensed**, copyright 2026 Robert Betancourt. Keep the license notice when reusing the code.
 
 Robert permits reuse and modification of his Midjourney gallery images, including commercially and without attribution, within the rights he holds. Suno free-plan recordings and brand assets remain excluded from MIT; the recordings are not licensed for commercial reuse and their distribution as library resources remains unresolved. Dependencies and fonts retain their own licenses. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing resources.
+
+### Videos de los previews
+
+Home y las tarjetas de Library comparten videos de comportamiento, sin montar los componentes interactivos. Se reproducen hasta ocho clips visibles a la vez; al salir de pantalla se libera el video. El editor conserva la demo real. Con movimiento reducido o reproducción bloqueada permanece el póster.
+
+Para actualizar los clips: inicia `npm run dev` y ejecuta `npm run previews:videos`. Requiere Playwright con Chromium y FFmpeg en PATH; `MOTIQO_PLAYWRIGHT` permite indicar la ruta del paquete y `PLAYWRIGHT_BROWSERS_PATH` la de Chromium. El proceso graba seis segundos por componente y tema a 400 × 300 / 24 fps, comprime a MP4 H.264 y actualiza `registry/preview-videos.json`. Las URLs llevan el hash del contenido y las entradas vigentes se reutilizan al reanudar. `MOTIQO_URL` permite cambiar el servidor local de captura.

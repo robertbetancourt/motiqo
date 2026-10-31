@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript-compiler-api'),React=require('react'),{renderToStaticMarkup}=require('react-dom/server');
 function preview(sourceHash){
  const filename=path.resolve(__dirname,'../components/card-preview.tsx'),entry=new Module(filename,module);entry.filename=filename;entry.paths=Module._nodeModulePaths(path.dirname(filename));
- const mocks={'@/registry/previews.json':{width:400,height:300,items:{'sonic-aperture':{dark:'/current-dark.webp',light:'/current-light.webp',sourceHash}}},'../registry/preview-sources.json':{'sonic-aperture':'current'},'./demos':{Demo:()=>null}};
+ const mocks={'@/registry/preview-videos.json':{items:{}},'@/registry/previews.json':{width:400,height:300,items:{'sonic-aperture':{dark:'/current-dark.webp',light:'/current-light.webp',sourceHash}}},'../registry/preview-sources.json':{'sonic-aperture':'current'},'./demos':{Demo:()=>null}};
  entry.require=id=>Object.hasOwn(mocks,id)?mocks[id]:id.startsWith('@/lib/')?{}:require(id);
  entry._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,filename);
  return renderToStaticMarkup(React.createElement(entry.exports.default,{id:'sonic-aperture',paused:true}));

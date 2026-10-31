@@ -3,6 +3,7 @@ import {useEffect,useRef,useState} from 'react';
 import type {ElementId} from '@/registry/element-ids';
 import {Demo} from './demos';
 import {observePreviewReady} from '@/lib/preview-ready';
+import {startPreviewDemo} from '@/lib/preview-demo';
 
 export default function PreviewCapture({id,theme,motion=false,card=false,portrait=false}:{card?:boolean;id:ElementId;theme:'dark'|'light';motion?:boolean;portrait?:boolean}){
   const root=useRef<HTMLDivElement>(null),[ready,setReady]=useState(false),[prepared,setPrepared]=useState(false);
@@ -20,6 +21,7 @@ export default function PreviewCapture({id,theme,motion=false,card=false,portrai
     const stop=observePreviewReady(root.current!,()=>{document.fonts.ready.then(()=>{if(!gone)timer=setTimeout(()=>{if(!gone)setReady(true);},500);});});
     return()=>{gone=true;stop();clearTimeout(timer);};
   },[prepared]);
+  useEffect(()=>{if(prepared&&ready&&motion)return startPreviewDemo(root.current!,id);},[prepared,ready,motion,id]);
   return <div ref={root} className="preview-capture" data-testid="poster-surface" data-ready={ready||undefined} data-motion={motion||undefined} aria-label={`${id} ${theme} poster`}>
     <style>{`.preview-capture{position:fixed!important;left:0;top:0;width:${portrait?1080:card?400:320}px;height:${portrait?1920:card?300:320}px;z-index:999999;background:${portrait?'#000':'var(--bg)'};overflow:hidden;isolation:isolate;${portrait?'display:flex;align-items:center;justify-content:center':''}}.preview-capture>.demo{width:${portrait?900:'100%'};height:${portrait?900:'100%'};padding:0}.preview-capture .mq-turbine{${portrait?'width:900px;height:900px':''}}.preview-capture .mq-lotus{border:0;border-radius:0}${motion?'':'.preview-capture *{transition:none!important;animation:none!important}'}`}</style>
     {prepared&&<Demo id={id} autoDemo={id==='elevation-matrix'&&!motion}/>}

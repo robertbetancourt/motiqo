@@ -48,6 +48,8 @@ const Control = load('../components/prompt-control.tsx', {
   './liquid-action': liquid,
 }).default;
 const Workspace = load('../components/element-workspace.tsx', {
+  './element-workspace.module.css': {default:{cosmosStage:'cosmos-stage'}},
+  'next/dynamic': {default:()=>props=>React.createElement('div',{'data-cosmos':true,'data-brand':props.brandName,'data-cycling':String(props.autoCycleSlides),'data-paused':String(props.paused)})},
   '@/lib/element-controls': settings,
   './use-component-settings': load('../components/use-component-settings.ts', {'@/lib/element-controls': settings}),
   '@/lib/catalog': catalog,
@@ -171,4 +173,14 @@ test('workflow keyboard selection copies the matching prompt; review and motion 
       if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];
     }
   }
+});
+
+test('Cosmos editor keeps its live desktop component, forwards settings and pauses on the code tab',async()=>{
+ const dom=new JSDOM('<div id="mount"></div>',{url:'http://localhost/login'}),old=new Map();const values={window:dom.window,document:dom.window.document,HTMLElement:dom.window.HTMLElement,IS_REACT_ACT_ENVIRONMENT:true,requestAnimationFrame:()=>1,cancelAnimationFrame:()=>{},matchMedia:()=>({matches:false,addEventListener(){},removeEventListener(){}})};
+ for(const[k,v]of Object.entries(values)){old.set(k,Object.getOwnPropertyDescriptor(globalThis,k));Object.defineProperty(globalThis,k,{value:v,configurable:true,writable:true});}
+ dom.window.localStorage.setItem('motiqo-settings-v1:cosmos-split-auth',JSON.stringify({brandName:'MISSION',autoCycleSlides:'disabled'}));
+ const root=require('react-dom/client').createRoot(document.getElementById('mount')),element=catalog.elements.find(e=>e.id==='cosmos-split-auth');
+ try{await React.act(()=>root.render(React.createElement(Workspace,{element,initialSettings:{brandName:'MISSION',autoCycleSlides:'disabled'},onBack(){},onPrevious(){},onNext(){},index:0,total:1,saved:false,onSave(){},paused:false,copy:async()=>true,originalSource:{[element.id]:[{name:'cosmos.tsx',code:'export default function Cosmos(){}'}]},onToolChange(){}})));
+ const live=document.querySelector('[data-cosmos]');assert.ok(document.querySelector('.cosmos-stage'));assert.equal(document.querySelector('[data-demo]'),null);assert.equal(live.dataset.brand,'MISSION');assert.equal(live.dataset.cycling,'false');assert.equal(live.dataset.paused,'false');await React.act(()=>document.querySelector('#tab-code').click());assert.equal(live.dataset.paused,'true');await React.act(()=>document.querySelector('#tab-preview').click());assert.equal(live.dataset.paused,'false');
+ }finally{await React.act(()=>root.unmount());dom.window.close();for(const[k,v]of old){if(v)Object.defineProperty(globalThis,k,v);else delete globalThis[k];}}
 });
